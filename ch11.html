@@ -1,0 +1,2235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>어텐션과 Self-Attention – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">주차별 계획</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#rnn의-병목-재확인" id="toc-rnn의-병목-재확인" class="nav-link active" data-scroll-target="#rnn의-병목-재확인">RNN의 병목 재확인</a></li>
+  <li><a href="#어텐션의-직관-번역하는-사람의-시선" id="toc-어텐션의-직관-번역하는-사람의-시선" class="nav-link" data-scroll-target="#어텐션의-직관-번역하는-사람의-시선">어텐션의 직관: 번역하는 사람의 시선</a></li>
+  <li><a href="#qkv-세-가지-역할" id="toc-qkv-세-가지-역할" class="nav-link" data-scroll-target="#qkv-세-가지-역할">Q·K·V: 세 가지 역할</a></li>
+  <li><a href="#어텐션-손계산-이-장의-심장" id="toc-어텐션-손계산-이-장의-심장" class="nav-link" data-scroll-target="#어텐션-손계산-이-장의-심장">어텐션 손계산 — 이 장의 심장</a>
+  <ul class="collapse">
+  <li><a href="#a-스코어-q와-k의-내적" id="toc-a-스코어-q와-k의-내적" class="nav-link" data-scroll-target="#a-스코어-q와-k의-내적">(a) 스코어: Q와 K의 내적</a></li>
+  <li><a href="#b-d로-나누기-스케일링" id="toc-b-d로-나누기-스케일링" class="nav-link" data-scroll-target="#b-d로-나누기-스케일링">(b) √d로 나누기: 스케일링</a></li>
+  <li><a href="#c-행별-softmax-스코어를-가중치로" id="toc-c-행별-softmax-스코어를-가중치로" class="nav-link" data-scroll-target="#c-행별-softmax-스코어를-가중치로">(c) 행별 Softmax: 스코어를 가중치로</a></li>
+  <li><a href="#d-가중합-새-표현-벡터" id="toc-d-가중합-새-표현-벡터" class="nav-link" data-scroll-target="#d-가중합-새-표현-벡터">(d) 가중합: 새 표현 벡터</a></li>
+  </ul></li>
+  <li><a href="#self-attention의-의미-문맥을-입은-단어" id="toc-self-attention의-의미-문맥을-입은-단어" class="nav-link" data-scroll-target="#self-attention의-의미-문맥을-입은-단어">Self-Attention의 의미: 문맥을 입은 단어</a></li>
+  <li><a href="#인과-마스크-미래를-보면-안-된다" id="toc-인과-마스크-미래를-보면-안-된다" class="nav-link" data-scroll-target="#인과-마스크-미래를-보면-안-된다">인과 마스크: 미래를 보면 안 된다</a>
+  <ul class="collapse">
+  <li><a href="#손계산-마스크를-씌우면-어떻게-달라지는가" id="toc-손계산-마스크를-씌우면-어떻게-달라지는가" class="nav-link" data-scroll-target="#손계산-마스크를-씌우면-어떻게-달라지는가">손계산: 마스크를 씌우면 어떻게 달라지는가</a></li>
+  </ul></li>
+  <li><a href="#multi-head-attention-관점을-여러-개-두기" id="toc-multi-head-attention-관점을-여러-개-두기" class="nav-link" data-scroll-target="#multi-head-attention-관점을-여러-개-두기">Multi-Head Attention: 관점을 여러 개 두기</a>
+  <ul class="collapse">
+  <li><a href="#왜-하나로는-부족한가" id="toc-왜-하나로는-부족한가" class="nav-link" data-scroll-target="#왜-하나로는-부족한가">왜 하나로는 부족한가</a></li>
+  <li><a href="#텐서-모양-따라가기-이것이-전부다" id="toc-텐서-모양-따라가기-이것이-전부다" class="nav-link" data-scroll-target="#텐서-모양-따라가기-이것이-전부다">텐서 모양 따라가기 — 이것이 전부다</a></li>
+  <li><a href="#파라미터-수-세기" id="toc-파라미터-수-세기" class="nav-link" data-scroll-target="#파라미터-수-세기">파라미터 수 세기</a></li>
+  </ul></li>
+  <li><a href="#왜-혁명이었나" id="toc-왜-혁명이었나" class="nav-link" data-scroll-target="#왜-혁명이었나">왜 혁명이었나</a></li>
+  <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">어텐션과 Self-Attention</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+학습 목표
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>RNN의 두 가지 병목(순차 처리, 먼 기억 소실)이 왜 구조적 한계인지 설명할 수 있다</li>
+<li>어텐션이 <strong>“유사도 → Softmax → 가중평균”</strong>의 조합임을 이해하고, 각각이 어느 장에서 배운 도구인지 짚을 수 있다</li>
+<li>Query, Key, Value의 역할을 검색 비유로 설명할 수 있다</li>
+<li>소형 Q·K·V가 주어졌을 때 <strong>어텐션 가중치와 새 표현 벡터를 직접 계산</strong>할 수 있다</li>
+<li>Self-Attention이 단어의 표현을 “문맥을 반영한 표현”으로 바꾼다는 것을 예시로 설명할 수 있다</li>
+<li><strong>인과 마스크</strong>가 왜 필요한지 설명하고, 마스크를 적용한 어텐션 가중치를 직접 계산할 수 있다</li>
+<li><strong>Multi-Head Attention</strong>의 분할–계산–결합 과정을 텐서 모양으로 추적하고, <strong>파라미터 수를 계산</strong>할 수 있다</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-important no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>이 장은 이 수업 손계산 여정의 <strong>정점</strong>이다. 퍼셉트론(Ch02), 콘볼루션(Ch06), IoU(Ch09), 유사도(Ch10)를 거쳐 온 손계산이 여기서 하나로 합쳐진다 — 그리고 놀랍게도, <strong>새로 배울 수학은 하나도 없다.</strong></p>
+</div>
+</div>
+</div>
+<hr>
+<section id="rnn의-병목-재확인" class="level2">
+<h2 class="anchored" data-anchor-id="rnn의-병목-재확인">RNN의 병목 재확인</h2>
+<p>Ch10의 마지막 질문을 회수하자. RNN은 문장을 <strong>한 단어씩 순서대로</strong> 읽으며 hidden state라는 기억 상자에 지금까지의 내용을 눌러 담았다. 이 설계에는 두 가지 구조적 병목이 있었다:</p>
+<ol type="1">
+<li><strong>순차 처리 — 병렬화 불가</strong>. <span class="math inline">\(t\)</span>번째 단어를 처리하려면 <span class="math inline">\(t-1\)</span>번째 계산이 끝나야 한다. 단어 1,000개짜리 문서는 1,000단계를 <strong>기다려야</strong> 한다. GPU가 수천 개의 연산을 동시에 할 수 있어도(Ch01), RNN은 그 능력을 쓸 수 없다.</li>
+<li><strong>먼 기억의 소실</strong>. 모든 과거를 고정 크기 벡터 하나에 눌러 담으니, 문장이 길어질수록 앞부분의 정보가 희미해진다. “Those <strong>dogs</strong> ate their food, … <strong>they</strong> were very happy”에서 they를 처리할 때쯤이면 dogs는 기억 저편이다.</li>
+</ol>
+<p>두 병목의 뿌리는 같다 — <strong>“순서대로, 하나의 기억 상자를 거쳐서”</strong>라는 설계 자체다. 그렇다면 요구사항을 다시 정의해 보자:</p>
+<blockquote class="blockquote">
+<p><strong>모든 단어를 동시에 보되, 필요한 곳에 집중할 수 있어야 한다.</strong></p>
+</blockquote>
+<p>“동시에 본다”가 병렬화를 해결하고, “필요한 곳에 집중한다”가 먼 기억 문제를 해결한다 — 아무리 멀리 있는 단어라도 필요하면 <strong>직접</strong> 참조하면 되기 때문이다. 이 요구사항을 구현한 것이 <strong>어텐션(Attention)</strong>이다.</p>
+<hr>
+</section>
+<section id="어텐션의-직관-번역하는-사람의-시선" class="level2">
+<h2 class="anchored" data-anchor-id="어텐션의-직관-번역하는-사람의-시선">어텐션의 직관: 번역하는 사람의 시선</h2>
+<p>“나는 어제 학교에서 친구를 만났다”를 영어로 옮긴다고 하자. “I met a friend at school yesterday”에서 <strong>“met”</strong>을 쓰는 순간, 여러분의 시선은 원문의 어디에 가 있는가?</p>
+<ul>
+<li><strong>“만났다”</strong>를 가장 강하게 본다 — 동사 자체니까</li>
+<li><strong>“어제”</strong>도 곁눈질한다 — meet이 아니라 <strong>met</strong>(과거형)을 골라야 하니까</li>
+<li>“학교에서”는 지금은 거의 안 본다 — at school은 다음에 쓸 것이다</li>
+</ul>
+<p>즉 번역가는 출력 단어 하나를 만들 때마다 원문 전체를 <strong>서로 다른 강도로</strong> 참조한다. 어텐션은 정확히 이것을 수식으로 옮긴 것이다:</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: 어텐션 (Attention)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>지금 처리 중인 단어가 다른 단어들을 <strong>얼마나 참고할지의 가중치를 정하고</strong>, 그 가중치로 다른 단어들의 정보를 <strong>가중평균</strong>하는 연산.</p>
+<p><span class="math display">\[\text{참고할 정도(유사도)} \;\xrightarrow{\text{Softmax}}\; \text{가중치(합=1)} \;\xrightarrow{\text{가중평균}}\; \text{새 표현}\]</span></p>
+</div>
+</div>
+<p>여기서 강조할 것이 있다. <strong>어텐션에는 새 수학이 없다.</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>단계</th>
+<th>쓰는 도구</th>
+<th style="text-align: center;">어디서 배웠나</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>참고할 정도를 잰다</td>
+<td>벡터의 <strong>내적</strong>(유사도)</td>
+<td style="text-align: center;">Ch10</td>
+</tr>
+<tr class="even">
+<td>정도를 가중치로 바꾼다</td>
+<td><strong>Softmax</strong> (합이 1인 확률로)</td>
+<td style="text-align: center;">Ch03</td>
+</tr>
+<tr class="odd">
+<td>정보를 합친다</td>
+<td><strong>가중평균</strong></td>
+<td style="text-align: center;">고등학교</td>
+</tr>
+</tbody>
+</table>
+<p>이미 손에 익은 세 가지를 순서대로 이어 붙이면 어텐션이 완성된다. 이 장에서 할 일은 이 조립을 직접 계산으로 확인하는 것뿐이다.</p>
+<hr>
+</section>
+<section id="qkv-세-가지-역할" class="level2">
+<h2 class="anchored" data-anchor-id="qkv-세-가지-역할">Q·K·V: 세 가지 역할</h2>
+<p>가중평균까지 가려면 먼저 “누가 누구를 참고하는가”를 정리할 언어가 필요하다. 어텐션은 각 단어에 세 개의 벡터를 부여한다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: Query, Key, Value
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Query (Q)</strong> — 내가 지금 <strong>찾고 있는 것</strong>. “나에게 필요한 정보는 무엇인가?”</li>
+<li><strong>Key (K)</strong> — 각 단어가 내건 <strong>색인(간판)</strong>. “나는 이런 정보를 갖고 있다”</li>
+<li><strong>Value (V)</strong> — 각 단어가 실제로 <strong>전달할 내용</strong></li>
+</ul>
+<p>Query와 Key의 <strong>내적</strong>이 크면 “찾는 것과 간판이 잘 맞는다” → 그 단어의 Value를 많이 가져온다.</p>
+</div>
+</div>
+<p>도서관 검색에 비유하면 정확하다. 여러분이 검색창에 입력하는 검색어가 <strong>Query</strong>, 각 책의 제목·키워드가 <strong>Key</strong>, 책의 본문이 <strong>Value</strong>다. 검색 엔진은 검색어와 잘 맞는 제목의 책일수록 결과 상단에 올리고(가중치), 여러분은 그 책들의 내용을 읽는다(Value를 가져온다). 어텐션이 다른 점은 하나뿐이다 — 1등 하나만 고르는 대신, <strong>모든 책을 가중치만큼 섞어 읽는다.</strong></p>
+<p>Q·K·V는 어디서 오는가? 각 단어의 임베딩 벡터(Ch10)에 <strong>학습되는 행렬 <span class="math inline">\(W_Q, W_K, W_V\)</span>를 곱해서</strong> 만든다. 즉 “무엇을 찾고, 무엇을 간판으로 내걸고, 무엇을 전달할지”조차 데이터로부터 학습되는 파라미터다 — 경사하강법(Ch03)으로 갱신된다는 점은 지금까지의 모든 가중치와 같다. 이 장의 손계산에서는 차원 폭발을 막기 위해, 이 곱셈이 끝난 <strong>Q·K·V 값이 이미 주어진 상태</strong>에서 시작한다.</p>
+<hr>
+</section>
+<section id="어텐션-손계산-이-장의-심장" class="level2">
+<h2 class="anchored" data-anchor-id="어텐션-손계산-이-장의-심장">어텐션 손계산 — 이 장의 심장</h2>
+<p>토큰 3개짜리 문장 <strong>“고양이가 / 생선을 / 먹었다”</strong>로 single-head self-attention 1회를 끝까지 계산한다. 각 토큰의 Q·K·V는 차원 2로 다음과 같이 주어졌다고 하자.</p>
+<div class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">'고양이가'</span>, <span class="st">'생선을'</span>, <span class="st">'먹었다'</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([[<span class="dv">2</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">1</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">1</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>pd.DataFrame({</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'토큰'</span>: tokens,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$q$ (Query)'</span>: [<span class="ss">f'(</span><span class="sc">{</span>q[<span class="dv">0</span>]<span class="sc">:.0f}</span><span class="ss">, </span><span class="sc">{</span>q[<span class="dv">1</span>]<span class="sc">:.0f}</span><span class="ss">)'</span> <span class="cf">for</span> q <span class="kw">in</span> Q],</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$k$ (Key)'</span>: [<span class="ss">f'(</span><span class="sc">{</span>k[<span class="dv">0</span>]<span class="sc">:.0f}</span><span class="ss">, </span><span class="sc">{</span>k[<span class="dv">1</span>]<span class="sc">:.0f}</span><span class="ss">)'</span> <span class="cf">for</span> k <span class="kw">in</span> K],</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$v$ (Value)'</span>: [<span class="ss">f'(</span><span class="sc">{</span>v[<span class="dv">0</span>]<span class="sc">:.0f}</span><span class="ss">, </span><span class="sc">{</span>v[<span class="dv">1</span>]<span class="sc">:.0f}</span><span class="ss">)'</span> <span class="cf">for</span> v <span class="kw">in</span> V],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>}).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-attn-qkv" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-attn-qkv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;1: 주어진 Q·K·V (차원 2) — 임베딩에 W_Q, W_K, W_V를 곱한 결과라고 가정
+</figcaption>
+<div aria-describedby="tbl-attn-qkv-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+토큰
+</th>
+
+<th>
+<span class="math inline">\(q\)</span> (Query)
+</th>
+
+<th>
+<span class="math inline">\(k\)</span> (Key)
+</th>
+
+<th>
+<span class="math inline">\(v\)</span> (Value)
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+고양이가
+</td>
+
+<td>
+(2, 1)
+</td>
+
+<td>
+(1, 0)
+</td>
+
+<td>
+(1, 0)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+생선을
+</td>
+
+<td>
+(1, 2)
+</td>
+
+<td>
+(0, 2)
+</td>
+
+<td>
+(0, 1)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+먹었다
+</td>
+
+<td>
+(1, 3)
+</td>
+
+<td>
+(1, 1)
+</td>
+
+<td>
+(1, 1)
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>Value의 두 성분을 대략 (1번째 = “동물 성분”, 2번째 = “음식 성분”) 정도의 의미로 읽어 두면 마지막 결과가 눈에 들어올 것이다.</p>
+<section id="a-스코어-q와-k의-내적" class="level3">
+<h3 class="anchored" data-anchor-id="a-스코어-q와-k의-내적">(a) 스코어: Q와 K의 내적</h3>
+<p>모든 (Query 토큰, Key 토큰) 쌍에 대해 내적을 계산한다. Ch10에서 한 그 내적 그대로다. 예를 들어 “먹었다”의 Query와 “생선을”의 Key라면:</p>
+<p><span class="math display">\[q_{\text{먹었다}} \cdot k_{\text{생선을}} = (1, 3) \cdot (0, 2) = 1 \times 0 + 3 \times 2 = 6\]</span></p>
+<p>9쌍을 전부 계산하면 <span class="math inline">\(3 \times 3\)</span> 스코어 표가 나온다:</p>
+<div class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> Q <span class="op">@</span> K.T   <span class="co"># 모든 쌍의 내적을 한 번에</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(S, columns<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">의 $k$'</span> <span class="cf">for</span> t <span class="kw">in</span> tokens])</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df.insert(<span class="dv">0</span>, <span class="st">'Query </span><span class="ch">\\</span><span class="st"> Key'</span>, [<span class="ss">f'**</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">의 $q$**'</span> <span class="cf">for</span> t <span class="kw">in</span> tokens])</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-attn-scores" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-attn-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;2: 스코어 표 — 행: Query 토큰, 열: Key 토큰 (각 칸 = 내적)
+</figcaption>
+<div aria-describedby="tbl-attn-scores-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+Query \ Key
+</th>
+
+<th>
+고양이가의 <span class="math inline">\(k\)</span>
+</th>
+
+<th>
+생선을의 <span class="math inline">\(k\)</span>
+</th>
+
+<th>
+먹었다의 <span class="math inline">\(k\)</span>
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+<strong>고양이가의 <span class="math inline">\(q\)</span></strong>
+</td>
+
+<td>
+2.0
+</td>
+
+<td>
+2.0
+</td>
+
+<td>
+3.0
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>생선을의 <span class="math inline">\(q\)</span></strong>
+</td>
+
+<td>
+1.0
+</td>
+
+<td>
+4.0
+</td>
+
+<td>
+3.0
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>먹었다의 <span class="math inline">\(q\)</span></strong>
+</td>
+
+<td>
+1.0
+</td>
+
+<td>
+6.0
+</td>
+
+<td>
+4.0
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>“먹었다” 행을 보라 — (1, <strong>6</strong>, 4). 설계된 대로 “먹었다”의 Query는 “생선을”의 Key와 가장 잘 맞는다 (무엇을 먹었는지가 가장 필요한 정보다).</p>
+</section>
+<section id="b-d로-나누기-스케일링" class="level3">
+<h3 class="anchored" data-anchor-id="b-d로-나누기-스케일링">(b) √d로 나누기: 스케일링</h3>
+<p>스코어를 그대로 Softmax에 넣지 않고 차원의 제곱근 <span class="math inline">\(\sqrt{d}\)</span>로 나눈다. 차원이 커지면 내적 값 자체가 커지고, 값이 커지면 Softmax가 한 곳에 확률을 몰아주는 극단적 분포가 되기 때문에 이를 완화하는 안전장치다. 여기서는 <span class="math inline">\(d = 2\)</span>이므로 <span class="math inline">\(\sqrt{2} \approx 1.414\)</span>로 나눈다. “먹었다” 행은 <span class="math inline">\((1, 6, 4) \rightarrow (0.71,\ 4.24,\ 2.83)\)</span>이 된다.</p>
+</section>
+<section id="c-행별-softmax-스코어를-가중치로" class="level3">
+<h3 class="anchored" data-anchor-id="c-행별-softmax-스코어를-가중치로">(c) 행별 Softmax: 스코어를 가중치로</h3>
+<p>각 <strong>행</strong>(Query 토큰 하나)에 대해 Softmax를 적용한다. Ch03에서 배운 그 Softmax, 표기까지 그대로다:</p>
+<p><span class="math display">\[\text{softmax}(z_k) = \frac{e^{z_k}}{\sum_{j=1}^{K} e^{z_j}}\]</span></p>
+<p>Ch03에서는 <span class="math inline">\(z\)</span>가 “클래스 점수”였고 지금은 “참고할 정도”라는 것만 다르다. “먹었다” 행을 Ch03의 수치 예시와 같은 형식으로 계산하면:</p>
+<div class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> S[<span class="dv">2</span>] <span class="op">/</span> np.sqrt(<span class="dv">2</span>)          <span class="co"># 먹었다 행의 스케일된 스코어</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>exp_z <span class="op">=</span> [np.exp(zi) <span class="cf">for</span> zi <span class="kw">in</span> z]</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>sum_exp <span class="op">=</span> <span class="bu">sum</span>(exp_z)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>softmax <span class="op">=</span> [e <span class="op">/</span> sum_exp <span class="cf">for</span> e <span class="kw">in</span> exp_z]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'참조 토큰'</span>: tokens[k],</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'스코어'</span>: <span class="ss">f'</span><span class="sc">{</span>S[<span class="dv">2</span>][k]<span class="sc">:.0f}</span><span class="ss">'</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$z_k = $ 스코어$/</span><span class="ch">\\</span><span class="st">sqrt</span><span class="sc">{{</span><span class="st">2</span><span class="sc">}}</span><span class="st">$'</span>: <span class="ss">f'</span><span class="sc">{</span>z[k]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$e^</span><span class="sc">{{</span><span class="st">z_k</span><span class="sc">}}</span><span class="st">$'</span>: <span class="ss">f'</span><span class="sc">{</span>exp_z[k]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$</span><span class="ch">\\</span><span class="st">text</span><span class="sc">{{</span><span class="st">softmax</span><span class="sc">}}</span><span class="st">(z_k)$'</span>: <span class="ss">f'</span><span class="sc">{</span>softmax[k]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'가중치 (%)'</span>: <span class="ss">f'</span><span class="sc">{</span>softmax[k]<span class="op">*</span><span class="dv">100</span><span class="sc">:.1f}</span><span class="ss">%'</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>rows.append({</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'참조 토큰'</span>: <span class="st">'**합계**'</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'스코어'</span>: <span class="st">''</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$z_k = $ 스코어$/</span><span class="ch">\\</span><span class="st">sqrt</span><span class="sc">{{</span><span class="st">2</span><span class="sc">}}</span><span class="st">$'</span>: <span class="st">''</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$e^</span><span class="sc">{{</span><span class="st">z_k</span><span class="sc">}}</span><span class="st">$'</span>: <span class="ss">f'</span><span class="sc">{</span>sum_exp<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$</span><span class="ch">\\</span><span class="st">text</span><span class="sc">{{</span><span class="st">softmax</span><span class="sc">}}</span><span class="st">(z_k)$'</span>: <span class="ss">f'</span><span class="sc">{</span><span class="bu">sum</span>(softmax)<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'가중치 (%)'</span>: <span class="st">'100.0%'</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-attn-softmax" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-attn-softmax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;3: Softmax 계산 과정 — ‘먹었다’ 행 (Ch03의 Softmax 그대로)
+</figcaption>
+<div aria-describedby="tbl-attn-softmax-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+참조 토큰
+</th>
+
+<th>
+스코어
+</th>
+
+<th>
+$z_k = $ 스코어<span class="math inline">\(/\\sqrt{{2}}\)</span>
+</th>
+
+<th>
+<span class="math inline">\(e^{{z_k}}\)</span>
+</th>
+
+<th>
+<span class="math inline">\(\\text{{softmax}}(z_k)\)</span>
+</th>
+
+<th>
+가중치 (%)
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+고양이가
+</td>
+
+<td>
+1
+</td>
+
+<td>
+0.7071
+</td>
+
+<td>
+2.0281
+</td>
+
+<td>
+0.0229
+</td>
+
+<td>
+2.3%
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+생선을
+</td>
+
+<td>
+6
+</td>
+
+<td>
+4.2426
+</td>
+
+<td>
+69.5914
+</td>
+
+<td>
+0.7860
+</td>
+
+<td>
+78.6%
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+먹었다
+</td>
+
+<td>
+4
+</td>
+
+<td>
+2.8284
+</td>
+
+<td>
+16.9188
+</td>
+
+<td>
+0.1911
+</td>
+
+<td>
+19.1%
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>합계</strong>
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+<td>
+88.5383
+</td>
+
+<td>
+1.0000
+</td>
+
+<td>
+100.0%
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>“먹었다”는 자신의 새 표현을 만들 때 <strong>“생선을”을 78.6%</strong>, 자기 자신을 19.1%, “고양이가”를 2.3% 참고하기로 결정했다. 같은 절차를 세 행 모두에 적용하면 <strong>어텐션 가중치 행렬</strong>이 완성된다 (각 행의 합 = 1):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Query \ Key</th>
+<th style="text-align: center;">고양이가</th>
+<th style="text-align: center;">생선을</th>
+<th style="text-align: center;">먹었다</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>고양이가</strong></td>
+<td style="text-align: center;">0.248</td>
+<td style="text-align: center;">0.248</td>
+<td style="text-align: center;">0.503</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>생선을</strong></td>
+<td style="text-align: center;">0.074</td>
+<td style="text-align: center;">0.620</td>
+<td style="text-align: center;">0.306</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>먹었다</strong></td>
+<td style="text-align: center;">0.023</td>
+<td style="text-align: center;"><strong>0.786</strong></td>
+<td style="text-align: center;">0.191</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="d-가중합-새-표현-벡터" class="level3">
+<h3 class="anchored" data-anchor-id="d-가중합-새-표현-벡터">(d) 가중합: 새 표현 벡터</h3>
+<p>마지막 단계 — 가중치로 Value들을 가중평균한다. “먹었다”에 대해 끝까지 계산하면:</p>
+<div class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> np.array(softmax)          <span class="co"># 먹었다 행의 가중치</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    wv <span class="op">=</span> w[k] <span class="op">*</span> V[k]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'참조 토큰'</span>: tokens[k],</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'가중치 $w_k$'</span>: <span class="ss">f'</span><span class="sc">{</span>w[k]<span class="sc">:.4f}</span><span class="ss">'</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$v_k$'</span>: <span class="ss">f'(</span><span class="sc">{</span>V[k][<span class="dv">0</span>]<span class="sc">:.0f}</span><span class="ss">, </span><span class="sc">{</span>V[k][<span class="dv">1</span>]<span class="sc">:.0f}</span><span class="ss">)'</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_k </span><span class="ch">\\</span><span class="st">times v_k$'</span>: <span class="ss">f'(</span><span class="sc">{</span>wv[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss">, </span><span class="sc">{</span>wv[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">)'</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> w <span class="op">@</span> V</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>rows.append({</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'참조 토큰'</span>: <span class="st">'**새 표현 (합)**'</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'가중치 $w_k$'</span>: <span class="st">''</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$v_k$'</span>: <span class="st">''</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$w_k </span><span class="ch">\\</span><span class="st">times v_k$'</span>: <span class="ss">f'**(</span><span class="sc">{</span>out[<span class="dv">0</span>]<span class="sc">:.4f}</span><span class="ss">, </span><span class="sc">{</span>out[<span class="dv">1</span>]<span class="sc">:.4f}</span><span class="ss">)**'</span>,</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-attn-output" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-attn-output-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;4: 가중합 — ’먹었다’의 새 표현 벡터
+</figcaption>
+<div aria-describedby="tbl-attn-output-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+참조 토큰
+</th>
+
+<th>
+가중치 <span class="math inline">\(w_k\)</span>
+</th>
+
+<th>
+<span class="math inline">\(v_k\)</span>
+</th>
+
+<th>
+<span class="math inline">\(w_k \\times v_k\)</span>
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+고양이가
+</td>
+
+<td>
+0.0229
+</td>
+
+<td>
+(1, 0)
+</td>
+
+<td>
+(0.0229, 0.0000)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+생선을
+</td>
+
+<td>
+0.7860
+</td>
+
+<td>
+(0, 1)
+</td>
+
+<td>
+(0.0000, 0.7860)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+먹었다
+</td>
+
+<td>
+0.1911
+</td>
+
+<td>
+(1, 1)
+</td>
+
+<td>
+(0.1911, 0.1911)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+<strong>새 표현 (합)</strong>
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+<td>
+<strong>(0.2140, 0.9771)</strong>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>“먹었다”의 새 표현은 <span class="math inline">\((0.214,\ 0.977)\)</span> — 2번째 성분(“음식 성분”)이 압도적이다. 어텐션 1회를 거치며 “먹었다”라는 단어의 벡터에 <strong>“생선을 먹었다”라는 문맥이 스며든</strong> 것이다. 이것이 어텐션이 하는 일의 전부다: <strong>내적으로 재고, Softmax로 나누고, 가중평균으로 섞는다.</strong></p>
+<blockquote class="blockquote">
+<p>손으로 따라 해 보라: “고양이가” 행에 대해 (b)~(d)를 반복하면 새 표현 <span class="math inline">\((0.752,\ 0.752)\)</span>가 나와야 한다. 문제집의 손계산 문제가 정확히 이 형태다.</p>
+</blockquote>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+인터랙티브 — 어텐션 가중치를 눈으로 확인하세요
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>번역 예시 문장 “나는 어제 학교에서 친구를 만났다”의 토큰 5개에 Q·K 값(차원 2)을 미리 넣어 두었어요. Query 토큰을 선택하면, 그 토큰의 Q와 모든 K의 스코어 → Softmax 가중치가 연결선의 굵기와 막대로 표시됩니다. <strong>“만났다”를 선택해 보세요</strong> — 번역가의 시선처럼 “친구를”에 가장 집중하는 것을 볼 수 있어요.</p>
+</div>
+</div>
+<div id="eb2eb902" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<script type="ojs-define">{"contents": [{"name": "dummy_attn", "value": 1}]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="292" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 291;"><span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>viewof attnSel <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"나는"</span><span class="op">,</span> <span class="st">"어제"</span><span class="op">,</span> <span class="st">"학교에서"</span><span class="op">,</span> <span class="st">"친구를"</span><span class="op">,</span> <span class="st">"만났다"</span>]<span class="op">,</span> {</span>
+<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"Query 토큰"</span><span class="op">,</span></span>
+<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="st">"만났다"</span></span>
+<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="300" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 299;"><span id="cb6-300"><a href="#cb6-300" aria-hidden="true" tabindex="-1"></a>attnCalc <span class="op">=</span> {</span>
+<span id="cb6-301"><a href="#cb6-301" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tokens <span class="op">=</span> [<span class="st">"나는"</span><span class="op">,</span> <span class="st">"어제"</span><span class="op">,</span> <span class="st">"학교에서"</span><span class="op">,</span> <span class="st">"친구를"</span><span class="op">,</span> <span class="st">"만났다"</span>]<span class="op">;</span></span>
+<span id="cb6-302"><a href="#cb6-302" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> Q <span class="op">=</span> [[<span class="fl">1.5</span><span class="op">,</span> <span class="fl">0.4</span>]<span class="op">,</span> [<span class="op">-</span><span class="fl">0.4</span><span class="op">,</span> <span class="fl">1.6</span>]<span class="op">,</span> [<span class="fl">1.1</span><span class="op">,</span> <span class="fl">1.0</span>]<span class="op">,</span> [<span class="fl">0.6</span><span class="op">,</span> <span class="fl">1.7</span>]<span class="op">,</span> [<span class="fl">0.9</span><span class="op">,</span> <span class="fl">2.3</span>]]<span class="op">;</span></span>
+<span id="cb6-303"><a href="#cb6-303" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> K <span class="op">=</span> [[<span class="fl">1.4</span><span class="op">,</span> <span class="fl">0.3</span>]<span class="op">,</span> [<span class="op">-</span><span class="fl">0.5</span><span class="op">,</span> <span class="fl">1.5</span>]<span class="op">,</span> [<span class="fl">1.0</span><span class="op">,</span> <span class="fl">1.0</span>]<span class="op">,</span> [<span class="fl">0.5</span><span class="op">,</span> <span class="fl">1.7</span>]<span class="op">,</span> [<span class="fl">1.2</span><span class="op">,</span> <span class="fl">0.9</span>]]<span class="op">;</span></span>
+<span id="cb6-304"><a href="#cb6-304" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> i <span class="op">=</span> tokens<span class="op">.</span><span class="fu">indexOf</span>(attnSel)<span class="op">;</span></span>
+<span id="cb6-305"><a href="#cb6-305" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> q <span class="op">=</span> Q[i]<span class="op">;</span></span>
+<span id="cb6-306"><a href="#cb6-306" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> scores <span class="op">=</span> K<span class="op">.</span><span class="fu">map</span>(k <span class="kw">=&gt;</span> q[<span class="dv">0</span>] <span class="op">*</span> k[<span class="dv">0</span>] <span class="op">+</span> q[<span class="dv">1</span>] <span class="op">*</span> k[<span class="dv">1</span>])<span class="op">;</span></span>
+<span id="cb6-307"><a href="#cb6-307" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> scaled <span class="op">=</span> scores<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> s <span class="op">/</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">sqrt</span>(<span class="dv">2</span>))<span class="op">;</span></span>
+<span id="cb6-308"><a href="#cb6-308" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> exps <span class="op">=</span> scaled<span class="op">.</span><span class="fu">map</span>(s <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">exp</span>(s))<span class="op">;</span></span>
+<span id="cb6-309"><a href="#cb6-309" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sum <span class="op">=</span> exps<span class="op">.</span><span class="fu">reduce</span>((a<span class="op">,</span> b) <span class="kw">=&gt;</span> a <span class="op">+</span> b<span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb6-310"><a href="#cb6-310" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> weights <span class="op">=</span> exps<span class="op">.</span><span class="fu">map</span>(e <span class="kw">=&gt;</span> e <span class="op">/</span> sum)<span class="op">;</span></span>
+<span id="cb6-311"><a href="#cb6-311" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { tokens<span class="op">,</span> i<span class="op">,</span> q<span class="op">,</span> K<span class="op">,</span> scores<span class="op">,</span> scaled<span class="op">,</span> weights }<span class="op">;</span></span>
+<span id="cb6-312"><a href="#cb6-312" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:55%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="319" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 318;"><span id="cb7-319"><a href="#cb7-319" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb7-320"><a href="#cb7-320" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> c <span class="op">=</span> attnCalc<span class="op">;</span></span>
+<span id="cb7-321"><a href="#cb7-321" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> W <span class="op">=</span> <span class="dv">560</span><span class="op">,</span> H <span class="op">=</span> <span class="dv">240</span><span class="op">;</span></span>
+<span id="cb7-322"><a href="#cb7-322" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> n <span class="op">=</span> c<span class="op">.</span><span class="at">tokens</span><span class="op">.</span><span class="at">length</span><span class="op">;</span></span>
+<span id="cb7-323"><a href="#cb7-323" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> boxW <span class="op">=</span> <span class="dv">88</span><span class="op">,</span> boxH <span class="op">=</span> <span class="dv">34</span><span class="op">;</span></span>
+<span id="cb7-324"><a href="#cb7-324" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> y <span class="op">=</span> <span class="dv">165</span><span class="op">;</span></span>
+<span id="cb7-325"><a href="#cb7-325" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xs <span class="op">=</span> c<span class="op">.</span><span class="at">tokens</span><span class="op">.</span><span class="fu">map</span>((_<span class="op">,</span> j) <span class="kw">=&gt;</span> <span class="dv">40</span> <span class="op">+</span> j <span class="op">*</span> (W <span class="op">-</span> <span class="dv">80</span> <span class="op">-</span> boxW) <span class="op">/</span> (n <span class="op">-</span> <span class="dv">1</span>))<span class="op">;</span></span>
+<span id="cb7-326"><a href="#cb7-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-327"><a href="#cb7-327" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">create</span>(<span class="st">"svg"</span>)</span>
+<span id="cb7-328"><a href="#cb7-328" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb7-329"><a href="#cb7-329" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)</span>
+<span id="cb7-330"><a href="#cb7-330" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>(<span class="st">"max-width"</span><span class="op">,</span> <span class="st">"560px"</span>)</span>
+<span id="cb7-331"><a href="#cb7-331" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"Pretendard, sans-serif"</span>)<span class="op">;</span></span>
+<span id="cb7-332"><a href="#cb7-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-333"><a href="#cb7-333" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 연결선 (선택 토큰 → 다른 토큰, 굵기 = 가중치)</span></span>
+<span id="cb7-334"><a href="#cb7-334" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cx <span class="op">=</span> j <span class="kw">=&gt;</span> xs[j] <span class="op">+</span> boxW <span class="op">/</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb7-335"><a href="#cb7-335" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb7-336"><a href="#cb7-336" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (j <span class="op">===</span> c<span class="op">.</span><span class="at">i</span>) <span class="cf">continue</span><span class="op">;</span></span>
+<span id="cb7-337"><a href="#cb7-337" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> x1 <span class="op">=</span> <span class="fu">cx</span>(c<span class="op">.</span><span class="at">i</span>)<span class="op">,</span> x2 <span class="op">=</span> <span class="fu">cx</span>(j)<span class="op">;</span></span>
+<span id="cb7-338"><a href="#cb7-338" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> lift <span class="op">=</span> <span class="dv">40</span> <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(x2 <span class="op">-</span> x1) <span class="op">*</span> <span class="fl">0.28</span><span class="op">;</span></span>
+<span id="cb7-339"><a href="#cb7-339" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)</span>
+<span id="cb7-340"><a href="#cb7-340" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> <span class="vs">`M </span><span class="sc">${</span>x1<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y<span class="sc">}</span><span class="vs"> Q </span><span class="sc">${</span>(x1 <span class="op">+</span> x2) <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y <span class="op">-</span> lift<span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>x2<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb7-341"><a href="#cb7-341" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"none"</span>)</span>
+<span id="cb7-342"><a href="#cb7-342" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#8C1515"</span>)</span>
+<span id="cb7-343"><a href="#cb7-343" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">1</span> <span class="op">+</span> c<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="dv">16</span>)</span>
+<span id="cb7-344"><a href="#cb7-344" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-opacity"</span><span class="op">,</span> <span class="fl">0.3</span> <span class="op">+</span> c<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="fl">0.7</span>)</span>
+<span id="cb7-345"><a href="#cb7-345" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-linecap"</span><span class="op">,</span> <span class="st">"round"</span>)<span class="op">;</span></span>
+<span id="cb7-346"><a href="#cb7-346" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-347"><a href="#cb7-347" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 자기 자신 참조: 작은 고리</span></span>
+<span id="cb7-348"><a href="#cb7-348" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb7-349"><a href="#cb7-349" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> x <span class="op">=</span> <span class="fu">cx</span>(c<span class="op">.</span><span class="at">i</span>)<span class="op">;</span></span>
+<span id="cb7-350"><a href="#cb7-350" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)</span>
+<span id="cb7-351"><a href="#cb7-351" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> <span class="vs">`M </span><span class="sc">${</span>x <span class="op">-</span> <span class="dv">12</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y<span class="sc">}</span><span class="vs"> C </span><span class="sc">${</span>x <span class="op">-</span> <span class="dv">26</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y <span class="op">-</span> <span class="dv">42</span><span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>x <span class="op">+</span> <span class="dv">26</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y <span class="op">-</span> <span class="dv">42</span><span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>x <span class="op">+</span> <span class="dv">12</span><span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>y<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb7-352"><a href="#cb7-352" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"none"</span>)</span>
+<span id="cb7-353"><a href="#cb7-353" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#1F3F7A"</span>)</span>
+<span id="cb7-354"><a href="#cb7-354" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">1</span> <span class="op">+</span> c<span class="op">.</span><span class="at">weights</span>[c<span class="op">.</span><span class="at">i</span>] <span class="op">*</span> <span class="dv">16</span>)</span>
+<span id="cb7-355"><a href="#cb7-355" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-opacity"</span><span class="op">,</span> <span class="fl">0.3</span> <span class="op">+</span> c<span class="op">.</span><span class="at">weights</span>[c<span class="op">.</span><span class="at">i</span>] <span class="op">*</span> <span class="fl">0.7</span>)</span>
+<span id="cb7-356"><a href="#cb7-356" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-linecap"</span><span class="op">,</span> <span class="st">"round"</span>)<span class="op">;</span></span>
+<span id="cb7-357"><a href="#cb7-357" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-358"><a href="#cb7-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-359"><a href="#cb7-359" aria-hidden="true" tabindex="-1"></a>  <span class="co">// 토큰 상자 (배경 진하기 = 받는 가중치)</span></span>
+<span id="cb7-360"><a href="#cb7-360" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;</span> n<span class="op">;</span> j<span class="op">++</span>) {</span>
+<span id="cb7-361"><a href="#cb7-361" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sel <span class="op">=</span> j <span class="op">===</span> c<span class="op">.</span><span class="at">i</span><span class="op">;</span></span>
+<span id="cb7-362"><a href="#cb7-362" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"rect"</span>)</span>
+<span id="cb7-363"><a href="#cb7-363" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> xs[j])<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> y)</span>
+<span id="cb7-364"><a href="#cb7-364" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> boxW)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"height"</span><span class="op">,</span> boxH)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"rx"</span><span class="op">,</span> <span class="dv">6</span>)</span>
+<span id="cb7-365"><a href="#cb7-365" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> sel <span class="op">?</span> <span class="st">"#1F3F7A"</span> <span class="op">:</span> <span class="st">"#8C1515"</span>)</span>
+<span id="cb7-366"><a href="#cb7-366" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill-opacity"</span><span class="op">,</span> sel <span class="op">?</span> <span class="fl">0.9</span> <span class="op">:</span> <span class="fl">0.12</span> <span class="op">+</span> c<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="fl">0.8</span>)</span>
+<span id="cb7-367"><a href="#cb7-367" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> sel <span class="op">?</span> <span class="st">"#1F3F7A"</span> <span class="op">:</span> <span class="st">"#8C1515"</span>)</span>
+<span id="cb7-368"><a href="#cb7-368" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> sel <span class="op">?</span> <span class="fl">2.5</span> <span class="op">:</span> <span class="fl">1.2</span>)<span class="op">;</span></span>
+<span id="cb7-369"><a href="#cb7-369" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb7-370"><a href="#cb7-370" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> xs[j] <span class="op">+</span> boxW <span class="op">/</span> <span class="dv">2</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> y <span class="op">+</span> <span class="dv">22</span>)</span>
+<span id="cb7-371"><a href="#cb7-371" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb7-372"><a href="#cb7-372" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"13"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-weight"</span><span class="op">,</span> <span class="st">"700"</span>)</span>
+<span id="cb7-373"><a href="#cb7-373" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> sel <span class="op">||</span> c<span class="op">.</span><span class="at">weights</span>[j] <span class="op">&gt;</span> <span class="fl">0.32</span> <span class="op">?</span> <span class="st">"white"</span> <span class="op">:</span> <span class="st">"#333"</span>)</span>
+<span id="cb7-374"><a href="#cb7-374" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">text</span>(c<span class="op">.</span><span class="at">tokens</span>[j])<span class="op">;</span></span>
+<span id="cb7-375"><a href="#cb7-375" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb7-376"><a href="#cb7-376" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> xs[j] <span class="op">+</span> boxW <span class="op">/</span> <span class="dv">2</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> y <span class="op">+</span> boxH <span class="op">+</span> <span class="dv">18</span>)</span>
+<span id="cb7-377"><a href="#cb7-377" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb7-378"><a href="#cb7-378" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"11"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-weight"</span><span class="op">,</span> <span class="st">"600"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"#555"</span>)</span>
+<span id="cb7-379"><a href="#cb7-379" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">text</span>(<span class="vs">`</span><span class="sc">${</span>(c<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%`</span>)<span class="op">;</span></span>
+<span id="cb7-380"><a href="#cb7-380" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-381"><a href="#cb7-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-382"><a href="#cb7-382" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)</span>
+<span id="cb7-383"><a href="#cb7-383" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> W <span class="op">/</span> <span class="dv">2</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="dv">18</span>)</span>
+<span id="cb7-384"><a href="#cb7-384" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"text-anchor"</span><span class="op">,</span> <span class="st">"middle"</span>)</span>
+<span id="cb7-385"><a href="#cb7-385" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"12"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"#555"</span>)</span>
+<span id="cb7-386"><a href="#cb7-386" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">text</span>(<span class="vs">`"</span><span class="sc">${</span>c<span class="op">.</span><span class="at">tokens</span>[c<span class="op">.</span><span class="at">i</span>]<span class="sc">}</span><span class="vs">"의 Query가 각 토큰의 Key를 참고하는 정도`</span>)<span class="op">;</span></span>
+<span id="cb7-387"><a href="#cb7-387" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-388"><a href="#cb7-388" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> svg<span class="op">.</span><span class="fu">node</span>()<span class="op">;</span></span>
+<span id="cb7-389"><a href="#cb7-389" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="395" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 394;"><span id="cb8-395"><a href="#cb8-395" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="font-family:'Pretendard',sans-serif;font-size:0.84em;"&gt;</span></span>
+<span id="cb8-396"><a href="#cb8-396" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width:100%;border-collapse:collapse;margin-bottom:0.6em;"&gt;</span></span>
+<span id="cb8-397"><a href="#cb8-397" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;thead&gt;&lt;tr&gt;</span></span>
+<span id="cb8-398"><a href="#cb8-398" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>[<span class="st">"토큰"</span><span class="op">,</span> <span class="st">"q·k"</span><span class="op">,</span> <span class="st">"/√2"</span><span class="op">,</span> <span class="st">"Softmax 가중치"</span>]<span class="op">.</span><span class="fu">map</span>(h <span class="kw">=&gt;</span></span>
+<span id="cb8-399"><a href="#cb8-399" aria-hidden="true" tabindex="-1"></a>        <span class="vs">`&lt;th style="background:#8C1515;color:white;padding:0.3em 0.5em;text-align:center;font-size:0.9em;"&gt;</span><span class="sc">${</span>h<span class="sc">}</span><span class="vs">&lt;/th&gt;`</span></span>
+<span id="cb8-400"><a href="#cb8-400" aria-hidden="true" tabindex="-1"></a>      )<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb8-401"><a href="#cb8-401" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;&lt;/thead&gt;</span></span>
+<span id="cb8-402"><a href="#cb8-402" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tbody&gt;</span></span>
+<span id="cb8-403"><a href="#cb8-403" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>attnCalc<span class="op">.</span><span class="at">tokens</span><span class="op">.</span><span class="fu">map</span>((t<span class="op">,</span> j) <span class="kw">=&gt;</span> <span class="vs">`</span></span>
+<span id="cb8-404"><a href="#cb8-404" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;tr style="background:</span><span class="sc">${</span>j <span class="op">===</span> attnCalc<span class="op">.</span><span class="at">i</span> <span class="op">?</span> <span class="st">'#FFF8E1'</span> <span class="op">:</span> j <span class="op">%</span> <span class="dv">2</span> <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">'white'</span> <span class="op">:</span> <span class="st">'#F9FAFB'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb8-405"><a href="#cb8-405" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.28em 0.5em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
+<span id="cb8-406"><a href="#cb8-406" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:</span><span class="sc">${</span>j <span class="op">===</span> attnCalc<span class="op">.</span><span class="at">i</span> <span class="op">?</span> <span class="st">'700'</span> <span class="op">:</span> <span class="st">'400'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb8-407"><a href="#cb8-407" aria-hidden="true" tabindex="-1"></a><span class="vs">            </span><span class="sc">${</span>t<span class="sc">}${</span>j <span class="op">===</span> attnCalc<span class="op">.</span><span class="at">i</span> <span class="op">?</span> <span class="st">' (자신)'</span> <span class="op">:</span> <span class="st">''</span><span class="sc">}</span></span>
+<span id="cb8-408"><a href="#cb8-408" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;/td&gt;</span></span>
+<span id="cb8-409"><a href="#cb8-409" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.28em 0.5em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>attnCalc<span class="op">.</span><span class="at">scores</span>[j]<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb8-410"><a href="#cb8-410" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.28em 0.5em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>attnCalc<span class="op">.</span><span class="at">scaled</span>[j]<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb8-411"><a href="#cb8-411" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.28em 0.5em;border-bottom:1px solid #E5E7EB;"&gt;</span></span>
+<span id="cb8-412"><a href="#cb8-412" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;div style="display:flex;align-items:center;gap:0.4em;"&gt;</span></span>
+<span id="cb8-413"><a href="#cb8-413" aria-hidden="true" tabindex="-1"></a><span class="vs">              &lt;div style="flex:1;background:#E5E7EB;border-radius:3px;height:14px;"&gt;</span></span>
+<span id="cb8-414"><a href="#cb8-414" aria-hidden="true" tabindex="-1"></a><span class="vs">                &lt;div style="background:</span><span class="sc">${</span>j <span class="op">===</span> attnCalc<span class="op">.</span><span class="at">i</span> <span class="op">?</span> <span class="st">'#1F3F7A'</span> <span class="op">:</span> <span class="st">'#8C1515'</span><span class="sc">}</span><span class="vs">;</span></span>
+<span id="cb8-415"><a href="#cb8-415" aria-hidden="true" tabindex="-1"></a><span class="vs">                  width:</span><span class="sc">${</span>(attnCalc<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">%;height:100%;border-radius:3px;"&gt;&lt;/div&gt;</span></span>
+<span id="cb8-416"><a href="#cb8-416" aria-hidden="true" tabindex="-1"></a><span class="vs">              &lt;/div&gt;</span></span>
+<span id="cb8-417"><a href="#cb8-417" aria-hidden="true" tabindex="-1"></a><span class="vs">              &lt;span style="font-weight:600;min-width:3.2em;"&gt;</span><span class="sc">${</span>(attnCalc<span class="op">.</span><span class="at">weights</span>[j] <span class="op">*</span> <span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%&lt;/span&gt;</span></span>
+<span id="cb8-418"><a href="#cb8-418" aria-hidden="true" tabindex="-1"></a><span class="vs">            &lt;/div&gt;</span></span>
+<span id="cb8-419"><a href="#cb8-419" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;/td&gt;</span></span>
+<span id="cb8-420"><a href="#cb8-420" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/tr&gt;`</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb8-421"><a href="#cb8-421" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tbody&gt;</span></span>
+<span id="cb8-422"><a href="#cb8-422" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
+<span id="cb8-423"><a href="#cb8-423" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.45em 0.7em;background:#FFF8E1;border-left:3px solid #D4A017;</span></span>
+<span id="cb8-424"><a href="#cb8-424" aria-hidden="true" tabindex="-1"></a><span class="vs">    border-radius:4px;line-height:1.6;color:#555;"&gt;</span></span>
+<span id="cb8-425"><a href="#cb8-425" aria-hidden="true" tabindex="-1"></a><span class="vs">    손계산과 절차가 같아요: &lt;strong&gt;내적 → √d 나누기 → Softmax&lt;/strong&gt;.</span></span>
+<span id="cb8-426"><a href="#cb8-426" aria-hidden="true" tabindex="-1"></a><span class="vs">    가중치의 합은 항상 1입니다.</span></span>
+<span id="cb8-427"><a href="#cb8-427" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb8-428"><a href="#cb8-428" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>시도해 보세요</strong>: “어제”를 선택하면 “친구를”과 자기 자신에 가중치가 비슷하게 나뉩니다. 토큰마다 “어디를 보는가”가 달라진다는 것 — 이것이 행마다 Softmax를 따로 하는 이유입니다.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="self-attention의-의미-문맥을-입은-단어" class="level2">
+<h2 class="anchored" data-anchor-id="self-attention의-의미-문맥을-입은-단어">Self-Attention의 의미: 문맥을 입은 단어</h2>
+<p>위 계산에서 문장은 <strong>자기 자신을 참조</strong>했다 — Query도, Key도, Value도 같은 문장의 토큰들에서 나왔다. 그래서 <strong>Self</strong>-Attention이다. 그 결과가 무엇이었는지 다시 보자:</p>
+<ul>
+<li>어텐션 <strong>전</strong>: “먹었다”의 벡터는 어느 문장에 있든 똑같은, 사전에 박제된 표현</li>
+<li>어텐션 <strong>후</strong>: “먹었다”의 벡터는 “생선을”의 정보가 78.6% 섞인, <strong>이 문장 안에서의 먹었다</strong></li>
+</ul>
+<p>즉 Self-Attention 1회는 모든 단어의 표현을 “<strong>문맥을 반영한 표현</strong>”으로 갱신하는 연산이다.</p>
+<p>이것이 왜 중요한가? Ch10에서 임베딩의 한계를 하나 남겨 두었다 — 같은 단어는 늘 같은 벡터라는 것. “<strong>강가의 은행</strong>에 앉았다”와 “<strong>돈을 맡기러 은행</strong>에 갔다”에서 “은행”은 전혀 다른 뜻이지만, 임베딩 사전에는 “은행” 벡터가 하나뿐이다. Self-Attention을 통과하면 첫 문장의 “은행”은 “강가”의 Value를 많이 섞고, 둘째 문장의 “은행”은 “돈”과 “맡기러”의 Value를 많이 섞는다 — <strong>같은 단어가 문장마다 다른 벡터가 된다.</strong> 다의어 문제가 구조적으로 풀리는 것이다.</p>
+<hr>
+</section>
+<section id="인과-마스크-미래를-보면-안-된다" class="level2">
+<h2 class="anchored" data-anchor-id="인과-마스크-미래를-보면-안-된다">인과 마스크: 미래를 보면 안 된다</h2>
+<p>지금까지의 계산에는 문제가 하나 있다. “고양이가”의 새 표현을 만들 때 <strong>뒤에 오는 “먹었다”를 참고</strong>했다. 문장 전체를 이해하는 작업(분류, 번역의 입력 쪽)에서는 문제가 없지만, <strong>다음 단어를 맞히는 작업</strong>에서는 치명적이다.</p>
+<blockquote class="blockquote">
+<p>“나는 어제 학교에 ___” 의 빈칸을 맞히는데 정답을 미리 보여준다면? 모델은 아무것도 배우지 않고 <strong>정답을 베낀다.</strong> 학습은 완벽해 보이지만 실전에서는 무용지물이다.</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: 인과 마스크 (Causal Mask)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>각 토큰이 <strong>자기 자신과 그 이전 토큰만</strong> 참고하도록, 스코어 표의 <strong>오른쪽 위 삼각형</strong>을 <span class="math inline">\(-\infty\)</span> 로 만드는 것. Softmax를 통과하면 <span class="math inline">\(e^{-\infty} = 0\)</span> 이 되어 가중치가 정확히 0이 된다.</p>
+</div>
+</div>
+<section id="손계산-마스크를-씌우면-어떻게-달라지는가" class="level3">
+<h3 class="anchored" data-anchor-id="손계산-마스크를-씌우면-어떻게-달라지는가">손계산: 마스크를 씌우면 어떻게 달라지는가</h3>
+<p>앞의 스케일링된 스코어에 마스크를 씌운다. 회색이 가려지는 칸이다.</p>
+<p><span class="math display">\[
+\begin{array}{c|ccc}
+&amp; \text{고양이가} &amp; \text{생선을} &amp; \text{먹었다} \\ \hline
+\text{고양이가} &amp; 1.41 &amp; \color{gray}{-\infty} &amp; \color{gray}{-\infty} \\
+\text{생선을}   &amp; 0.71 &amp; 2.83 &amp; \color{gray}{-\infty} \\
+\text{먹었다}   &amp; 0.71 &amp; 4.24 &amp; 2.83
+\end{array}
+\]</span></p>
+<p>이제 <strong>행마다 살아남은 칸끼리만</strong> Softmax를 한다.</p>
+<p><strong>1행 (고양이가)</strong> — 볼 수 있는 것이 자기 하나뿐이다.</p>
+<p><span class="math display">\[\text{softmax}(1.41) = 1.000\]</span></p>
+<p><strong>2행 (생선을)</strong> — 두 칸만 남았다.</p>
+<p><span class="math display">\[e^{0.71} = 2.028, \quad e^{2.83} = 16.919, \quad \text{합} = 18.947\]</span> <span class="math display">\[\left(\frac{2.028}{18.947},\ \frac{16.919}{18.947}\right) = (0.107,\ 0.893)\]</span></p>
+<p><strong>3행 (먹었다)</strong> — 가릴 것이 없으므로 앞의 계산과 같다: <span class="math inline">\((0.023,\ 0.786,\ 0.191)\)</span></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Query \ Key</th>
+<th style="text-align: center;">고양이가</th>
+<th style="text-align: center;">생선을</th>
+<th style="text-align: center;">먹었다</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>고양이가</strong></td>
+<td style="text-align: center;"><strong>1.000</strong></td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>생선을</strong></td>
+<td style="text-align: center;">0.107</td>
+<td style="text-align: center;"><strong>0.893</strong></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>먹었다</strong></td>
+<td style="text-align: center;">0.023</td>
+<td style="text-align: center;"><strong>0.786</strong></td>
+<td style="text-align: center;">0.191</td>
+</tr>
+</tbody>
+</table>
+<p><strong>아래쪽 삼각형만 남았다.</strong> 각 행의 합은 여전히 1이다.</p>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> np.array([[<span class="dv">2</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">3</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">2</span>], [<span class="dv">1</span>, <span class="dv">1</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">1</span>]], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">'고양이가'</span>, <span class="st">'생선을'</span>, <span class="st">'먹었다'</span>]</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> attn(S):</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> np.exp(S <span class="op">-</span> S.<span class="bu">max</span>(axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> e <span class="op">/</span> e.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W, W <span class="op">@</span> V</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> (Q <span class="op">@</span> K.T) <span class="op">/</span> np.sqrt(<span class="dv">2</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>W_free, out_free <span class="op">=</span> attn(S)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> np.triu(np.ones((<span class="dv">3</span>, <span class="dv">3</span>)), k<span class="op">=</span><span class="dv">1</span>).astype(<span class="bu">bool</span>)   <span class="co"># 오른쪽 위 삼각형</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>S_masked <span class="op">=</span> S.copy()<span class="op">;</span> S_masked[mask] <span class="op">=</span> <span class="op">-</span>np.inf</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>W_causal, out_causal <span class="op">=</span> attn(S_masked)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>pd.DataFrame({</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">'토큰'</span>: tokens,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">'마스크 없음'</span>: [<span class="ss">f'(</span><span class="sc">{</span>v[<span class="dv">0</span>]<span class="sc">:.3f}</span><span class="ss">, </span><span class="sc">{</span>v[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">)'</span> <span class="cf">for</span> v <span class="kw">in</span> out_free],</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">'인과 마스크'</span>: [<span class="ss">f'(</span><span class="sc">{</span>v[<span class="dv">0</span>]<span class="sc">:.3f}</span><span class="ss">, </span><span class="sc">{</span>v[<span class="dv">1</span>]<span class="sc">:.3f}</span><span class="ss">)'</span> <span class="cf">for</span> v <span class="kw">in</span> out_causal],</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>}).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-causal-mask" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-causal-mask-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;5: 인과 마스크 적용 전후의 새 표현 벡터 비교
+</figcaption>
+<div aria-describedby="tbl-causal-mask-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+토큰
+</th>
+
+<th>
+마스크 없음
+</th>
+
+<th>
+인과 마스크
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+고양이가
+</td>
+
+<td>
+(0.752, 0.752)
+</td>
+
+<td>
+(1.000, 0.000)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+생선을
+</td>
+
+<td>
+(0.380, 0.926)
+</td>
+
+<td>
+(0.107, 0.893)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+먹었다
+</td>
+
+<td>
+(0.214, 0.977)
+</td>
+
+<td>
+(0.214, 0.977)
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>“고양이가”의 표현이 크게 달라졌다</strong> — 마스크가 없을 때는 뒤 단어들의 정보가 섞였지만, 이제는 자기 자신의 Value <span class="math inline">\((1, 0)\)</span> 그대로다. 아직 아무 문맥도 없는 문장의 첫 단어이니 당연하다. 반대로 마지막 토큰 “먹었다”는 볼 수 있는 것이 원래부터 전부였으므로 변화가 없다.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>두 종류의 어텐션.</strong> 마스크 없는 것을 <strong>양방향(bidirectional)</strong>, 마스크 있는 것을 <strong>인과(causal)</strong> 어텐션이라 한다. BERT 계열은 전자, GPT 계열은 후자를 쓴다. 이 수업에서 다루는 언어모델(Ch12)은 다음 토큰을 맞히므로 <strong>인과 어텐션</strong>이다.</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="multi-head-attention-관점을-여러-개-두기" class="level2">
+<h2 class="anchored" data-anchor-id="multi-head-attention-관점을-여러-개-두기">Multi-Head Attention: 관점을 여러 개 두기</h2>
+<section id="왜-하나로는-부족한가" class="level3">
+<h3 class="anchored" data-anchor-id="왜-하나로는-부족한가">왜 하나로는 부족한가</h3>
+<p>지금까지 계산한 어텐션은 <strong>관점 하나</strong>다. 그런데 “먹었다”가 알아야 할 것은 하나가 아니다.</p>
+<ul>
+<li><strong>무엇을</strong> 먹었나 → “생선을”을 봐야 한다</li>
+<li><strong>누가</strong> 먹었나 → “고양이가”를 봐야 한다</li>
+<li><strong>언제</strong>인가 → 시제를 나타내는 토큰을 봐야 한다</li>
+</ul>
+<p>가중치 행 하나로는 이 셋을 동시에 표현할 수 없다. 합이 1이라 <strong>한 곳을 보면 다른 곳을 못 본다.</strong> 해법은 단순하다 — <strong>어텐션을 여러 벌 병렬로 돌리고 결과를 합친다.</strong></p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: Multi-Head Attention
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(d_{\text{model}}\)</span> 차원을 <span class="math inline">\(h\)</span> 개의 <strong>head</strong>로 나누어 각각 독립적으로 어텐션을 수행한 뒤, 결과를 이어 붙이고(concat) 마지막에 행렬 <span class="math inline">\(W_O\)</span> 를 한 번 곱하는 구조.</p>
+<p><span class="math display">\[d_{\text{head}} = \frac{d_{\text{model}}}{h}\]</span></p>
+</div>
+</div>
+</section>
+<section id="텐서-모양-따라가기-이것이-전부다" class="level3">
+<h3 class="anchored" data-anchor-id="텐서-모양-따라가기-이것이-전부다">텐서 모양 따라가기 — 이것이 전부다</h3>
+<p><span class="math inline">\(d_{\text{model}} = 4\)</span>, head 2개, 토큰 3개인 경우를 <strong>모양만</strong> 좇아가 보자. 계산 내용은 앞에서 손으로 한 것과 <strong>똑같다.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 37%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">단계</th>
+<th>연산</th>
+<th style="text-align: center;">모양</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">① 입력</td>
+<td>임베딩 <span class="math inline">\(X\)</span></td>
+<td style="text-align: center;"><span class="math inline">\((3,\ 4)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">② 투영</td>
+<td><span class="math inline">\(XW_Q,\ XW_K,\ XW_V\)</span></td>
+<td style="text-align: center;">각 <span class="math inline">\((3,\ 4)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">③ <strong>분할</strong></td>
+<td>마지막 축을 head 2개로 쪼갠다</td>
+<td style="text-align: center;">각 head가 <span class="math inline">\((3,\ 2)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">④ 어텐션</td>
+<td>head마다 따로 — <strong>앞 절의 계산 그대로</strong></td>
+<td style="text-align: center;">각 head 출력 <span class="math inline">\((3,\ 2)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">⑤ <strong>결합</strong></td>
+<td>두 결과를 옆으로 이어 붙인다 (concat)</td>
+<td style="text-align: center;"><span class="math inline">\((3,\ 4)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">⑥ 투영</td>
+<td><span class="math inline">\(W_O\)</span> 를 곱해 섞는다</td>
+<td style="text-align: center;"><span class="math inline">\((3,\ 4)\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+들어간 모양과 나온 모양이 <strong>같다</strong>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\((3, 4)\)</span> 로 들어가서 <span class="math inline">\((3, 4)\)</span> 로 나온다. 이것이 결정적이다 — 모양이 보존되므로 <strong>같은 블록을 몇 번이고 쌓을 수 있다.</strong> Ch12에서 이 블록을 12층, 96층 쌓게 되는 근거가 여기에 있다.</p>
+<p>그리고 우리가 손으로 계산한 <span class="math inline">\(d=2\)</span> 짜리 어텐션이 바로 <strong>head 하나</strong>였다. Multi-Head는 그것을 여러 번 하고 붙이는 것뿐이다 — <strong>새 수학은 여기서도 없다.</strong></p>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> [</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'① 입력 X'</span>,              <span class="st">'(3, 4)'</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'② Q = X @ W_Q'</span>,         <span class="st">'(3, 4)'</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'③ head 분할 → head 1'</span>,  <span class="st">'(3, 2)'</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'③ head 분할 → head 2'</span>,  <span class="st">'(3, 2)'</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'④ head 1 어텐션 출력'</span>,  <span class="st">'(3, 2)'</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'④ head 2 어텐션 출력'</span>,  <span class="st">'(3, 2)'</span>),</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'⑤ concat'</span>,              <span class="st">'(3, 4)'</span>),</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'⑥ @ W_O'</span>,               <span class="st">'(3, 4)'</span>),</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows, columns<span class="op">=</span>[<span class="st">'단계'</span>, <span class="st">'모양'</span>]).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-multihead-shape" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multihead-shape-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;6: Multi-Head Attention의 모양 추적 (d_model=4, head=2, 토큰=3)
+</figcaption>
+<div aria-describedby="tbl-multihead-shape-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+단계
+</th>
+
+<th>
+모양
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+① 입력 X
+</td>
+
+<td>
+(3, 4)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+② Q = X @ W_Q
+</td>
+
+<td>
+(3, 4)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+③ head 분할 → head 1
+</td>
+
+<td>
+(3, 2)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+③ head 분할 → head 2
+</td>
+
+<td>
+(3, 2)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+④ head 1 어텐션 출력
+</td>
+
+<td>
+(3, 2)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+④ head 2 어텐션 출력
+</td>
+
+<td>
+(3, 2)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+⑤ concat
+</td>
+
+<td>
+(3, 4)
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+⑥ @ W_O
+</td>
+
+<td>
+(3, 4)
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="파라미터-수-세기" class="level3">
+<h3 class="anchored" data-anchor-id="파라미터-수-세기">파라미터 수 세기</h3>
+<p>Multi-Head Attention이 가진 학습 파라미터는 <strong>행렬 네 개</strong>뿐이다. head를 몇 개로 쪼개든 <strong>총 파라미터 수는 변하지 않는다</strong> — 쪼개기만 할 뿐이기 때문이다.</p>
+<p><span class="math display">\[W_Q,\ W_K,\ W_V,\ W_O \;:\; \text{각각 } d_{\text{model}} \times d_{\text{model}}\]</span></p>
+<p><span class="math display">\[\boxed{\text{파라미터 수} = 4 \times d_{\text{model}}^2}\]</span></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(d_{\text{model}}\)</span></th>
+<th style="text-align: center;">head 수</th>
+<th style="text-align: center;"><span class="math inline">\(d_{\text{head}}\)</span></th>
+<th style="text-align: center;">파라미터 수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><span class="math inline">\(4 \times 16 = 64\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">768 (BERT-base)</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">64</td>
+<td style="text-align: center;"><span class="math inline">\(4 \times 768^2 = 2{,}359{,}296\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">768</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">96</td>
+<td style="text-align: center;"><strong>같은 2,359,296</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>마지막 두 줄을 비교하라. head를 12개로 쪼개든 8개로 쪼개든 <strong>파라미터 수는 같다.</strong> head 수는 “몇 개의 관점으로 나눌 것인가”를 정하는 <strong>하이퍼파라미터</strong>(Ch01)일 뿐이다.</p>
+</blockquote>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>편향까지 포함하면 <span class="math inline">\(4d_{\text{model}}^2 + 4d_{\text{model}}\)</span> 이지만, 파라미터 수를 어림할 때는 제곱항이 지배적이라 흔히 <span class="math inline">\(4d^2\)</span> 으로 센다. 문제집에서는 편향 포함 여부를 문제에 명시한다.</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="왜-혁명이었나" class="level2">
+<h2 class="anchored" data-anchor-id="왜-혁명이었나">왜 혁명이었나</h2>
+<p>2017년 논문 “Attention Is All You Need”가 제안한 이 구조는 몇 년 만에 자연어 처리 전체를 갈아치웠다. 이유는 성능만이 아니다 — <strong>확장성</strong>이다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 31%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;">RNN</th>
+<th style="text-align: center;">Transformer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>처리 방식</td>
+<td style="text-align: center;">한 단어씩 순차 처리</td>
+<td style="text-align: center;">모든 단어 <strong>동시</strong> 처리</td>
+</tr>
+<tr class="even">
+<td>단어 1,000개 문장</td>
+<td style="text-align: center;">1,000단계 대기</td>
+<td style="text-align: center;">행렬 곱 몇 번 (병렬)</td>
+</tr>
+<tr class="odd">
+<td>먼 단어 참조</td>
+<td style="text-align: center;">기억 상자를 거쳐 간접적으로</td>
+<td style="text-align: center;">어텐션으로 <strong>직접</strong> (거리 무관)</td>
+</tr>
+<tr class="even">
+<td>GPU 활용</td>
+<td style="text-align: center;">구조적으로 제한</td>
+<td style="text-align: center;">완전 활용 가능</td>
+</tr>
+</tbody>
+</table>
+<p>스코어 계산이 결국 행렬 곱 <span class="math inline">\(QK^\top\)</span> 하나라는 점을 상기하자. 행렬 곱은 GPU가 가장 잘하는 연산이다(Ch01). “순서대로 기다려야 하는” 구조가 사라지자, <strong>데이터를 더 붓고 모델을 더 키우면 성능이 계속 오르는</strong> 시대가 열렸다 — 더 큰 모델, 더 많은 데이터, 더 많은 GPU의 스케일 경쟁이 시작된 것이다.</p>
+<p>그런데 아직 <strong>Transformer</strong>를 만든 것은 아니다. 우리가 가진 것은 부품 하나 — Multi-Head Self-Attention이다. 여기에 세 가지가 더 필요하다.</p>
+<ul>
+<li><strong>순서</strong>: 모든 단어를 동시에 보는 순간 “몇 번째 단어인가”가 사라졌다. 어디에도 위치 정보가 없다</li>
+<li><strong>깊이</strong>: 블록을 수십 개 쌓으려면 Ch04의 기울기 소실을 넘어야 한다</li>
+<li><strong>변환</strong>: 어텐션은 정보를 <strong>섞기만</strong> 한다 — 각 위치에서 <strong>가공</strong>하는 층이 따로 필요하다</li>
+</ul>
+<p>이 셋을 채워 블록 하나를 완성하고, 그것을 쌓아 언어모델을 만드는 것이 다음 장이다.</p>
+<hr>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+깊이 계약 확인
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>문제집과 시험이 다루는 것은 세 가지다.</p>
+<ol type="1">
+<li><strong>어텐션 손계산 1회</strong> — “내적 → <span class="math inline">\(\sqrt{d}\)</span> 나누기 → Softmax → 가중합”. Q·K·V는 항상 주어진다</li>
+<li><strong>인과 마스크를 적용한 가중치 계산</strong> — 가린 뒤 남은 칸끼리만 Softmax</li>
+<li><strong>Multi-Head의 모양 추적과 파라미터 수</strong> — <span class="math inline">\(d_{\text{head}} = d_{\text{model}}/h\)</span>, 파라미터 <span class="math inline">\(4d_{\text{model}}^2\)</span></li>
+</ol>
+<p>범위 밖: 어텐션의 <strong>역전파 유도</strong>, <span class="math inline">\(W_Q, W_K, W_V\)</span> 를 임베딩에서 만드는 과정의 수치 계산, encoder-decoder 구조. 위치 인코딩과 LayerNorm은 <strong>다음 장</strong>에서 다룬다.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="핵심-요약" class="level2">
+<h2 class="anchored" data-anchor-id="핵심-요약">핵심 요약</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>개념</th>
+<th>핵심 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>RNN의 병목</strong></td>
+<td>순차 처리(병렬 불가) + 먼 기억 소실 — 뿌리는 “순서대로, 기억 상자 하나”</td>
+</tr>
+<tr class="even">
+<td><strong>어텐션</strong></td>
+<td>유사도(내적, Ch10) → 가중치(Softmax, Ch03) → 가중평균. 새 수학 없음</td>
+</tr>
+<tr class="odd">
+<td><strong>Q / K / V</strong></td>
+<td>찾는 것 / 색인 / 전달할 내용 — 임베딩 × 학습 행렬 <span class="math inline">\(W_Q, W_K, W_V\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>스케일링</strong></td>
+<td>스코어를 <span class="math inline">\(\sqrt{d}\)</span>로 나눔 — Softmax의 극단화 완화</td>
+</tr>
+<tr class="odd">
+<td><strong>Self-Attention</strong></td>
+<td>문장이 스스로를 참조 → 모든 단어가 “문맥을 반영한 표현”으로 갱신</td>
+</tr>
+<tr class="even">
+<td><strong>인과 마스크</strong></td>
+<td>오른쪽 위 삼각형을 <span class="math inline">\(-\infty\)</span> → 미래를 못 보게 막는다. GPT 계열이 쓰는 방식</td>
+</tr>
+<tr class="odd">
+<td><strong>Multi-Head</strong></td>
+<td><span class="math inline">\(d_{\text{model}}\)</span> 을 head로 쪼개 병렬 어텐션 → concat → <span class="math inline">\(W_O\)</span>. <strong>모양이 보존된다</strong></td>
+</tr>
+<tr class="even">
+<td><strong>MHA 파라미터 수</strong></td>
+<td><span class="math inline">\(4 d_{\text{model}}^2\)</span> — <strong>head 수와 무관하다</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>혁명의 이유</strong></td>
+<td>완전 병렬 → GPU 스케일 가능 → 데이터·모델 크기 경쟁의 시작</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>다음 장 예고</strong>: 부품은 손에 들어왔다. 이제 <strong>블록으로 조립</strong>한다 — 위치 인코딩으로 순서를 되살리고, 잔차 연결과 LayerNorm으로 깊게 쌓고, FFN으로 가공한다. 그리고 그 블록을 쌓아 <strong>직접 언어모델을 만든다.</strong></p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBhdHRuU2VsID0gSW5wdXRzLnJhZGlvKFtcIuuCmOuKlFwiLCBcIuyWtOygnFwiLCBcIu2Vmeq1kOyXkOyEnFwiLCBcIuy5nOq1rOulvFwiLCBcIuunjOuCrOuLpFwiXSwge1xuICBsYWJlbDogXCJRdWVyeSDthqDtgbBcIixcbiAgdmFsdWU6IFwi66eM64Ks64ukXCJcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTIiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJhdHRuQ2FsYyA9IHtcbiAgY29uc3QgdG9rZW5zID0gW1wi64KY64qUXCIsIFwi7Ja07KCcXCIsIFwi7ZWZ6rWQ7JeQ7IScXCIsIFwi7Lmc6rWs66W8XCIsIFwi66eM64Ks64ukXCJdO1xuICBjb25zdCBRID0gW1sxLjUsIDAuNF0sIFstMC40LCAxLjZdLCBbMS4xLCAxLjBdLCBbMC42LCAxLjddLCBbMC45LCAyLjNdXTtcbiAgY29uc3QgSyA9IFtbMS40LCAwLjNdLCBbLTAuNSwgMS41XSwgWzEuMCwgMS4wXSwgWzAuNSwgMS43XSwgWzEuMiwgMC45XV07XG4gIGNvbnN0IGkgPSB0b2tlbnMuaW5kZXhPZihhdHRuU2VsKTtcbiAgY29uc3QgcSA9IFFbaV07XG4gIGNvbnN0IHNjb3JlcyA9IEsubWFwKGsgPT4gcVswXSAqIGtbMF0gKyBxWzFdICoga1sxXSk7XG4gIGNvbnN0IHNjYWxlZCA9IHNjb3Jlcy5tYXAocyA9PiBzIC8gTWF0aC5zcXJ0KDIpKTtcbiAgY29uc3QgZXhwcyA9IHNjYWxlZC5tYXAocyA9PiBNYXRoLmV4cChzKSk7XG4gIGNvbnN0IHN1bSA9IGV4cHMucmVkdWNlKChhLCBiKSA9PiBhICsgYiwgMCk7XG4gIGNvbnN0IHdlaWdodHMgPSBleHBzLm1hcChlID0+IGUgLyBzdW0pO1xuICByZXR1cm4geyB0b2tlbnMsIGksIHEsIEssIHNjb3Jlcywgc2NhbGVkLCB3ZWlnaHRzIH07XG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IGMgPSBhdHRuQ2FsYztcbiAgY29uc3QgVyA9IDU2MCwgSCA9IDI0MDtcbiAgY29uc3QgbiA9IGMudG9rZW5zLmxlbmd0aDtcbiAgY29uc3QgYm94VyA9IDg4LCBib3hIID0gMzQ7XG4gIGNvbnN0IHkgPSAxNjU7XG4gIGNvbnN0IHhzID0gYy50b2tlbnMubWFwKChfLCBqKSA9PiA0MCArIGogKiAoVyAtIDgwIC0gYm94VykgLyAobiAtIDEpKTtcblxuICBjb25zdCBzdmcgPSBkMy5jcmVhdGUoXCJzdmdcIilcbiAgICAuYXR0cihcInZpZXdCb3hcIiwgYDAgMCAke1d9ICR7SH1gKVxuICAgIC5hdHRyKFwid2lkdGhcIiwgXCIxMDAlXCIpXG4gICAgLnN0eWxlKFwibWF4LXdpZHRoXCIsIFwiNTYwcHhcIilcbiAgICAuc3R5bGUoXCJmb250LWZhbWlseVwiLCBcIlByZXRlbmRhcmQsIHNhbnMtc2VyaWZcIik7XG5cbiAgLy8g7Jew6rKw7ISgICjshKDtg50g7Yag7YGwIOKGkiDri6Trpbgg7Yag7YGwLCDqtbXquLAgPSDqsIDspJHsuZgpXG4gIGNvbnN0IGN4ID0gaiA9PiB4c1tqXSArIGJveFcgLyAyO1xuICBmb3IgKGxldCBqID0gMDsgaiA8IG47IGorKykge1xuICAgIGlmIChqID09PSBjLmkpIGNvbnRpbnVlO1xuICAgIGNvbnN0IHgxID0gY3goYy5pKSwgeDIgPSBjeChqKTtcbiAgICBjb25zdCBsaWZ0ID0gNDAgKyBNYXRoLmFicyh4MiAtIHgxKSAqIDAuMjg7XG4gICAgc3ZnLmFwcGVuZChcInBhdGhcIilcbiAgICAgIC5hdHRyKFwiZFwiLCBgTSAke3gxfSAke3l9IFEgJHsoeDEgKyB4MikgLyAyfSAke3kgLSBsaWZ0fSwgJHt4Mn0gJHt5fWApXG4gICAgICAuYXR0cihcImZpbGxcIiwgXCJub25lXCIpXG4gICAgICAuYXR0cihcInN0cm9rZVwiLCBcIiM4QzE1MTVcIilcbiAgICAgIC5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDEgKyBjLndlaWdodHNbal0gKiAxNilcbiAgICAgIC5hdHRyKFwic3Ryb2tlLW9wYWNpdHlcIiwgMC4zICsgYy53ZWlnaHRzW2pdICogMC43KVxuICAgICAgLmF0dHIoXCJzdHJva2UtbGluZWNhcFwiLCBcInJvdW5kXCIpO1xuICB9XG4gIC8vIOyekOq4sCDsnpDsi6Ag7LC47KGwOiDsnpHsnYAg6rOg66asXG4gIHtcbiAgICBjb25zdCB4ID0gY3goYy5pKTtcbiAgICBzdmcuYXBwZW5kKFwicGF0aFwiKVxuICAgICAgLmF0dHIoXCJkXCIsIGBNICR7eCAtIDEyfSAke3l9IEMgJHt4IC0gMjZ9ICR7eSAtIDQyfSwgJHt4ICsgMjZ9ICR7eSAtIDQyfSwgJHt4ICsgMTJ9ICR7eX1gKVxuICAgICAgLmF0dHIoXCJmaWxsXCIsIFwibm9uZVwiKVxuICAgICAgLmF0dHIoXCJzdHJva2VcIiwgXCIjMUYzRjdBXCIpXG4gICAgICAuYXR0cihcInN0cm9rZS13aWR0aFwiLCAxICsgYy53ZWlnaHRzW2MuaV0gKiAxNilcbiAgICAgIC5hdHRyKFwic3Ryb2tlLW9wYWNpdHlcIiwgMC4zICsgYy53ZWlnaHRzW2MuaV0gKiAwLjcpXG4gICAgICAuYXR0cihcInN0cm9rZS1saW5lY2FwXCIsIFwicm91bmRcIik7XG4gIH1cblxuICAvLyDthqDtgbAg7IOB7J6QICjrsLDqsr0g7KeE7ZWY6riwID0g67Cb64qUIOqwgOykkey5mClcbiAgZm9yIChsZXQgaiA9IDA7IGogPCBuOyBqKyspIHtcbiAgICBjb25zdCBzZWwgPSBqID09PSBjLmk7XG4gICAgc3ZnLmFwcGVuZChcInJlY3RcIilcbiAgICAgIC5hdHRyKFwieFwiLCB4c1tqXSkuYXR0cihcInlcIiwgeSlcbiAgICAgIC5hdHRyKFwid2lkdGhcIiwgYm94VykuYXR0cihcImhlaWdodFwiLCBib3hIKS5hdHRyKFwicnhcIiwgNilcbiAgICAgIC5hdHRyKFwiZmlsbFwiLCBzZWwgPyBcIiMxRjNGN0FcIiA6IFwiIzhDMTUxNVwiKVxuICAgICAgLmF0dHIoXCJmaWxsLW9wYWNpdHlcIiwgc2VsID8gMC45IDogMC4xMiArIGMud2VpZ2h0c1tqXSAqIDAuOClcbiAgICAgIC5hdHRyKFwic3Ryb2tlXCIsIHNlbCA/IFwiIzFGM0Y3QVwiIDogXCIjOEMxNTE1XCIpXG4gICAgICAuYXR0cihcInN0cm9rZS13aWR0aFwiLCBzZWwgPyAyLjUgOiAxLjIpO1xuICAgIHN2Zy5hcHBlbmQoXCJ0ZXh0XCIpXG4gICAgICAuYXR0cihcInhcIiwgeHNbal0gKyBib3hXIC8gMikuYXR0cihcInlcIiwgeSArIDIyKVxuICAgICAgLmF0dHIoXCJ0ZXh0LWFuY2hvclwiLCBcIm1pZGRsZVwiKVxuICAgICAgLmF0dHIoXCJmb250LXNpemVcIiwgXCIxM1wiKS5hdHRyKFwiZm9udC13ZWlnaHRcIiwgXCI3MDBcIilcbiAgICAgIC5hdHRyKFwiZmlsbFwiLCBzZWwgfHwgYy53ZWlnaHRzW2pdID4gMC4zMiA/IFwid2hpdGVcIiA6IFwiIzMzM1wiKVxuICAgICAgLnRleHQoYy50b2tlbnNbal0pO1xuICAgIHN2Zy5hcHBlbmQoXCJ0ZXh0XCIpXG4gICAgICAuYXR0cihcInhcIiwgeHNbal0gKyBib3hXIC8gMikuYXR0cihcInlcIiwgeSArIGJveEggKyAxOClcbiAgICAgIC5hdHRyKFwidGV4dC1hbmNob3JcIiwgXCJtaWRkbGVcIilcbiAgICAgIC5hdHRyKFwiZm9udC1zaXplXCIsIFwiMTFcIikuYXR0cihcImZvbnQtd2VpZ2h0XCIsIFwiNjAwXCIpLmF0dHIoXCJmaWxsXCIsIFwiIzU1NVwiKVxuICAgICAgLnRleHQoYCR7KGMud2VpZ2h0c1tqXSAqIDEwMCkudG9GaXhlZCgxKX0lYCk7XG4gIH1cblxuICBzdmcuYXBwZW5kKFwidGV4dFwiKVxuICAgIC5hdHRyKFwieFwiLCBXIC8gMikuYXR0cihcInlcIiwgMTgpXG4gICAgLmF0dHIoXCJ0ZXh0LWFuY2hvclwiLCBcIm1pZGRsZVwiKVxuICAgIC5hdHRyKFwiZm9udC1zaXplXCIsIFwiMTJcIikuYXR0cihcImZpbGxcIiwgXCIjNTU1XCIpXG4gICAgLnRleHQoYFwiJHtjLnRva2Vuc1tjLmldfVwi7J2YIFF1ZXJ56rCAIOqwgSDthqDtgbDsnZggS2V566W8IOywuOqzoO2VmOuKlCDsoJXrj4RgKTtcblxuICByZXR1cm4gc3ZnLm5vZGUoKTtcbn1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNCIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6Imh0bWxgPGRpdiBzdHlsZT1cImZvbnQtZmFtaWx5OidQcmV0ZW5kYXJkJyxzYW5zLXNlcmlmO2ZvbnQtc2l6ZTowLjg0ZW07XCI+XG4gIDx0YWJsZSBzdHlsZT1cIndpZHRoOjEwMCU7Ym9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlO21hcmdpbi1ib3R0b206MC42ZW07XCI+XG4gICAgPHRoZWFkPjx0cj5cbiAgICAgICR7W1wi7Yag7YGwXCIsIFwiccK3a1wiLCBcIi/iiJoyXCIsIFwiU29mdG1heCDqsIDspJHsuZhcIl0ubWFwKGggPT5cbiAgICAgICAgYDx0aCBzdHlsZT1cImJhY2tncm91bmQ6IzhDMTUxNTtjb2xvcjp3aGl0ZTtwYWRkaW5nOjAuM2VtIDAuNWVtO3RleHQtYWxpZ246Y2VudGVyO2ZvbnQtc2l6ZTowLjllbTtcIj4ke2h9PC90aD5gXG4gICAgICApLmpvaW4oXCJcIil9XG4gICAgPC90cj48L3RoZWFkPlxuICAgIDx0Ym9keT5cbiAgICAgICR7YXR0bkNhbGMudG9rZW5zLm1hcCgodCwgaikgPT4gYFxuICAgICAgICA8dHIgc3R5bGU9XCJiYWNrZ3JvdW5kOiR7aiA9PT0gYXR0bkNhbGMuaSA/ICcjRkZGOEUxJyA6IGogJSAyID09PSAwID8gJ3doaXRlJyA6ICcjRjlGQUZCJ307XCI+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjI4ZW0gMC41ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcbiAgICAgICAgICAgIGZvbnQtd2VpZ2h0OiR7aiA9PT0gYXR0bkNhbGMuaSA/ICc3MDAnIDogJzQwMCd9O1wiPlxuICAgICAgICAgICAgJHt0fSR7aiA9PT0gYXR0bkNhbGMuaSA/ICcgKOyekOyLoCknIDogJyd9XG4gICAgICAgICAgPC90ZD5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjhlbSAwLjVlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPiR7YXR0bkNhbGMuc2NvcmVzW2pdLnRvRml4ZWQoMil9PC90ZD5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjhlbSAwLjVlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPiR7YXR0bkNhbGMuc2NhbGVkW2pdLnRvRml4ZWQoMil9PC90ZD5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjhlbSAwLjVlbTtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPlxuICAgICAgICAgICAgPGRpdiBzdHlsZT1cImRpc3BsYXk6ZmxleDthbGlnbi1pdGVtczpjZW50ZXI7Z2FwOjAuNGVtO1wiPlxuICAgICAgICAgICAgICA8ZGl2IHN0eWxlPVwiZmxleDoxO2JhY2tncm91bmQ6I0U1RTdFQjtib3JkZXItcmFkaXVzOjNweDtoZWlnaHQ6MTRweDtcIj5cbiAgICAgICAgICAgICAgICA8ZGl2IHN0eWxlPVwiYmFja2dyb3VuZDoke2ogPT09IGF0dG5DYWxjLmkgPyAnIzFGM0Y3QScgOiAnIzhDMTUxNSd9O1xuICAgICAgICAgICAgICAgICAgd2lkdGg6JHsoYXR0bkNhbGMud2VpZ2h0c1tqXSAqIDEwMCkudG9GaXhlZCgwKX0lO2hlaWdodDoxMDAlO2JvcmRlci1yYWRpdXM6M3B4O1wiPjwvZGl2PlxuICAgICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgICAgICAgPHNwYW4gc3R5bGU9XCJmb250LXdlaWdodDo2MDA7bWluLXdpZHRoOjMuMmVtO1wiPiR7KGF0dG5DYWxjLndlaWdodHNbal0gKiAxMDApLnRvRml4ZWQoMSl9JTwvc3Bhbj5cbiAgICAgICAgICAgIDwvZGl2PlxuICAgICAgICAgIDwvdGQ+XG4gICAgICAgIDwvdHI+YCkuam9pbihcIlwiKX1cbiAgICA8L3Rib2R5PlxuICA8L3RhYmxlPlxuICA8ZGl2IHN0eWxlPVwicGFkZGluZzowLjQ1ZW0gMC43ZW07YmFja2dyb3VuZDojRkZGOEUxO2JvcmRlci1sZWZ0OjNweCBzb2xpZCAjRDRBMDE3O1xuICAgIGJvcmRlci1yYWRpdXM6NHB4O2xpbmUtaGVpZ2h0OjEuNjtjb2xvcjojNTU1O1wiPlxuICAgIOyGkOqzhOyCsOqzvCDsoIjssKjqsIAg6rCZ7JWE7JqUOiA8c3Ryb25nPuuCtOyggSDihpIg4oiaZCDrgpjriITquLAg4oaSIFNvZnRtYXg8L3N0cm9uZz4uXG4gICAg6rCA7KSR7LmY7J2YIO2VqeydgCDtla3sg4EgMeyeheuLiOuLpC5cbiAgPC9kaXY+XG48L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ2F0dG5TZWwnKSJ9XX0=
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>부경대학교 시스템경영공학부 · 이지환</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

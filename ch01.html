@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>들어가기: 데이터와 모형 – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<script type="module" src="site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">주차별 계획</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#데이터-기반-문제해결" id="toc-데이터-기반-문제해결" class="nav-link active" data-scroll-target="#데이터-기반-문제해결">데이터 기반 문제해결</a>
+  <ul class="collapse">
+  <li><a href="#고전적-프로그래밍-vs-머신러닝" id="toc-고전적-프로그래밍-vs-머신러닝" class="nav-link" data-scroll-target="#고전적-프로그래밍-vs-머신러닝">고전적 프로그래밍 vs 머신러닝</a></li>
+  <li><a href="#왜-머신러닝이-필요한가" id="toc-왜-머신러닝이-필요한가" class="nav-link" data-scroll-target="#왜-머신러닝이-필요한가">왜 머신러닝이 필요한가?</a></li>
+  </ul></li>
+  <li><a href="#인공지능-머신러닝-딥러닝" id="toc-인공지능-머신러닝-딥러닝" class="nav-link" data-scroll-target="#인공지능-머신러닝-딥러닝">인공지능, 머신러닝, 딥러닝</a>
+  <ul class="collapse">
+  <li><a href="#세-개념의-관계" id="toc-세-개념의-관계" class="nav-link" data-scroll-target="#세-개념의-관계">세 개념의 관계</a></li>
+  </ul></li>
+  <li><a href="#데이터란-무엇인가" id="toc-데이터란-무엇인가" class="nav-link" data-scroll-target="#데이터란-무엇인가">데이터란 무엇인가</a>
+  <ul class="collapse">
+  <li><a href="#데이터의-정의" id="toc-데이터의-정의" class="nav-link" data-scroll-target="#데이터의-정의">데이터의 정의</a></li>
+  <li><a href="#예시-데이터" id="toc-예시-데이터" class="nav-link" data-scroll-target="#예시-데이터">예시 데이터</a></li>
+  <li><a href="#데이터의-구성요소" id="toc-데이터의-구성요소" class="nav-link" data-scroll-target="#데이터의-구성요소">데이터의 구성요소</a></li>
+  <li><a href="#정형-데이터와-비정형-데이터" id="toc-정형-데이터와-비정형-데이터" class="nav-link" data-scroll-target="#정형-데이터와-비정형-데이터">정형 데이터와 비정형 데이터</a></li>
+  </ul></li>
+  <li><a href="#독립변수와-종속변수" id="toc-독립변수와-종속변수" class="nav-link" data-scroll-target="#독립변수와-종속변수">독립변수와 종속변수</a>
+  <ul class="collapse">
+  <li><a href="#정의" id="toc-정의" class="nav-link" data-scroll-target="#정의">정의</a></li>
+  <li><a href="#데이터의-크기-n-p" id="toc-데이터의-크기-n-p" class="nav-link" data-scroll-target="#데이터의-크기-n-p">데이터의 크기 — <span class="math inline">\((n, p)\)</span></a></li>
+  <li><a href="#수치-예시" id="toc-수치-예시" class="nav-link" data-scroll-target="#수치-예시">수치 예시</a></li>
+  </ul></li>
+  <li><a href="#모형-model" id="toc-모형-model" class="nav-link" data-scroll-target="#모형-model">모형 (Model)</a>
+  <ul class="collapse">
+  <li><a href="#정의-1" id="toc-정의-1" class="nav-link" data-scroll-target="#정의-1">정의</a></li>
+  <li><a href="#모형의-예시" id="toc-모형의-예시" class="nav-link" data-scroll-target="#모형의-예시">모형의 예시</a></li>
+  <li><a href="#모형의-종류" id="toc-모형의-종류" class="nav-link" data-scroll-target="#모형의-종류">모형의 종류</a></li>
+  </ul></li>
+  <li><a href="#파라미터-parameter" id="toc-파라미터-parameter" class="nav-link" data-scroll-target="#파라미터-parameter">파라미터 (Parameter)</a>
+  <ul class="collapse">
+  <li><a href="#정의-2" id="toc-정의-2" class="nav-link" data-scroll-target="#정의-2">정의</a></li>
+  <li><a href="#파라미터-vs-하이퍼파라미터" id="toc-파라미터-vs-하이퍼파라미터" class="nav-link" data-scroll-target="#파라미터-vs-하이퍼파라미터">파라미터 vs 하이퍼파라미터</a></li>
+  <li><a href="#수치-예시-파라미터에-따른-예측-변화" id="toc-수치-예시-파라미터에-따른-예측-변화" class="nav-link" data-scroll-target="#수치-예시-파라미터에-따른-예측-변화">수치 예시: 파라미터에 따른 예측 변화</a></li>
+  </ul></li>
+  <li><a href="#모형의-학습-learning" id="toc-모형의-학습-learning" class="nav-link" data-scroll-target="#모형의-학습-learning">모형의 학습 (Learning)</a>
+  <ul class="collapse">
+  <li><a href="#학습이란" id="toc-학습이란" class="nav-link" data-scroll-target="#학습이란">학습이란</a></li>
+  </ul></li>
+  <li><a href="#모형의-이용-예측과-추론" id="toc-모형의-이용-예측과-추론" class="nav-link" data-scroll-target="#모형의-이용-예측과-추론">모형의 이용: 예측과 추론</a>
+  <ul class="collapse">
+  <li><a href="#예측-prediction" id="toc-예측-prediction" class="nav-link" data-scroll-target="#예측-prediction">예측 (Prediction)</a></li>
+  <li><a href="#추론-inference" id="toc-추론-inference" class="nav-link" data-scroll-target="#추론-inference">추론 (Inference)</a></li>
+  </ul></li>
+  <li><a href="#변수의-종류" id="toc-변수의-종류" class="nav-link" data-scroll-target="#변수의-종류">변수의 종류</a>
+  <ul class="collapse">
+  <li><a href="#숫자형-변수-numerical-variable" id="toc-숫자형-변수-numerical-variable" class="nav-link" data-scroll-target="#숫자형-변수-numerical-variable">숫자형 변수 (Numerical Variable)</a></li>
+  <li><a href="#범주형-변수-categorical-variable" id="toc-범주형-변수-categorical-variable" class="nav-link" data-scroll-target="#범주형-변수-categorical-variable">범주형 변수 (Categorical Variable)</a></li>
+  <li><a href="#순서형-변수-ordinal-variable" id="toc-순서형-변수-ordinal-variable" class="nav-link" data-scroll-target="#순서형-변수-ordinal-variable">순서형 변수 (Ordinal Variable)</a></li>
+  <li><a href="#세-종류를-가르는-두-개의-질문" id="toc-세-종류를-가르는-두-개의-질문" class="nav-link" data-scroll-target="#세-종류를-가르는-두-개의-질문">세 종류를 가르는 두 개의 질문</a></li>
+  <li><a href="#수치-예시-변수-유형-비교" id="toc-수치-예시-변수-유형-비교" class="nav-link" data-scroll-target="#수치-예시-변수-유형-비교">수치 예시: 변수 유형 비교</a></li>
+  </ul></li>
+  <li><a href="#회귀와-분류" id="toc-회귀와-분류" class="nav-link" data-scroll-target="#회귀와-분류">회귀와 분류</a>
+  <ul class="collapse">
+  <li><a href="#회귀-regression" id="toc-회귀-regression" class="nav-link" data-scroll-target="#회귀-regression">회귀 (Regression)</a></li>
+  <li><a href="#분류-classification" id="toc-분류-classification" class="nav-link" data-scroll-target="#분류-classification">분류 (Classification)</a></li>
+  </ul></li>
+  <li><a href="#지도학습-vs-비지도학습" id="toc-지도학습-vs-비지도학습" class="nav-link" data-scroll-target="#지도학습-vs-비지도학습">지도학습 vs 비지도학습</a>
+  <ul class="collapse">
+  <li><a href="#지도학습-supervised-learning" id="toc-지도학습-supervised-learning" class="nav-link" data-scroll-target="#지도학습-supervised-learning">지도학습 (Supervised Learning)</a></li>
+  <li><a href="#비지도학습-unsupervised-learning" id="toc-비지도학습-unsupervised-learning" class="nav-link" data-scroll-target="#비지도학습-unsupervised-learning">비지도학습 (Unsupervised Learning)</a></li>
+  </ul></li>
+  <li><a href="#딥러닝이란" id="toc-딥러닝이란" class="nav-link" data-scroll-target="#딥러닝이란">딥러닝이란?</a></li>
+  <li><a href="#왜-딥러닝이-각광받는가" id="toc-왜-딥러닝이-각광받는가" class="nav-link" data-scroll-target="#왜-딥러닝이-각광받는가">왜 딥러닝이 각광받는가?</a>
+  <ul class="collapse">
+  <li><a href="#모델링의-자유도" id="toc-모델링의-자유도" class="nav-link" data-scroll-target="#모델링의-자유도">모델링의 자유도</a></li>
+  <li><a href="#모델의-유연성" id="toc-모델의-유연성" class="nav-link" data-scroll-target="#모델의-유연성">모델의 유연성</a></li>
+  <li><a href="#인프라의-성숙" id="toc-인프라의-성숙" class="nav-link" data-scroll-target="#인프라의-성숙">인프라의 성숙</a></li>
+  <li><a href="#사전학습-생태계" id="toc-사전학습-생태계" class="nav-link" data-scroll-target="#사전학습-생태계">사전학습 생태계</a></li>
+  </ul></li>
+  <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">들어가기: 데이터와 모형</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+학습 목표
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>고전적 프로그래밍과 머신러닝의 차이를 설명할 수 있다</li>
+<li>인공지능, 머신러닝, 딥러닝의 관계를 이해한다</li>
+<li>데이터의 구성요소(변수, 데이터 포인트, 독립변수, 종속변수)를 구분할 수 있다</li>
+<li>정형 데이터와 비정형 데이터를 구분하고, 데이터의 크기를 <span class="math inline">\((n, p)\)</span>로 말할 수 있다</li>
+<li>숫자형·순서형·범주형 변수를 구분할 수 있다</li>
+<li>모형(model)과 파라미터(parameter)의 개념을 이해한다</li>
+<li>파라미터와 하이퍼파라미터의 차이를 설명할 수 있다</li>
+<li>모형의 학습이 파라미터 최적화임을 이해한다</li>
+<li>회귀와 분류 문제를 구분할 수 있다</li>
+<li>지도학습과 비지도학습의 차이를 설명할 수 있다</li>
+<li>딥러닝이 각광받는 이유를 세 가지 이상 제시할 수 있다</li>
+</ul>
+</div>
+</div>
+<hr>
+<section id="데이터-기반-문제해결" class="level2">
+<h2 class="anchored" data-anchor-id="데이터-기반-문제해결">데이터 기반 문제해결</h2>
+<section id="고전적-프로그래밍-vs-머신러닝" class="level3">
+<h3 class="anchored" data-anchor-id="고전적-프로그래밍-vs-머신러닝">고전적 프로그래밍 vs 머신러닝</h3>
+<p>문제를 해결하는 방식에는 두 가지 접근이 있다.</p>
+<p><strong>고전적 프로그래밍 (Classical Programming)</strong></p>
+<ul>
+<li>사람이 직접 <strong>규칙(Rules)</strong>을 만들고, 데이터를 넣으면 답을 얻는다</li>
+<li>예: “기온이 0도 이하이면 빙판 주의보를 발령한다”</li>
+</ul>
+<p><strong>머신러닝 (Machine Learning)</strong></p>
+<ul>
+<li>사람이 <strong>데이터(Data)</strong>와 <strong>정답(Answers)</strong>을 주면, 컴퓨터가 <strong>규칙(Rules)</strong>을 찾아낸다</li>
+<li>예: 과거 기상데이터와 사고기록을 주면, 어떤 조건에서 사고가 나는지 규칙을 학습</li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>입력</th>
+<th>출력</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>고전적 프로그래밍</strong></td>
+<td>규칙 + 데이터</td>
+<td>답</td>
+</tr>
+<tr class="even">
+<td><strong>머신러닝</strong></td>
+<td>데이터 + 답</td>
+<td>규칙</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="왜-머신러닝이-필요한가" class="level3">
+<h3 class="anchored" data-anchor-id="왜-머신러닝이-필요한가">왜 머신러닝이 필요한가?</h3>
+<p>규칙을 사람이 직접 만들기 어려운 경우가 많다.</p>
+<ul>
+<li>사진 속 동물이 고양이인지 개인지 판별하는 규칙은?</li>
+<li>이메일이 스팸인지 아닌지 판별하는 규칙은?</li>
+<li>내일 주가가 오를지 내릴지 판별하는 규칙은?</li>
+</ul>
+<p>이런 문제들은 <strong>데이터로부터 패턴을 자동으로 학습</strong>하는 것이 효과적이다.</p>
+<hr>
+</section>
+</section>
+<section id="인공지능-머신러닝-딥러닝" class="level2">
+<h2 class="anchored" data-anchor-id="인공지능-머신러닝-딥러닝">인공지능, 머신러닝, 딥러닝</h2>
+<section id="세-개념의-관계" class="level3">
+<h3 class="anchored" data-anchor-id="세-개념의-관계">세 개념의 관계</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+인공지능 (Artificial Intelligence)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>컴퓨터로 하여금 사람의 생각과 행동을 <strong>모사(mimic)</strong>하도록 하는 모든 기술.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+머신러닝 (Machine Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>명시적으로 프로그래밍하지 않아도 컴퓨터가 <strong>데이터로부터 규칙을 스스로 발견</strong>하도록 하는 것.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+딥러닝 (Deep Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>인공신경망 구조</strong>를 사용하여 데이터로부터 패턴을 추출하는 머신러닝의 한 분야.</p>
+</div>
+</div>
+<p>세 개념의 포함 관계: <strong>인공지능 ⊃ 머신러닝 ⊃ 딥러닝</strong></p>
+<div style="text-align:center;margin:0.5em 0;">
+<svg viewbox="0 0 420 300" width="100%" style="max-width:400px;font-family:Pretendard,sans-serif;">
+<!-- AI outer -->
+<ellipse cx="210" cy="155" rx="195" ry="135" fill="#E3F2FD" stroke="#1565C0" stroke-width="2.5" opacity="0.7"></ellipse> <text x="210" y="42" text-anchor="middle" font-size="15" font-weight="700" fill="#1565C0">인공지능 (Artificial Intelligence)</text> <!-- ML middle --> <ellipse cx="210" cy="170" rx="145" ry="100" fill="#FFF8E1" stroke="#D4A017" stroke-width="2.5" opacity="0.75"></ellipse> <text x="210" y="95" text-anchor="middle" font-size="14" font-weight="700" fill="#B8860B">머신러닝 (Machine Learning)</text> <!-- DL inner --> <ellipse cx="210" cy="190" rx="85" ry="60" fill="#FFEBEE" stroke="#8C1515" stroke-width="2.5" opacity="0.8"></ellipse> <text x="210" y="185" text-anchor="middle" font-size="14" font-weight="700" fill="#8C1515">딥러닝</text> <text x="210" y="205" text-anchor="middle" font-size="11" fill="#8C1515">(Deep Learning)</text> <!-- Examples --> <text x="70" y="135" text-anchor="middle" font-size="9.5" fill="#1565C0">규칙 기반 AI</text> <text x="350" y="135" text-anchor="middle" font-size="9.5" fill="#1565C0">전문가 시스템</text> <text x="105" y="195" text-anchor="middle" font-size="9.5" fill="#B8860B">SVM</text> <text x="315" y="195" text-anchor="middle" font-size="9.5" fill="#B8860B">Random Forest</text> <text x="210" y="228" text-anchor="middle" font-size="9.5" fill="#8C1515">CNN, RNN, Transformer</text>
+</svg>
+</div>
+<hr>
+</section>
+</section>
+<section id="데이터란-무엇인가" class="level2">
+<h2 class="anchored" data-anchor-id="데이터란-무엇인가">데이터란 무엇인가</h2>
+<section id="데이터의-정의" class="level3">
+<h3 class="anchored" data-anchor-id="데이터의-정의">데이터의 정의</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+데이터 (Data)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>과거에 일어난 사실들을 특정 형식에 맞게 기록해놓은 자료.</p>
+</div>
+</div>
+</section>
+<section id="예시-데이터" class="level3">
+<h3 class="anchored" data-anchor-id="예시-데이터">예시 데이터</h3>
+<p>어떤 기업 내 사원 8명에 대한 데이터를 다음과 같이 수집하였다.</p>
+<div class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'사원'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>],</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'경력 (년)'</span>: [<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.2</span>, <span class="fl">5.1</span>, <span class="fl">6.7</span>, <span class="fl">8.3</span>, <span class="fl">9.5</span>, <span class="fl">13.0</span>],</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'연봉 ($)'</span>: [<span class="dv">31000</span>, <span class="dv">39000</span>, <span class="dv">43000</span>, <span class="dv">49000</span>, <span class="dv">54000</span>, <span class="dv">67000</span>, <span class="dv">92000</span>, <span class="dv">129000</span>],</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-salary-data" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-salary-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;1: 예시 데이터: 사원 경력과 연봉
+</figcaption>
+<div aria-describedby="tbl-salary-data-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+사원
+</th>
+
+<th>
+경력 (년)
+</th>
+
+<th>
+연봉 ($)
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+1
+</td>
+
+<td>
+1.5
+</td>
+
+<td>
+31000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+2
+</td>
+
+<td>
+2.5
+</td>
+
+<td>
+39000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+3
+</td>
+
+<td>
+4.2
+</td>
+
+<td>
+43000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+4
+</td>
+
+<td>
+5.1
+</td>
+
+<td>
+49000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+5
+</td>
+
+<td>
+6.7
+</td>
+
+<td>
+54000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+6
+</td>
+
+<td>
+8.3
+</td>
+
+<td>
+67000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+7
+</td>
+
+<td>
+9.5
+</td>
+
+<td>
+92000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+8
+</td>
+
+<td>
+13.0
+</td>
+
+<td>
+129000
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="데이터의-구성요소" class="level3">
+<h3 class="anchored" data-anchor-id="데이터의-구성요소">데이터의 구성요소</h3>
+<p>데이터는 <strong>열(column)</strong>과 <strong>행(row)</strong>의 조합으로 표현된다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+변수 (Variable)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>데이터의 특성을 구분 짓는 이름. 테이블의 <strong>열(column)</strong>에 해당한다.</p>
+<ul>
+<li>위 예시에서 변수: “경력”, “연봉”</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+데이터 포인트 (Data Point)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>각 특성에 따라 기록된 서로 다른 개체. 테이블의 <strong>행(row)</strong>에 해당한다.</p>
+<ul>
+<li>위 예시에서 데이터 포인트: 사원 1, 사원 2, …, 사원 8 (총 8개)</li>
+<li>다른 이름: 관측치(observation), 샘플(sample)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="정형-데이터와-비정형-데이터" class="level3">
+<h3 class="anchored" data-anchor-id="정형-데이터와-비정형-데이터">정형 데이터와 비정형 데이터</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정형 데이터 (Tabular Data)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>행과 열로 정리된 표 형태</strong>의 데이터. 각 행이 하나의 개체, 각 열이 하나의 변수다.</p>
+<ul>
+<li>예: 엑셀 시트, 데이터베이스 테이블, 설비 센서 로그, 생산 실적표</li>
+<li>산업 현장에서 가장 흔한 형태다</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+비정형 데이터 (Unstructured Data)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>표로 정리되지 않는 데이터. <strong>무엇이 열인지 정해져 있지 않다.</strong></p>
+<ul>
+<li>예: 사진, 문장, 음성, 동영상</li>
+<li>“이 사진의 3번째 열의 값”이라는 말이 성립하지 않는다</li>
+</ul>
+</div>
+</div>
+<p>이 수업은 <strong>정형 데이터에서 출발해</strong>(1~4주) 이미지(5~9주), 텍스트(10~12주)로 옮겨간다. 비정형 데이터를 신경망에 넣으려면 먼저 <strong>숫자로 바꾸는 방법</strong>이 필요한데, 그 방법이 각각 콘볼루션(이미지)과 임베딩(텍스트)이다.</p>
+<hr>
+</section>
+</section>
+<section id="독립변수와-종속변수" class="level2">
+<h2 class="anchored" data-anchor-id="독립변수와-종속변수">독립변수와 종속변수</h2>
+<section id="정의" class="level3">
+<h3 class="anchored" data-anchor-id="정의">정의</h3>
+<p>데이터를 활용하여 예측이나 추론을 하려면, 변수 간의 <strong>역할 구분</strong>이 필요하다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+종속변수 (Dependent Variable)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>독립변수에 영향을 받는 특성. 우리가 <strong>예측하고자 하는 대상</strong>.</p>
+<ul>
+<li>소문자 <span class="math inline">\(y\)</span>로 표기</li>
+<li>다른 이름: target variable, output variable, label, 반응변수</li>
+<li>위 예시에서: <strong>연봉</strong></li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+독립변수 (Independent Variable)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>종속변수에 영향을 주는 것으로 여겨지는 특성들.</p>
+<ul>
+<li>대문자 <span class="math inline">\(X\)</span>로 표기</li>
+<li>다른 이름: predictor, input variable, feature, regressor</li>
+<li>위 예시에서: <strong>경력</strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="데이터의-크기-n-p" class="level3">
+<h3 class="anchored" data-anchor-id="데이터의-크기-n-p">데이터의 크기 — <span class="math inline">\((n, p)\)</span></h3>
+<p>데이터를 말할 때는 항상 <strong>두 개의 숫자</strong>로 크기를 말한다.</p>
+<ul>
+<li>데이터 포인트(행)의 수를 <span class="math inline">\(n\)</span></li>
+<li>독립변수(열)의 수를 <span class="math inline">\(p\)</span></li>
+</ul>
+<p>이렇게 두면 <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 모양이 정해진다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">기호</th>
+<th style="text-align: center;">모양</th>
+<th>왜 그렇게 쓰는가</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(X\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(n\)</span>행 × <span class="math inline">\(p\)</span>열의 <strong>표(행렬)</strong></td>
+<td>값이 가로세로로 펼쳐져 있어서 <strong>대문자</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(y\)</span></td>
+<td style="text-align: center;">길이 <span class="math inline">\(n\)</span>의 <strong>한 줄(벡터)</strong></td>
+<td>행마다 정답이 하나씩, 한 줄이라 <strong>소문자</strong></td>
+</tr>
+</tbody>
+</table>
+<p>위 사원 데이터는 <span class="math inline">\(n = 8\)</span> (사원 8명), <span class="math inline">\(p = 1\)</span> (경력 하나)이다. 만약 경력·부서·평가등급을 모두 쓴다면 <span class="math inline">\(p = 3\)</span>이 된다.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>이 <span class="math inline">\((n, p)\)</span> 감각은 이 수업 내내 쓰인다. Ch02에서 신경망의 <strong>입력층 노드 수가 곧 <span class="math inline">\(p\)</span></strong>이고, Ch04에서 범주형 변수를 원-핫 인코딩하면 <strong><span class="math inline">\(p\)</span>가 늘어난다.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="수치-예시" class="level3">
+<h3 class="anchored" data-anchor-id="수치-예시">수치 예시</h3>
+<p>위 사원 데이터에서 독립변수와 종속변수를 구분하면:</p>
+<div class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'사원'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$X$ (경력)'</span>: [<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.2</span>, <span class="fl">5.1</span>, <span class="fl">6.7</span>, <span class="fl">8.3</span>, <span class="fl">9.5</span>, <span class="fl">13.0</span>],</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'$y$ (연봉)'</span>: [<span class="dv">31000</span>, <span class="dv">39000</span>, <span class="dv">43000</span>, <span class="dv">49000</span>, <span class="dv">54000</span>, <span class="dv">67000</span>, <span class="dv">92000</span>, <span class="dv">129000</span>],</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-xy-example" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-xy-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;2: 독립변수(X)와 종속변수(y) 구분
+</figcaption>
+<div aria-describedby="tbl-xy-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+사원
+</th>
+
+<th>
+<span class="math inline">\(X\)</span> (경력)
+</th>
+
+<th>
+<span class="math inline">\(y\)</span> (연봉)
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+1
+</td>
+
+<td>
+1.5
+</td>
+
+<td>
+31000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+2
+</td>
+
+<td>
+2.5
+</td>
+
+<td>
+39000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+3
+</td>
+
+<td>
+4.2
+</td>
+
+<td>
+43000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+4
+</td>
+
+<td>
+5.1
+</td>
+
+<td>
+49000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+5
+</td>
+
+<td>
+6.7
+</td>
+
+<td>
+54000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+6
+</td>
+
+<td>
+8.3
+</td>
+
+<td>
+67000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+7
+</td>
+
+<td>
+9.5
+</td>
+
+<td>
+92000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+8
+</td>
+
+<td>
+13.0
+</td>
+
+<td>
+129000
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>질문</strong>: “경력이 7년인 사원의 연봉은 얼마일까?”</p>
+<p>이 질문에 답하려면, <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계를 수학적으로 표현하는 <strong>모형</strong>이 필요하다.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="모형-model" class="level2">
+<h2 class="anchored" data-anchor-id="모형-model">모형 (Model)</h2>
+<section id="정의-1" class="level3">
+<h3 class="anchored" data-anchor-id="정의-1">정의</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+모형 (Model)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>독립변수(<span class="math inline">\(X\)</span>)와 종속변수(<span class="math inline">\(y\)</span>)의 관계에 대한 <strong>가설을 수학적으로 표현</strong>한 것.</p>
+</div>
+</div>
+<p>같은 데이터라 할 지라도 <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계에 대한 다양한 가설을 생각해 볼 수 있다.</p>
+</section>
+<section id="모형의-예시" class="level3">
+<h3 class="anchored" data-anchor-id="모형의-예시">모형의 예시</h3>
+<div class="cell" data-execution_count="3">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'가설'</span>: [</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'연봉이 경력에 비례하여 증가'</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'연봉이 경력의 제곱에 비례하여 증가'</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'연봉이 경력의 n차식으로 표현'</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'수식'</span>: [</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$y = w_0 + w_1 x$'</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$y = w_0 + w_1 x + w_2 x^2$'</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$y = w_0 + w_1 x + w_2 x^2 + ⋯ + w_n x^n$'</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'파라미터'</span>: [</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_0, w_1$'</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_0, w_1, w_2$'</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_0, w_1, …, w_n$'</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-model-hypotheses" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="3">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-model-hypotheses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;3: 같은 데이터에 대한 다양한 모형 가설
+</figcaption>
+<div aria-describedby="tbl-model-hypotheses-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="3">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+가설
+</th>
+
+<th>
+수식
+</th>
+
+<th>
+파라미터
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+연봉이 경력에 비례하여 증가
+</td>
+
+<td>
+<span class="math inline">\(y = w_0 + w_1 x\)</span>
+</td>
+
+<td>
+<span class="math inline">\(w_0, w_1\)</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+연봉이 경력의 제곱에 비례하여 증가
+</td>
+
+<td>
+<span class="math inline">\(y = w_0 + w_1 x + w_2 x^2\)</span>
+</td>
+
+<td>
+<span class="math inline">\(w_0, w_1, w_2\)</span>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+연봉이 경력의 n차식으로 표현
+</td>
+
+<td>
+<span class="math inline">\(y = w_0 + w_1 x + w_2 x^2 + ⋯ + w_n x^n\)</span>
+</td>
+
+<td>
+<span class="math inline">\(w_0, w_1, …, w_n\)</span>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="모형의-종류" class="level3">
+<h3 class="anchored" data-anchor-id="모형의-종류">모형의 종류</h3>
+<p><span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계에 대한 가설에 따라 다양한 종류의 모형이 존재한다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>모형</th>
+<th>특징</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>회귀모형</td>
+<td><span class="math inline">\(y = w_0 + w_1 x\)</span></td>
+</tr>
+<tr class="even">
+<td>로지스틱회귀모형</td>
+<td>확률을 통한 분류</td>
+</tr>
+<tr class="odd">
+<td>K-Nearest Neighbor</td>
+<td>가까운 이웃의 다수결</td>
+</tr>
+<tr class="even">
+<td>Support Vector Machine</td>
+<td>최대 마진 분류</td>
+</tr>
+<tr class="odd">
+<td>Random Forest</td>
+<td>의사결정나무 앙상블</td>
+</tr>
+<tr class="even">
+<td><strong>딥뉴럴네트워크</strong></td>
+<td>다층 퍼셉트론 구조</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="파라미터-parameter" class="level2">
+<h2 class="anchored" data-anchor-id="파라미터-parameter">파라미터 (Parameter)</h2>
+<section id="정의-2" class="level3">
+<h3 class="anchored" data-anchor-id="정의-2">정의</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+파라미터 (Parameter)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>모형 안에서 독립변수(<span class="math inline">\(X\)</span>)와 종속변수(<span class="math inline">\(y\)</span>) 간의 관계를 표현하기 위해 <strong>조절할 수 있는 매개변수</strong>.</p>
+<p>파라미터의 값이 달라지면, 같은 모형이라도 <strong>다른 예측</strong>을 한다.</p>
+</div>
+</div>
+</section>
+<section id="파라미터-vs-하이퍼파라미터" class="level3">
+<h3 class="anchored" data-anchor-id="파라미터-vs-하이퍼파라미터">파라미터 vs 하이퍼파라미터</h3>
+<p>모형에 관련된 숫자가 전부 학습으로 정해지는 것은 아니다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+하이퍼파라미터 (Hyperparameter)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>학습으로 정해지지 <strong>않고</strong>, 사람이 <strong>미리 정해 주어야</strong> 하는 값.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">누가 정하는가</th>
+<th>예</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>파라미터</strong></td>
+<td style="text-align: center;">데이터가 정한다 (= 학습)</td>
+<td>가중치 <span class="math inline">\(w_1\)</span>, 편향 <span class="math inline">\(w_0\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>하이퍼파라미터</strong></td>
+<td style="text-align: center;">사람이 정한다</td>
+<td>다항식의 <strong>차수</strong>, 은닉층의 <strong>노드 수</strong>(Ch02), <strong>학습률</strong>·<strong>배치 크기</strong>(Ch04)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><span class="math inline">\(y = w_0 + w_1 x + w_2 x^2\)</span>에서 “2차식으로 하자”는 <strong>사람의 결정</strong>(하이퍼파라미터)이고, <span class="math inline">\(w_0, w_1, w_2\)</span>의 값은 <strong>데이터가 정한다</strong>(파라미터). 하이퍼파라미터를 잘못 고르면 학습을 아무리 잘해도 좋은 모형이 나오지 않는다 — Ch04에서 확인한다.</p>
+</section>
+<section id="수치-예시-파라미터에-따른-예측-변화" class="level3">
+<h3 class="anchored" data-anchor-id="수치-예시-파라미터에-따른-예측-변화">수치 예시: 파라미터에 따른 예측 변화</h3>
+<p>모형 <span class="math inline">\(y = w_0 + w_1 x\)</span>에서 파라미터를 다르게 설정하면 같은 경력(7년)에 대해 다른 연봉을 예측한다.</p>
+<div class="cell" data-execution_count="4">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, b0, b1 <span class="kw">in</span> [(<span class="st">'A'</span>, <span class="dv">20000</span>, <span class="dv">5000</span>), (<span class="st">'B'</span>, <span class="dv">10000</span>, <span class="dv">8000</span>), (<span class="st">'C'</span>, <span class="dv">15000</span>, <span class="dv">7000</span>)]:</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> b0 <span class="op">+</span> b1 <span class="op">*</span> <span class="dv">7</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'후보'</span>: name,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_0$'</span>: <span class="ss">f'</span><span class="sc">{</span>b0<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$w_1$'</span>: <span class="ss">f'</span><span class="sc">{</span>b1<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측식'</span>: <span class="ss">f'</span><span class="sc">{</span>b0<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span>b1<span class="sc">}</span><span class="ss"> × 7'</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측 연봉'</span>: <span class="ss">f'$</span><span class="sc">{</span>y_hat<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-param-example" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="4">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-param-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;4: 파라미터에 따른 예측값 변화 (경력 7년일 때)
+</figcaption>
+<div aria-describedby="tbl-param-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="4">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+후보
+</th>
+
+<th>
+<span class="math inline">\(w_0\)</span>
+</th>
+
+<th>
+<span class="math inline">\(w_1\)</span>
+</th>
+
+<th>
+예측식
+</th>
+
+<th>
+예측 연봉
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+A
+</td>
+
+<td>
+20,000
+</td>
+
+<td>
+5,000
+</td>
+
+<td>
+20000 + 5000 × 7
+</td>
+
+<td>
+$55,000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+B
+</td>
+
+<td>
+10,000
+</td>
+
+<td>
+8,000
+</td>
+
+<td>
+10000 + 8000 × 7
+</td>
+
+<td>
+$66,000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+C
+</td>
+
+<td>
+15,000
+</td>
+
+<td>
+7,000
+</td>
+
+<td>
+15000 + 7000 × 7
+</td>
+
+<td>
+$64,000
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>어떤 파라미터가 “좋은” 것인지 판단하려면, <strong>데이터를 가장 잘 설명하는 파라미터</strong>를 찾아야 한다.</p>
+<hr>
+</section>
+</section>
+<section id="모형의-학습-learning" class="level2">
+<h2 class="anchored" data-anchor-id="모형의-학습-learning">모형의 학습 (Learning)</h2>
+<section id="학습이란" class="level3">
+<h3 class="anchored" data-anchor-id="학습이란">학습이란</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+학습 (Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>주어진 데이터를 <strong>가장 잘 나타내는 파라미터를 찾아나가는 과정</strong>.</p>
+<ul>
+<li>모형: <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>에 대한 수학적 관계</li>
+<li>학습: 그 관계를 가장 잘 표현하는 파라미터를 데이터로부터 결정</li>
+</ul>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+인터랙티브 — 파라미터를 조절하여 데이터에 맞는 직선을 찾아보세요
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(w_0\)</span> (절편)과 <span class="math inline">\(w_1\)</span> (기울기)을 조정하면서, 데이터를 가장 잘 설명하는 직선을 찾아보세요. 잔차 제곱합(L)이 최소가 되는 파라미터가 최적입니다.</p>
+</div>
+</div>
+<div id="cbc97c82" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<script type="ojs-define">{"contents": [{"name": "sal_data", "value": [{"x": 1.5, "y": 31000.0}, {"x": 2.5, "y": 39000.0}, {"x": 4.2, "y": 43000.0}, {"x": 5.1, "y": 49000.0}, {"x": 6.7, "y": 54000.0}, {"x": 8.3, "y": 67000.0}, {"x": 9.5, "y": 92000.0}, {"x": 13.0, "y": 129000.0}]}, {"name": "sal_b0_star", "value": 10826.023391812863}, {"name": "sal_b1_star", "value": 8216.374269005848}, {"name": "sal_L_star", "value": 563596491.2280703}]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="432" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 431;"><span id="cb5-432"><a href="#cb5-432" aria-hidden="true" tabindex="-1"></a>viewof sal_b0 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">20000</span><span class="op">,</span> <span class="dv">50000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">1000</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₀ (절편)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">20000</span> })</span>
+<span id="cb5-433"><a href="#cb5-433" aria-hidden="true" tabindex="-1"></a>viewof sal_b1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">15000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₁ (기울기)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">5000</span> })</span>
+<span id="cb5-434"><a href="#cb5-434" aria-hidden="true" tabindex="-1"></a>viewof sal_ans <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({ <span class="dt">label</span><span class="op">:</span> <span class="st">"✅ 정답 보기"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="kw">false</span> })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-1-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="438" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 437;"><span id="cb6-438"><a href="#cb6-438" aria-hidden="true" tabindex="-1"></a>sal_b0e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b0_star <span class="op">:</span> sal_b0</span>
+<span id="cb6-439"><a href="#cb6-439" aria-hidden="true" tabindex="-1"></a>sal_b1e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b1_star <span class="op">:</span> sal_b1</span>
+<span id="cb6-440"><a href="#cb6-440" aria-hidden="true" tabindex="-1"></a>sal_rows <span class="op">=</span> sal_data<span class="op">.</span><span class="fu">map</span>((d<span class="op">,</span> i) <span class="kw">=&gt;</span> {</span>
+<span id="cb6-441"><a href="#cb6-441" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yhat <span class="op">=</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> d<span class="op">.</span><span class="at">x</span></span>
+<span id="cb6-442"><a href="#cb6-442" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> e <span class="op">=</span> d<span class="op">.</span><span class="at">y</span> <span class="op">-</span> yhat</span>
+<span id="cb6-443"><a href="#cb6-443" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">i</span><span class="op">:</span> i<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">...</span>d<span class="op">,</span> yhat<span class="op">,</span> e<span class="op">,</span> <span class="dt">err2</span><span class="op">:</span> e <span class="op">*</span> e }</span>
+<span id="cb6-444"><a href="#cb6-444" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-445"><a href="#cb6-445" aria-hidden="true" tabindex="-1"></a>sal_L <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(sal_rows<span class="op">,</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">err2</span>)</span>
+<span id="cb6-446"><a href="#cb6-446" aria-hidden="true" tabindex="-1"></a>sal_pct <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">1</span> <span class="op">-</span> (sal_L <span class="op">-</span> sal_L_star) <span class="op">/</span> (sal_L_star <span class="op">*</span> <span class="dv">20</span>)))</span>
+<span id="cb6-447"><a href="#cb6-447" aria-hidden="true" tabindex="-1"></a>sal_clr <span class="op">=</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="fl">1.05</span> <span class="op">?</span> <span class="st">"#2E7D32"</span> <span class="op">:</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="dv">3</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#8C1515"</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-4" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-6" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:40%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="452" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 451;"><span id="cb7-452"><a href="#cb7-452" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="font-size:0.83em;font-family:'Pretendard',sans-serif;"&gt;</span></span>
+<span id="cb7-453"><a href="#cb7-453" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-454"><a href="#cb7-454" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.42em 0.8em;background:#FFF8E1;</span></span>
+<span id="cb7-455"><a href="#cb7-455" aria-hidden="true" tabindex="-1"></a><span class="vs">    border-left:3px solid #D4A017;border-radius:4px;margin-bottom:0.7em;line-height:1.7;"&gt;</span></span>
+<span id="cb7-456"><a href="#cb7-456" aria-hidden="true" tabindex="-1"></a><span class="vs">    ŷ = &lt;strong&gt;</span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; + &lt;strong&gt;</span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; · x</span></span>
+<span id="cb7-457"><a href="#cb7-457" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb7-458"><a href="#cb7-458" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-459"><a href="#cb7-459" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width:100%;border-collapse:collapse;"&gt;</span></span>
+<span id="cb7-460"><a href="#cb7-460" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;thead&gt;&lt;tr&gt;</span></span>
+<span id="cb7-461"><a href="#cb7-461" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>[<span class="st">"i"</span><span class="op">,</span><span class="st">"xᵢ"</span><span class="op">,</span><span class="st">"yᵢ"</span><span class="op">,</span><span class="st">"ŷᵢ"</span><span class="op">,</span><span class="st">"eᵢ²"</span>]<span class="op">.</span><span class="fu">map</span>(h <span class="kw">=&gt;</span></span>
+<span id="cb7-462"><a href="#cb7-462" aria-hidden="true" tabindex="-1"></a>        <span class="vs">`&lt;th style="background:#8C1515;color:white;padding:0.3em 0.4em;text-align:center;font-size:0.9em;"&gt;</span><span class="sc">${</span>h<span class="sc">}</span><span class="vs">&lt;/th&gt;`</span></span>
+<span id="cb7-463"><a href="#cb7-463" aria-hidden="true" tabindex="-1"></a>      )<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb7-464"><a href="#cb7-464" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;&lt;/thead&gt;</span></span>
+<span id="cb7-465"><a href="#cb7-465" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tbody&gt;</span></span>
+<span id="cb7-466"><a href="#cb7-466" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_rows<span class="op">.</span><span class="fu">map</span>((r<span class="op">,</span> idx) <span class="kw">=&gt;</span> <span class="vs">`</span></span>
+<span id="cb7-467"><a href="#cb7-467" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;tr style="background:</span><span class="sc">${</span>idx<span class="op">%</span><span class="dv">2</span><span class="op">===</span><span class="dv">0</span><span class="op">?</span><span class="st">'white'</span><span class="op">:</span><span class="st">'#F9FAFB'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb7-468"><a href="#cb7-468" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">i</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb7-469"><a href="#cb7-469" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb7-470"><a href="#cb7-470" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">y</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb7-471"><a href="#cb7-471" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
+<span id="cb7-472"><a href="#cb7-472" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:#1F3F7A;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">yhat</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb7-473"><a href="#cb7-473" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
+<span id="cb7-474"><a href="#cb7-474" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:</span><span class="sc">${</span>r<span class="op">.</span><span class="at">err2</span><span class="op">&gt;</span><span class="fl">1e8</span><span class="op">?</span><span class="st">'#E65100'</span><span class="op">:</span><span class="st">'#333'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(r<span class="op">.</span><span class="at">err2</span><span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
+<span id="cb7-475"><a href="#cb7-475" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/tr&gt;`</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb7-476"><a href="#cb7-476" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;tr style="background:#FFF8E1;"&gt;</span></span>
+<span id="cb7-477"><a href="#cb7-477" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td colspan="4" style="padding:0.32em 0.4em;text-align:right;font-weight:700;</span></span>
+<span id="cb7-478"><a href="#cb7-478" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;"&gt;L =&lt;/td&gt;</span></span>
+<span id="cb7-479"><a href="#cb7-479" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td style="padding:0.32em 0.4em;text-align:center;font-size:1.05em;font-weight:700;</span></span>
+<span id="cb7-480"><a href="#cb7-480" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;color:</span><span class="sc">${</span>sal_clr<span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(sal_L<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
+<span id="cb7-481"><a href="#cb7-481" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/tr&gt;</span></span>
+<span id="cb7-482"><a href="#cb7-482" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tbody&gt;</span></span>
+<span id="cb7-483"><a href="#cb7-483" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
+<span id="cb7-484"><a href="#cb7-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-485"><a href="#cb7-485" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.55em;"&gt;</span></span>
+<span id="cb7-486"><a href="#cb7-486" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="height:7px;background:#EEE;border-radius:4px;overflow:hidden;"&gt;</span></span>
+<span id="cb7-487"><a href="#cb7-487" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="height:100%;width:</span><span class="sc">${</span>(sal_pct<span class="op">*</span><span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%;</span></span>
+<span id="cb7-488"><a href="#cb7-488" aria-hidden="true" tabindex="-1"></a><span class="vs">        background:</span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.9</span><span class="op">?</span><span class="st">'#2E7D32'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.6</span><span class="op">?</span><span class="st">'#D4A017'</span><span class="op">:</span><span class="st">'#8C1515'</span><span class="sc">}</span><span class="vs">;</span></span>
+<span id="cb7-489"><a href="#cb7-489" aria-hidden="true" tabindex="-1"></a><span class="vs">        transition:width 0.2s;border-radius:4px;"&gt;&lt;/div&gt;</span></span>
+<span id="cb7-490"><a href="#cb7-490" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb7-491"><a href="#cb7-491" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.74em;color:#666;margin-top:0.15em;text-align:center;"&gt;</span></span>
+<span id="cb7-492"><a href="#cb7-492" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.98</span><span class="op">?</span><span class="st">'최솟값 도달!'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.7</span><span class="op">?</span><span class="st">'거의 다 왔어요!'</span><span class="op">:</span><span class="st">'슬라이더로 L을 최소화해 보세요'</span><span class="sc">}</span></span>
+<span id="cb7-493"><a href="#cb7-493" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb7-494"><a href="#cb7-494" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb7-495"><a href="#cb7-495" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-496"><a href="#cb7-496" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>sal_ans <span class="op">?</span> <span class="vs">`</span></span>
+<span id="cb7-497"><a href="#cb7-497" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.6em;padding:0.45em 0.8em;background:#E8F5E9;</span></span>
+<span id="cb7-498"><a href="#cb7-498" aria-hidden="true" tabindex="-1"></a><span class="vs">    border:1.5px solid #2E7D32;border-radius:5px;color:#2E7D32;line-height:1.8;"&gt;</span></span>
+<span id="cb7-499"><a href="#cb7-499" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-weight:700;margin-bottom:0.1em;"&gt;최적 파라미터&lt;/div&gt;</span></span>
+<span id="cb7-500"><a href="#cb7-500" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₀* = &lt;strong&gt;</span><span class="sc">${</span>sal_b0_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb7-501"><a href="#cb7-501" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₁* = &lt;strong&gt;</span><span class="sc">${</span>sal_b1_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb7-502"><a href="#cb7-502" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;L*  = &lt;strong&gt;</span><span class="sc">${</span>(sal_L_star<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb7-503"><a href="#cb7-503" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;`</span> <span class="op">:</span> <span class="st">''</span><span class="sc">}</span></span>
+<span id="cb7-504"><a href="#cb7-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-505"><a href="#cb7-505" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div><div class="column" style="width:60%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="510" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 509;"><span id="cb8-510"><a href="#cb8-510" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb8-511"><a href="#cb8-511" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xLo <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> xHi <span class="op">=</span> <span class="dv">15</span></span>
+<span id="cb8-512"><a href="#cb8-512" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb8-513"><a href="#cb8-513" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">400</span><span class="op">,</span></span>
+<span id="cb8-514"><a href="#cb8-514" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb8-515"><a href="#cb8-515" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [xLo<span class="op">,</span> xHi]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb8-516"><a href="#cb8-516" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">160000</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb8-517"><a href="#cb8-517" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb8-518"><a href="#cb8-518" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 잔차 점선</span></span>
+<span id="cb8-519"><a href="#cb8-519" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">ruleX</span>(sal_rows<span class="op">,</span> {</span>
+<span id="cb8-520"><a href="#cb8-520" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y1</span><span class="op">:</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">yhat</span><span class="op">,</span> <span class="dt">y2</span><span class="op">:</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">y</span><span class="op">,</span></span>
+<span id="cb8-521"><a href="#cb8-521" aria-hidden="true" tabindex="-1"></a>        <span class="dt">stroke</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">&gt;</span> <span class="dv">10000</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#BDBDBD"</span><span class="op">,</span></span>
+<span id="cb8-522"><a href="#cb8-522" aria-hidden="true" tabindex="-1"></a>        <span class="dt">strokeWidth</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">1</span> <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">/</span> <span class="dv">20000</span>)<span class="op">,</span></span>
+<span id="cb8-523"><a href="#cb8-523" aria-hidden="true" tabindex="-1"></a>        <span class="dt">strokeDasharray</span><span class="op">:</span> <span class="st">"5,3"</span></span>
+<span id="cb8-524"><a href="#cb8-524" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
+<span id="cb8-525"><a href="#cb8-525" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 현재 회귀선</span></span>
+<span id="cb8-526"><a href="#cb8-526" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">line</span>(</span>
+<span id="cb8-527"><a href="#cb8-527" aria-hidden="true" tabindex="-1"></a>        [{ <span class="dt">x</span><span class="op">:</span> xLo<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> xLo }<span class="op">,</span></span>
+<span id="cb8-528"><a href="#cb8-528" aria-hidden="true" tabindex="-1"></a>         { <span class="dt">x</span><span class="op">:</span> xHi<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> xHi }]<span class="op">,</span></span>
+<span id="cb8-529"><a href="#cb8-529" aria-hidden="true" tabindex="-1"></a>        { <span class="dt">stroke</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> }</span>
+<span id="cb8-530"><a href="#cb8-530" aria-hidden="true" tabindex="-1"></a>      )<span class="op">,</span></span>
+<span id="cb8-531"><a href="#cb8-531" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 회귀식 라벨</span></span>
+<span id="cb8-532"><a href="#cb8-532" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb8-533"><a href="#cb8-533" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="vs">`ŷ = </span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">·x`</span><span class="op">,</span></span>
+<span id="cb8-534"><a href="#cb8-534" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span></span>
+<span id="cb8-535"><a href="#cb8-535" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">11</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">8</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
+<span id="cb8-536"><a href="#cb8-536" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
+<span id="cb8-537"><a href="#cb8-537" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 데이터 포인트</span></span>
+<span id="cb8-538"><a href="#cb8-538" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(sal_rows<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.9</span> })</span>
+<span id="cb8-539"><a href="#cb8-539" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb8-540"><a href="#cb8-540" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-541"><a href="#cb8-541" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>직선으로 충분한가?</strong> 슬라이더를 아무리 조절해도 이 데이터의 모든 점을 지나는 직선은 없다. 실제로 이 사원 데이터는 경력이 길어질수록 연봉이 <strong>가팔라지는</strong> 모양이라, 직선보다 곡선이 더 잘 맞는다. 그렇다면 2차식, 3차식으로 차수를 계속 올리면 항상 좋아질까? — 이 질문의 답은 Ch04의 <strong>과적합</strong>에서 만난다. (차수는 사람이 정하는 <strong>하이퍼파라미터</strong>였음을 기억하라.)</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="모형의-이용-예측과-추론" class="level2">
+<h2 class="anchored" data-anchor-id="모형의-이용-예측과-추론">모형의 이용: 예측과 추론</h2>
+<section id="예측-prediction" class="level3">
+<h3 class="anchored" data-anchor-id="예측-prediction">예측 (Prediction)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+예측 (Prediction)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>새로운 데이터의 <span class="math inline">\(x\)</span>값이 주어질 때, 학습된 파라미터를 이용하여 <strong><span class="math inline">\(y\)</span>값을 예측</strong>하는 것.</p>
+</div>
+</div>
+<p>학습된 모형이 <span class="math inline">\(y = 15000 + 8000x\)</span>라면:</p>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x_new <span class="kw">in</span> [<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>]:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> <span class="dv">15000</span> <span class="op">+</span> <span class="dv">8000</span> <span class="op">*</span> x_new</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'경력 (년)'</span>: x_new,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측식'</span>: <span class="ss">f'15000 + 8000 × </span><span class="sc">{</span>x_new<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측 연봉 ($)'</span>: <span class="ss">f'</span><span class="sc">{</span>y_pred<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-prediction-example" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prediction-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;5: 학습된 모형을 이용한 예측
+</figcaption>
+<div aria-describedby="tbl-prediction-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+경력 (년)
+</th>
+
+<th>
+예측식
+</th>
+
+<th>
+예측 연봉 ($)
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+4
+</td>
+
+<td>
+15000 + 8000 × 4
+</td>
+
+<td>
+47,000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+6
+</td>
+
+<td>
+15000 + 8000 × 6
+</td>
+
+<td>
+63,000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+8
+</td>
+
+<td>
+15000 + 8000 × 8
+</td>
+
+<td>
+79,000
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+10
+</td>
+
+<td>
+15000 + 8000 × 10
+</td>
+
+<td>
+95,000
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="추론-inference" class="level3">
+<h3 class="anchored" data-anchor-id="추론-inference">추론 (Inference)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+추론 (Inference)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(y\)</span>를 예측하는 데 있어 <span class="math inline">\(X\)</span>의 중요한 특성(feature)이 무엇인지, 그리고 그 방향성에 대하여 <strong>설명</strong>하는 것.</p>
+<ul>
+<li>모든 모형에서 추론이 가능하지는 않다</li>
+<li>명확한 수학적 형태를 가진 모형에서만 가능</li>
+</ul>
+</div>
+</div>
+<p><span class="math inline">\(y = 15000 + 8000x\)</span>에서 추론할 수 있는 것:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">파라미터</th>
+<th style="text-align: center;">값</th>
+<th>추론 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(w_0 = 15000\)</span></td>
+<td style="text-align: center;">절편</td>
+<td>회사에 처음 입사 시 연봉이 약 $15,000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(w_1 = 8000\)</span></td>
+<td style="text-align: center;">기울기</td>
+<td>1년 경력이 늘 때마다 연봉이 약 $8,000씩 인상</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+주의 — 추론은 <strong>인과</strong>가 아니다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>위 문장은 “이 데이터에서 경력과 연봉이 <strong>함께 움직였다</strong>”는 관찰이다. 경력이 연봉을 <strong>올린 원인</strong>이라는 뜻이 아니다.</p>
+<p>경력이 긴 사람이 애초에 능력이 좋았을 수도 있고, 두 변수 모두 나이의 영향을 받았을 수도 있다. <strong>인과를 주장하려면 실험 설계가 필요하다</strong> — 데이터를 관찰하는 것만으로는 알 수 없다. 모형이 알려주는 것은 언제나 <strong>연관성</strong>이지 인과가 아니다.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="변수의-종류" class="level2">
+<h2 class="anchored" data-anchor-id="변수의-종류">변수의 종류</h2>
+<section id="숫자형-변수-numerical-variable" class="level3">
+<h3 class="anchored" data-anchor-id="숫자형-변수-numerical-variable">숫자형 변수 (Numerical Variable)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+숫자형 변수
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>실수나 정수로 표현할 수 있으며, <strong>값의 차이가 의미를 가지는</strong> 변수.</p>
+<ul>
+<li>예: 나이(56, 24, …), 온도(27.2, 24.0, …), 연봉(40000, …)</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="범주형-변수-categorical-variable" class="level3">
+<h3 class="anchored" data-anchor-id="범주형-변수-categorical-variable">범주형 변수 (Categorical Variable)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+범주형 변수
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>실수로 표현할 수 없으며, <strong>분절된 서로 다른 값</strong>을 가지는 변수.</p>
+<ul>
+<li>예: 성별 {남자, 여자}, 브랜드 {삼성, 애플}, 결혼여부 {yes, no}</li>
+<li>서로 다른 값에 숫자를 부여하더라도(남=1, 여=2) <strong>숫자 간의 차이는 무의미</strong></li>
+</ul>
+</div>
+</div>
+</section>
+<section id="순서형-변수-ordinal-variable" class="level3">
+<h3 class="anchored" data-anchor-id="순서형-변수-ordinal-variable">순서형 변수 (Ordinal Variable)</h3>
+<p>범주형과 숫자형 사이에 하나가 더 있다. 실무에서 매우 자주 나오는데, 놓치기 쉽다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+순서형 변수
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>범주형이지만 <strong>순서가 있는</strong> 변수. 크기 비교는 되지만, <strong>간격은 의미가 없다.</strong></p>
+<ul>
+<li>예: 학점 {A, B, C}, 만족도 {매우 불만 … 매우 만족}, 제품 등급 {1등급, 2등급, 3등급}</li>
+<li>“A는 B보다 위”는 말이 되지만, “A − B 와 B − C 가 같다”는 보장되지 않는다</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="세-종류를-가르는-두-개의-질문" class="level3">
+<h3 class="anchored" data-anchor-id="세-종류를-가르는-두-개의-질문">세 종류를 가르는 두 개의 질문</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>질문</th>
+<th style="text-align: center;">숫자형</th>
+<th style="text-align: center;">순서형</th>
+<th style="text-align: center;">범주형</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>값을 <strong>빼면</strong> 의미가 있는가?</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+<td style="text-align: center;">❌</td>
+</tr>
+<tr class="even">
+<td>값에 <strong>순서</strong>가 있는가?</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">✅</td>
+<td style="text-align: center;">❌</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>나이</strong> 40 − 24 = 16년 → 뺄 수 있다 → <strong>숫자형</strong></li>
+<li><strong>학점</strong> A − B = ? → 뺄 수 없다. 하지만 A &gt; B → <strong>순서형</strong></li>
+<li><strong>부서</strong> ‘영업’ − ‘개발’ = ? → 뺄 수도, 순서를 매길 수도 없다 → <strong>범주형</strong></li>
+</ul>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>이 구분이 Ch04에서 실제로 쓰인다. 신경망에 넣을 때 <strong>범주형은 원-핫 인코딩</strong>을 해야 하지만, <strong>순서형은 순서를 살려 숫자로 넣는 편</strong>이 나은 경우가 많다 (A=3, B=2, C=1). 순서 정보를 버리지 않기 위해서다.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="수치-예시-변수-유형-비교" class="level3">
+<h3 class="anchored" data-anchor-id="수치-예시-변수-유형-비교">수치 예시: 변수 유형 비교</h3>
+<div class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">''</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'나이'</span>: [<span class="dv">24</span>, <span class="dv">23</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">27</span>],</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'성별'</span>: [<span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'여'</span>],</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'직업'</span>: [<span class="st">'군인'</span>, <span class="st">'디자이너'</span>, <span class="st">'디자이너'</span>, <span class="st">'회사원'</span>, <span class="st">'요리사'</span>],</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'브랜드'</span>: [<span class="st">'삼성'</span>, <span class="st">'애플'</span>, <span class="st">'애플'</span>, <span class="st">'삼성'</span>, <span class="st">'삼성'</span>],</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-variable-types" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-variable-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;6: 숫자형 변수와 범주형 변수 비교
+</figcaption>
+<div aria-describedby="tbl-variable-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="7">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+</th>
+
+<th>
+나이
+</th>
+
+<th>
+성별
+</th>
+
+<th>
+직업
+</th>
+
+<th>
+브랜드
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+1
+</td>
+
+<td>
+24
+</td>
+
+<td>
+남
+</td>
+
+<td>
+군인
+</td>
+
+<td>
+삼성
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+2
+</td>
+
+<td>
+23
+</td>
+
+<td>
+여
+</td>
+
+<td>
+디자이너
+</td>
+
+<td>
+애플
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+3
+</td>
+
+<td>
+40
+</td>
+
+<td>
+남
+</td>
+
+<td>
+디자이너
+</td>
+
+<td>
+애플
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+4
+</td>
+
+<td>
+50
+</td>
+
+<td>
+여
+</td>
+
+<td>
+회사원
+</td>
+
+<td>
+삼성
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+5
+</td>
+
+<td>
+27
+</td>
+
+<td>
+여
+</td>
+
+<td>
+요리사
+</td>
+
+<td>
+삼성
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li><strong>숫자형 변수</strong>: 나이 → 값의 차이(24세 vs 40세)가 의미 있음</li>
+<li><strong>범주형 변수</strong>: 성별, 직업, 브랜드 → 값 간의 크기 비교 불가</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="회귀와-분류" class="level2">
+<h2 class="anchored" data-anchor-id="회귀와-분류">회귀와 분류</h2>
+<section id="회귀-regression" class="level3">
+<h3 class="anchored" data-anchor-id="회귀-regression">회귀 (Regression)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+회귀 (Regression)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>종속변수가 <strong>숫자형(연속형)</strong>인 경우. 실수값을 예측한다.</p>
+<ul>
+<li>예: “경력이 8년인 사람의 연봉은 얼마인가?” → 실수값 예측</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="분류-classification" class="level3">
+<h3 class="anchored" data-anchor-id="분류-classification">분류 (Classification)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+분류 (Classification)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>종속변수가 <strong>범주형</strong>인 경우. 어느 범주에 속하는지 예측한다.</p>
+<ul>
+<li>예: “나이 30, 남성, 엔지니어인 사람이 삼성과 애플 중 어느 핸드폰을 고를까?” → 범주 예측</li>
+</ul>
+</div>
+</div>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+인터랙티브 — 회귀와 분류의 차이를 직접 확인해 보세요
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>토글을 바꾸면서 같은 데이터 구조에서 종속변수의 유형에 따라 문제가 어떻게 달라지는지 관찰하세요.</p>
+</div>
+</div>
+<div id="abc9a422" class="cell" data-execution_count="8">
+<div class="cell-output cell-output-display">
+<script type="ojs-define">{"contents": [{"name": "rc_reg_data", "value": [{"x": 5.49448142616835, "y": 53200.88352223528}, {"x": 12.408571676918994, "y": 116147.06350708033}, {"x": 9.783927301736862, "y": 90268.22496430087}, {"x": 8.18390181036444, "y": 79012.74573394914}, {"x": 2.872223685309238, "y": 34969.25642132692}, {"x": 2.8719342440344318, "y": 47236.864874820145}, {"x": 1.6970033460183935, "y": 28508.54064445748}, {"x": 11.394113749299223, "y": 100864.35534961427}, {"x": 8.213380140918506, "y": 84819.76568786398}, {"x": 9.496870933552547, "y": 84870.74921856527}, {"x": 1.2470139315496294, "y": 26020.42942742081}, {"x": 12.638918225943932, "y": 106312.99518815259}, {"x": 10.98931168960506, "y": 96273.56327234833}, {"x": 3.548069328139314, "y": 44368.86080446013}, {"x": 3.1818996064852074, "y": 44147.52975185871}, {"x": 3.200854118241206, "y": 41463.674351879505}, {"x": 4.650906915514453, "y": 51629.013912174414}, {"x": 7.297077179586854, "y": 71871.09895874838}, {"x": 6.18334022370539, "y": 57074.111837805984}, {"x": 4.4947496823765025, "y": 47358.776417038476}, {"x": 8.342234736668553, "y": 79434.68403854949}, {"x": 2.673926327824502, "y": 41677.02175369059}, {"x": 4.505735782422618, "y": 52763.977707223254}, {"x": 5.3963421195243, "y": 49355.53617938074}, {"x": 6.472839810604431, "y": 68403.13833180943}, {"x": 10.422111536716162, "y": 96451.48089164772}, {"x": 3.396085385900317, "y": 38784.07308567274}, {"x": 7.170813260963339, "y": 75424.88753191105}, {"x": 8.10897482634451, "y": 85026.79622323583}, {"x": 1.5574049526399727, "y": 32115.640216700773}]}, {"name": "rc_cls_data", "value": [{"x1": 50.85081386743783, "x2": 66934.46307320667, "label": "\uc0bc\uc131"}, {"x1": 22.961786069363615, "x2": 97999.60246887438, "label": "\uc0bc\uc131"}, {"x1": 34.33862914177091, "x2": 50591.83489424602, "label": "\uc560\ud50c"}, {"x1": 24.63476238100519, "x2": 36928.19188459137, "label": "\uc0bc\uc131"}, {"x1": 54.52413703502374, "x2": 56077.63076223912, "label": "\uc0bc\uc131"}, {"x1": 44.93192507310232, "x2": 44509.9158528604, "label": "\uc0bc\uc131"}, {"x1": 33.23592099410597, "x2": 113672.78871083158, "label": "\uc560\ud50c"}, {"x1": 22.542334011440946, "x2": 102730.83416079753, "label": "\uc0bc\uc131"}, {"x1": 32.43929286862649, "x2": 87006.33808593811, "label": "\uc560\ud50c"}, {"x1": 33.007332881069885, "x2": 108431.4531168946, "label": "\uc560\ud50c"}, {"x1": 49.18424713352256, "x2": 102330.4869209203, "label": "\uc560\ud50c"}, {"x1": 45.502298854208526, "x2": 46791.305299743224, "label": "\uc0bc\uc131"}, {"x1": 55.48850970305306, "x2": 110330.309864098, "label": "\uc560\ud50c"}, {"x1": 38.88859700647797, "x2": 78540.80177240857, "label": "\uc0bc\uc131"}, {"x1": 24.78376983753207, "x2": 102669.61396476562, "label": "\uc0bc\uc131"}, {"x1": 48.5297914889198, "x2": 110648.21699311439, "label": "\uc560\ud50c"}, {"x1": 50.4314019446759, "x2": 58620.312747467746, "label": "\uc0bc\uc131"}, {"x1": 42.45108790277985, "x2": 39904.67320749091, "label": "\uc0bc\uc131"}, {"x1": 50.83868719818244, "x2": 50514.16462877475, "label": "\uc0bc\uc131"}, {"x1": 39.75182385457563, "x2": 68439.70097636306, "label": "\uc0bc\uc131"}, {"x1": 40.90931317527976, "x2": 103621.32893302439, "label": "\uc560\ud50c"}, {"x1": 37.101640734341984, "x2": 107465.7524930709, "label": "\uc560\ud50c"}, {"x1": 21.016765069763807, "x2": 30625.691747807163, "label": "\uc0bc\uc131"}, {"x1": 24.315657079732176, "x2": 75967.25723198091, "label": "\uc0bc\uc131"}, {"x1": 21.25716742746937, "x2": 67566.9902833901, "label": "\uc0bc\uc131"}, {"x1": 45.45641645055122, "x2": 49989.70294236572, "label": "\uc0bc\uc131"}, {"x1": 32.57423924305307, "x2": 40787.883060031454, "label": "\uc560\ud50c"}, {"x1": 40.34282764658811, "x2": 60385.36542632652, "label": "\uc0bc\uc131"}, {"x1": 56.30265895704372, "x2": 114861.87335212673, "label": "\uc560\ud50c"}, {"x1": 29.971689165955, "x2": 59088.26388186797, "label": "\uc0bc\uc131"}]}]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="755" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 754;"><span id="cb11-755"><a href="#cb11-755" aria-hidden="true" tabindex="-1"></a>viewof rc_mode <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"regression"</span><span class="op">,</span> <span class="st">"classification"</span>]<span class="op">,</span> {</span>
+<span id="cb11-756"><a href="#cb11-756" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"문제 유형"</span><span class="op">,</span></span>
+<span id="cb11-757"><a href="#cb11-757" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="st">"regression"</span><span class="op">,</span></span>
+<span id="cb11-758"><a href="#cb11-758" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> k <span class="kw">=&gt;</span> k <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span> <span class="st">"회귀 (연봉 예측)"</span> <span class="op">:</span> <span class="st">"분류 (브랜드 선택)"</span></span>
+<span id="cb11-759"><a href="#cb11-759" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="763" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 762;"><span id="cb12-763"><a href="#cb12-763" aria-hidden="true" tabindex="-1"></a>rc_mode <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span></span>
+<span id="cb12-764"><a href="#cb12-764" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb12-765"><a href="#cb12-765" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb12-766"><a href="#cb12-766" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb12-767"><a href="#cb12-767" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb12-768"><a href="#cb12-768" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb12-769"><a href="#cb12-769" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb12-770"><a href="#cb12-770" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span> })<span class="op">,</span></span>
+<span id="cb12-771"><a href="#cb12-771" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">linearRegressionY</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> })<span class="op">,</span></span>
+<span id="cb12-772"><a href="#cb12-772" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb12-773"><a href="#cb12-773" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 연봉 (실수값)"</span><span class="op">,</span></span>
+<span id="cb12-774"><a href="#cb12-774" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
+<span id="cb12-775"><a href="#cb12-775" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb12-776"><a href="#cb12-776" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb12-777"><a href="#cb12-777" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb12-778"><a href="#cb12-778" aria-hidden="true" tabindex="-1"></a><span class="op">:</span></span>
+<span id="cb12-779"><a href="#cb12-779" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb12-780"><a href="#cb12-780" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb12-781"><a href="#cb12-781" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb12-782"><a href="#cb12-782" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"나이"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb12-783"><a href="#cb12-783" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"소득 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb12-784"><a href="#cb12-784" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb12-785"><a href="#cb12-785" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb12-786"><a href="#cb12-786" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_cls_data<span class="op">,</span> {</span>
+<span id="cb12-787"><a href="#cb12-787" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> <span class="st">"x1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"x2"</span><span class="op">,</span></span>
+<span id="cb12-788"><a href="#cb12-788" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"#1428A0"</span> <span class="op">:</span> <span class="st">"#555555"</span><span class="op">,</span></span>
+<span id="cb12-789"><a href="#cb12-789" aria-hidden="true" tabindex="-1"></a>        <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span><span class="op">,</span></span>
+<span id="cb12-790"><a href="#cb12-790" aria-hidden="true" tabindex="-1"></a>        <span class="dt">symbol</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"circle"</span> <span class="op">:</span> <span class="st">"diamond"</span></span>
+<span id="cb12-791"><a href="#cb12-791" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
+<span id="cb12-792"><a href="#cb12-792" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb12-793"><a href="#cb12-793" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 브랜드 (범주값)"</span><span class="op">,</span></span>
+<span id="cb12-794"><a href="#cb12-794" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
+<span id="cb12-795"><a href="#cb12-795" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb12-796"><a href="#cb12-796" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb12-797"><a href="#cb12-797" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-6" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="지도학습-vs-비지도학습" class="level2">
+<h2 class="anchored" data-anchor-id="지도학습-vs-비지도학습">지도학습 vs 비지도학습</h2>
+<section id="지도학습-supervised-learning" class="level3">
+<h3 class="anchored" data-anchor-id="지도학습-supervised-learning">지도학습 (Supervised Learning)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+지도학습 (Supervised Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>데이터: <span class="math inline">\((X, y)\)</span> — <span class="math inline">\(X\)</span> 데이터와 <span class="math inline">\(y\)</span> 레이블(정답)이 <strong>모두</strong> 존재</li>
+<li>목표: <span class="math inline">\(X \to y\)</span>의 관계를 매핑하는 함수를 찾는 것</li>
+<li>예시: 회귀, 분류, CNN, 객체탐지, Sequence 모델</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="비지도학습-unsupervised-learning" class="level3">
+<h3 class="anchored" data-anchor-id="비지도학습-unsupervised-learning">비지도학습 (Unsupervised Learning)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+비지도학습 (Unsupervised Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>데이터: <span class="math inline">\(X\)</span>만 존재 — <span class="math inline">\(y\)</span>(정답)는 <strong>존재하지 않음</strong></li>
+<li>목표: 데이터를 설명하는 <strong>내재적인 구조</strong>를 학습</li>
+<li>예시: 군집분석(Clustering), 차원축소(Dimensionality Reduction), 이상치 탐지</li>
+</ul>
+</div>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>지도학습</th>
+<th>비지도학습</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>데이터</strong></td>
+<td><span class="math inline">\((X, y)\)</span></td>
+<td><span class="math inline">\(X\)</span>만</td>
+</tr>
+<tr class="even">
+<td><strong>정답</strong></td>
+<td>존재</td>
+<td>없음</td>
+</tr>
+<tr class="odd">
+<td><strong>목표</strong></td>
+<td><span class="math inline">\(X \to y\)</span> 매핑</td>
+<td>데이터 내부 구조 발견</td>
+</tr>
+<tr class="even">
+<td><strong>예시</strong></td>
+<td>회귀, 분류, CNN</td>
+<td>군집분석, 차원축소</td>
+</tr>
+</tbody>
+</table>
+<div style="display:flex;gap:2.5em;justify-content:center;flex-wrap:wrap;margin:0.5em 0;font-family:Pretendard,sans-serif;font-size:0.85em;">
+<div style="text-align:center;">
+<div style="font-weight:700;margin-bottom:0.6em;color:#2E7D32;font-size:1.05em;">
+지도학습
+</div>
+<div style="display:flex;align-items:center;gap:0.4em;">
+<div style="padding:0.5em 0.8em;background:#E8F5E9;border-radius:8px;border:1.5px solid #A5D6A7;line-height:1.6;">
+<p><strong>X</strong> (입력)<br> <strong>y</strong> (정답)</p>
+</div>
+<div style="font-size:1.6em;color:#2E7D32;">
+→
+</div>
+<div style="padding:0.7em 1em;background:#C8E6C9;border-radius:8px;border:2px solid #66BB6A;">
+<p><strong>모형</strong><br><span style="font-size:0.85em;">학습</span></p>
+</div>
+<div style="font-size:1.6em;color:#2E7D32;">
+→
+</div>
+<div style="padding:0.7em 1em;background:#E8F5E9;border-radius:8px;border:2px solid #A5D6A7;">
+<p><strong>X → ŷ</strong><br><span style="font-size:0.85em;">예측</span></p>
+</div>
+</div>
+</div>
+<div style="text-align:center;">
+<div style="font-weight:700;margin-bottom:0.6em;color:#6A1B9A;font-size:1.05em;">
+비지도학습
+</div>
+<div style="display:flex;align-items:center;gap:0.4em;">
+<div style="padding:0.5em 0.8em;background:#F3E5F5;border-radius:8px;border:1.5px solid #CE93D8;line-height:1.6;">
+<p><strong>X</strong> (입력)<br> <span style="color:#999;text-decoration:line-through;">y 없음</span></p>
+</div>
+<div style="font-size:1.6em;color:#6A1B9A;">
+→
+</div>
+<div style="padding:0.7em 1em;background:#E1BEE7;border-radius:8px;border:2px solid #AB47BC;">
+<p><strong>모형</strong><br><span style="font-size:0.85em;">탐색</span></p>
+</div>
+<div style="font-size:1.6em;color:#6A1B9A;">
+→
+</div>
+<div style="padding:0.7em 1em;background:#F3E5F5;border-radius:8px;border:2px solid #CE93D8;">
+<p><strong>구조</strong><br><span style="font-size:0.85em;">군집, 패턴</span></p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="딥러닝이란" class="level2">
+<h2 class="anchored" data-anchor-id="딥러닝이란">딥러닝이란?</h2>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+딥러닝 (Deep Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계를 <strong>다층 퍼셉트론(인공신경망) 구조</strong>로 표현하는 모형.</p>
+<p>기존의 머신러닝 모형(회귀, SVM, Random Forest 등)과 달리, <strong>인공신경망의 층(layer)</strong>을 깊게 쌓아서 복잡한 패턴을 학습한다.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="왜-딥러닝이-각광받는가" class="level2">
+<h2 class="anchored" data-anchor-id="왜-딥러닝이-각광받는가">왜 딥러닝이 각광받는가?</h2>
+<section id="모델링의-자유도" class="level3">
+<h3 class="anchored" data-anchor-id="모델링의-자유도">모델링의 자유도</h3>
+<p>기존의 머신러닝 모형은 주로 <strong>정형데이터(Tabular Data)</strong>의 회귀/분류에 집중되었다.</p>
+<p>딥러닝은 모델링의 자유도가 높아 다양한 종류의 데이터를 표현할 수 있다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>데이터 유형</th>
+<th>예시</th>
+<th>딥러닝 활용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>정형 데이터</td>
+<td>테이블, 스프레드시트</td>
+<td>회귀, 분류</td>
+</tr>
+<tr class="even">
+<td>텍스트 데이터</td>
+<td>리뷰, 뉴스, 소셜미디어</td>
+<td>자연어 처리 (NLP)</td>
+</tr>
+<tr class="odd">
+<td>이미지 데이터</td>
+<td>사진, 의료영상</td>
+<td>이미지 분류, 객체탐지</td>
+</tr>
+<tr class="even">
+<td>음성 데이터</td>
+<td>음성 명령, 통화녹음</td>
+<td>음성 인식</td>
+</tr>
+<tr class="odd">
+<td>동영상 데이터</td>
+<td>CCTV, 스트리밍</td>
+<td>행동 인식, 비디오 분석</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="모델의-유연성" class="level3">
+<h3 class="anchored" data-anchor-id="모델의-유연성">모델의 유연성</h3>
+<p>딥러닝은 기존 모형에 비하여 유연성이 높아 <strong>복잡한 비선형 관계</strong>를 표현할 수 있다.</p>
+<p>특히 <strong>학습에 사용되는 데이터가 많을수록</strong> 딥러닝이 유리하다.</p>
+<div id="edf29148" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<script type="ojs-define">{"contents": [{"name": "flex_data", "value": [{"x": 1.0, "y": 15.381855752935497, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.4974874371859297, "y": 17.903088892989015, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.9949748743718594, "y": 20.32595002591401, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 2.492462311557789, "y": 22.65427737342539, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 2.9899497487437188, "y": 24.8917593997373, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 3.487437185929648, "y": 27.041940654714097, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 3.9849246231155777, "y": 29.108227389036724, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 4.482412060301508, "y": 31.093892950279738, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 4.9798994974874375, "y": 33.00208296844728, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 5.477386934673366, "y": 34.83582033918305, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 5.974874371859296, "y": 36.59801001254799, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 6.472361809045226, "y": 38.291443594952455, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 6.969849246231155, "y": 39.9188037715328, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 7.467336683417085, "y": 41.48266855597823, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 7.964824120603015, "y": 42.98551537454042, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 8.462311557788944, "y": 44.429724990695554, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 8.959798994974875, "y": 45.81758527667629, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 9.457286432160803, "y": 47.151294837848226, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 9.954773869346733, "y": 48.43296649567252, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 10.452261306532662, "y": 49.66463063477236, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 10.949748743718592, "y": 50.848238419405554, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 11.447236180904522, "y": 51.98566488443859, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 11.944723618090451, "y": 53.07871190571894, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 12.442211055276381, "y": 54.1291110545511, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 12.93969849246231, "y": 55.13852634079824, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 13.43718592964824, "y": 56.108556848955324, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 13.93467336683417, "y": 57.04073927136921, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 14.4321608040201, "y": 57.93655034261926, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 14.92964824120603, "y": 58.79740917891458, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 15.42713567839196, "y": 59.624679526214024, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 15.924623115577889, "y": 60.419671920630456, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 16.42211055276382, "y": 61.18364576454149, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 16.91959798994975, "y": 61.91781132169581, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 17.417085427135678, "y": 62.62333163447563, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 17.914572864321606, "y": 63.301324366352475, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 18.412060301507537, "y": 63.9528635724551, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 18.909547738693465, "y": 64.57898140105436, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 19.407035175879397, "y": 65.18066972866073, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 19.904522613065325, "y": 65.7588817313243, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 20.402010050251256, "y": 66.31453339462686, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 20.899497487437184, "y": 66.84850496475796, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 21.396984924623116, "y": 67.36164234297365, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 21.894472361809044, "y": 67.85475842564716, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 22.391959798994975, "y": 68.32863439203419, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 22.889447236180903, "y": 68.78402094179293, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 23.386934673366834, "y": 69.22163948421931, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 23.884422110552762, "y": 69.64218328108122, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 24.381909547738694, "y": 70.0463185448624, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 24.87939698492462, "y": 70.43468549415574, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 25.376884422110553, "y": 70.80789936787767, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 25.87437185929648, "y": 71.1665513999107, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 26.371859296482413, "y": 71.51120975571789, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 26.86934673366834, "y": 71.84242043241292, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 27.366834170854272, "y": 72.16070812371191, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 27.8643216080402, "y": 72.46657705113702, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 28.36180904522613, "y": 72.76051176278847, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 28.85929648241206, "y": 73.0429779009508, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 29.35678391959799, "y": 73.31442293974894, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 29.85427135678392, "y": 73.5752768940228, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 30.35175879396985, "y": 73.82595300054368, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 30.849246231155778, "y": 74.06684837265094, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 31.34673366834171, "y": 74.2983446293469, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 31.844221105527637, "y": 74.52080849984574, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 32.34170854271357, "y": 74.73459240453465, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 32.8391959798995, "y": 74.94003501326726, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 33.336683417085425, "y": 75.13746178187398, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 33.834170854271356, "y": 75.32718546773908, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 34.33165829145729, "y": 75.50950662526125, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 34.82914572864321, "y": 75.68471408198262, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 35.32663316582914, "y": 75.85308539614034, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 35.824120603015075, "y": 76.01488729636588, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 36.321608040201006, "y": 76.17037610422818, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 36.81909547738693, "y": 76.31979814029044, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 37.31658291457286, "y": 76.46339011432346, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 37.814070351758794, "y": 76.601379500294, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 38.311557788944725, "y": 76.733984896722, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 38.80904522613065, "y": 76.86141637297759, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 39.30653266331658, "y": 76.98387580206648, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 39.80402010050251, "y": 77.10155718043092, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 40.301507537688444, "y": 77.21464693527295, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 40.79899497487437, "y": 77.32332421988653, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 41.2964824120603, "y": 77.42776119746667, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 41.79396984924623, "y": 77.52812331384504, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 42.29145728643216, "y": 77.62456955958419, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 42.78894472361809, "y": 77.71725272184538, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 43.28643216080402, "y": 77.80631962642941, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 43.78391959798995, "y": 77.89191137037342, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 44.28140703517588, "y": 77.97416354547245, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 44.778894472361806, "y": 78.05320645307987, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 45.27638190954774, "y": 78.12916531052663, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 45.77386934673367, "y": 78.2021604494868, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 46.2713567839196, "y": 78.27230750660317, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 46.768844221105525, "y": 78.33971760667535, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 47.266331658291456, "y": 78.40449753870021, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 47.76381909547739, "y": 78.46674992504367, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 48.26130653266332, "y": 78.52657338401194, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 48.75879396984924, "y": 78.58406268607952, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 49.256281407035175, "y": 78.63930890402173, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 49.753768844221106, "y": 78.69239955718936, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 50.25125628140703, "y": 78.74341875015408, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 50.74874371859296, "y": 78.79244730594435, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 51.246231155778894, "y": 78.83956289408277, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 51.743718592964825, "y": 78.8848401536277, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 52.24120603015075, "y": 78.92835081141418, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 52.73869346733668, "y": 78.97016379568132, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 53.23618090452261, "y": 79.01034534526633, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 53.733668341708544, "y": 79.04895911453805, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 54.23115577889447, "y": 79.08606627423617, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 54.7286432160804, "y": 79.12172560837611, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 55.22613065326633, "y": 79.15599360737274, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 55.72361809045226, "y": 79.18892455753084, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 56.22110552763819, "y": 79.22057062704373, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 56.71859296482412, "y": 79.25098194863655, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 57.21608040201005, "y": 79.28020669898493, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 57.71356783919598, "y": 79.30829117503501, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 58.211055276381906, "y": 79.33527986734566, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 58.70854271356784, "y": 79.361215530569, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 59.20603015075377, "y": 79.38613925118102, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 59.7035175879397, "y": 79.41009051256951, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 60.201005025125625, "y": 79.4331072575824, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 60.698492462311556, "y": 79.45522594863573, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 61.19597989949749, "y": 79.4764816254761, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 61.69346733668342, "y": 79.49690796068978, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 62.19095477386934, "y": 79.51653731304562, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 62.688442211055275, "y": 79.53540077875687, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 63.185929648241206, "y": 79.5535282407428, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 63.68341708542714, "y": 79.57094841596842, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 64.18090452261306, "y": 79.58768890093681, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 64.678391959799, "y": 79.6037762154068, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 65.17587939698493, "y": 79.61923584440473, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 65.67336683417085, "y": 79.63409227859697, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 66.17085427135679, "y": 79.64836905308735, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 66.66834170854271, "y": 79.66208878470073, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 67.16582914572864, "y": 79.67527320781186, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 67.66331658291458, "y": 79.68794320877625, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 68.1608040201005, "y": 79.70011885901782, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 68.65829145728642, "y": 79.71181944682533, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 69.15577889447236, "y": 79.72306350790832, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 69.65326633165829, "y": 79.73386885476079, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 70.15075376884423, "y": 79.7442526048792, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 70.64824120603015, "y": 79.75423120787956, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 71.14572864321607, "y": 79.76382047155626, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 71.64321608040201, "y": 79.77303558692445, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 72.14070351758794, "y": 79.78189115228501, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 72.63819095477386, "y": 79.7904011963509, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 73.1356783919598, "y": 79.79857920047084, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 73.63316582914572, "y": 79.8064381199862, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 74.13065326633166, "y": 79.81399040475432, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 74.62814070351759, "y": 79.82124801887132, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 75.12562814070351, "y": 79.82822245962512, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 75.62311557788945, "y": 79.8349247757092, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 76.12060301507537, "y": 79.84136558472551, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 76.6180904522613, "y": 79.8475550900046, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 77.11557788944724, "y": 79.85350309676944, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 77.61306532663316, "y": 79.85921902766849, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 78.1105527638191, "y": 79.86471193770276, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 78.60804020100502, "y": 79.86999052857057, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 79.10552763819095, "y": 79.8750631624524, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 79.60301507537689, "y": 79.87993787525805, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 80.10050251256281, "y": 79.88462238935686, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 80.59798994974874, "y": 79.88912412581128, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 81.09547738693468, "y": 79.89345021613303, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 81.5929648241206, "y": 79.8976075135807, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 82.09045226130652, "y": 79.90160260401638, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 82.58793969849246, "y": 79.90544181633885, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 83.08542713567839, "y": 79.90913123250962, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 83.58291457286433, "y": 79.91267669718772, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 84.08040201005025, "y": 79.91608382698871, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 84.57788944723617, "y": 79.91935801938232, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 85.07537688442211, "y": 79.92250446124291, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 85.57286432160804, "y": 79.92552813706644, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 86.07035175879396, "y": 79.92843383686666, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 86.5678391959799, "y": 79.9312261637634, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 87.06532663316582, "y": 79.9339095412746, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 87.56281407035176, "y": 79.93648822032398, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 88.06030150753769, "y": 79.93896628597518, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 88.55778894472361, "y": 79.9413476639032, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 89.05527638190955, "y": 79.94363612661336, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 89.55276381909547, "y": 79.94583529941754, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 90.0502512562814, "y": 79.9479486661773, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 90.54773869346734, "y": 79.94997957482296, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 91.04522613065326, "y": 79.95193124265721, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 91.5427135678392, "y": 79.9538067614519, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 92.04020100502512, "y": 79.95560910234596, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 92.53768844221105, "y": 79.95734112055207, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 93.03517587939699, "y": 79.95900555988, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 93.53266331658291, "y": 79.96060505708303, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 94.03015075376884, "y": 79.9621421460352, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 94.52763819095478, "y": 79.96361926174535, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 95.0251256281407, "y": 79.9650387442145, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 95.52261306532664, "y": 79.9664028421429, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 96.02010050251256, "y": 79.96771371649231, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 96.51758793969849, "y": 79.96897344390939, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 97.01507537688443, "y": 79.97018402001537, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 97.51256281407035, "y": 79.97134736256747, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 98.01005025125627, "y": 79.97246531449701, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 98.50753768844221, "y": 79.9735396468289, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 99.00502512562814, "y": 79.9745720614872, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 99.50251256281406, "y": 79.97556419399129, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 100.0, "y": 79.97651761604682, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.0, "y": 7.659901980634256, "type": "\ub525\ub7ec\ub2dd"}, {"x": 1.4974874371859297, "y": 8.953740980537226, "type": "\ub525\ub7ec\ub2dd"}, {"x": 1.9949748743718594, "y": 10.228413304473113, "type": "\ub525\ub7ec\ub2dd"}, {"x": 2.492462311557789, "y": 11.48420288380252, "type": "\ub525\ub7ec\ub2dd"}, {"x": 2.9899497487437188, "y": 12.721389443782794, "type": "\ub525\ub7ec\ub2dd"}, {"x": 3.487437185929648, "y": 13.940248565876496, "type": "\ub525\ub7ec\ub2dd"}, {"x": 3.9849246231155777, "y": 15.141051749136665, "type": "\ub525\ub7ec\ub2dd"}, {"x": 4.482412060301508, "y": 16.324066470682883, "type": "\ub525\ub7ec\ub2dd"}, {"x": 4.9798994974874375, "y": 17.48955624528141, "type": "\ub525\ub7ec\ub2dd"}, {"x": 5.477386934673366, "y": 18.637780684042674, "type": "\ub525\ub7ec\ub2dd"}, {"x": 5.974874371859296, "y": 19.768995552249272, "type": "\ub525\ub7ec\ub2dd"}, {"x": 6.472361809045226, "y": 20.883452826327343, "type": "\ub525\ub7ec\ub2dd"}, {"x": 6.969849246231155, "y": 21.98140074997386, "type": "\ub525\ub7ec\ub2dd"}, {"x": 7.467336683417085, "y": 23.063083889452614, "type": "\ub525\ub7ec\ub2dd"}, {"x": 7.964824120603015, "y": 24.128743188070946, "type": "\ub525\ub7ec\ub2dd"}, {"x": 8.462311557788944, "y": 25.178616019849546, "type": "\ub525\ub7ec\ub2dd"}, {"x": 8.959798994974875, "y": 26.212936242397134, "type": "\ub525\ub7ec\ub2dd"}, {"x": 9.457286432160803, "y": 27.231934249001895, "type": "\ub525\ub7ec\ub2dd"}, {"x": 9.954773869346733, "y": 28.235837019951248, "type": "\ub525\ub7ec\ub2dd"}, {"x": 10.452261306532662, "y": 29.22486817309137, "type": "\ub525\ub7ec\ub2dd"}, {"x": 10.949748743718592, "y": 30.19924801363773, "type": "\ub525\ub7ec\ub2dd"}, {"x": 11.447236180904522, "y": 31.159193583247752, "type": "\ub525\ub7ec\ub2dd"}, {"x": 11.944723618090451, "y": 32.104918708366526, "type": "\ub525\ub7ec\ub2dd"}, {"x": 12.442211055276381, "y": 33.03663404785628, "type": "\ub525\ub7ec\ub2dd"}, {"x": 12.93969849246231, "y": 33.95454713992046, "type": "\ub525\ub7ec\ub2dd"}, {"x": 13.43718592964824, "y": 34.85886244833235, "type": "\ub525\ub7ec\ub2dd"}, {"x": 13.93467336683417, "y": 35.749781407979306, "type": "\ub525\ub7ec\ub2dd"}, {"x": 14.4321608040201, "y": 36.627502469731894, "type": "\ub525\ub7ec\ub2dd"}, {"x": 14.92964824120603, "y": 37.49222114464858, "type": "\ub525\ub7ec\ub2dd"}, {"x": 15.42713567839196, "y": 38.344130047525596, "type": "\ub525\ub7ec\ub2dd"}, {"x": 15.924623115577889, "y": 39.1834189398015, "type": "\ub525\ub7ec\ub2dd"}, {"x": 16.42211055276382, "y": 40.010274771826296, "type": "\ub525\ub7ec\ub2dd"}, {"x": 16.91959798994975, "y": 40.824881724504365, "type": "\ub525\ub7ec\ub2dd"}, {"x": 17.417085427135678, "y": 41.62742125032045, "type": "\ub525\ub7ec\ub2dd"}, {"x": 17.914572864321606, "y": 42.418072113757944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 18.412060301507537, "y": 43.19701043111844, "type": "\ub525\ub7ec\ub2dd"}, {"x": 18.909547738693465, "y": 43.9644097097513, "type": "\ub525\ub7ec\ub2dd"}, {"x": 19.407035175879397, "y": 44.72044088670226, "type": "\ub525\ub7ec\ub2dd"}, {"x": 19.904522613065325, "y": 45.4652723667893, "type": "\ub525\ub7ec\ub2dd"}, {"x": 20.402010050251256, "y": 46.199070060114636, "type": "\ub525\ub7ec\ub2dd"}, {"x": 20.899497487437184, "y": 46.92199741902092, "type": "\ub525\ub7ec\ub2dd"}, {"x": 21.396984924623116, "y": 47.63421547450001, "type": "\ub525\ub7ec\ub2dd"}, {"x": 21.894472361809044, "y": 48.33588287206239, "type": "\ub525\ub7ec\ub2dd"}, {"x": 22.391959798994975, "y": 49.02715590707523, "type": "\ub525\ub7ec\ub2dd"}, {"x": 22.889447236180903, "y": 49.7081885595769, "type": "\ub525\ub7ec\ub2dd"}, {"x": 23.386934673366834, "y": 50.37913252857586, "type": "\ub525\ub7ec\ub2dd"}, {"x": 23.884422110552762, "y": 51.04013726584131, "type": "\ub525\ub7ec\ub2dd"}, {"x": 24.381909547738694, "y": 51.69135000919344, "type": "\ub525\ub7ec\ub2dd"}, {"x": 24.87939698492462, "y": 52.33291581530038, "type": "\ub525\ub7ec\ub2dd"}, {"x": 25.376884422110553, "y": 52.96497759198933, "type": "\ub525\ub7ec\ub2dd"}, {"x": 25.87437185929648, "y": 53.58767613007913, "type": "\ub525\ub7ec\ub2dd"}, {"x": 26.371859296482413, "y": 54.201150134741184, "type": "\ub525\ub7ec\ub2dd"}, {"x": 26.86934673366834, "y": 54.80553625639578, "type": "\ub525\ub7ec\ub2dd"}, {"x": 27.366834170854272, "y": 55.40096912115087, "type": "\ub525\ub7ec\ub2dd"}, {"x": 27.8643216080402, "y": 55.98758136078972, "type": "\ub525\ub7ec\ub2dd"}, {"x": 28.36180904522613, "y": 56.565503642314525, "type": "\ub525\ub7ec\ub2dd"}, {"x": 28.85929648241206, "y": 57.134864697052244, "type": "\ub525\ub7ec\ub2dd"}, {"x": 29.35678391959799, "y": 57.69579134932934, "type": "\ub525\ub7ec\ub2dd"}, {"x": 29.85427135678392, "y": 58.24840854472169, "type": "\ub525\ub7ec\ub2dd"}, {"x": 30.35175879396985, "y": 58.79283937788604, "type": "\ub525\ub7ec\ub2dd"}, {"x": 30.849246231155778, "y": 59.32920511997915, "type": "\ub525\ub7ec\ub2dd"}, {"x": 31.34673366834171, "y": 59.85762524567077, "type": "\ub525\ub7ec\ub2dd"}, {"x": 31.844221105527637, "y": 60.378217459756364, "type": "\ub525\ub7ec\ub2dd"}, {"x": 32.34170854271357, "y": 60.8910977233759, "type": "\ub525\ub7ec\ub2dd"}, {"x": 32.8391959798995, "y": 61.39638027984371, "type": "\ub525\ub7ec\ub2dd"}, {"x": 33.336683417085425, "y": 61.8941776800963, "type": "\ub525\ub7ec\ub2dd"}, {"x": 33.834170854271356, "y": 62.384600807762716, "type": "\ub525\ub7ec\ub2dd"}, {"x": 34.33165829145729, "y": 62.86775890386382, "type": "\ub525\ub7ec\ub2dd"}, {"x": 34.82914572864321, "y": 63.343759591145485, "type": "\ub525\ub7ec\ub2dd"}, {"x": 35.32663316582914, "y": 63.81270889805145, "type": "\ub525\ub7ec\ub2dd"}, {"x": 35.824120603015075, "y": 64.27471128234097, "type": "\ub525\ub7ec\ub2dd"}, {"x": 36.321608040201006, "y": 64.72986965435666, "type": "\ub525\ub7ec\ub2dd"}, {"x": 36.81909547738693, "y": 65.17828539994761, "type": "\ub525\ub7ec\ub2dd"}, {"x": 37.31658291457286, "y": 65.62005840305287, "type": "\ub525\ub7ec\ub2dd"}, {"x": 37.814070351758794, "y": 66.05528706795056, "type": "\ub525\ub7ec\ub2dd"}, {"x": 38.311557788944725, "y": 66.48406834117716, "type": "\ub525\ub7ec\ub2dd"}, {"x": 38.80904522613065, "y": 66.90649773312234, "type": "\ub525\ub7ec\ub2dd"}, {"x": 39.30653266331658, "y": 67.32266933930362, "type": "\ub525\ub7ec\ub2dd"}, {"x": 39.80402010050251, "y": 67.73267586132604, "type": "\ub525\ub7ec\ub2dd"}, {"x": 40.301507537688444, "y": 68.13660862753144, "type": "\ub525\ub7ec\ub2dd"}, {"x": 40.79899497487437, "y": 68.53455761334148, "type": "\ub525\ub7ec\ub2dd"}, {"x": 41.2964824120603, "y": 68.92661146129974, "type": "\ub525\ub7ec\ub2dd"}, {"x": 41.79396984924623, "y": 69.31285750081659, "type": "\ub525\ub7ec\ub2dd"}, {"x": 42.29145728643216, "y": 69.69338176762173, "type": "\ub525\ub7ec\ub2dd"}, {"x": 42.78894472361809, "y": 70.06826902292853, "type": "\ub525\ub7ec\ub2dd"}, {"x": 43.28643216080402, "y": 70.43760277231442, "type": "\ub525\ub7ec\ub2dd"}, {"x": 43.78391959798995, "y": 70.80146528432171, "type": "\ub525\ub7ec\ub2dd"}, {"x": 44.28140703517588, "y": 71.15993760878266, "type": "\ub525\ub7ec\ub2dd"}, {"x": 44.778894472361806, "y": 71.51309959487338, "type": "\ub525\ub7ec\ub2dd"}, {"x": 45.27638190954774, "y": 71.86102990889995, "type": "\ub525\ub7ec\ub2dd"}, {"x": 45.77386934673367, "y": 72.20380605182132, "type": "\ub525\ub7ec\ub2dd"}, {"x": 46.2713567839196, "y": 72.54150437651253, "type": "\ub525\ub7ec\ub2dd"}, {"x": 46.768844221105525, "y": 72.87420010477213, "type": "\ub525\ub7ec\ub2dd"}, {"x": 47.266331658291456, "y": 73.20196734407781, "type": "\ub525\ub7ec\ub2dd"}, {"x": 47.76381909547739, "y": 73.52487910409367, "type": "\ub525\ub7ec\ub2dd"}, {"x": 48.26130653266332, "y": 73.84300731293303, "type": "\ub525\ub7ec\ub2dd"}, {"x": 48.75879396984924, "y": 74.15642283318032, "type": "\ub525\ub7ec\ub2dd"}, {"x": 49.256281407035175, "y": 74.46519547767562, "type": "\ub525\ub7ec\ub2dd"}, {"x": 49.753768844221106, "y": 74.76939402506534, "type": "\ub525\ub7ec\ub2dd"}, {"x": 50.25125628140703, "y": 75.06908623512258, "type": "\ub525\ub7ec\ub2dd"}, {"x": 50.74874371859296, "y": 75.36433886384053, "type": "\ub525\ub7ec\ub2dd"}, {"x": 51.246231155778894, "y": 75.65521767830225, "type": "\ub525\ub7ec\ub2dd"}, {"x": 51.743718592964825, "y": 75.94178747133014, "type": "\ub525\ub7ec\ub2dd"}, {"x": 52.24120603015075, "y": 76.22411207591855, "type": "\ub525\ub7ec\ub2dd"}, {"x": 52.73869346733668, "y": 76.50225437945248, "type": "\ub525\ub7ec\ub2dd"}, {"x": 53.23618090452261, "y": 76.77627633771547, "type": "\ub525\ub7ec\ub2dd"}, {"x": 53.733668341708544, "y": 77.0462389886904, "type": "\ub525\ub7ec\ub2dd"}, {"x": 54.23115577889447, "y": 77.31220246615545, "type": "\ub525\ub7ec\ub2dd"}, {"x": 54.7286432160804, "y": 77.57422601307891, "type": "\ub525\ub7ec\ub2dd"}, {"x": 55.22613065326633, "y": 77.83236799481534, "type": "\ub525\ub7ec\ub2dd"}, {"x": 55.72361809045226, "y": 78.0866859121065, "type": "\ub525\ub7ec\ub2dd"}, {"x": 56.22110552763819, "y": 78.33723641388944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 56.71859296482412, "y": 78.58407530991511, "type": "\ub525\ub7ec\ub2dd"}, {"x": 57.21608040201005, "y": 78.8272575831797, "type": "\ub525\ub7ec\ub2dd"}, {"x": 57.71356783919598, "y": 79.0668374021722, "type": "\ub525\ub7ec\ub2dd"}, {"x": 58.211055276381906, "y": 79.30286813294026, "type": "\ub525\ub7ec\ub2dd"}, {"x": 58.70854271356784, "y": 79.53540235097742, "type": "\ub525\ub7ec\ub2dd"}, {"x": 59.20603015075377, "y": 79.7644918529342, "type": "\ub525\ub7ec\ub2dd"}, {"x": 59.7035175879397, "y": 79.99018766815577, "type": "\ub525\ub7ec\ub2dd"}, {"x": 60.201005025125625, "y": 80.21254007004863, "type": "\ub525\ub7ec\ub2dd"}, {"x": 60.698492462311556, "y": 80.43159858727897, "type": "\ub525\ub7ec\ub2dd"}, {"x": 61.19597989949749, "y": 80.64741201480501, "type": "\ub525\ub7ec\ub2dd"}, {"x": 61.69346733668342, "y": 80.86002842474613, "type": "\ub525\ub7ec\ub2dd"}, {"x": 62.19095477386934, "y": 81.06949517709083, "type": "\ub525\ub7ec\ub2dd"}, {"x": 62.688442211055275, "y": 81.27585893024599, "type": "\ub525\ub7ec\ub2dd"}, {"x": 63.185929648241206, "y": 81.47916565143012, "type": "\ub525\ub7ec\ub2dd"}, {"x": 63.68341708542714, "y": 81.67946062691239, "type": "\ub525\ub7ec\ub2dd"}, {"x": 64.18090452261306, "y": 81.87678847210007, "type": "\ub525\ub7ec\ub2dd"}, {"x": 64.678391959799, "y": 82.07119314147667, "type": "\ub525\ub7ec\ub2dd"}, {"x": 65.17587939698493, "y": 82.26271793839253, "type": "\ub525\ub7ec\ub2dd"}, {"x": 65.67336683417085, "y": 82.45140552471075, "type": "\ub525\ub7ec\ub2dd"}, {"x": 66.17085427135679, "y": 82.63729793031003, "type": "\ub525\ub7ec\ub2dd"}, {"x": 66.66834170854271, "y": 82.82043656244666, "type": "\ub525\ub7ec\ub2dd"}, {"x": 67.16582914572864, "y": 83.00086221497804, "type": "\ub525\ub7ec\ub2dd"}, {"x": 67.66331658291458, "y": 83.1786150774494, "type": "\ub525\ub7ec\ub2dd"}, {"x": 68.1608040201005, "y": 83.35373474404594, "type": "\ub525\ub7ec\ub2dd"}, {"x": 68.65829145728642, "y": 83.52626022241245, "type": "\ub525\ub7ec\ub2dd"}, {"x": 69.15577889447236, "y": 83.69622994234209, "type": "\ub525\ub7ec\ub2dd"}, {"x": 69.65326633165829, "y": 83.86368176433673, "type": "\ub525\ub7ec\ub2dd"}, {"x": 70.15075376884423, "y": 84.02865298804016, "type": "\ub525\ub7ec\ub2dd"}, {"x": 70.64824120603015, "y": 84.1911803605466, "type": "\ub525\ub7ec\ub2dd"}, {"x": 71.14572864321607, "y": 84.35130008458609, "type": "\ub525\ub7ec\ub2dd"}, {"x": 71.64321608040201, "y": 84.5090478265885, "type": "\ub525\ub7ec\ub2dd"}, {"x": 72.14070351758794, "y": 84.66445872462835, "type": "\ub525\ub7ec\ub2dd"}, {"x": 72.63819095477386, "y": 84.8175673962515, "type": "\ub525\ub7ec\ub2dd"}, {"x": 73.1356783919598, "y": 84.96840794618646, "type": "\ub525\ub7ec\ub2dd"}, {"x": 73.63316582914572, "y": 85.11701397394089, "type": "\ub525\ub7ec\ub2dd"}, {"x": 74.13065326633166, "y": 85.26341858128603, "type": "\ub525\ub7ec\ub2dd"}, {"x": 74.62814070351759, "y": 85.40765437962999, "type": "\ub525\ub7ec\ub2dd"}, {"x": 75.12562814070351, "y": 85.5497534972819, "type": "\ub525\ub7ec\ub2dd"}, {"x": 75.62311557788945, "y": 85.68974758660845, "type": "\ub525\ub7ec\ub2dd"}, {"x": 76.12060301507537, "y": 85.82766783108443, "type": "\ub525\ub7ec\ub2dd"}, {"x": 76.6180904522613, "y": 85.96354495223875, "type": "\ub525\ub7ec\ub2dd"}, {"x": 77.11557788944724, "y": 86.09740921649765, "type": "\ub525\ub7ec\ub2dd"}, {"x": 77.61306532663316, "y": 86.22929044192654, "type": "\ub525\ub7ec\ub2dd"}, {"x": 78.1105527638191, "y": 86.3592180048718, "type": "\ub525\ub7ec\ub2dd"}, {"x": 78.60804020100502, "y": 86.48722084650448, "type": "\ub525\ub7ec\ub2dd"}, {"x": 79.10552763819095, "y": 86.61332747926681, "type": "\ub525\ub7ec\ub2dd"}, {"x": 79.60301507537689, "y": 86.7375659932233, "type": "\ub525\ub7ec\ub2dd"}, {"x": 80.10050251256281, "y": 86.85996406231776, "type": "\ub525\ub7ec\ub2dd"}, {"x": 80.59798994974874, "y": 86.98054895053771, "type": "\ub525\ub7ec\ub2dd"}, {"x": 81.09547738693468, "y": 87.0993475179873, "type": "\ub525\ub7ec\ub2dd"}, {"x": 81.5929648241206, "y": 87.21638622687038, "type": "\ub525\ub7ec\ub2dd"}, {"x": 82.09045226130652, "y": 87.33169114738494, "type": "\ub525\ub7ec\ub2dd"}, {"x": 82.58793969849246, "y": 87.44528796353019, "type": "\ub525\ub7ec\ub2dd"}, {"x": 83.08542713567839, "y": 87.55720197882766, "type": "\ub525\ub7ec\ub2dd"}, {"x": 83.58291457286433, "y": 87.66745812195745, "type": "\ub525\ub7ec\ub2dd"}, {"x": 84.08040201005025, "y": 87.77608095231115, "type": "\ub525\ub7ec\ub2dd"}, {"x": 84.57788944723617, "y": 87.88309466546235, "type": "\ub525\ub7ec\ub2dd"}, {"x": 85.07537688442211, "y": 87.98852309855617, "type": "\ub525\ub7ec\ub2dd"}, {"x": 85.57286432160804, "y": 88.09238973561897, "type": "\ub525\ub7ec\ub2dd"}, {"x": 86.07035175879396, "y": 88.19471771278937, "type": "\ub525\ub7ec\ub2dd"}, {"x": 86.5678391959799, "y": 88.2955298234718, "type": "\ub525\ub7ec\ub2dd"}, {"x": 87.06532663316582, "y": 88.39484852341366, "type": "\ub525\ub7ec\ub2dd"}, {"x": 87.56281407035176, "y": 88.49269593570737, "type": "\ub525\ub7ec\ub2dd"}, {"x": 88.06030150753769, "y": 88.5890938557182, "type": "\ub525\ub7ec\ub2dd"}, {"x": 88.55778894472361, "y": 88.68406375593918, "type": "\ub525\ub7ec\ub2dd"}, {"x": 89.05527638190955, "y": 88.77762679077404, "type": "\ub525\ub7ec\ub2dd"}, {"x": 89.55276381909547, "y": 88.86980380124938, "type": "\ub525\ub7ec\ub2dd"}, {"x": 90.0502512562814, "y": 88.9606153196569, "type": "\ub525\ub7ec\ub2dd"}, {"x": 90.54773869346734, "y": 89.050081574127, "type": "\ub525\ub7ec\ub2dd"}, {"x": 91.04522613065326, "y": 89.13822249313455, "type": "\ub525\ub7ec\ub2dd"}, {"x": 91.5427135678392, "y": 89.22505770993789, "type": "\ub525\ub7ec\ub2dd"}, {"x": 92.04020100502512, "y": 89.31060656695216, "type": "\ub525\ub7ec\ub2dd"}, {"x": 92.53768844221105, "y": 89.39488812005777, "type": "\ub525\ub7ec\ub2dd"}, {"x": 93.03517587939699, "y": 89.47792114284509, "type": "\ub525\ub7ec\ub2dd"}, {"x": 93.53266331658291, "y": 89.5597241307962, "type": "\ub525\ub7ec\ub2dd"}, {"x": 94.03015075376884, "y": 89.64031530540476, "type": "\ub525\ub7ec\ub2dd"}, {"x": 94.52763819095478, "y": 89.7197126182348, "type": "\ub525\ub7ec\ub2dd"}, {"x": 95.0251256281407, "y": 89.79793375491944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 95.52261306532664, "y": 89.87499613910033, "type": "\ub525\ub7ec\ub2dd"}, {"x": 96.02010050251256, "y": 89.95091693630867, "type": "\ub525\ub7ec\ub2dd"}, {"x": 96.51758793969849, "y": 90.02571305778892, "type": "\ub525\ub7ec\ub2dd"}, {"x": 97.01507537688443, "y": 90.09940116426567, "type": "\ub525\ub7ec\ub2dd"}, {"x": 97.51256281407035, "y": 90.17199766965481, "type": "\ub525\ub7ec\ub2dd"}, {"x": 98.01005025125627, "y": 90.24351874471976, "type": "\ub525\ub7ec\ub2dd"}, {"x": 98.50753768844221, "y": 90.3139803206734, "type": "\ub525\ub7ec\ub2dd"}, {"x": 99.00502512562814, "y": 90.38339809272675, "type": "\ub525\ub7ec\ub2dd"}, {"x": 99.50251256281406, "y": 90.4517875235851, "type": "\ub525\ub7ec\ub2dd"}, {"x": 100.0, "y": 90.51916384689224, "type": "\ub525\ub7ec\ub2dd"}]}]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="925" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 924;"><span id="cb13-925"><a href="#cb13-925" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb13-926"><a href="#cb13-926" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb13-927"><a href="#cb13-927" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb13-928"><a href="#cb13-928" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"데이터양"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb13-929"><a href="#cb13-929" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"성능"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb13-930"><a href="#cb13-930" aria-hidden="true" tabindex="-1"></a>  <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="st">"머신러닝"</span><span class="op">,</span> <span class="st">"딥러닝"</span>]<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> [<span class="st">"#999"</span><span class="op">,</span> <span class="st">"#8C1515"</span>] }<span class="op">,</span></span>
+<span id="cb13-931"><a href="#cb13-931" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb13-932"><a href="#cb13-932" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(flex_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"type"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.8</span> })<span class="op">,</span></span>
+<span id="cb13-933"><a href="#cb13-933" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb13-934"><a href="#cb13-934" aria-hidden="true" tabindex="-1"></a>      <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"데이터가 많을수록 딥러닝이 유리"</span><span class="op">,</span></span>
+<span id="cb13-935"><a href="#cb13-935" aria-hidden="true" tabindex="-1"></a>      <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#555"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
+<span id="cb13-936"><a href="#cb13-936" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb13-937"><a href="#cb13-937" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb13-938"><a href="#cb13-938" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-7" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</section>
+<section id="인프라의-성숙" class="level3">
+<h3 class="anchored" data-anchor-id="인프라의-성숙">인프라의 성숙</h3>
+<p>인공신경망의 기반기술은 이미 수십 년 전부터 제시되었다. <strong>데이터 + 하드웨어 + 소프트웨어</strong>의 3요소가 결합하여 사용 저변이 확대되었다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>요소</th>
+<th>발전 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Big Data</strong></td>
+<td>대규모 데이터셋 수집·저장이 용이해짐 (ImageNet, Wikipedia 등)</td>
+</tr>
+<tr class="even">
+<td><strong>Hardware</strong></td>
+<td>GPU의 대규모 병렬처리 능력 활용</td>
+</tr>
+<tr class="odd">
+<td><strong>Software</strong></td>
+<td>TensorFlow, PyTorch 등 딥러닝 프레임워크 발전</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="사전학습-생태계" class="level3">
+<h3 class="anchored" data-anchor-id="사전학습-생태계">사전학습 생태계</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+사전학습 모델과 Fine-tuning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>사전학습 모델 (Pre-trained Model)</strong>: 방대한 데이터로 미리 학습된 모형</li>
+<li><strong>Fine-tuning</strong>: 사전학습 모델을 가져와 나의 작업에 맞게 <strong>미세조정</strong>하는 것</li>
+</ul>
+<p>사전에 방대한 데이터를 가지고 학습된 모형을 가져와 재활용할 수 있는 생태계가 존재한다.</p>
+</div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Before (사전학습 이전)</th>
+<th>After (사전학습 이후)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>작업마다 모형을 <strong>처음부터</strong> 학습</td>
+<td>사전학습된 모형을 <strong>가져와서</strong> 미세조정</td>
+</tr>
+<tr class="even">
+<td>대량의 데이터와 컴퓨팅 자원 필요</td>
+<td>소량의 데이터로도 높은 성능 달성 가능</td>
+</tr>
+<tr class="odd">
+<td>Task #1, Task #2, … 각각 독립</td>
+<td>하나의 기반 모형 → 여러 작업에 응용</td>
+</tr>
+</tbody>
+</table>
+<div style="text-align:center;margin:0.5em 0;">
+<svg viewbox="0 0 560 220" width="100%" style="max-width:720px;font-family:Pretendard,sans-serif;">
+<defs> <marker id="arrowPT" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"> <polygon points="0 0, 8 3, 0 6" fill="#333"></polygon> </marker> </defs> <rect x="10" y="60" width="140" height="100" rx="12" fill="#E3F2FD" stroke="#1565C0" stroke-width="2"></rect> <text x="80" y="95" text-anchor="middle" font-size="11" font-weight="700" fill="#1565C0">사전학습 모델</text> <text x="80" y="115" text-anchor="middle" font-size="9" fill="#1565C0">(Pre-trained)</text> <text x="80" y="138" text-anchor="middle" font-size="8.5" fill="#666">대규모 데이터로</text> <text x="80" y="150" text-anchor="middle" font-size="8.5" fill="#666">미리 학습 완료</text> <!-- Arrow --> <line x1="155" y1="110" x2="210" y2="110" stroke="#333" stroke-width="2" marker-end="url(#arrowPT)"></line> <text x="183" y="100" text-anchor="middle" font-size="9" fill="#333">가져오기</text> <!-- Fine-tuning --> <rect x="215" y="60" width="130" height="100" rx="12" fill="#FFF8E1" stroke="#D4A017" stroke-width="2"></rect> <text x="280" y="95" text-anchor="middle" font-size="11" font-weight="700" fill="#B8860B">Fine-tuning</text> <text x="280" y="118" text-anchor="middle" font-size="8.5" fill="#666">나의 소량 데이터로</text> <text x="280" y="130" text-anchor="middle" font-size="8.5" fill="#666">미세조정</text> <!-- Arrows to tasks --> <line x1="350" y1="85" x2="410" y2="50" stroke="#8C1515" stroke-width="1.8" marker-end="url(#arrowPT)"></line> <line x1="350" y1="110" x2="410" y2="110" stroke="#8C1515" stroke-width="1.8" marker-end="url(#arrowPT)"></line> <line x1="350" y1="135" x2="410" y2="170" stroke="#8C1515" stroke-width="1.8" marker-end="url(#arrowPT)"></line> <!-- Tasks --> <rect x="415" y="25" width="130" height="45" rx="8" fill="#FFEBEE" stroke="#8C1515" stroke-width="1.5"></rect> <text x="480" y="50" text-anchor="middle" font-size="10" font-weight="600" fill="#8C1515">Task 1: 감성분석</text> <rect x="415" y="88" width="130" height="45" rx="8" fill="#FFEBEE" stroke="#8C1515" stroke-width="1.5"></rect> <text x="480" y="113" text-anchor="middle" font-size="10" font-weight="600" fill="#8C1515">Task 2: 번역</text> <rect x="415" y="150" width="130" height="45" rx="8" fill="#FFEBEE" stroke="#8C1515" stroke-width="1.5"></rect> <text x="480" y="175" text-anchor="middle" font-size="10" font-weight="600" fill="#8C1515">Task 3: 요약</text>
+</svg>
+</div>
+<hr>
+</section>
+</section>
+<section id="핵심-요약" class="level2">
+<h2 class="anchored" data-anchor-id="핵심-요약">핵심 요약</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>개념</th>
+<th>핵심 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>고전적 프로그래밍 vs ML</strong></td>
+<td>규칙+데이터→답 vs 데이터+답→규칙</td>
+</tr>
+<tr class="even">
+<td><strong>AI ⊃ ML ⊃ DL</strong></td>
+<td>딥러닝은 인공신경망을 사용하는 머신러닝의 한 분야</td>
+</tr>
+<tr class="odd">
+<td><strong>데이터</strong></td>
+<td>변수(열) × 데이터 포인트(행)의 구조. 크기는 <span class="math inline">\((n, p)\)</span></td>
+</tr>
+<tr class="even">
+<td><strong>정형 / 비정형</strong></td>
+<td>표로 정리됨 / 이미지·텍스트·음성처럼 표가 아님</td>
+</tr>
+<tr class="odd">
+<td><strong>독립변수/종속변수</strong></td>
+<td><span class="math inline">\(X\)</span> (입력, 원인) / <span class="math inline">\(y\)</span> (출력, 결과)</td>
+</tr>
+<tr class="even">
+<td><strong>모형</strong></td>
+<td><span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계에 대한 수학적 표현</td>
+</tr>
+<tr class="odd">
+<td><strong>파라미터</strong></td>
+<td>모형 내에서 관계를 조절하는 매개변수 (데이터가 정함)</td>
+</tr>
+<tr class="even">
+<td><strong>하이퍼파라미터</strong></td>
+<td>사람이 미리 정하는 값 — 차수, 노드 수, 학습률, 배치 크기</td>
+</tr>
+<tr class="odd">
+<td><strong>학습</strong></td>
+<td>데이터를 가장 잘 설명하는 파라미터를 찾는 과정</td>
+</tr>
+<tr class="even">
+<td><strong>변수의 종류</strong></td>
+<td>숫자형(빼기 가능) / 순서형(순서만) / 범주형(둘 다 불가)</td>
+</tr>
+<tr class="odd">
+<td><strong>회귀/분류</strong></td>
+<td><span class="math inline">\(y\)</span>가 숫자형 → 회귀, <span class="math inline">\(y\)</span>가 범주형 → 분류</td>
+</tr>
+<tr class="even">
+<td><strong>추론 ≠ 인과</strong></td>
+<td>모형이 보여주는 것은 연관성. 인과는 실험 설계가 필요</td>
+</tr>
+<tr class="odd">
+<td><strong>지도/비지도학습</strong></td>
+<td>정답 있음 → 지도학습, 정답 없음 → 비지도학습</td>
+</tr>
+<tr class="even">
+<td><strong>딥러닝 각광 이유</strong></td>
+<td>모델링 자유도, 유연성, 인프라 성숙, 사전학습 생태계</td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBzYWxfYjAgPSBJbnB1dHMucmFuZ2UoWy0yMDAwMCwgNTAwMDBdLCB7IHN0ZXA6IDEwMDAsIGxhYmVsOiBcInfigoAgKOygiO2OuClcIiwgdmFsdWU6IDIwMDAwIH0pXG52aWV3b2Ygc2FsX2IxID0gSW5wdXRzLnJhbmdlKFswLCAxNTAwMF0sIHsgc3RlcDogNTAwLCBsYWJlbDogXCJ34oKBICjquLDsmrjquLApXCIsIHZhbHVlOiA1MDAwIH0pXG52aWV3b2Ygc2FsX2FucyA9IElucHV0cy50b2dnbGUoeyBsYWJlbDogXCLinIUg7KCV64u1IOuztOq4sFwiLCB2YWx1ZTogZmFsc2UgfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InNhbF9iMGUgPSBzYWxfYW5zID8gc2FsX2IwX3N0YXIgOiBzYWxfYjBcbnNhbF9iMWUgPSBzYWxfYW5zID8gc2FsX2IxX3N0YXIgOiBzYWxfYjFcbnNhbF9yb3dzID0gc2FsX2RhdGEubWFwKChkLCBpKSA9PiB7XG4gIGNvbnN0IHloYXQgPSBzYWxfYjBlICsgc2FsX2IxZSAqIGQueFxuICBjb25zdCBlID0gZC55IC0geWhhdFxuICByZXR1cm4geyBpOiBpKzEsIC4uLmQsIHloYXQsIGUsIGVycjI6IGUgKiBlIH1cbn0pXG5zYWxfTCA9IGQzLnN1bShzYWxfcm93cywgciA9PiByLmVycjIpXG5zYWxfcGN0ID0gTWF0aC5tYXgoMCwgTWF0aC5taW4oMSwgMSAtIChzYWxfTCAtIHNhbF9MX3N0YXIpIC8gKHNhbF9MX3N0YXIgKiAyMCkpKVxuc2FsX2NsciA9IHNhbF9MIDwgc2FsX0xfc3RhciAqIDEuMDUgPyBcIiMyRTdEMzJcIiA6IHNhbF9MIDwgc2FsX0xfc3RhciAqIDMgPyBcIiNFNjUxMDBcIiA6IFwiIzhDMTUxNVwiXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXYgc3R5bGU9XCJmb250LXNpemU6MC44M2VtO2ZvbnQtZmFtaWx5OidQcmV0ZW5kYXJkJyxzYW5zLXNlcmlmO1wiPlxuXG4gIDxkaXYgc3R5bGU9XCJwYWRkaW5nOjAuNDJlbSAwLjhlbTtiYWNrZ3JvdW5kOiNGRkY4RTE7XG4gICAgYm9yZGVyLWxlZnQ6M3B4IHNvbGlkICNENEEwMTc7Ym9yZGVyLXJhZGl1czo0cHg7bWFyZ2luLWJvdHRvbTowLjdlbTtsaW5lLWhlaWdodDoxLjc7XCI+XG4gICAgxbcgPSA8c3Ryb25nPiR7c2FsX2IwZS50b0ZpeGVkKDApfTwvc3Ryb25nPiArIDxzdHJvbmc+JHtzYWxfYjFlLnRvRml4ZWQoMCl9PC9zdHJvbmc+IMK3IHhcbiAgPC9kaXY+XG5cbiAgPHRhYmxlIHN0eWxlPVwid2lkdGg6MTAwJTtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7XCI+XG4gICAgPHRoZWFkPjx0cj5cbiAgICAgICR7W1wiaVwiLFwieOG1olwiLFwieeG1olwiLFwixbfhtaJcIixcImXhtaLCslwiXS5tYXAoaCA9PlxuICAgICAgICBgPHRoIHN0eWxlPVwiYmFja2dyb3VuZDojOEMxNTE1O2NvbG9yOndoaXRlO3BhZGRpbmc6MC4zZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Zm9udC1zaXplOjAuOWVtO1wiPiR7aH08L3RoPmBcbiAgICAgICkuam9pbihcIlwiKX1cbiAgICA8L3RyPjwvdGhlYWQ+XG4gICAgPHRib2R5PlxuICAgICAgJHtzYWxfcm93cy5tYXAoKHIsIGlkeCkgPT4gYFxuICAgICAgICA8dHIgc3R5bGU9XCJiYWNrZ3JvdW5kOiR7aWR4JTI9PT0wPyd3aGl0ZSc6JyNGOUZBRkInfTtcIj5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjJlbSAwLjRlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPiR7ci5pfTwvdGQ+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjIyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcIj4ke3IueH08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XCI+JHtyLnkudG9GaXhlZCgwKX08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XG4gICAgICAgICAgICBmb250LXdlaWdodDo2MDA7Y29sb3I6IzFGM0Y3QTtcIj4ke3IueWhhdC50b0ZpeGVkKDApfTwvdGQ+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjIyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcbiAgICAgICAgICAgIGZvbnQtd2VpZ2h0OjYwMDtjb2xvcjoke3IuZXJyMj4xZTg/JyNFNjUxMDAnOicjMzMzJ307XCI+JHsoci5lcnIyLzFlNikudG9GaXhlZCgxKX1NPC90ZD5cbiAgICAgICAgPC90cj5gKS5qb2luKFwiXCIpfVxuICAgICAgPHRyIHN0eWxlPVwiYmFja2dyb3VuZDojRkZGOEUxO1wiPlxuICAgICAgICA8dGQgY29sc3Bhbj1cIjRcIiBzdHlsZT1cInBhZGRpbmc6MC4zMmVtIDAuNGVtO3RleHQtYWxpZ246cmlnaHQ7Zm9udC13ZWlnaHQ6NzAwO1xuICAgICAgICAgIGJvcmRlci10b3A6MnB4IHNvbGlkICNENEEwMTc7XCI+TCA9PC90ZD5cbiAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjMyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Zm9udC1zaXplOjEuMDVlbTtmb250LXdlaWdodDo3MDA7XG4gICAgICAgICAgYm9yZGVyLXRvcDoycHggc29saWQgI0Q0QTAxNztjb2xvcjoke3NhbF9jbHJ9O1wiPiR7KHNhbF9MLzFlNikudG9GaXhlZCgyKX1NPC90ZD5cbiAgICAgIDwvdHI+XG4gICAgPC90Ym9keT5cbiAgPC90YWJsZT5cblxuICA8ZGl2IHN0eWxlPVwibWFyZ2luLXRvcDowLjU1ZW07XCI+XG4gICAgPGRpdiBzdHlsZT1cImhlaWdodDo3cHg7YmFja2dyb3VuZDojRUVFO2JvcmRlci1yYWRpdXM6NHB4O292ZXJmbG93OmhpZGRlbjtcIj5cbiAgICAgIDxkaXYgc3R5bGU9XCJoZWlnaHQ6MTAwJTt3aWR0aDokeyhzYWxfcGN0KjEwMCkudG9GaXhlZCgxKX0lO1xuICAgICAgICBiYWNrZ3JvdW5kOiR7c2FsX3BjdD4wLjk/JyMyRTdEMzInOnNhbF9wY3Q+MC42PycjRDRBMDE3JzonIzhDMTUxNSd9O1xuICAgICAgICB0cmFuc2l0aW9uOndpZHRoIDAuMnM7Ym9yZGVyLXJhZGl1czo0cHg7XCI+PC9kaXY+XG4gICAgPC9kaXY+XG4gICAgPGRpdiBzdHlsZT1cImZvbnQtc2l6ZTowLjc0ZW07Y29sb3I6IzY2NjttYXJnaW4tdG9wOjAuMTVlbTt0ZXh0LWFsaWduOmNlbnRlcjtcIj5cbiAgICAgICR7c2FsX3BjdD4wLjk4PyfstZzshp/qsJIg64+E64usISc6c2FsX3BjdD4wLjc/J+qxsOydmCDri6Qg7JmU7Ja07JqUISc6J+yKrOudvOydtOuNlOuhnCBM7J2EIOy1nOyGjO2ZlO2VtCDrs7TshLjsmpQnfVxuICAgIDwvZGl2PlxuICA8L2Rpdj5cblxuICAke3NhbF9hbnMgPyBgXG4gIDxkaXYgc3R5bGU9XCJtYXJnaW4tdG9wOjAuNmVtO3BhZGRpbmc6MC40NWVtIDAuOGVtO2JhY2tncm91bmQ6I0U4RjVFOTtcbiAgICBib3JkZXI6MS41cHggc29saWQgIzJFN0QzMjtib3JkZXItcmFkaXVzOjVweDtjb2xvcjojMkU3RDMyO2xpbmUtaGVpZ2h0OjEuODtcIj5cbiAgICA8ZGl2IHN0eWxlPVwiZm9udC13ZWlnaHQ6NzAwO21hcmdpbi1ib3R0b206MC4xZW07XCI+7LWc7KCBIO2MjOudvOuvuO2EsDwvZGl2PlxuICAgIDxkaXY+d+KCgCogPSA8c3Ryb25nPiR7c2FsX2IwX3N0YXIudG9GaXhlZCgwKX08L3N0cm9uZz48L2Rpdj5cbiAgICA8ZGl2PnfigoEqID0gPHN0cm9uZz4ke3NhbF9iMV9zdGFyLnRvRml4ZWQoMCl9PC9zdHJvbmc+PC9kaXY+XG4gICAgPGRpdj5MKiAgPSA8c3Ryb25nPiR7KHNhbF9MX3N0YXIvMWU2KS50b0ZpeGVkKDIpfU08L3N0cm9uZz48L2Rpdj5cbiAgPC9kaXY+YCA6ICcnfVxuXG48L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHhMbyA9IDAsIHhIaSA9IDE1XG4gIHJldHVybiBQbG90LnBsb3Qoe1xuICAgIHdpZHRoOiA1MDAsIGhlaWdodDogNDAwLFxuICAgIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcIuqyveugpSAo64WEKVwiLCBkb21haW46IFt4TG8sIHhIaV0sIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyXsOu0iSAoJClcIiwgZG9tYWluOiBbMCwgMTYwMDAwXSwgZ3JpZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICAvLyDsnpTssKgg7KCQ7ISgXG4gICAgICBQbG90LnJ1bGVYKHNhbF9yb3dzLCB7XG4gICAgICAgIHg6IFwieFwiLCB5MTogciA9PiByLnloYXQsIHkyOiByID0+IHIueSxcbiAgICAgICAgc3Ryb2tlOiByID0+IE1hdGguYWJzKHIuZSkgPiAxMDAwMCA/IFwiI0U2NTEwMFwiIDogXCIjQkRCREJEXCIsXG4gICAgICAgIHN0cm9rZVdpZHRoOiByID0+IE1hdGgubWluKDMsIDEgKyBNYXRoLmFicyhyLmUpIC8gMjAwMDApLFxuICAgICAgICBzdHJva2VEYXNoYXJyYXk6IFwiNSwzXCJcbiAgICAgIH0pLFxuICAgICAgLy8g7ZiE7J6sIO2ajOq3gOyEoFxuICAgICAgUGxvdC5saW5lKFxuICAgICAgICBbeyB4OiB4TG8sIHk6IHNhbF9iMGUgKyBzYWxfYjFlICogeExvIH0sXG4gICAgICAgICB7IHg6IHhIaSwgeTogc2FsX2IwZSArIHNhbF9iMWUgKiB4SGkgfV0sXG4gICAgICAgIHsgc3Ryb2tlOiBzYWxfY2xyLCBzdHJva2VXaWR0aDogMi41IH1cbiAgICAgICksXG4gICAgICAvLyDtmozqt4Dsi50g652867KoXG4gICAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICAgIHRleHQ6ICgpID0+IGDFtyA9ICR7c2FsX2IwZS50b0ZpeGVkKDApfSArICR7c2FsX2IxZS50b0ZpeGVkKDApfcK3eGAsXG4gICAgICAgIGZyYW1lQW5jaG9yOiBcImJvdHRvbS1yaWdodFwiLFxuICAgICAgICBmaWxsOiBzYWxfY2xyLCBmb250U2l6ZTogMTEsIGZvbnRXZWlnaHQ6IFwiNzAwXCIsIGR4OiAtOCwgZHk6IC0xMFxuICAgICAgfSksXG4gICAgICAvLyDrjbDsnbTthLAg7Y+s7J247Yq4XG4gICAgICBQbG90LmRvdChzYWxfcm93cywgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IFwiIzFGM0Y3QVwiLCByOiA2LCBvcGFjaXR5OiAwLjkgfSlcbiAgICBdXG4gIH0pXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgcmNfbW9kZSA9IElucHV0cy5yYWRpbyhbXCJyZWdyZXNzaW9uXCIsIFwiY2xhc3NpZmljYXRpb25cIl0sIHtcbiAgbGFiZWw6IFwi66y47KCcIOycoO2YlVwiLFxuICB2YWx1ZTogXCJyZWdyZXNzaW9uXCIsXG4gIGZvcm1hdDogayA9PiBrID09PSBcInJlZ3Jlc3Npb25cIiA/IFwi7ZqM6reAICjsl7DrtIkg7JiI7LihKVwiIDogXCLrtoTrpZggKOu4jOuenOuTnCDshKDtg50pXCJcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJyY19tb2RlID09PSBcInJlZ3Jlc3Npb25cIiA/XG4gIFBsb3QucGxvdCh7XG4gICAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gICAgc3R5bGU6IHsgZm9udEZhbWlseTogXCJQcmV0ZW5kYXJkLCBzYW5zLXNlcmlmXCIsIGZvbnRTaXplOiBcIjEycHhcIiB9LFxuICAgIHg6IHsgbGFiZWw6IFwi6rK966ClICjrhYQpXCIsIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyXsOu0iSAoJClcIiwgZ3JpZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmRvdChyY19yZWdfZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IFwiIzFGM0Y3QVwiLCByOiA1LCBvcGFjaXR5OiAwLjcgfSksXG4gICAgICBQbG90LmxpbmVhclJlZ3Jlc3Npb25ZKHJjX3JlZ19kYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiBcIiM4QzE1MTVcIiwgc3Ryb2tlV2lkdGg6IDIuNSB9KSxcbiAgICAgIFBsb3QudGV4dChbbnVsbF0sIHtcbiAgICAgICAgdGV4dDogKCkgPT4gXCLsooXsho3rs4DsiJggeSA9IOyXsOu0iSAo7Iuk7IiY6rCSKVwiLFxuICAgICAgICBmcmFtZUFuY2hvcjogXCJ0b3AtbGVmdFwiLCBmaWxsOiBcIiM4QzE1MTVcIiwgZm9udFNpemU6IDEyLCBmb250V2VpZ2h0OiBcIjcwMFwiLCBkeDogMTAsIGR5OiAxNFxuICAgICAgfSlcbiAgICBdXG4gIH0pXG46XG4gIFBsb3QucGxvdCh7XG4gICAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gICAgc3R5bGU6IHsgZm9udEZhbWlseTogXCJQcmV0ZW5kYXJkLCBzYW5zLXNlcmlmXCIsIGZvbnRTaXplOiBcIjEycHhcIiB9LFxuICAgIHg6IHsgbGFiZWw6IFwi64KY7J20XCIsIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyGjOuTnSAoJClcIiwgZ3JpZDogdHJ1ZSB9LFxuICAgIGNvbG9yOiB7IGxlZ2VuZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmRvdChyY19jbHNfZGF0YSwge1xuICAgICAgICB4OiBcIngxXCIsIHk6IFwieDJcIixcbiAgICAgICAgZmlsbDogZCA9PiBkLmxhYmVsID09PSBcIuyCvOyEsVwiID8gXCIjMTQyOEEwXCIgOiBcIiM1NTU1NTVcIixcbiAgICAgICAgcjogNiwgb3BhY2l0eTogMC43LFxuICAgICAgICBzeW1ib2w6IGQgPT4gZC5sYWJlbCA9PT0gXCLsgrzshLFcIiA/IFwiY2lyY2xlXCIgOiBcImRpYW1vbmRcIlxuICAgICAgfSksXG4gICAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICAgIHRleHQ6ICgpID0+IFwi7KKF7IaN67OA7IiYIHkgPSDruIzrnpzrk5wgKOuylOyjvOqwkilcIixcbiAgICAgICAgZnJhbWVBbmNob3I6IFwidG9wLWxlZnRcIiwgZmlsbDogXCIjOEMxNTE1XCIsIGZvbnRTaXplOiAxMiwgZm9udFdlaWdodDogXCI3MDBcIiwgZHg6IDEwLCBkeTogMTRcbiAgICAgIH0pXG4gICAgXVxuICB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5wbG90KHtcbiAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgeDogeyBsYWJlbDogXCLrjbDsnbTthLDslpFcIiwgZ3JpZDogdHJ1ZSB9LFxuICB5OiB7IGxhYmVsOiBcIuyEseuKpVwiLCBkb21haW46IFswLCAxMDBdLCBncmlkOiB0cnVlIH0sXG4gIGNvbG9yOiB7IGxlZ2VuZDogdHJ1ZSwgZG9tYWluOiBbXCLrqLjsi6Drn6zri51cIiwgXCLrlKXrn6zri51cIl0sIHJhbmdlOiBbXCIjOTk5XCIsIFwiIzhDMTUxNVwiXSB9LFxuICBtYXJrczogW1xuICAgIFBsb3QubGluZShmbGV4X2RhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IFwidHlwZVwiLCBzdHJva2VXaWR0aDogMi44IH0pLFxuICAgIFBsb3QudGV4dChbbnVsbF0sIHtcbiAgICAgIHRleHQ6ICgpID0+IFwi642w7J207YSw6rCAIOunjuydhOyImOuhnSDrlKXrn6zri53snbQg7Jyg66asXCIsXG4gICAgICBmcmFtZUFuY2hvcjogXCJib3R0b20tcmlnaHRcIiwgZmlsbDogXCIjNTU1XCIsIGZvbnRTaXplOiAxMCwgZHg6IC0xMCwgZHk6IC0xMFxuICAgIH0pXG4gIF1cbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NhbF9iMCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzYWxfYjEnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsX2FucycpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdyY19tb2RlJykifV19
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../..";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>부경대학교 시스템경영공학부 · 이지환</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
