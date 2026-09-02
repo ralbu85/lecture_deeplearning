@@ -1,0 +1,1796 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>실습 11주차: 어텐션을 손으로 만들기 – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">주차별 계획</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#손계산-그대로-재현하기" id="toc-손계산-그대로-재현하기" class="nav-link active" data-scroll-target="#손계산-그대로-재현하기">1. 손계산 그대로 재현하기</a>
+  <ul class="collapse">
+  <li><a href="#a-스코어-모든-쌍의-내적" id="toc-a-스코어-모든-쌍의-내적" class="nav-link" data-scroll-target="#a-스코어-모든-쌍의-내적">1-1. (a) 스코어 — 모든 쌍의 내적</a></li>
+  <li><a href="#b-sqrtd-로-나누기" id="toc-b-sqrtd-로-나누기" class="nav-link" data-scroll-target="#b-sqrtd-로-나누기">1-2. (b) <span class="math inline">\(\sqrt{d}\)</span> 로 나누기</a></li>
+  <li><a href="#c-행별-softmax" id="toc-c-행별-softmax" class="nav-link" data-scroll-target="#c-행별-softmax">1-3. (c) 행별 Softmax</a></li>
+  <li><a href="#d-가중합-새-표현-벡터" id="toc-d-가중합-새-표현-벡터" class="nav-link" data-scroll-target="#d-가중합-새-표현-벡터">1-4. (d) 가중합 — 새 표현 벡터</a></li>
+  <li><a href="#함수-하나로-묶고-pytorch와-대조" id="toc-함수-하나로-묶고-pytorch와-대조" class="nav-link" data-scroll-target="#함수-하나로-묶고-pytorch와-대조">1-5. 함수 하나로 묶고, PyTorch와 대조</a></li>
+  </ul></li>
+  <li><a href="#인과-마스크-미래를-보면-안-된다" id="toc-인과-마스크-미래를-보면-안-된다" class="nav-link" data-scroll-target="#인과-마스크-미래를-보면-안-된다">2. 인과 마스크 — 미래를 보면 안 된다</a>
+  <ul class="collapse">
+  <li><a href="#마스크-만들기" id="toc-마스크-만들기" class="nav-link" data-scroll-target="#마스크-만들기">2-1. 마스크 만들기</a></li>
+  <li><a href="#infty-를-넣고-softmax" id="toc-infty-를-넣고-softmax" class="nav-link" data-scroll-target="#infty-를-넣고-softmax">2-2. <span class="math inline">\(-\infty\)</span> 를 넣고 Softmax</a></li>
+  <li><a href="#왜-0을-곱하지-않고--infty-를-넣는가" id="toc-왜-0을-곱하지-않고--infty-를-넣는가" class="nav-link" data-scroll-target="#왜-0을-곱하지-않고--infty-를-넣는가">2-3. 왜 0을 곱하지 않고 <span class="math inline">\(-\infty\)</span> 를 넣는가</a></li>
+  <li><a href="#is_causaltrue-와-대조" id="toc-is_causaltrue-와-대조" class="nav-link" data-scroll-target="#is_causaltrue-와-대조">2-4. <code>is_causal=True</code> 와 대조</a></li>
+  <li><a href="#마스크-유무를-그림으로" id="toc-마스크-유무를-그림으로" class="nav-link" data-scroll-target="#마스크-유무를-그림으로">2-5. 마스크 유무를 그림으로</a></li>
+  </ul></li>
+  <li><a href="#self-attention-모듈-q-k-v-는-어디서-오는가" id="toc-self-attention-모듈-q-k-v-는-어디서-오는가" class="nav-link" data-scroll-target="#self-attention-모듈-q-k-v-는-어디서-오는가">3. Self-Attention 모듈 — <span class="math inline">\(Q, K, V\)</span> 는 어디서 오는가</a></li>
+  <li><a href="#multi-head-attention" id="toc-multi-head-attention" class="nav-link" data-scroll-target="#multi-head-attention">4. Multi-Head Attention</a>
+  <ul class="collapse">
+  <li><a href="#모양만-좇아간다" id="toc-모양만-좇아간다" class="nav-link" data-scroll-target="#모양만-좇아간다">4-1. 모양만 좇아간다</a></li>
+  <li><a href="#파라미터는-head-수와-무관하다" id="toc-파라미터는-head-수와-무관하다" class="nav-link" data-scroll-target="#파라미터는-head-수와-무관하다">4-2. 파라미터는 head 수와 무관하다</a></li>
+  <li><a href="#nn.multiheadattention-과-값-대조" id="toc-nn.multiheadattention-과-값-대조" class="nav-link" data-scroll-target="#nn.multiheadattention-과-값-대조">4-3. <code>nn.MultiheadAttention</code> 과 값 대조</a></li>
+  <li><a href="#head마다-다른-곳을-본다" id="toc-head마다-다른-곳을-본다" class="nav-link" data-scroll-target="#head마다-다른-곳을-본다">4-4. head마다 다른 곳을 본다</a></li>
+  </ul></li>
+  <li><a href="#패딩-마스크와-인과-마스크를-함께-쓰기" id="toc-패딩-마스크와-인과-마스크를-함께-쓰기" class="nav-link" data-scroll-target="#패딩-마스크와-인과-마스크를-함께-쓰기">5. 패딩 마스크와 인과 마스크를 함께 쓰기</a></li>
+  <li><a href="#완성-어텐션이-어디를-보는지-꺼내-본다" id="toc-완성-어텐션이-어디를-보는지-꺼내-본다" class="nav-link" data-scroll-target="#완성-어텐션이-어디를-보는지-꺼내-본다">5.5. 완성 — 어텐션이 어디를 보는지 꺼내 본다</a>
+  <ul class="collapse">
+  <li><a href="#데이터" id="toc-데이터" class="nav-link" data-scroll-target="#데이터">5-5-1. 데이터</a></li>
+  <li><a href="#어텐션-풀링-가중치를-학습으로-정한다" id="toc-어텐션-풀링-가중치를-학습으로-정한다" class="nav-link" data-scroll-target="#어텐션-풀링-가중치를-학습으로-정한다">5-5-2. 어텐션 풀링 — 가중치를 학습으로 정한다</a></li>
+  <li><a href="#학습" id="toc-학습" class="nav-link" data-scroll-target="#학습">5-5-3. 학습</a></li>
+  <li><a href="#모형이-어느-단어를-봤는가" id="toc-모형이-어느-단어를-봤는가" class="nav-link" data-scroll-target="#모형이-어느-단어를-봤는가">5-5-4. 모형이 어느 단어를 봤는가</a></li>
+  </ul></li>
+  <li><a href="#정리" id="toc-정리" class="nav-link" data-scroll-target="#정리">6. 정리</a>
+  <ul class="collapse">
+  <li><a href="#스스로-확인해-보기" id="toc-스스로-확인해-보기" class="nav-link" data-scroll-target="#스스로-확인해-보기">스스로 확인해 보기</a></li>
+  <li><a href="#다음-실습" id="toc-다음-실습" class="nav-link" data-scroll-target="#다음-실습">다음 실습</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">실습 11주차: 어텐션을 손으로 만들기</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab11.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img" alt="Open In Colab"></a></p>
+<figcaption>Open In Colab</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+시나리오 — 오늘 만들 것
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>지난주 감성 분류기는 토큰 임베딩을 <strong>그냥 평균</strong>냈다. 평균은 순서도, 중요도도 모른다. 오늘은 <strong>어떤 토큰을 얼마나 볼지 모형이 스스로 정하게</strong> 만든다.</p>
+<p><span class="math display">\[S = \frac{QK^\top}{\sqrt{d}} \;\to\; \text{mask} \;\to\; W = \text{softmax}(S) \;\to\; WV\]</span></p>
+<p>이론에서 손으로 계산한 그 값들을 코드로 한 줄씩 재현하고 <code>F.scaled_dot_product_attention</code> 과 대조한 뒤, <strong>어텐션을 쓴 감성 분류기를 학습</strong>시켜 <strong>모형이 문장의 어느 단어를 봤는지</strong> 꺼내 본다.</p>
+<ul>
+<li><strong>대응 이론</strong>: <a href="../chapters/ch11.html">Ch11 어텐션과 Self-Attention</a></li>
+<li>데이터: NSMC (네이버 영화 리뷰)</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+이번 주에 익히는 것
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>개념</th>
+<th>이론과의 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(Q, K, V\)</span> 만들기</td>
+<td>세 가지 역할 (Ch11)</td>
+</tr>
+<tr class="even">
+<td>스코어 <span class="math inline">\(QK^\top\)</span> · <span class="math inline">\(\sqrt{d}\)</span> 스케일링</td>
+<td>어텐션 손계산 (a)(b) (Ch11)</td>
+</tr>
+<tr class="odd">
+<td>행별 Softmax · 가중합</td>
+<td>어텐션 손계산 (c)(d) (Ch11)</td>
+</tr>
+<tr class="even">
+<td>인과 마스크 (<span class="math inline">\(-\infty\)</span>)</td>
+<td>인과 마스크 손계산 (Ch11)</td>
+</tr>
+<tr class="odd">
+<td>head 분할 · 결합</td>
+<td>Multi-Head 모양 추적 (Ch11)</td>
+</tr>
+<tr class="even">
+<td>파라미터 <span class="math inline">\(4d^2\)</span></td>
+<td>head 수와 무관 (Ch11)</td>
+</tr>
+<tr class="odd">
+<td><code>F.scaled_dot_product_attention</code></td>
+<td>직접 만든 것과 대조</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<hr>
+<section id="손계산-그대로-재현하기" class="level1">
+<h1>1. 손계산 그대로 재현하기</h1>
+<p>Ch11에서 토큰 3개짜리 문장 “고양이가 / 생선을 / 먹었다”로 계산했던 그 값이다.</p>
+<div id="d0bedf2c" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>torch.set_printoptions(precision<span class="op">=</span><span class="dv">4</span>, sci_mode<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> [<span class="st">'고양이가'</span>, <span class="st">'생선을'</span>, <span class="st">'먹었다'</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> torch.tensor([[<span class="fl">2.</span>, <span class="fl">1.</span>], [<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">1.</span>, <span class="fl">3.</span>]])</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">0.</span>], [<span class="fl">0.</span>, <span class="fl">2.</span>], [<span class="fl">1.</span>, <span class="fl">1.</span>]])</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">0.</span>], [<span class="fl">0.</span>, <span class="fl">1.</span>], [<span class="fl">1.</span>, <span class="fl">1.</span>]])</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Q shape:'</span>, <span class="bu">tuple</span>(Q.shape), <span class="st">' (토큰 수, d)'</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame({<span class="st">'토큰'</span>: tokens,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'q'</span>: [<span class="bu">tuple</span>(v.tolist()) <span class="cf">for</span> v <span class="kw">in</span> Q],</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'k'</span>: [<span class="bu">tuple</span>(v.tolist()) <span class="cf">for</span> v <span class="kw">in</span> K],</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                    <span class="st">'v'</span>: [<span class="bu">tuple</span>(v.tolist()) <span class="cf">for</span> v <span class="kw">in</span> V]}).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Q shape: (3, 2)  (토큰 수, d)
+  토큰          q          k          v
+고양이가 (2.0, 1.0) (1.0, 0.0) (1.0, 0.0)
+ 생선을 (1.0, 2.0) (0.0, 2.0) (0.0, 1.0)
+ 먹었다 (1.0, 3.0) (1.0, 1.0) (1.0, 1.0)</code></pre>
+</div>
+</div>
+<section id="a-스코어-모든-쌍의-내적" class="level2">
+<h2 class="anchored" data-anchor-id="a-스코어-모든-쌍의-내적">1-1. (a) 스코어 — 모든 쌍의 내적</h2>
+<div id="9c8ecdcb" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>S <span class="op">=</span> Q <span class="op">@</span> K.T</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape :'</span>, <span class="bu">tuple</span>(S.shape), <span class="st">' (Query 수, Key 수)'</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(S.numpy(), index<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">의 q'</span> <span class="cf">for</span> t <span class="kw">in</span> tokens],</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   columns<span class="op">=</span>[<span class="ss">f'</span><span class="sc">{</span>t<span class="sc">}</span><span class="ss">의 k'</span> <span class="cf">for</span> t <span class="kw">in</span> tokens]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape : (3, 3)  (Query 수, Key 수)
+         고양이가의 k  생선을의 k  먹었다의 k
+고양이가의 q      2.0     2.0     3.0
+생선을의 q       1.0     4.0     3.0
+먹었다의 q       1.0     6.0     4.0</code></pre>
+</div>
+</div>
+<p>“먹었다” 행이 (1, <strong>6</strong>, 4)다 — “먹었다”의 Query가 “생선을”의 Key와 가장 잘 맞는다. 한 칸만 손으로 확인해 본다.</p>
+<div id="8b7a5488" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'q(먹었다) · k(생선을) ='</span>, <span class="bu">float</span>(Q[<span class="dv">2</span>] <span class="op">@</span> K[<span class="dv">1</span>]), <span class="st">' = 1x0 + 3x2'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>q(먹었다) · k(생선을) = 6.0  = 1x0 + 3x2</code></pre>
+</div>
+</div>
+</section>
+<section id="b-sqrtd-로-나누기" class="level2">
+<h2 class="anchored" data-anchor-id="b-sqrtd-로-나누기">1-2. (b) <span class="math inline">\(\sqrt{d}\)</span> 로 나누기</h2>
+<div id="8469dc8c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> Q.shape[<span class="dv">1</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>S_scaled <span class="op">=</span> S <span class="op">/</span> (d <span class="op">**</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'d ='</span>, d, <span class="st">'  sqrt(d) ='</span>, <span class="bu">round</span>(d<span class="op">**</span><span class="fl">0.5</span>, <span class="dv">4</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(S_scaled.numpy().<span class="bu">round</span>(<span class="dv">2</span>), index<span class="op">=</span>tokens, columns<span class="op">=</span>tokens))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>d = 2   sqrt(d) = 1.4142
+      고양이가   생선을   먹었다
+고양이가  1.41  1.41  2.12
+생선을   0.71  2.83  2.12
+먹었다   0.71  4.24  2.83</code></pre>
+</div>
+</div>
+<p>차원이 커지면 내적 값 자체가 커지고, Softmax가 한 곳에 확률을 몰아준다. <span class="math inline">\(\sqrt{d}\)</span> 로 나누는 것은 그 안전장치다.</p>
+</section>
+<section id="c-행별-softmax" class="level2">
+<h2 class="anchored" data-anchor-id="c-행별-softmax">1-3. (c) 행별 Softmax</h2>
+<div id="e775a4bc" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> S_scaled.softmax(dim<span class="op">=-</span><span class="dv">1</span>)      <span class="co"># 마지막 축(Key 방향)으로 softmax</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(W.numpy().<span class="bu">round</span>(<span class="dv">3</span>), index<span class="op">=</span>tokens, columns<span class="op">=</span>tokens))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">각 행의 합 :'</span>, W.<span class="bu">sum</span>(dim<span class="op">=-</span><span class="dv">1</span>).numpy())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       고양이가    생선을    먹었다
+고양이가  0.248  0.248  0.503
+생선을   0.074  0.620  0.306
+먹었다   0.023  0.786  0.191
+
+각 행의 합 : [1. 1. 1.]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>dim=-1</code> 이어야 한다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Softmax는 <strong>행마다 독립적으로</strong> 걸려야 한다. 한 Query가 여러 Key에 나눠 주는 가중치의 합이 1이 되는 것이지, 열 방향 합이 1이 되는 것이 아니다.</p>
+<p>3주차의 <code>keepdims</code> 문제와 같은 자리다 — <strong>어느 축으로 정규화하는가</strong>를 항상 확인한다.</p>
+</div>
+</div>
+<div id="987553a4" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 직접 계산해서 확인 — "먹었다" 행</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>row <span class="op">=</span> S_scaled[<span class="dv">2</span>]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> torch.exp(row <span class="op">-</span> row.<span class="bu">max</span>())</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'exp    :'</span>, e.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'합     :'</span>, <span class="bu">float</span>(e.<span class="bu">sum</span>()).<span class="fu">__round__</span>(<span class="dv">4</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접   :'</span>, (e <span class="op">/</span> e.<span class="bu">sum</span>()).numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'softmax:'</span>, W[<span class="dv">2</span>].numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>exp    : [0.0291 1.     0.2431]
+합     : 1.2723
+직접   : [0.0229 0.786  0.1911]
+softmax: [0.0229 0.786  0.1911]</code></pre>
+</div>
+</div>
+</section>
+<section id="d-가중합-새-표현-벡터" class="level2">
+<h2 class="anchored" data-anchor-id="d-가중합-새-표현-벡터">1-4. (d) 가중합 — 새 표현 벡터</h2>
+<div id="23c38426" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> W <span class="op">@</span> V</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape :'</span>, <span class="bu">tuple</span>(out.shape))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(out.numpy().<span class="bu">round</span>(<span class="dv">4</span>), index<span class="op">=</span>tokens, columns<span class="op">=</span>[<span class="st">'성분1'</span>, <span class="st">'성분2'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>shape : (3, 2)
+         성분1     성분2
+고양이가  0.7517  0.7517
+생선을   0.3800  0.9257
+먹었다   0.2140  0.9771</code></pre>
+</div>
+</div>
+<p>“먹었다”의 새 표현은 (0.214, 0.977)이다. Value의 두 성분을 “동물 성분 / 음식 성분”으로 읽으면, <strong>“먹었다”가 음식 쪽으로 강하게 끌려간 것</strong>이 보인다. 가중치의 0.786이 “생선을”에 갔기 때문이다.</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+직접 해보기 ① — “고양이가”의 새 표현을 손으로
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>가중치 행렬 <code>W</code> 의 1행이 <code>(0.248, 0.248, 0.503)</code> 이다. 이 가중치로 <code>V</code> 를 가중합해 “고양이가”의 새 표현을 <strong>직접 계산</strong>하시오.</p>
+</div>
+</div>
+<div id="7a8ae208" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>w_row <span class="op">=</span> W[<span class="dv">0</span>]                    <span class="co"># (0.248, 0.248, 0.503)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>new_repr <span class="op">=</span> <span class="va">None</span>                 <span class="co"># ← w_row 와 V 로 가중합을 만드세요</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> new_repr <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">tuple</span>(new_repr.shape) <span class="op">==</span> (<span class="dv">2</span>,), <span class="st">'모양을 확인하세요'</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> torch.allclose(new_repr, out[<span class="dv">0</span>], atol<span class="op">=</span><span class="fl">1e-4</span>), <span class="st">'값이 다릅니다'</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>, new_repr.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f6289190" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>정답 코드 보기</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>w_row <span class="op">=</span> W[<span class="dv">0</span>]</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>new_repr <span class="op">=</span> (w_row.unsqueeze(<span class="dv">1</span>) <span class="op">*</span> V).<span class="bu">sum</span>(<span class="dv">0</span>)       <span class="co"># 또는 w_row @ V</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중합 :'</span>, new_repr.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'W @ V  :'</span>, out[<span class="dv">0</span>].numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'성분 1 ='</span>, <span class="st">' + '</span>.join(<span class="ss">f'</span><span class="sc">{</span><span class="bu">float</span>(w_row[i])<span class="sc">:.3f}</span><span class="ss">x</span><span class="sc">{</span><span class="bu">float</span>(V[i,<span class="dv">0</span>])<span class="sc">:.0f}</span><span class="ss">'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>가중합 : [0.7517 0.7517]
+W @ V  : [0.7517 0.7517]
+성분 1 = 0.248x1 + 0.248x0 + 0.503x1</code></pre>
+</div>
+</div>
+</section>
+<section id="함수-하나로-묶고-pytorch와-대조" class="level2">
+<h2 class="anchored" data-anchor-id="함수-하나로-묶고-pytorch와-대조">1-5. 함수 하나로 묶고, PyTorch와 대조</h2>
+<div id="aa2e5177" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> attention(Q, K, V, mask<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    d <span class="op">=</span> Q.shape[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    S <span class="op">=</span> Q <span class="op">@</span> K.transpose(<span class="op">-</span><span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>) <span class="op">/</span> (d <span class="op">**</span> <span class="fl">0.5</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        S <span class="op">=</span> S.masked_fill(mask, <span class="bu">float</span>(<span class="st">'-inf'</span>))</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    W <span class="op">=</span> S.softmax(dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> W <span class="op">@</span> V, W</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>mine, W_mine <span class="op">=</span> attention(Q, K, V)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>ref <span class="op">=</span> F.scaled_dot_product_attention(Q, K, V)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접 구현:</span><span class="ch">\n</span><span class="st">'</span>, mine.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">PyTorch  :</span><span class="ch">\n</span><span class="st">'</span>, ref.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">일치:'</span>, torch.allclose(mine, ref, atol<span class="op">=</span><span class="fl">1e-6</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>직접 구현:
+ [[0.7517 0.7517]
+ [0.38   0.9257]
+ [0.214  0.9771]]
+
+PyTorch  :
+ [[0.7517 0.7517]
+ [0.38   0.9257]
+ [0.214  0.9771]]
+
+일치: True</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="인과-마스크-미래를-보면-안-된다" class="level1">
+<h1>2. 인과 마스크 — 미래를 보면 안 된다</h1>
+<section id="마스크-만들기" class="level2">
+<h2 class="anchored" data-anchor-id="마스크-만들기">2-1. 마스크 만들기</h2>
+<div id="1cb45e22" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>T <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> torch.triu(torch.ones(T, T, dtype<span class="op">=</span>torch.<span class="bu">bool</span>), diagonal<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'mask (True = 가릴 자리):</span><span class="ch">\n</span><span class="st">'</span>, mask.numpy())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>mask (True = 가릴 자리):
+ [[False  True  True]
+ [False False  True]
+ [False False False]]</code></pre>
+</div>
+</div>
+<p><code>diagonal=1</code> 은 <strong>대각선 위쪽</strong>만 True로 만든다. 자기 자신(대각선)은 볼 수 있어야 한다.</p>
+</section>
+<section id="infty-를-넣고-softmax" class="level2">
+<h2 class="anchored" data-anchor-id="infty-를-넣고-softmax">2-2. <span class="math inline">\(-\infty\)</span> 를 넣고 Softmax</h2>
+<div id="bb2ab61f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>S_masked <span class="op">=</span> S_scaled.masked_fill(mask, <span class="bu">float</span>(<span class="st">'-inf'</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'마스크 적용 후 스코어:</span><span class="ch">\n</span><span class="st">'</span>, S_masked.numpy())</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>W_causal <span class="op">=</span> S_masked.softmax(dim<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">가중치:'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(W_causal.numpy().<span class="bu">round</span>(<span class="dv">3</span>), index<span class="op">=</span>tokens, columns<span class="op">=</span>tokens))</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">각 행의 합:'</span>, W_causal.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>).numpy())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>마스크 적용 후 스코어:
+ [[1.4142135        -inf       -inf]
+ [0.70710677 2.828427         -inf]
+ [0.70710677 4.242641   2.828427  ]]
+
+가중치:
+       고양이가    생선을    먹었다
+고양이가  1.000  0.000  0.000
+생선을   0.107  0.893  0.000
+먹었다   0.023  0.786  0.191
+
+각 행의 합: [1. 1. 1.]</code></pre>
+</div>
+</div>
+<p>Ch11에서 손으로 구한 표와 같다 — 1행 <code>1.000</code>, 2행 <code>(0.107, 0.893)</code>, 3행 <code>(0.023, 0.786, 0.191)</code>. <strong>아래쪽 삼각형만 남았고, 각 행의 합은 여전히 1</strong>이다.</p>
+<div id="ac2a0a38" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2행을 손으로 확인</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'e^0.71 ='</span>, <span class="bu">round</span>(<span class="bu">float</span>(torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">0</span>])), <span class="dv">3</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'e^2.83 ='</span>, <span class="bu">round</span>(<span class="bu">float</span>(torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">1</span>])), <span class="dv">3</span>))</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>tot <span class="op">=</span> <span class="bu">float</span>(torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">0</span>]) <span class="op">+</span> torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">1</span>]))</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'합     ='</span>, <span class="bu">round</span>(tot, <span class="dv">3</span>))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중치 ='</span>, <span class="bu">round</span>(<span class="bu">float</span>(torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">0</span>]))<span class="op">/</span>tot, <span class="dv">3</span>),</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                <span class="bu">round</span>(<span class="bu">float</span>(torch.exp(S_scaled[<span class="dv">1</span>,<span class="dv">1</span>]))<span class="op">/</span>tot, <span class="dv">3</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>e^0.71 = 2.028
+e^2.83 = 16.919
+합     = 18.947
+가중치 = 0.107 0.893</code></pre>
+</div>
+</div>
+</section>
+<section id="왜-0을-곱하지-않고--infty-를-넣는가" class="level2">
+<h2 class="anchored" data-anchor-id="왜-0을-곱하지-않고--infty-를-넣는가">2-3. 왜 0을 곱하지 않고 <span class="math inline">\(-\infty\)</span> 를 넣는가</h2>
+<div id="0941da0e" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 잘못된 방법: softmax 뒤에 0을 곱한다</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>W_wrong <span class="op">=</span> W.clone()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>W_wrong[mask] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'softmax 뒤에 0을 곱한 경우:'</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(W_wrong.numpy().<span class="bu">round</span>(<span class="dv">3</span>), index<span class="op">=</span>tokens, columns<span class="op">=</span>tokens))</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'행의 합:'</span>, W_wrong.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>).numpy(), <span class="st">' ← 1이 아니다'</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'softmax 전에 -inf를 넣은 경우 행의 합:'</span>, W_causal.<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>).numpy())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>softmax 뒤에 0을 곱한 경우:
+       고양이가    생선을    먹었다
+고양이가  0.248  0.000  0.000
+생선을   0.074  0.620  0.000
+먹었다   0.023  0.786  0.191
+행의 합: [0.24825507 0.6943047  1.        ]  ← 1이 아니다
+
+softmax 전에 -inf를 넣은 경우 행의 합: [1. 1. 1.]</code></pre>
+</div>
+</div>
+<p>가려야 할 자리는 <strong>Softmax를 계산하기 전에</strong> 없애야 한다. 나중에 0을 곱하면 남은 가중치의 합이 1이 되지 않는다.</p>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+직접 해보기 ② — 마스크를 직접 만들기
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>토큰이 5개일 때, <strong>자기 자신과 그 이전만</strong> 보는 인과 마스크를 만드시오. <code>torch.triu</code> 를 쓰되 <code>diagonal</code> 값을 스스로 정해 보라.</p>
+</div>
+</div>
+<div id="d54e1278" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mask5 <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← (5, 5) bool 텐서, True = 가릴 자리</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> mask5 <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> mask5.shape <span class="op">==</span> (<span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> mask5.diagonal().<span class="bu">sum</span>() <span class="op">==</span> <span class="dv">0</span>, <span class="st">'자기 자신은 봐야 합니다'</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> mask5.<span class="bu">sum</span>() <span class="op">==</span> <span class="dv">10</span>, <span class="ss">f'가리는 칸 수가 다릅니다: </span><span class="sc">{</span><span class="bu">int</span>(mask5.<span class="bu">sum</span>())<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과</span><span class="ch">\n</span><span class="st">'</span>, mask5.numpy().astype(<span class="bu">int</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="14f1864a" class="cell" data-execution_count="16">
+<details class="code-fold">
+<summary>정답 코드 보기</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mask5 <span class="op">=</span> torch.triu(torch.ones(<span class="dv">5</span>, <span class="dv">5</span>, dtype<span class="op">=</span>torch.<span class="bu">bool</span>), diagonal<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mask5.numpy().astype(<span class="bu">int</span>))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가리는 칸 수:'</span>, <span class="bu">int</span>(mask5.<span class="bu">sum</span>()), <span class="st">' = 4+3+2+1'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[0 1 1 1 1]
+ [0 0 1 1 1]
+ [0 0 0 1 1]
+ [0 0 0 0 1]
+ [0 0 0 0 0]]
+가리는 칸 수: 10  = 4+3+2+1</code></pre>
+</div>
+</div>
+</section>
+<section id="is_causaltrue-와-대조" class="level2">
+<h2 class="anchored" data-anchor-id="is_causaltrue-와-대조">2-4. <code>is_causal=True</code> 와 대조</h2>
+<div id="aaf0b3c8" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mine_c, _ <span class="op">=</span> attention(Q, K, V, mask<span class="op">=</span>mask)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ref_c <span class="op">=</span> F.scaled_dot_product_attention(Q, K, V, is_causal<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접 구현:</span><span class="ch">\n</span><span class="st">'</span>, mine_c.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">PyTorch  :</span><span class="ch">\n</span><span class="st">'</span>, ref_c.numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">일치:'</span>, torch.allclose(mine_c, ref_c, atol<span class="op">=</span><span class="fl">1e-6</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>직접 구현:
+ [[1.     0.    ]
+ [0.107  0.893 ]
+ [0.214  0.9771]]
+
+PyTorch  :
+ [[1.     0.    ]
+ [0.107  0.893 ]
+ [0.214  0.9771]]
+
+일치: True</code></pre>
+</div>
+</div>
+</section>
+<section id="마스크-유무를-그림으로" class="level2">
+<h2 class="anchored" data-anchor-id="마스크-유무를-그림으로">2-5. 마스크 유무를 그림으로</h2>
+<div id="c1eaf4bd" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">3.6</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, M, title <span class="kw">in</span> [(axes[<span class="dv">0</span>], W, <span class="st">'no mask'</span>), (axes[<span class="dv">1</span>], W_causal, <span class="st">'causal mask'</span>)]:</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> ax.imshow(M.numpy(), cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    ax.set_xticks(<span class="bu">range</span>(<span class="dv">3</span>))<span class="op">;</span> ax.set_yticks(<span class="bu">range</span>(<span class="dv">3</span>))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    ax.set_xticklabels(tokens, fontsize<span class="op">=</span><span class="dv">8</span>)<span class="op">;</span> ax.set_yticklabels(tokens, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    ax.set_xlabel(<span class="st">'Key'</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">'Query'</span>)<span class="op">;</span> ax.set_title(title, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>            ax.text(j, i, <span class="ss">f'</span><span class="sc">{</span>M[i,j]<span class="sc">:.2f}</span><span class="ss">'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>                    color<span class="op">=</span><span class="st">'white'</span> <span class="cf">if</span> M[i,j] <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="st">'black'</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab11_files/figure-html/cell-19-output-1.png" width="749" height="336" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="self-attention-모듈-q-k-v-는-어디서-오는가" class="level1">
+<h1>3. Self-Attention 모듈 — <span class="math inline">\(Q, K, V\)</span> 는 어디서 오는가</h1>
+<p>지금까지 <span class="math inline">\(Q, K, V\)</span> 를 그냥 주어진 것으로 썼다. 실제로는 <strong>같은 입력 <span class="math inline">\(X\)</span> 에 서로 다른 행렬 세 개를 곱해서</strong> 만든다. 그래서 “self”다.</p>
+<div id="a561ae7c" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SelfAttention(nn.Module):</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d_model):</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wq <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wk <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.Wv <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x, causal<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>        B, T, d <span class="op">=</span> x.shape</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>        q, k, v <span class="op">=</span> <span class="va">self</span>.Wq(x), <span class="va">self</span>.Wk(x), <span class="va">self</span>.Wv(x)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>        m <span class="op">=</span> torch.triu(torch.ones(T, T, dtype<span class="op">=</span>torch.<span class="bu">bool</span>, device<span class="op">=</span>x.device), <span class="dv">1</span>) <span class="cf">if</span> causal <span class="cf">else</span> <span class="va">None</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> attention(q, k, v, m)</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>d_model <span class="op">=</span> <span class="dv">8</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>sa <span class="op">=</span> SelfAttention(d_model)</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, d_model)          <span class="co"># (B, T, d)</span></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>y, w <span class="op">=</span> sa(x)</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'입력  :'</span>, <span class="bu">tuple</span>(x.shape), <span class="st">' (B, T, d)'</span>)</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'출력  :'</span>, <span class="bu">tuple</span>(y.shape), <span class="st">' ← 입력과 같다'</span>)</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중치:'</span>, <span class="bu">tuple</span>(w.shape), <span class="st">' (B, T, T)'</span>)</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">파라미터:'</span>, <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> sa.parameters()), <span class="st">' = 3 x d^2 ='</span>, <span class="dv">3</span><span class="op">*</span>d_model<span class="op">**</span><span class="dv">2</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>입력  : (2, 5, 8)  (B, T, d)
+출력  : (2, 5, 8)  ← 입력과 같다
+가중치: (2, 5, 5)  (B, T, T)
+
+파라미터: 192  = 3 x d^2 = 192</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+들어간 모양과 나온 모양이 같다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\((B, T, d)\)</span> 로 들어가서 <span class="math inline">\((B, T, d)\)</span> 로 나온다. 그래서 <strong>같은 블록을 몇 번이고 쌓을 수 있다.</strong> 12주차에 이 성질을 그대로 쓴다.</p>
+</div>
+</div>
+<div id="85fbfec9" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>y_c, w_c <span class="op">=</span> sa(x, causal<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'인과 가중치의 위쪽 삼각형 합:'</span>, <span class="bu">float</span>(w_c[<span class="dv">0</span>].triu(<span class="dv">1</span>).<span class="bu">sum</span>()), <span class="st">' ← 정확히 0'</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'행의 합:'</span>, w_c[<span class="dv">0</span>].<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>).detach().numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>인과 가중치의 위쪽 삼각형 합: 0.0  ← 정확히 0
+행의 합: [1. 1. 1. 1. 1.]</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="multi-head-attention" class="level1">
+<h1>4. Multi-Head Attention</h1>
+<section id="모양만-좇아간다" class="level2">
+<h2 class="anchored" data-anchor-id="모양만-좇아간다">4-1. 모양만 좇아간다</h2>
+<p>Ch11의 표를 그대로 코드로 옮긴다. <span class="math inline">\(d_{\text{model}}=8\)</span>, head 2개, 토큰 5개.</p>
+<div id="526eaddb" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>B, T, d_model, H <span class="op">=</span> <span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">2</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>d_head <span class="op">=</span> d_model <span class="op">//</span> H</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'd_model = </span><span class="sc">{</span>d_model<span class="sc">}</span><span class="ss">, head = </span><span class="sc">{</span>H<span class="sc">}</span><span class="ss">, d_head = </span><span class="sc">{</span>d_head<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>Wq <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>Wk <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>Wv <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>Wo <span class="op">=</span> nn.Linear(d_model, d_model, bias<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(B, T, d_model)</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> [(<span class="st">'① 입력 x'</span>, <span class="bu">tuple</span>(x.shape))]</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> Wq(x)<span class="op">;</span> rows.append((<span class="st">'② q = Wq(x)'</span>, <span class="bu">tuple</span>(q.shape)))</span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>qh <span class="op">=</span> q.view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)      <span class="co"># (B, H, T, d_head)</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>rows.append((<span class="st">'③ head 분할'</span>, <span class="bu">tuple</span>(qh.shape)))</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>kh <span class="op">=</span> Wk(x).view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>vh <span class="op">=</span> Wv(x).view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>oh, wh <span class="op">=</span> attention(qh, kh, vh)</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>rows.append((<span class="st">'④ head별 어텐션 출력'</span>, <span class="bu">tuple</span>(oh.shape)))</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> oh.transpose(<span class="dv">1</span>, <span class="dv">2</span>).reshape(B, T, d_model)</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>rows.append((<span class="st">'⑤ concat'</span>, <span class="bu">tuple</span>(merged.shape)))</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>out_mh <span class="op">=</span> Wo(merged)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>rows.append((<span class="st">'⑥ Wo 통과'</span>, <span class="bu">tuple</span>(out_mh.shape)))</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(rows, columns<span class="op">=</span>[<span class="st">'단계'</span>, <span class="st">'모양'</span>]).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">어텐션 가중치 shape:'</span>, <span class="bu">tuple</span>(wh.shape), <span class="st">' (B, H, T, T) — head마다 따로'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>d_model = 8, head = 2, d_head = 4
+            단계           모양
+        ① 입력 x    (2, 5, 8)
+   ② q = Wq(x)    (2, 5, 8)
+     ③ head 분할 (2, 2, 5, 4)
+④ head별 어텐션 출력 (2, 2, 5, 4)
+      ⑤ concat    (2, 5, 8)
+       ⑥ Wo 통과    (2, 5, 8)
+
+어텐션 가중치 shape: (2, 2, 5, 5)  (B, H, T, T) — head마다 따로</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><code>view</code> 로 마지막 축을 <code>(H, d_head)</code> 로 쪼개고, <code>transpose(1, 2)</code> 로 head 축을 앞으로 보낸다. 그러면 head 차원이 배치처럼 취급되어 <strong>head마다 독립적으로</strong> 어텐션이 계산된다.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="파라미터는-head-수와-무관하다" class="level2">
+<h2 class="anchored" data-anchor-id="파라미터는-head-수와-무관하다">4-2. 파라미터는 head 수와 무관하다</h2>
+<div id="60d76a9d" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> H_ <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">8</span>]:</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> nn.MultiheadAttention(d_model, H_, bias<span class="op">=</span><span class="va">False</span>, batch_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    rows.append({<span class="st">'d_model'</span>: d_model, <span class="st">'head 수'</span>: H_, <span class="st">'d_head'</span>: d_model <span class="op">//</span> H_,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'파라미터'</span>: <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> m.parameters()),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'공식 4d²'</span>: <span class="dv">4</span> <span class="op">*</span> d_model<span class="op">**</span><span class="dv">2</span>})</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame(rows).to_string(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> d_model  head 수  d_head  파라미터  공식 4d²
+       8       1       8   256     256
+       8       2       4   256     256
+       8       4       2   256     256
+       8       8       1   256     256</code></pre>
+</div>
+</div>
+<p><strong>head를 몇 개로 쪼개든 파라미터 수는 같다.</strong> 쪼개기만 할 뿐 새 가중치가 생기지 않는다. head 수는 “몇 개의 관점으로 나눌 것인가”를 정하는 하이퍼파라미터다.</p>
+<div id="209b1e15" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d_ <span class="kw">in</span> [<span class="dv">768</span>, <span class="dv">1024</span>]:</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'd_model=</span><span class="sc">{</span>d_<span class="sc">:5d}</span><span class="ss"> → 4d² = </span><span class="sc">{</span><span class="dv">4</span><span class="op">*</span>d_<span class="op">**</span><span class="dv">2</span><span class="sc">:,}</span><span class="ss">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>d_model=  768 → 4d² = 2,359,296
+d_model= 1024 → 4d² = 4,194,304</code></pre>
+</div>
+</div>
+</section>
+<section id="nn.multiheadattention-과-값-대조" class="level2">
+<h2 class="anchored" data-anchor-id="nn.multiheadattention-과-값-대조">4-3. <code>nn.MultiheadAttention</code> 과 값 대조</h2>
+<p>우리가 만든 가중치를 그대로 넣어 두 결과가 같은지 본다.</p>
+<div id="fc118605" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>mha <span class="op">=</span> nn.MultiheadAttention(d_model, H, bias<span class="op">=</span><span class="va">False</span>, batch_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    mha.in_proj_weight.copy_(torch.cat([Wq.weight, Wk.weight, Wv.weight], dim<span class="op">=</span><span class="dv">0</span>))</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    mha.out_proj.weight.copy_(Wo.weight)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>ref_mh, _ <span class="op">=</span> mha(x, x, x, need_weights<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접 구현 (0번 문장 첫 토큰):'</span>, out_mh[<span class="dv">0</span>, <span class="dv">0</span>].detach().numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'nn.MultiheadAttention      :'</span>, ref_mh[<span class="dv">0</span>, <span class="dv">0</span>].detach().numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">최대 차이:'</span>, <span class="bu">float</span>((out_mh <span class="op">-</span> ref_mh).<span class="bu">abs</span>().<span class="bu">max</span>()))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>직접 구현 (0번 문장 첫 토큰): [-0.0299 -0.0449  0.0335  0.0203 -0.0819 -0.0065 -0.0594 -0.115 ]
+nn.MultiheadAttention      : [-0.0299 -0.0449  0.0335  0.0203 -0.0819 -0.0065 -0.0594 -0.115 ]
+
+최대 차이: 5.21540641784668e-08</code></pre>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><code>nn.MultiheadAttention</code> 은 <span class="math inline">\(W_Q, W_K, W_V\)</span> 를 <strong>하나의 행렬로 붙여서</strong>(<code>in_proj_weight</code>) 들고 있다. 세로로 이어 붙이면 행렬 곱 한 번으로 셋을 동시에 계산할 수 있어 더 빠르다.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="head마다-다른-곳을-본다" class="level2">
+<h2 class="anchored" data-anchor-id="head마다-다른-곳을-본다">4-4. head마다 다른 곳을 본다</h2>
+<div id="b8de001e" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, H, figsize<span class="op">=</span>(<span class="fl">4.6</span><span class="op">*</span>H, <span class="fl">3.4</span>))</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> h <span class="kw">in</span> <span class="bu">range</span>(H):</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    M <span class="op">=</span> wh[<span class="dv">0</span>, h].detach().numpy()</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> axes[h].imshow(M, cmap<span class="op">=</span><span class="st">'Blues'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span>M.<span class="bu">max</span>())</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    axes[h].set_title(<span class="ss">f'head </span><span class="sc">{</span>h<span class="sc">}</span><span class="ss">'</span>, fontsize<span class="op">=</span><span class="dv">9</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    axes[h].set_xlabel(<span class="st">'Key'</span>)<span class="op">;</span> axes[h].set_ylabel(<span class="st">'Query'</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab11_files/figure-html/cell-26-output-1.png" width="714" height="316" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>학습 전(무작위 초기화)이라 아직 의미 있는 패턴은 없다. 학습된 모델에서는 head마다 어순·주어–동사·같은 단어 반복 같은 <strong>서로 다른 관계</strong>를 담게 된다.</p>
+<hr>
+</section>
+</section>
+<section id="패딩-마스크와-인과-마스크를-함께-쓰기" class="level1">
+<h1>5. 패딩 마스크와 인과 마스크를 함께 쓰기</h1>
+<p>10주차에서 만든 패딩 마스크를 어텐션에 연결한다.</p>
+<div id="f9c366c3" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>attn_mask_pad <span class="op">=</span> torch.tensor([[<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">0</span>],      <span class="co"># 문장 1: 3토큰</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                              [<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>]])     <span class="co"># 문장 2: 5토큰</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'패딩 마스크 (1=진짜 토큰):</span><span class="ch">\n</span><span class="st">'</span>, attn_mask_pad.numpy())</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># (B, 1, 1, T) 로 만들어 Key 방향에 걸리게 한다</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>pad_block <span class="op">=</span> (attn_mask_pad <span class="op">==</span> <span class="dv">0</span>)[:, <span class="va">None</span>, <span class="va">None</span>, :]</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>causal_block <span class="op">=</span> torch.triu(torch.ones(T, T, dtype<span class="op">=</span>torch.<span class="bu">bool</span>), <span class="dv">1</span>)[<span class="va">None</span>, <span class="va">None</span>]</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>combined <span class="op">=</span> pad_block <span class="op">|</span> causal_block</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">결합 마스크 shape:'</span>, <span class="bu">tuple</span>(combined.shape))</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'문장 1의 마스크 (True=가림):</span><span class="ch">\n</span><span class="st">'</span>, combined[<span class="dv">0</span>, <span class="dv">0</span>].numpy().astype(<span class="bu">int</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>패딩 마스크 (1=진짜 토큰):
+ [[1 1 1 0 0]
+ [1 1 1 1 1]]
+
+결합 마스크 shape: (2, 1, 5, 5)
+문장 1의 마스크 (True=가림):
+ [[0 1 1 1 1]
+ [0 0 1 1 1]
+ [0 0 0 1 1]
+ [0 0 0 1 1]
+ [0 0 0 1 1]]</code></pre>
+</div>
+</div>
+<div id="eeb35d6c" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>qh2 <span class="op">=</span> Wq(x).view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>kh2 <span class="op">=</span> Wk(x).view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>vh2 <span class="op">=</span> Wv(x).view(B, T, H, d_head).transpose(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>o2, w2 <span class="op">=</span> attention(qh2, kh2, vh2, mask<span class="op">=</span>combined)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'출력 shape:'</span>, <span class="bu">tuple</span>(o2.shape))</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">문장 1, head 0의 가중치:'</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w2[<span class="dv">0</span>, <span class="dv">0</span>].detach().numpy().<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">패딩 열(3, 4)의 가중치 합:'</span>, <span class="bu">float</span>(w2[<span class="dv">0</span>, :, :, <span class="dv">3</span>:].<span class="bu">sum</span>()), <span class="st">' ← 0이어야 한다'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>출력 shape: (2, 2, 5, 4)
+
+문장 1, head 0의 가중치:
+[[1.    0.    0.    0.    0.   ]
+ [0.819 0.181 0.    0.    0.   ]
+ [0.302 0.281 0.417 0.    0.   ]
+ [0.26  0.419 0.321 0.    0.   ]
+ [0.569 0.189 0.243 0.    0.   ]]
+
+패딩 열(3, 4)의 가중치 합: 0.0  ← 0이어야 한다</code></pre>
+</div>
+</div>
+<div id="90239796" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'nan이 있는가:'</span>, <span class="bu">bool</span>(torch.isnan(o2).<span class="bu">any</span>()))</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'문장 1의 행별 가중치 합:'</span>, w2[<span class="dv">0</span>, <span class="dv">0</span>].<span class="bu">sum</span>(<span class="op">-</span><span class="dv">1</span>).detach().numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>nan이 있는가: False
+문장 1의 행별 가중치 합: [1. 1. 1. 1. 1.]</code></pre>
+</div>
+</div>
+<p>패딩 행(3, 4번)도 앞쪽 진짜 토큰을 보고 있으므로 계산 자체는 성립한다. 그 출력은 <strong>의미가 없으니 나중에 버리면 된다.</strong></p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+한 행이 통째로 가려지면 <code>nan</code> 이 난다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>마스크를 Key 방향뿐 아니라 Query 방향에도 걸면, 어떤 행은 <strong>볼 수 있는 칸이 하나도 없게</strong> 된다. 그 행은 Softmax의 분모가 0이 되어 <code>nan</code> 이 나온다.</p>
+</div>
+</div>
+<div id="ee99ecfb" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>bad <span class="op">=</span> torch.zeros(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>, dtype<span class="op">=</span>torch.<span class="bu">bool</span>)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>bad[<span class="dv">0</span>, <span class="dv">2</span>, :] <span class="op">=</span> <span class="va">True</span>                     <span class="co"># 2번 행을 통째로 가린다</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>q4 <span class="op">=</span> torch.randn(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)<span class="op">;</span> k4 <span class="op">=</span> torch.randn(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)<span class="op">;</span> v4 <span class="op">=</span> torch.randn(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>o_bad, w_bad <span class="op">=</span> attention(q4, k4, v4, mask<span class="op">=</span>bad)</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중치:</span><span class="ch">\n</span><span class="st">'</span>, w_bad[<span class="dv">0</span>].numpy().<span class="bu">round</span>(<span class="dv">3</span>))</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="ch">\n</span><span class="st">nan이 있는가:'</span>, <span class="bu">bool</span>(torch.isnan(o_bad).<span class="bu">any</span>()))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>가중치:
+ [[0.314 0.283 0.216 0.187]
+ [0.101 0.412 0.125 0.362]
+ [  nan   nan   nan   nan]
+ [0.106 0.611 0.228 0.056]]
+
+nan이 있는가: True</code></pre>
+</div>
+</div>
+<p>패딩 마스크는 <strong>Key 방향(마지막 축)에만</strong> 거는 것이 안전하다.</p>
+<hr>
+</section>
+<section id="완성-어텐션이-어디를-보는지-꺼내-본다" class="level1">
+<h1>5.5. 완성 — 어텐션이 어디를 보는지 꺼내 본다</h1>
+<p>지난주 감성 분류기는 토큰 임베딩을 <strong>평균</strong>냈다. 이번에는 <strong>어텐션이 가중치를 정하게</strong> 한다.</p>
+<p><span class="math display">\[\text{평균} = \sum_t \frac{1}{T} X_t
+\qquad\longrightarrow\qquad
+\text{어텐션} = \sum_t w_t X_t, \quad \textstyle\sum_t w_t = 1\]</span></p>
+<p>가중치 <span class="math inline">\(w_t\)</span> 를 사람이 정하지 않고 <strong>학습으로 얻는다는 것</strong>이 차이의 전부다.</p>
+<section id="데이터" class="level2">
+<h2 class="anchored" data-anchor-id="데이터">5-5-1. 데이터</h2>
+<div id="4b91db30" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">'klue/bert-base'</span>)</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>TRAIN_URL <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/e9t/nsmc/master/ratings_train.txt'</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>TEST_URL  <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/e9t/nsmc/master/ratings_test.txt'</span></span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>train_df <span class="op">=</span> pd.read_csv(TRAIN_URL, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>).dropna().sample(<span class="dv">20000</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>test_df  <span class="op">=</span> pd.read_csv(TEST_URL,  sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>).dropna().sample(<span class="dv">5000</span>,  random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>MAX_LEN <span class="op">=</span> <span class="dv">48</span></span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode(df):</span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> tok(<span class="bu">list</span>(df[<span class="st">'document'</span>]), padding<span class="op">=</span><span class="st">'max_length'</span>, truncation<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a>            max_length<span class="op">=</span>MAX_LEN, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> e[<span class="st">'input_ids'</span>], e[<span class="st">'attention_mask'</span>], torch.tensor(df[<span class="st">'label'</span>].to_numpy())</span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>Xtr, Mtr, ytr <span class="op">=</span> encode(train_df)</span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a>Xte, Mte, yte <span class="op">=</span> encode(test_df)</span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'훈련'</span>, <span class="bu">tuple</span>(Xtr.shape), <span class="st">' 테스트'</span>, <span class="bu">tuple</span>(Xte.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>훈련 (20000, 48)  테스트 (5000, 48)</code></pre>
+</div>
+</div>
+</section>
+<section id="어텐션-풀링-가중치를-학습으로-정한다" class="level2">
+<h2 class="anchored" data-anchor-id="어텐션-풀링-가중치를-학습으로-정한다">5-5-2. 어텐션 풀링 — 가중치를 학습으로 정한다</h2>
+<p>토큰마다 <strong>점수 하나</strong>를 매기고, 마스크를 씌우고, Softmax로 가중치를 만든다. 1절에서 한 계산과 구조가 같다 — Query가 학습되는 벡터 하나일 뿐이다.</p>
+<div id="888efc91" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AttnPoolNet(nn.Module):</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, vocab_size, d<span class="op">=</span><span class="dv">64</span>, n_classes<span class="op">=</span><span class="dv">2</span>):</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.emb <span class="op">=</span> nn.Embedding(vocab_size, d, padding_idx<span class="op">=</span>tok.pad_token_id)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.score <span class="op">=</span> nn.Linear(d, <span class="dv">1</span>)             <span class="co"># 토큰마다 점수 하나</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc <span class="op">=</span> nn.Linear(d, n_classes)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, ids, mask, return_weights<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>        X <span class="op">=</span> <span class="va">self</span>.emb(ids)                                    <span class="co"># (B, T, d)</span></span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>        s <span class="op">=</span> <span class="va">self</span>.score(X).squeeze(<span class="op">-</span><span class="dv">1</span>)                        <span class="co"># (B, T)</span></span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>        s <span class="op">=</span> s.masked_fill(mask <span class="op">==</span> <span class="dv">0</span>, <span class="bu">float</span>(<span class="st">'-inf'</span>))          <span class="co"># 패딩은 -inf</span></span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>        w <span class="op">=</span> s.softmax(dim<span class="op">=-</span><span class="dv">1</span>)                                <span class="co"># (B, T), 행 합 1</span></span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> (X <span class="op">*</span> w.unsqueeze(<span class="op">-</span><span class="dv">1</span>)).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>)                 <span class="co"># 가중합 → (B, d)</span></span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>        out <span class="op">=</span> <span class="va">self</span>.fc(v)</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (out, w) <span class="cf">if</span> return_weights <span class="cf">else</span> out</span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> AttnPoolNet(tok.vocab_size)</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'파라미터 :'</span>, <span class="ss">f'</span><span class="sc">{</span><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters())<span class="sc">:,}</span><span class="ss">'</span>)</span>
+<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>o, w <span class="op">=</span> model(Xte[:<span class="dv">2</span>], Mte[:<span class="dv">2</span>], return_weights<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'출력'</span>, <span class="bu">tuple</span>(o.shape), <span class="st">' 가중치'</span>, <span class="bu">tuple</span>(w.shape))</span>
+<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중치 행 합:'</span>, w.<span class="bu">sum</span>(<span class="dv">1</span>).detach().numpy().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>파라미터 : 2,048,195
+출력 (2, 2)  가중치 (2, 48)
+가중치 행 합: [1. 1.]</code></pre>
+</div>
+</div>
+</section>
+<section id="학습" class="level2">
+<h2 class="anchored" data-anchor-id="학습">5-5-3. 학습</h2>
+<div id="acbd0376" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(TensorDataset(Xtr, Mtr, ytr), batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>hist <span class="op">=</span> []</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>t0 <span class="op">=</span> time.time()</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ep <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ids, m, y <span class="kw">in</span> train_loader:</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>        criterion(model(ids, m), y).backward()</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>        acc <span class="op">=</span> (model(Xte, Mte).argmax(<span class="dv">1</span>) <span class="op">==</span> yte).<span class="bu">float</span>().mean().item()</span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>    hist.append(acc)</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'epoch </span><span class="sc">{</span>ep<span class="sc">}</span><span class="ss">  test acc </span><span class="sc">{</span>acc<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'</span><span class="ch">\n</span><span class="ss">학습 시간 </span><span class="sc">{</span>time<span class="sc">.</span>time()<span class="op">-</span>t0<span class="sc">:.0f}</span><span class="ss">초'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>epoch 0  test acc 0.6746
+epoch 1  test acc 0.7318
+epoch 2  test acc 0.7540
+epoch 3  test acc 0.7668
+epoch 4  test acc 0.7752
+epoch 5  test acc 0.7810
+
+학습 시간 6초</code></pre>
+</div>
+</div>
+<div id="18e492f0" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">5.6</span>, <span class="fl">3.2</span>))</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>plt.plot(hist, <span class="st">'o-'</span>, ms<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'epoch'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'test accuracy'</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span> plt.tight_layout()<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab11_files/figure-html/cell-34-output-1.png" width="528" height="298" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>지난주 마스크 평균 모형과 정확도가 크게 다르지 않다. 리뷰가 짧고(평균 20토큰 남짓) 데이터가 2만 건이라 <strong>평균만으로도 상당히 잘 되기 때문</strong>이다. 어텐션의 값은 여기서는 성능이 아니라 <strong>다음 절에 있다.</strong></p>
+</div>
+</div>
+</div>
+</section>
+<section id="모형이-어느-단어를-봤는가" class="level2">
+<h2 class="anchored" data-anchor-id="모형이-어느-단어를-봤는가">5-5-4. 모형이 어느 단어를 봤는가</h2>
+<p>어텐션 가중치는 <strong>“모형이 어디를 봤는지”를 그대로 보여 주는 숫자</strong>다. 평균 풀링에서는 볼 수 없던 것이다.</p>
+<div id="ea6462c8" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>    logits, W_all <span class="op">=</span> model(Xte[:<span class="dv">200</span>], Mte[:<span class="dv">200</span>], return_weights<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> logits.argmax(<span class="dv">1</span>)</span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>texts <span class="op">=</span> <span class="bu">list</span>(test_df[<span class="st">'document'</span>])[:<span class="dv">200</span>]</span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">int</span>(Mte[i].<span class="bu">sum</span>())</span>
+<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>    w_i <span class="op">=</span> W_all[i, :n]</span>
+<span id="cb62-10"><a href="#cb62-10" aria-hidden="true" tabindex="-1"></a>    toks <span class="op">=</span> tok.convert_ids_to_tokens(Xte[i, :n])</span>
+<span id="cb62-11"><a href="#cb62-11" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> torch.argsort(w_i, descending<span class="op">=</span><span class="va">True</span>)[:<span class="dv">5</span>]</span>
+<span id="cb62-12"><a href="#cb62-12" aria-hidden="true" tabindex="-1"></a>    tag <span class="op">=</span> <span class="kw">lambda</span> v: <span class="st">'긍정'</span> <span class="cf">if</span> v <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">'부정'</span></span>
+<span id="cb62-13"><a href="#cb62-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'[정답 </span><span class="sc">{</span>tag(<span class="bu">int</span>(yte[i]))<span class="sc">}</span><span class="ss"> / 예측 </span><span class="sc">{</span>tag(<span class="bu">int</span>(pred[i]))<span class="sc">}</span><span class="ss">]  </span><span class="sc">{</span>texts[i][:<span class="dv">45</span>]<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb62-14"><a href="#cb62-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'   가장 많이 본 토큰:'</span>,</span>
+<span id="cb62-15"><a href="#cb62-15" aria-hidden="true" tabindex="-1"></a>          <span class="st">' | '</span>.join(<span class="ss">f'</span><span class="sc">{</span>toks[j]<span class="sc">}</span><span class="ss">(</span><span class="sc">{</span><span class="bu">float</span>(w_i[j])<span class="sc">:.3f}</span><span class="ss">)'</span> <span class="cf">for</span> j <span class="kw">in</span> top.tolist()))</span>
+<span id="cb62-16"><a href="#cb62-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[정답 긍정 / 예측 긍정]  찐한 여운과 함께...내 인생 최고의 미드
+   가장 많이 본 토큰: 최고(0.365) | 여운(0.219) | 인생(0.161) | ##과(0.058) | 내(0.055)
+
+[정답 긍정 / 예측 긍정]  기대 이상이다
+   가장 많이 본 토큰: ##이다(0.434) | 기대(0.244) | 이상(0.174) | [SEP](0.118) | [CLS](0.030)
+
+[정답 부정 / 예측 부정]  신날 것 없는 애니.
+   가장 많이 본 토큰: 없(0.346) | 신(0.236) | 애니(0.175) | ##는(0.066) | [SEP](0.051)
+
+[정답 긍정 / 예측 긍정]  마지막까지 힘을잃지않은 드라마~~
+   가장 많이 본 토큰: ##않(0.297) | 마지막(0.202) | ##잃(0.119) | ##을(0.064) | ~(0.060)
+
+[정답 부정 / 예측 부정]  정말아니다. 그냥 뒤끝이 불쾌하고 상황에 대처하는 언니와 순경을 보고 너무 비현실
+   가장 많이 본 토큰: 0(0.078) | 그냥(0.067) | ##끝(0.064) | 불쾌(0.058) | ##라(0.054)
+
+[정답 긍정 / 예측 긍정]  영화공사중 도로를 보았는데 에어컨을.. 정말 더웠다.하지만 더글라스오빠연기 압권
+   가장 많이 본 토큰: ##공사(0.103) | 정말(0.092) | ##권(0.092) | ##빠(0.086) | ##웠(0.079)
+</code></pre>
+</div>
+</div>
+<div id="bdcf583a" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 한 문장의 가중치를 막대로</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(Mte[i].<span class="bu">sum</span>())</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>toks <span class="op">=</span> tok.convert_ids_to_tokens(Xte[i, :n])</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>w_i <span class="op">=</span> W_all[i, :n].numpy()</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="fl">2.8</span>))</span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(n), w_i)</span>
+<span id="cb64-9"><a href="#cb64-9" aria-hidden="true" tabindex="-1"></a>plt.xticks(<span class="bu">range</span>(n), toks, rotation<span class="op">=</span><span class="dv">60</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb64-10"><a href="#cb64-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'attention weight'</span>)<span class="op">;</span> plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>, axis<span class="op">=</span><span class="st">'y'</span>)</span>
+<span id="cb64-11"><a href="#cb64-11" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()<span class="op">;</span> plt.show()</span>
+<span id="cb64-12"><a href="#cb64-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(texts[i])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab11_files/figure-html/cell-36-output-1.png" width="854" height="259" class="figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>찐한 여운과 함께...내 인생 최고의 미드</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+이것이 어텐션의 진짜 값어치다
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>성능이 아니라 <strong>설명 가능성</strong>이다. “왜 이 리뷰를 부정이라고 봤나”에 모형이 <strong>“없”, “최악” 이라는 토큰에 가중치를 몰았기 때문”</strong> 이라고 답할 수 있다.</p>
+<p>11주차 프로젝트 진단에서도 같은 질문을 하게 된다 — 모형이 무엇을 보고 판단했는가.</p>
+</div>
+</div>
+<div class="callout callout-style-simple callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+직접 해보기 ③ — 내 문장으로 확인하기
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>직접 쓴 리뷰 문장을 넣어 예측과 어텐션 가중치를 확인하시오. 모형이 주목한 단어가 납득이 가는가?</p>
+</div>
+</div>
+<div id="9c895724" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>my_reviews <span class="op">=</span> [<span class="va">None</span>]            <span class="co"># ← 문장 두세 개를 적으세요</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> tok(my_reviews, padding<span class="op">=</span><span class="va">True</span>, truncation<span class="op">=</span><span class="va">True</span>, max_length<span class="op">=</span>MAX_LEN, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    lo, ww <span class="op">=</span> model(e[<span class="st">'input_ids'</span>], e[<span class="st">'attention_mask'</span>], return_weights<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 위 5-5-4의 출력 코드를 참고해 상위 토큰을 찍어 보세요</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="66827a5a" class="cell" data-execution_count="37">
+<details class="code-fold">
+<summary>예시 보기</summary>
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>my_reviews <span class="op">=</span> [<span class="st">'배우 연기가 정말 좋았고 여운이 오래 남는다'</span>,</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">'돈이 아깝다 시간 낭비였음'</span>,</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">'재미없지 않았다'</span>]</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> tok(my_reviews, padding<span class="op">=</span><span class="va">True</span>, truncation<span class="op">=</span><span class="va">True</span>, max_length<span class="op">=</span>MAX_LEN, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>    lo, ww <span class="op">=</span> model(e[<span class="st">'input_ids'</span>], e[<span class="st">'attention_mask'</span>], return_weights<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> lo.softmax(<span class="dv">1</span>)</span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> k, s_ <span class="kw">in</span> <span class="bu">enumerate</span>(my_reviews):</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">int</span>(e[<span class="st">'attention_mask'</span>][k].<span class="bu">sum</span>())</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a>    toks <span class="op">=</span> tok.convert_ids_to_tokens(e[<span class="st">'input_ids'</span>][k, :n])</span>
+<span id="cb67-12"><a href="#cb67-12" aria-hidden="true" tabindex="-1"></a>    w_k <span class="op">=</span> ww[k, :n]</span>
+<span id="cb67-13"><a href="#cb67-13" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> torch.argsort(w_k, descending<span class="op">=</span><span class="va">True</span>)[:<span class="dv">4</span>]</span>
+<span id="cb67-14"><a href="#cb67-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span><span class="st">"긍정"</span> <span class="cf">if</span> prob[k,<span class="dv">1</span>] <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="cf">else</span> <span class="st">"부정"</span><span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span><span class="bu">float</span>(prob[k,<span class="dv">1</span>])<span class="sc">:.3f}</span><span class="ss">)  </span><span class="sc">{</span>s_<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb67-15"><a href="#cb67-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'   '</span>, <span class="st">' | '</span>.join(<span class="ss">f'</span><span class="sc">{</span>toks[j]<span class="sc">}</span><span class="ss">(</span><span class="sc">{</span><span class="bu">float</span>(w_k[j])<span class="sc">:.3f}</span><span class="ss">)'</span> <span class="cf">for</span> j <span class="kw">in</span> top.tolist()), <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>긍정 (0.978)  배우 연기가 정말 좋았고 여운이 오래 남는다
+    여운(0.341) | 좋(0.197) | 정말(0.135) | ##았(0.078) 
+
+부정 (0.007)  돈이 아깝다 시간 낭비였음
+    돈(0.392) | 낭비(0.268) | 아깝(0.143) | 시간(0.091) 
+
+부정 (0.002)  재미없지 않았다
+    재미없(0.750) | ##았(0.088) | 않(0.071) | ##지(0.033) 
+</code></pre>
+</div>
+</div>
+<p>세 번째 문장을 보라. <strong>“재미없지 않았다”</strong> 는 이중부정이라 긍정인데, 이 모형은 토큰을 <strong>가중합</strong>할 뿐 순서를 보지 않으므로 틀리기 쉽다. 토큰끼리 서로를 보게 하려면 <strong>self-attention을 층으로 쌓아야</strong> 한다 — 다음 주 내용이다.</p>
+<hr>
+</section>
+</section>
+<section id="정리" class="level1">
+<h1>6. 정리</h1>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+이번 주 체크포인트
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>하고 싶은 일</th>
+<th>코드</th>
+<th>결과 shape</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>스코어</td>
+<td><code>Q @ K.transpose(-2,-1) / d**0.5</code></td>
+<td><code>(..., T, T)</code></td>
+</tr>
+<tr class="even">
+<td>행별 Softmax</td>
+<td><code>S.softmax(dim=-1)</code></td>
+<td>각 행의 합 = 1</td>
+</tr>
+<tr class="odd">
+<td>가중합</td>
+<td><code>W @ V</code></td>
+<td><code>(..., T, d)</code></td>
+</tr>
+<tr class="even">
+<td>인과 마스크</td>
+<td><code>torch.triu(torch.ones(T,T,dtype=bool), 1)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>가리기</td>
+<td><code>S.masked_fill(mask, float('-inf'))</code></td>
+<td><strong>softmax 전에</strong></td>
+</tr>
+<tr class="even">
+<td>head 분할</td>
+<td><code>x.view(B,T,H,dh).transpose(1,2)</code></td>
+<td><code>(B, H, T, dh)</code></td>
+</tr>
+<tr class="odd">
+<td>head 결합</td>
+<td><code>o.transpose(1,2).reshape(B,T,d)</code></td>
+<td><code>(B, T, d)</code></td>
+</tr>
+<tr class="even">
+<td>한 줄 어텐션</td>
+<td><code>F.scaled_dot_product_attention(q,k,v,is_causal=True)</code></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>파라미터</td>
+<td><span class="math inline">\(4d_{\text{model}}^2\)</span> — head 수와 무관</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>어텐션 네 줄</strong></p>
+<p><span class="math display">\[S = \frac{QK^\top}{\sqrt{d}} \;\to\; S[\text{mask}] = -\infty \;\to\; W = \text{softmax}(S) \;\to\; \text{출력} = WV\]</span></p>
+<section id="스스로-확인해-보기" class="level2">
+<h2 class="anchored" data-anchor-id="스스로-확인해-보기">스스로 확인해 보기</h2>
+<p>아래 결과를 먼저 예상한 뒤 실행해서 대조한다.</p>
+<div id="cb5044a6" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>B, T, d, H <span class="op">=</span> <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">12</span>, <span class="dv">3</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(B, T, d)</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> nn.MultiheadAttention(d, H, bias<span class="op">=</span><span class="va">False</span>, batch_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>y, w <span class="op">=</span> m(x, x, x, need_weights<span class="op">=</span><span class="va">True</span>, average_attn_weights<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'입력          :'</span>, <span class="bu">tuple</span>(x.shape))</span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'출력          :'</span>, <span class="bu">tuple</span>(y.shape))</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가중치        :'</span>, <span class="bu">tuple</span>(w.shape))</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'d_head        :'</span>, d <span class="op">//</span> H)</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'파라미터      :'</span>, <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> m.parameters()), <span class="st">' = 4 x'</span>, d, <span class="st">'^2 ='</span>, <span class="dv">4</span><span class="op">*</span>d<span class="op">*</span>d)</span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> torch.triu(torch.ones(T, T, dtype<span class="op">=</span>torch.<span class="bu">bool</span>), <span class="dv">1</span>)</span>
+<span id="cb69-13"><a href="#cb69-13" aria-hidden="true" tabindex="-1"></a>y2, w2 <span class="op">=</span> m(x, x, x, attn_mask<span class="op">=</span>mask, need_weights<span class="op">=</span><span class="va">True</span>, average_attn_weights<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb69-14"><a href="#cb69-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'인과 가중치 위쪽 삼각형 합:'</span>, <span class="bu">float</span>(w2[<span class="dv">0</span>, <span class="dv">0</span>].triu(<span class="dv">1</span>).<span class="bu">sum</span>()))</span>
+<span id="cb69-15"><a href="#cb69-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'마지막 토큰이 보는 칸 수  :'</span>, <span class="bu">int</span>((w2[<span class="dv">0</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>] <span class="op">&gt;</span> <span class="dv">0</span>).<span class="bu">sum</span>()))</span>
+<span id="cb69-16"><a href="#cb69-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'첫 토큰이 보는 칸 수      :'</span>, <span class="bu">int</span>((w2[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>] <span class="op">&gt;</span> <span class="dv">0</span>).<span class="bu">sum</span>()))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>입력          : (4, 6, 12)
+출력          : (4, 6, 12)
+가중치        : (4, 3, 6, 6)
+d_head        : 4
+파라미터      : 576  = 4 x 12 ^2 = 576
+
+인과 가중치 위쪽 삼각형 합: 0.0
+마지막 토큰이 보는 칸 수  : 6
+첫 토큰이 보는 칸 수      : 1</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="다음-실습" class="level2">
+<h2 class="anchored" data-anchor-id="다음-실습">다음 실습</h2>
+<p><a href="../labs/lab12.html">실습 12주차: Transformer 블록과 언어모델</a> — 오늘 만든 어텐션에 <strong>위치 정보, 잔차, LayerNorm, FFN</strong>을 붙여 블록 하나를 완성하고, 실제 GPT-2를 열어 본다.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>부경대학교 시스템경영공학부 · 이지환</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>텍스트 표현: 토큰화와 임베딩 – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<script type="module" src="../site_libs/quarto-ojs/quarto-ojs-runtime.js"></script>
+<link href="../site_libs/quarto-ojs/quarto-ojs.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">주차별 계획</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#컴퓨터는-글자를-어떻게-읽는가" id="toc-컴퓨터는-글자를-어떻게-읽는가" class="nav-link active" data-scroll-target="#컴퓨터는-글자를-어떻게-읽는가">컴퓨터는 글자를 어떻게 읽는가</a></li>
+  <li><a href="#토큰화-텍스트를-조각내기" id="toc-토큰화-텍스트를-조각내기" class="nav-link" data-scroll-target="#토큰화-텍스트를-조각내기">토큰화: 텍스트를 조각내기</a>
+  <ul class="collapse">
+  <li><a href="#무엇을-한-단위로-셀-것인가" id="toc-무엇을-한-단위로-셀-것인가" class="nav-link" data-scroll-target="#무엇을-한-단위로-셀-것인가">무엇을 한 단위로 셀 것인가</a></li>
+  <li><a href="#서브워드-자주-나오는-조각으로-쪼갠다" id="toc-서브워드-자주-나오는-조각으로-쪼갠다" class="nav-link" data-scroll-target="#서브워드-자주-나오는-조각으로-쪼갠다">서브워드: 자주 나오는 조각으로 쪼갠다</a></li>
+  <li><a href="#손계산-bpe-병합-절차-따라가기" id="toc-손계산-bpe-병합-절차-따라가기" class="nav-link" data-scroll-target="#손계산-bpe-병합-절차-따라가기">손계산: BPE 병합 절차 따라가기</a></li>
+  </ul></li>
+  <li><a href="#숫자로-바꾸기-1차-시도-원-핫의-실패" id="toc-숫자로-바꾸기-1차-시도-원-핫의-실패" class="nav-link" data-scroll-target="#숫자로-바꾸기-1차-시도-원-핫의-실패">숫자로 바꾸기 1차 시도: 원-핫의 실패</a></li>
+  <li><a href="#임베딩-단어를-좌표로" id="toc-임베딩-단어를-좌표로" class="nav-link" data-scroll-target="#임베딩-단어를-좌표로">임베딩: 단어를 좌표로</a></li>
+  <li><a href="#유사도-손계산-내적과-코사인" id="toc-유사도-손계산-내적과-코사인" class="nav-link" data-scroll-target="#유사도-손계산-내적과-코사인">유사도 손계산: 내적과 코사인</a>
+  <ul class="collapse">
+  <li><a href="#손계산" id="toc-손계산" class="nav-link" data-scroll-target="#손계산">손계산</a></li>
+  <li><a href="#왜-내적이-아니라-코사인을-쓰는-경우가-많은가" id="toc-왜-내적이-아니라-코사인을-쓰는-경우가-많은가" class="nav-link" data-scroll-target="#왜-내적이-아니라-코사인을-쓰는-경우가-많은가">왜 내적이 아니라 코사인을 쓰는 경우가 많은가</a></li>
+  </ul></li>
+  <li><a href="#임베딩-공간의-성질-의미가-기하학이-된다" id="toc-임베딩-공간의-성질-의미가-기하학이-된다" class="nav-link" data-scroll-target="#임베딩-공간의-성질-의미가-기하학이-된다">임베딩 공간의 성질: 의미가 기하학이 된다</a></li>
+  <li><a href="#문장을-텐서로-b-t-d" id="toc-문장을-텐서로-b-t-d" class="nav-link" data-scroll-target="#문장을-텐서로-b-t-d">문장을 텐서로 — <span class="math inline">\((B, T, d)\)</span></a>
+  <ul class="collapse">
+  <li><a href="#문장-하나가-텐서가-되기까지" id="toc-문장-하나가-텐서가-되기까지" class="nav-link" data-scroll-target="#문장-하나가-텐서가-되기까지">문장 하나가 텐서가 되기까지</a></li>
+  <li><a href="#임베딩-층의-파라미터-수" id="toc-임베딩-층의-파라미터-수" class="nav-link" data-scroll-target="#임베딩-층의-파라미터-수">임베딩 층의 파라미터 수</a></li>
+  <li><a href="#길이가-다른-문장을-어떻게-한-배치에-담는가" id="toc-길이가-다른-문장을-어떻게-한-배치에-담는가" class="nav-link" data-scroll-target="#길이가-다른-문장을-어떻게-한-배치에-담는가">길이가 다른 문장을 어떻게 한 배치에 담는가</a></li>
+  </ul></li>
+  <li><a href="#순서라는-마지막-문제" id="toc-순서라는-마지막-문제" class="nav-link" data-scroll-target="#순서라는-마지막-문제">순서라는 마지막 문제</a>
+  <ul class="collapse">
+  <li><a href="#rnn-요약-메모를-옆으로-넘기며-읽는다" id="toc-rnn-요약-메모를-옆으로-넘기며-읽는다" class="nav-link" data-scroll-target="#rnn-요약-메모를-옆으로-넘기며-읽는다">RNN: 요약 메모를 옆으로 넘기며 읽는다</a></li>
+  <li><a href="#그러나-두-가지-한계" id="toc-그러나-두-가지-한계" class="nav-link" data-scroll-target="#그러나-두-가지-한계">그러나 두 가지 한계</a></li>
+  </ul></li>
+  <li><a href="#다음-장으로-가는-질문" id="toc-다음-장으로-가는-질문" class="nav-link" data-scroll-target="#다음-장으로-가는-질문">다음 장으로 가는 질문</a></li>
+  <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">텍스트 표현: 토큰화와 임베딩</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-simple callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+학습 목표
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>텍스트가 이미지보다 다루기 까다로운 <strong>세 가지 이유</strong>를 설명할 수 있다</li>
+<li>토큰화를 정의하고, BPE 병합 절차를 <strong>직접 따라 계산</strong>할 수 있다</li>
+<li>원-핫 인코딩이 단어 표현에 실패하는 <strong>두 가지 이유</strong>를 설명할 수 있다</li>
+<li>임베딩 벡터가 사람이 정하는 값이 아니라 <strong>학습되는 파라미터</strong>임을 설명할 수 있다</li>
+<li>두 임베딩 벡터의 <strong>내적과 코사인 유사도를 직접 계산</strong>할 수 있다</li>
+<li>임베딩 공간의 벡터 연산 성질(왕 − 남자 + 여자 ≈ 여왕)을 확인할 수 있다</li>
+<li>문장이 신경망에 들어갈 때의 텐서 모양 <span class="math inline">\((B, T, d)\)</span>를 말할 수 있고, <strong>임베딩 층의 파라미터 수를 계산</strong>할 수 있다</li>
+<li>길이가 다른 문장을 배치로 묶기 위한 <strong>패딩과 마스크</strong>의 필요성을 설명할 수 있다</li>
+<li>RNN의 핵심 아이디어와 <strong>두 가지 한계</strong>를 설명할 수 있다</li>
+</ul>
+</div>
+</div>
+<hr>
+<section id="컴퓨터는-글자를-어떻게-읽는가" class="level2">
+<h2 class="anchored" data-anchor-id="컴퓨터는-글자를-어떻게-읽는가">컴퓨터는 글자를 어떻게 읽는가</h2>
+<p>Ch09 마지막에 던진 질문에서 시작하자. 우리는 이미 한 번 이 문제를 풀어 봤다. Ch05에서 이미지는 <strong>픽셀 숫자의 격자</strong>가 되었고, 그 순간부터 Ch02의 신경망이 이미지를 먹을 수 있게 되었다. 텍스트도 똑같은 관문 앞에 서 있다 — <strong>신경망은 숫자만 먹는다. 글자를 숫자로 바꿔야 한다.</strong></p>
+<p>그런데 텍스트는 이미지보다 까다롭다. 세 가지 이유 때문이다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>이미지 (Ch05)</th>
+<th>텍스트</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>값의 성질</strong></td>
+<td>픽셀은 연속값 (0~255, 밝기를 조금씩 바꿀 수 있다)</td>
+<td>단어는 <strong>이산적 기호</strong> (“고양이”와 “고양시” 사이의 중간 단어는 없다)</td>
+</tr>
+<tr class="even">
+<td><strong>길이</strong></td>
+<td>크기를 224×224로 맞추면 끝</td>
+<td>문장마다 <strong>길이가 다르다</strong> — 3단어짜리도, 300단어짜리도 있다</td>
+</tr>
+<tr class="odd">
+<td><strong>순서</strong></td>
+<td>픽셀을 좌우 반전해도 고양이는 고양이</td>
+<td><strong>순서가 의미를 바꾼다</strong></td>
+</tr>
+</tbody>
+</table>
+<p>세 번째가 특히 무섭다. 다음 두 문장은 <strong>완전히 같은 단어들</strong>로 이루어져 있다:</p>
+<blockquote class="blockquote">
+<p>“개가 사람을 물었다” — 흔한 일</p>
+<p>“사람이 개를 물었다” — 뉴스에 나올 일</p>
+</blockquote>
+<p>단어 목록만 보면 구별할 수 없다. 순서까지 표현해야 진짜 텍스트 표현이다.</p>
+<p>이번 장의 여정은 세 단계다: 글자를 <strong>조각내고</strong>(토큰화), 조각을 <strong>좌표로 바꾸고</strong>(임베딩), 마지막으로 <strong>순서</strong>를 다루는 첫 시도(RNN)와 그 한계까지 간다. 그 한계가 다음 장의 트랜스포머를 부른다.</p>
+<hr>
+</section>
+<section id="토큰화-텍스트를-조각내기" class="level2">
+<h2 class="anchored" data-anchor-id="토큰화-텍스트를-조각내기">토큰화: 텍스트를 조각내기</h2>
+<section id="무엇을-한-단위로-셀-것인가" class="level3">
+<h3 class="anchored" data-anchor-id="무엇을-한-단위로-셀-것인가">무엇을 한 단위로 셀 것인가</h3>
+<p>숫자로 바꾸기 전에 먼저 정해야 할 것이 있다. <strong>텍스트의 최소 단위</strong>는 무엇인가?</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: 토큰화 (Tokenization)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>텍스트를 모델이 처리할 <strong>최소 단위(토큰, token)의 나열로 쪼개는 절차</strong>. 쪼개진 각 토큰은 어휘 사전(vocabulary)의 번호 하나에 대응된다.</p>
+</div>
+</div>
+<p>가장 단순한 방법은 띄어쓰기로 자르는 <strong>단어 단위 토큰화</strong>다. 그런데 두 가지 문제에 부딪힌다.</p>
+<p><strong>문제 1 — 어휘 폭발</strong>: 한국어에서는 조사가 단어에 붙는다.</p>
+<blockquote class="blockquote">
+<p>학교에 / 학교를 / 학교가 / 학교에서 / 학교로 / 학교까지 …</p>
+</blockquote>
+<p>의미의 핵심은 전부 “학교”인데, 띄어쓰기 기준으로는 <strong>전부 다른 단어</strong>다. 명사 하나마다 조사 조합만큼 어휘가 불어나고, 어휘 사전이 수십만 개로 폭발한다.</p>
+<p><strong>문제 2 — 미등록 단어(OOV, Out-of-Vocabulary)</strong>: 사전에 없는 단어가 오면 처리할 방법이 없다. 신조어(“갓생”), 새 상품명, 오타 — 세상은 사전이 갱신되는 속도보다 빨리 새 단어를 만든다.</p>
+</section>
+<section id="서브워드-자주-나오는-조각으로-쪼갠다" class="level3">
+<h3 class="anchored" data-anchor-id="서브워드-자주-나오는-조각으로-쪼갠다">서브워드: 자주 나오는 조각으로 쪼갠다</h3>
+<p>해법의 아이디어는 단순하다. <strong>단어보다 작고 글자보다 큰, “자주 나오는 조각”을 단위로 쓰자.</strong> “학교에”를 “학교” + “에”로 쪼개면, “학교”라는 조각 하나로 수십 개의 변형을 전부 커버한다. 처음 보는 단어도 아는 조각들의 조합으로 표현할 수 있으니 미등록 단어 문제도 사라진다.</p>
+<p>그럼 “자주 나오는 조각”을 누가 정하는가? 사람이 아니라 <strong>데이터가 정한다.</strong> 대표적 절차가 <strong>BPE(Byte Pair Encoding)</strong>다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: BPE (Byte Pair Encoding)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>글자 단위에서 시작해, <strong>가장 자주 등장하는 인접 쌍을 하나의 새 토큰으로 병합</strong>하는 것을 원하는 어휘 크기가 될 때까지 반복하는 절차. 자주 붙어 다니는 글자들이 자동으로 한 조각이 된다.</p>
+</div>
+</div>
+</section>
+<section id="손계산-bpe-병합-절차-따라가기" class="level3">
+<h3 class="anchored" data-anchor-id="손계산-bpe-병합-절차-따라가기">손계산: BPE 병합 절차 따라가기</h3>
+<p>장난감 문자열 <code>aaabdaaabac</code>에서 병합 3스텝을 직접 따라가 보자. 각 스텝은 똑같다: <strong>인접 쌍의 빈도를 세고 → 최다 빈도 쌍을 새 기호로 병합</strong>한다.</p>
+<div class="cell" data-execution_count="1">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>pd.DataFrame([</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'단계'</span>: <span class="dv">0</span>, <span class="st">'토큰열'</span>: <span class="st">'a a a b d a a a b a c'</span>, <span class="st">'토큰 수'</span>: <span class="dv">11</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>     <span class="st">'최다 빈도 쌍'</span>: <span class="st">'(a, a) — 4회'</span>, <span class="st">'병합 규칙'</span>: <span class="st">'aa → Z'</span>},</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'단계'</span>: <span class="dv">1</span>, <span class="st">'토큰열'</span>: <span class="st">'Z a b d Z a b a c'</span>, <span class="st">'토큰 수'</span>: <span class="dv">9</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>     <span class="st">'최다 빈도 쌍'</span>: <span class="st">'(a, b) — 2회'</span>, <span class="st">'병합 규칙'</span>: <span class="st">'ab → Y'</span>},</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'단계'</span>: <span class="dv">2</span>, <span class="st">'토큰열'</span>: <span class="st">'Z Y d Z Y a c'</span>, <span class="st">'토큰 수'</span>: <span class="dv">7</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>     <span class="st">'최다 빈도 쌍'</span>: <span class="st">'(Z, Y) — 2회'</span>, <span class="st">'병합 규칙'</span>: <span class="st">'ZY → X'</span>},</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'단계'</span>: <span class="dv">3</span>, <span class="st">'토큰열'</span>: <span class="st">'X d X a c'</span>, <span class="st">'토큰 수'</span>: <span class="dv">5</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>     <span class="st">'최다 빈도 쌍'</span>: <span class="st">'(모든 쌍 1회 — 종료)'</span>, <span class="st">'병합 규칙'</span>: <span class="st">''</span>},</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>]).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-bpe" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-bpe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;1: BPE 손계산 — 문자열 aaabdaaabac, 병합 3스텝
+</figcaption>
+<div aria-describedby="tbl-bpe-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="1">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+단계
+</th>
+
+<th>
+토큰열
+</th>
+
+<th>
+토큰 수
+</th>
+
+<th>
+최다 빈도 쌍
+</th>
+
+<th>
+병합 규칙
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+0
+</td>
+
+<td>
+a a a b d a a a b a c
+</td>
+
+<td>
+11
+</td>
+
+<td>
+(a, a) — 4회
+</td>
+
+<td>
+aa → Z
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+1
+</td>
+
+<td>
+Z a b d Z a b a c
+</td>
+
+<td>
+9
+</td>
+
+<td>
+(a, b) — 2회
+</td>
+
+<td>
+ab → Y
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+2
+</td>
+
+<td>
+Z Y d Z Y a c
+</td>
+
+<td>
+7
+</td>
+
+<td>
+(Z, Y) — 2회
+</td>
+
+<td>
+ZY → X
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+3
+</td>
+
+<td>
+X d X a c
+</td>
+
+<td>
+5
+</td>
+
+<td>
+(모든 쌍 1회 — 종료)
+</td>
+
+<td>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li>단계 1에서 (Z, a)도 2회로 동률이다 — 동률이면 미리 정한 규칙(예: 먼저 나온 쌍)으로 하나를 고른다</li>
+<li>병합할 때마다 어휘 사전에 새 토큰이 추가된다: {a, b, c, d} → {a, b, c, d, <strong>Z, Y, X</strong>}</li>
+<li>실제로는 이 절차를 수십억 글자의 말뭉치 위에서 수만 번 반복한다 — 그러면 Z, Y, X 자리에 “학교”, “니다”, “ing” 같은 <strong>진짜 자주 쓰이는 조각들</strong>이 들어선다</li>
+</ul>
+<p>실제 LLM의 토크나이저에 한국어 문장을 넣으면 대략 이런 식으로 쪼개진다:</p>
+<blockquote class="blockquote">
+<p>“깊은 학습은 즐겁다” → <code>["깊", "은", " 학", "습", "은", " 즐", "겁", "다"]</code></p>
+</blockquote>
+<p>자주 쓰이는 조각은 통째로, 드문 조각은 잘게 — 데이터의 빈도가 그대로 칼자국이 된 모습이다.</p>
+<hr>
+</section>
+</section>
+<section id="숫자로-바꾸기-1차-시도-원-핫의-실패" class="level2">
+<h2 class="anchored" data-anchor-id="숫자로-바꾸기-1차-시도-원-핫의-실패">숫자로 바꾸기 1차 시도: 원-핫의 실패</h2>
+<p>토큰을 얻었으니 이제 숫자로 바꾸자. 우리에게는 이미 도구가 하나 있다. Ch04에서 브랜드 {삼성, 애플, LG}를 <strong>원-핫 인코딩</strong>으로 바꿨었다 — 범주 3개, 0/1 열 3개, 깔끔하게 끝났다.</p>
+<p>같은 방법을 단어에 쓰면 어떻게 될까? 어휘 사전이 50,000개라면?</p>
+<p><strong>실패 1 — 차원의 낭비</strong>: 단어 하나가 50,000차원 벡터가 된다. 그중 49,999개는 0이고 딱 하나만 1인 <strong>희소(sparse) 벡터</strong>다. 20단어짜리 문장 하나가 숫자 100만 개 — 거의 전부가 0인 데이터를 쌓는 셈이다. Ch04에서 경고했던 “범주가 수백 개인 변수는 파라미터를 수백 배로 늘린다”가 범주 5만 개에서 폭발한 것이다.</p>
+<p><strong>실패 2 — 유사성의 실종</strong>: 더 근본적인 문제다. 서로 다른 두 원-핫 벡터의 내적은 <strong>항상 0</strong>이다. 1이 서 있는 자리가 다르니 곱해서 더하면 반드시 0이 나온다.</p>
+<p><span class="math display">\[\text{고양이} \cdot \text{강아지} = 0, \qquad \text{고양이} \cdot \text{미분방정식} = 0\]</span></p>
+<p>원-핫의 세계에서 “고양이”와 “강아지”는 “고양이”와 “미분방정식”만큼 멀다. 모든 단어가 모든 단어와 똑같이 무관하다. 하지만 우리는 안다 — 고양이와 강아지는 분명히 <strong>비슷한 무언가</strong>를 공유한다. <strong>유사성을 표현할 수 없는 표현</strong>은 단어의 표현으로 실격이다.</p>
+<blockquote class="blockquote">
+<p>원-핫은 “서로 다르다”만 말할 수 있고, “얼마나 비슷한가”는 말할 수 없다. 우리에게 필요한 것은 후자다.</p>
+</blockquote>
+<hr>
+</section>
+<section id="임베딩-단어를-좌표로" class="level2">
+<h2 class="anchored" data-anchor-id="임베딩-단어를-좌표로">임베딩: 단어를 좌표로</h2>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: 임베딩 (Embedding)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>단어(토큰)를 <strong>낮은 차원의 밀집(dense) 벡터</strong> — 즉 연속 공간의 <strong>좌표</strong> — 로 대응시키는 것. 50,000차원 희소 벡터 대신 수백 차원의 실수 벡터를 쓰며, <strong>비슷한 의미의 단어는 가까운 좌표</strong>에 놓이도록 한다.</p>
+</div>
+</div>
+<p>핵심 질문: 그 좌표는 <strong>누가 정하는가?</strong> 사람이 “고양이는 (3, 4)로 하자”라고 정하는 것이 아니다. 임베딩 값은 <strong>학습되는 파라미터</strong>다 — Ch02에서 만난 가중치 <span class="math inline">\(w\)</span>와 완전히 같은 지위다. 처음에는 무작위 값으로 시작하고, 손실을 줄이는 방향으로 경사하강법이 조금씩 옮겨 놓는다. “고양이”와 “강아지”가 비슷한 문맥에 자꾸 등장하면, 학습이 두 좌표를 점점 가까이 끌어다 놓는 것이다.</p>
+<p>구현은 의외로 소박하다. <strong>룩업 테이블(lookup table)</strong> 하나면 된다:</p>
+<ul>
+<li>어휘 50,000개 × 임베딩 차원 256 크기의 행렬을 만든다 (파라미터 1,280만 개)</li>
+<li>토큰 번호 <span class="math inline">\(i\)</span>가 들어오면 → 행렬의 <strong><span class="math inline">\(i\)</span>번째 행을 꺼내 준다</strong>. 그게 전부다</li>
+</ul>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">토큰 번호</th>
+<th style="text-align: center;">단어</th>
+<th>임베딩 벡터 (행렬의 해당 행)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">고양이</td>
+<td><span class="math inline">\((0.31, -1.20, 0.88, \ldots)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">강아지</td>
+<td><span class="math inline">\((0.29, -1.15, 0.91, \ldots)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">자동차</td>
+<td><span class="math inline">\((-2.01, 0.44, -0.37, \ldots)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">⋮</td>
+<td style="text-align: center;">⋮</td>
+<td>⋮</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>원-핫 벡터에 행렬을 곱하면 정확히 그 행이 나온다 — 룩업 테이블은 “원-핫 × 행렬”을 낭비 없이 구현한 것뿐이다. 1차 시도가 완전히 버려진 게 아니라 <strong>학습 가능한 행렬 하나를 사이에 끼운 것</strong>이 임베딩이다.</p>
+</blockquote>
+<hr>
+</section>
+<section id="유사도-손계산-내적과-코사인" class="level2">
+<h2 class="anchored" data-anchor-id="유사도-손계산-내적과-코사인">유사도 손계산: 내적과 코사인</h2>
+<p>“비슷한 단어는 가까운 좌표”라고 했다. 그럼 <strong>가깝다를 숫자로</strong> 재는 도구가 필요하다. 두 가지를 쓴다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정의: 내적과 코사인 유사도 (Dot Product &amp; Cosine Similarity)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>두 벡터 <span class="math inline">\(\mathbf{a} = (a_1, a_2)\)</span>, <span class="math inline">\(\mathbf{b} = (b_1, b_2)\)</span>에 대해</p>
+<p><span class="math display">\[\mathbf{a} \cdot \mathbf{b} = a_1 b_1 + a_2 b_2, \qquad
+\cos\theta = \frac{\mathbf{a} \cdot \mathbf{b}}{\|\mathbf{a}\| \, \|\mathbf{b}\|}, \qquad
+\|\mathbf{a}\| = \sqrt{a_1^2 + a_2^2}\]</span></p>
+<ul>
+<li>코사인 유사도는 <strong>두 벡터 사이 각도</strong>만 본다: 같은 방향 +1, 수직 0, 반대 방향 −1</li>
+<li>내적은 방향뿐 아니라 <strong>벡터의 크기</strong>에도 영향을 받는다</li>
+</ul>
+</div>
+</div>
+<section id="손계산" class="level3">
+<h3 class="anchored" data-anchor-id="손계산">손계산</h3>
+<p>실제 임베딩은 수백 차원이지만, 계산 원리는 2차원과 똑같다. 장난감 임베딩 4개로 직접 계산해 보자:</p>
+<p><span class="math display">\[\text{고양이} = (3, 4), \quad \text{강아지} = (4, 3), \quad \text{호랑이} = (6, 8), \quad \text{자동차} = (4, -3)\]</span></p>
+<p>예를 들어 고양이·강아지 쌍은:</p>
+<p><span class="math display">\[\mathbf{a} \cdot \mathbf{b} = 3 \times 4 + 4 \times 3 = 24, \qquad
+\|\text{고양이}\| = \sqrt{9+16} = 5, \quad \|\text{강아지}\| = 5\]</span></p>
+<p><span class="math display">\[\cos\theta = \frac{24}{5 \times 5} = 0.96\]</span></p>
+<div class="cell" data-execution_count="2">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>vecs <span class="op">=</span> {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'고양이'</span>: np.array([<span class="dv">3</span>, <span class="dv">4</span>]),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'강아지'</span>: np.array([<span class="dv">4</span>, <span class="dv">3</span>]),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'호랑이'</span>: np.array([<span class="dv">6</span>, <span class="dv">8</span>]),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'자동차'</span>: np.array([<span class="dv">4</span>, <span class="op">-</span><span class="dv">3</span>]),</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>pairs <span class="op">=</span> [(<span class="st">'고양이'</span>, <span class="st">'강아지'</span>), (<span class="st">'고양이'</span>, <span class="st">'호랑이'</span>), (<span class="st">'강아지'</span>, <span class="st">'호랑이'</span>),</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>         (<span class="st">'고양이'</span>, <span class="st">'자동차'</span>), (<span class="st">'강아지'</span>, <span class="st">'자동차'</span>)]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>fmt <span class="op">=</span> <span class="kw">lambda</span> v: <span class="ss">f'(</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">)'</span> <span class="cf">if</span> v <span class="op">&lt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="ss">f'</span><span class="sc">{</span>v<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w1, w2 <span class="kw">in</span> pairs:</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    a, b <span class="op">=</span> vecs[w1], vecs[w2]</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    dot <span class="op">=</span> <span class="bu">int</span>(a <span class="op">@</span> b)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    na, nb <span class="op">=</span> np.linalg.norm(a), np.linalg.norm(b)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'쌍'</span>: <span class="ss">f'</span><span class="sc">{</span>w1<span class="sc">}</span><span class="ss"> · </span><span class="sc">{</span>w2<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'내적 계산'</span>: <span class="ss">f'$</span><span class="sc">{</span>a[<span class="dv">0</span>]<span class="sc">}</span><span class="ch">\\</span><span class="ss">times</span><span class="sc">{</span>fmt(b[<span class="dv">0</span>])<span class="sc">}</span><span class="ss"> + </span><span class="sc">{</span>a[<span class="dv">1</span>]<span class="sc">}</span><span class="ch">\\</span><span class="ss">times</span><span class="sc">{</span>fmt(b[<span class="dv">1</span>])<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>dot<span class="sc">}</span><span class="ss">$'</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">'$</span><span class="ch">\\</span><span class="st">|</span><span class="ch">\\</span><span class="st">mathbf</span><span class="sc">{a}</span><span class="ch">\\</span><span class="st">|$'</span>: <span class="ss">f'</span><span class="sc">{</span>na<span class="sc">:.0f}</span><span class="ss">'</span>, <span class="st">'$</span><span class="ch">\\</span><span class="st">|</span><span class="ch">\\</span><span class="st">mathbf</span><span class="sc">{b}</span><span class="ch">\\</span><span class="st">|$'</span>: <span class="ss">f'</span><span class="sc">{</span>nb<span class="sc">:.0f}</span><span class="ss">'</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">'코사인'</span>: <span class="ss">f'**</span><span class="sc">{</span>dot <span class="op">/</span> (na <span class="op">*</span> nb)<span class="sc">:.2f}</span><span class="ss">**'</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-cosine" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="2">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cosine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;2: 유사도 손계산 — 장난감 임베딩 4개의 내적·크기·코사인
+</figcaption>
+<div aria-describedby="tbl-cosine-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="2">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+쌍
+</th>
+
+<th>
+내적 계산
+</th>
+
+<th>
+<span class="math inline">\(\\|\\mathbf{a}\\|\)</span>
+</th>
+
+<th>
+<span class="math inline">\(\\|\\mathbf{b}\\|\)</span>
+</th>
+
+<th>
+코사인
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+고양이 · 강아지
+</td>
+
+<td>
+<span class="math inline">\(3\\times4 + 4\\times3 = 24\)</span>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+5
+</td>
+
+<td>
+<strong>0.96</strong>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+고양이 · 호랑이
+</td>
+
+<td>
+<span class="math inline">\(3\\times6 + 4\\times8 = 50\)</span>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+10
+</td>
+
+<td>
+<strong>1.00</strong>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+강아지 · 호랑이
+</td>
+
+<td>
+<span class="math inline">\(4\\times6 + 3\\times8 = 48\)</span>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+10
+</td>
+
+<td>
+<strong>0.96</strong>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+고양이 · 자동차
+</td>
+
+<td>
+<span class="math inline">\(3\\times4 + 4\\times(-3) = 0\)</span>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+5
+</td>
+
+<td>
+<strong>0.00</strong>
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+강아지 · 자동차
+</td>
+
+<td>
+<span class="math inline">\(4\\times4 + 3\\times(-3) = 7\)</span>
+</td>
+
+<td>
+5
+</td>
+
+<td>
+5
+</td>
+
+<td>
+<strong>0.28</strong>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>숫자가 우리의 직관을 그대로 재현한다:</p>
+<ul>
+<li>고양이·강아지 = <strong>0.96</strong> — 거의 같은 방향</li>
+<li>고양이·자동차 = <strong>0.00</strong> — 정확히 수직, 무관한 사이</li>
+<li>고양이·강아지(0.96) &gt; 고양이·자동차(0.00) — 원-핫이 못 하던 일이 <strong>좌표 하나 바꿨더니</strong> 된다</li>
+</ul>
+</section>
+<section id="왜-내적이-아니라-코사인을-쓰는-경우가-많은가" class="level3">
+<h3 class="anchored" data-anchor-id="왜-내적이-아니라-코사인을-쓰는-경우가-많은가">왜 내적이 아니라 코사인을 쓰는 경우가 많은가</h3>
+<p>표에서 이상한 점을 하나 발견했는가? 강아지·호랑이의 <strong>내적은 48</strong>로 고양이·강아지(24)의 두 배인데, <strong>코사인은 0.96으로 똑같다.</strong> 호랑이 벡터가 <span class="math inline">\((6,8)\)</span>로 크기가 10 — 다른 벡터들의 두 배이기 때문이다. 내적은 방향이 같아도 벡터가 길면 커진다. 실제 임베딩에서 벡터의 크기는 단어의 등장 빈도 같은 부수적 요인에 흔들리기 쉬워서, “의미가 얼마나 같은 방향인가”만 보고 싶을 때는 크기로 나눠 정규화한 <strong>코사인</strong>을 쓴다. 반대로 크기 정보까지 활용하고 싶은 계산(다음 장의 어텐션이 그렇다)에서는 내적을 그대로 쓴다.</p>
+<hr>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+인터랙티브 — 임베딩 지도에서 단어 사이의 각도를 재 보세요
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>14개 단어가 배치된 2차원 임베딩 지도입니다. 단어 두 개를 고르면 원점에서 두 벡터가 화살표로 그려지고 코사인 유사도가 계산됩니다. 같은 무리(동물, 탈것, 과일) 안에서 고를 때와 무리를 건너 고를 때 값이 어떻게 달라지는지 확인해 보세요.</p>
+</div>
+</div>
+<div id="481c0006" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<script type="ojs-define">{"contents": [{"name": "dummy_emb", "value": 1}]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb3" data-startfrom="298" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 297;"><span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a>embWords <span class="op">=</span> [</span>
+<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"고양이"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">4</span>}<span class="op">,</span> {<span class="dt">word</span><span class="op">:</span> <span class="st">"강아지"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span></span>
+<span id="cb3-300"><a href="#cb3-300" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"호랑이"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">8</span>}<span class="op">,</span> {<span class="dt">word</span><span class="op">:</span> <span class="st">"토끼"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">5</span>}<span class="op">,</span></span>
+<span id="cb3-301"><a href="#cb3-301" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"말"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">5</span>}<span class="op">,</span></span>
+<span id="cb3-302"><a href="#cb3-302" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"자동차"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">3</span>}<span class="op">,</span> {<span class="dt">word</span><span class="op">:</span> <span class="st">"버스"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">4</span>}<span class="op">,</span></span>
+<span id="cb3-303"><a href="#cb3-303" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"기차"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">2</span>}<span class="op">,</span> {<span class="dt">word</span><span class="op">:</span> <span class="st">"자전거"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">4</span>}<span class="op">,</span></span>
+<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"오토바이"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">5</span>}<span class="op">,</span></span>
+<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"사과"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="op">-</span><span class="dv">4</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span> {<span class="dt">word</span><span class="op">:</span> <span class="st">"바나나"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">2</span>}<span class="op">,</span></span>
+<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"포도"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="op">-</span><span class="dv">3</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">4</span>}<span class="op">,</span></span>
+<span id="cb3-307"><a href="#cb3-307" aria-hidden="true" tabindex="-1"></a>  {<span class="dt">word</span><span class="op">:</span> <span class="st">"미분방정식"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="op">-</span><span class="dv">5</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="op">-</span><span class="dv">5</span>}</span>
+<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb4" data-startfrom="314" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 313;"><span id="cb4-314"><a href="#cb4-314" aria-hidden="true" tabindex="-1"></a>viewof wordA <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(embWords<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">word</span>)<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"단어 A"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"고양이"</span> })</span>
+<span id="cb4-315"><a href="#cb4-315" aria-hidden="true" tabindex="-1"></a>viewof wordB <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">select</span>(embWords<span class="op">.</span><span class="fu">map</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">word</span>)<span class="op">,</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"단어 B"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"강아지"</span> })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-1" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-2" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="319" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 318;"><span id="cb5-319"><a href="#cb5-319" aria-hidden="true" tabindex="-1"></a>simCalc <span class="op">=</span> {</span>
+<span id="cb5-320"><a href="#cb5-320" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> a <span class="op">=</span> embWords<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordA)<span class="op">;</span></span>
+<span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> b <span class="op">=</span> embWords<span class="op">.</span><span class="fu">find</span>(d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordB)<span class="op">;</span></span>
+<span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dot <span class="op">=</span> a<span class="op">.</span><span class="at">x</span> <span class="op">*</span> b<span class="op">.</span><span class="at">x</span> <span class="op">+</span> a<span class="op">.</span><span class="at">y</span> <span class="op">*</span> b<span class="op">.</span><span class="at">y</span><span class="op">;</span></span>
+<span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> na <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">hypot</span>(a<span class="op">.</span><span class="at">x</span><span class="op">,</span> a<span class="op">.</span><span class="at">y</span>)<span class="op">;</span></span>
+<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> nb <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">hypot</span>(b<span class="op">.</span><span class="at">x</span><span class="op">,</span> b<span class="op">.</span><span class="at">y</span>)<span class="op">;</span></span>
+<span id="cb5-325"><a href="#cb5-325" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { a<span class="op">,</span> b<span class="op">,</span> dot<span class="op">,</span> na<span class="op">,</span> nb<span class="op">,</span> <span class="dt">cos</span><span class="op">:</span> dot <span class="op">/</span> (na <span class="op">*</span> nb) }<span class="op">;</span></span>
+<span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-3" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" style="width:58%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="333" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 332;"><span id="cb6-333"><a href="#cb6-333" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb6-334"><a href="#cb6-334" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xmin <span class="op">=</span> <span class="op">-</span><span class="dv">7</span><span class="op">,</span> xmax <span class="op">=</span> <span class="dv">8</span><span class="op">,</span> ymin <span class="op">=</span> <span class="op">-</span><span class="dv">7</span><span class="op">,</span> ymax <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb6-335"><a href="#cb6-335" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> s <span class="op">=</span> <span class="dv">30</span><span class="op">,</span> pad <span class="op">=</span> <span class="dv">26</span><span class="op">;</span></span>
+<span id="cb6-336"><a href="#cb6-336" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> W <span class="op">=</span> (xmax <span class="op">-</span> xmin) <span class="op">*</span> s <span class="op">+</span> pad <span class="op">*</span> <span class="dv">2</span><span class="op">,</span> H <span class="op">=</span> (ymax <span class="op">-</span> ymin) <span class="op">*</span> s <span class="op">+</span> pad <span class="op">*</span> <span class="dv">2</span><span class="op">;</span></span>
+<span id="cb6-337"><a href="#cb6-337" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> px <span class="op">=</span> x <span class="kw">=&gt;</span> pad <span class="op">+</span> (x <span class="op">-</span> xmin) <span class="op">*</span> s<span class="op">;</span></span>
+<span id="cb6-338"><a href="#cb6-338" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> py <span class="op">=</span> y <span class="kw">=&gt;</span> pad <span class="op">+</span> (ymax <span class="op">-</span> y) <span class="op">*</span> s<span class="op">;</span></span>
+<span id="cb6-339"><a href="#cb6-339" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cA <span class="op">=</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> cB <span class="op">=</span> <span class="st">"#E65100"</span><span class="op">;</span></span>
+<span id="cb6-340"><a href="#cb6-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-341"><a href="#cb6-341" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">create</span>(<span class="st">"svg"</span>)</span>
+<span id="cb6-342"><a href="#cb6-342" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)</span>
+<span id="cb6-343"><a href="#cb6-343" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)</span>
+<span id="cb6-344"><a href="#cb6-344" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>(<span class="st">"max-width"</span><span class="op">,</span> <span class="st">"540px"</span>)</span>
+<span id="cb6-345"><a href="#cb6-345" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">style</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"Pretendard, sans-serif"</span>)<span class="op">;</span></span>
+<span id="cb6-346"><a href="#cb6-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-347"><a href="#cb6-347" aria-hidden="true" tabindex="-1"></a>  <span class="co">// grid</span></span>
+<span id="cb6-348"><a href="#cb6-348" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> xmin<span class="op">;</span> i <span class="op">&lt;=</span> xmax<span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb6-349"><a href="#cb6-349" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">px</span>(i))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">py</span>(ymin))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">px</span>(i))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">py</span>(ymax))</span>
+<span id="cb6-350"><a href="#cb6-350" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> i <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">"#bbb"</span> <span class="op">:</span> <span class="st">"#f0f0f0"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> i <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="fl">1.5</span> <span class="op">:</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb6-351"><a href="#cb6-351" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> ymin<span class="op">;</span> j <span class="op">&lt;=</span> ymax<span class="op">;</span> j<span class="op">++</span>)</span>
+<span id="cb6-352"><a href="#cb6-352" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">px</span>(xmin))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">py</span>(j))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">px</span>(xmax))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">py</span>(j))</span>
+<span id="cb6-353"><a href="#cb6-353" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> j <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">"#bbb"</span> <span class="op">:</span> <span class="st">"#f0f0f0"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> j <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="fl">1.5</span> <span class="op">:</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb6-354"><a href="#cb6-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-355"><a href="#cb6-355" aria-hidden="true" tabindex="-1"></a>  <span class="co">// arrow markers</span></span>
+<span id="cb6-356"><a href="#cb6-356" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> defs <span class="op">=</span> svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"defs"</span>)<span class="op">;</span></span>
+<span id="cb6-357"><a href="#cb6-357" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> [id<span class="op">,</span> color] <span class="kw">of</span> [[<span class="st">"arrA"</span><span class="op">,</span> cA]<span class="op">,</span> [<span class="st">"arrB"</span><span class="op">,</span> cB]]) {</span>
+<span id="cb6-358"><a href="#cb6-358" aria-hidden="true" tabindex="-1"></a>    defs<span class="op">.</span><span class="fu">append</span>(<span class="st">"marker"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"id"</span><span class="op">,</span> id)</span>
+<span id="cb6-359"><a href="#cb6-359" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="st">"0 0 10 10"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"refX"</span><span class="op">,</span> <span class="dv">8</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"refY"</span><span class="op">,</span> <span class="dv">5</span>)</span>
+<span id="cb6-360"><a href="#cb6-360" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"markerWidth"</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"markerHeight"</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"orient"</span><span class="op">,</span> <span class="st">"auto-start-reverse"</span>)</span>
+<span id="cb6-361"><a href="#cb6-361" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">append</span>(<span class="st">"path"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"d"</span><span class="op">,</span> <span class="st">"M 0 0 L 10 5 L 0 10 z"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> color)<span class="op">;</span></span>
+<span id="cb6-362"><a href="#cb6-362" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-363"><a href="#cb6-363" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-364"><a href="#cb6-364" aria-hidden="true" tabindex="-1"></a>  <span class="co">// all word points</span></span>
+<span id="cb6-365"><a href="#cb6-365" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">const</span> d <span class="kw">of</span> embWords) {</span>
+<span id="cb6-366"><a href="#cb6-366" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> sel <span class="op">=</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordA <span class="op">||</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordB<span class="op">;</span></span>
+<span id="cb6-367"><a href="#cb6-367" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"circle"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"cx"</span><span class="op">,</span> <span class="fu">px</span>(d<span class="op">.</span><span class="at">x</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"cy"</span><span class="op">,</span> <span class="fu">py</span>(d<span class="op">.</span><span class="at">y</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"r"</span><span class="op">,</span> sel <span class="op">?</span> <span class="dv">6</span> <span class="op">:</span> <span class="dv">4</span>)</span>
+<span id="cb6-368"><a href="#cb6-368" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordA <span class="op">?</span> cA <span class="op">:</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordB <span class="op">?</span> cB <span class="op">:</span> <span class="st">"#999"</span>)<span class="op">;</span></span>
+<span id="cb6-369"><a href="#cb6-369" aria-hidden="true" tabindex="-1"></a>    svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">px</span>(d<span class="op">.</span><span class="at">x</span>) <span class="op">+</span> <span class="dv">8</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">py</span>(d<span class="op">.</span><span class="at">y</span>) <span class="op">-</span> <span class="dv">7</span>)</span>
+<span id="cb6-370"><a href="#cb6-370" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> sel <span class="op">?</span> <span class="st">"13"</span> <span class="op">:</span> <span class="st">"11.5"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-weight"</span><span class="op">,</span> sel <span class="op">?</span> <span class="st">"700"</span> <span class="op">:</span> <span class="st">"400"</span>)</span>
+<span id="cb6-371"><a href="#cb6-371" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordA <span class="op">?</span> cA <span class="op">:</span> d<span class="op">.</span><span class="at">word</span> <span class="op">===</span> wordB <span class="op">?</span> cB <span class="op">:</span> <span class="st">"#666"</span>)<span class="op">.</span><span class="fu">text</span>(d<span class="op">.</span><span class="at">word</span>)<span class="op">;</span></span>
+<span id="cb6-372"><a href="#cb6-372" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-373"><a href="#cb6-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-374"><a href="#cb6-374" aria-hidden="true" tabindex="-1"></a>  <span class="co">// vectors from origin</span></span>
+<span id="cb6-375"><a href="#cb6-375" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> c <span class="op">=</span> simCalc<span class="op">;</span></span>
+<span id="cb6-376"><a href="#cb6-376" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">px</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">py</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">px</span>(c<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">x</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">py</span>(c<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">y</span>))</span>
+<span id="cb6-377"><a href="#cb6-377" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> cA)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"marker-end"</span><span class="op">,</span> <span class="st">"url(#arrA)"</span>)<span class="op">;</span></span>
+<span id="cb6-378"><a href="#cb6-378" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> <span class="fu">px</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> <span class="fu">py</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> <span class="fu">px</span>(c<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">x</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> <span class="fu">py</span>(c<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">y</span>))</span>
+<span id="cb6-379"><a href="#cb6-379" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> cB)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"marker-end"</span><span class="op">,</span> <span class="st">"url(#arrB)"</span>)<span class="op">;</span></span>
+<span id="cb6-380"><a href="#cb6-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-381"><a href="#cb6-381" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"circle"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"cx"</span><span class="op">,</span> <span class="fu">px</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"cy"</span><span class="op">,</span> <span class="fu">py</span>(<span class="dv">0</span>))<span class="op">.</span><span class="fu">attr</span>(<span class="st">"r"</span><span class="op">,</span> <span class="dv">3</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"#333"</span>)<span class="op">;</span></span>
+<span id="cb6-382"><a href="#cb6-382" aria-hidden="true" tabindex="-1"></a>  svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> <span class="fu">px</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="dv">6</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> <span class="fu">py</span>(<span class="dv">0</span>) <span class="op">+</span> <span class="dv">15</span>)</span>
+<span id="cb6-383"><a href="#cb6-383" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> <span class="st">"11"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> <span class="st">"#888"</span>)<span class="op">.</span><span class="fu">text</span>(<span class="st">"원점"</span>)<span class="op">;</span></span>
+<span id="cb6-384"><a href="#cb6-384" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-385"><a href="#cb6-385" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> svg<span class="op">.</span><span class="fu">node</span>()<span class="op">;</span></span>
+<span id="cb6-386"><a href="#cb6-386" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-4" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div><div class="column" style="width:42%;">
+<div class="cell">
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="392" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 391;"><span id="cb7-392"><a href="#cb7-392" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="font-family:'Pretendard',sans-serif;font-size:0.85em;"&gt;</span></span>
+<span id="cb7-393"><a href="#cb7-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-394"><a href="#cb7-394" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.5em 0.8em;background:#FFF8E1;</span></span>
+<span id="cb7-395"><a href="#cb7-395" aria-hidden="true" tabindex="-1"></a><span class="vs">    border-left:3px solid #D4A017;border-radius:4px;margin-bottom:0.6em;line-height:1.9;"&gt;</span></span>
+<span id="cb7-396"><a href="#cb7-396" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;span style="color:#1F3F7A;font-weight:700;"&gt;</span><span class="sc">${</span>wordA<span class="sc">}</span><span class="vs">&lt;/span&gt; = (</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">y</span><span class="sc">}</span><span class="vs">),</span></span>
+<span id="cb7-397"><a href="#cb7-397" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;span style="color:#E65100;font-weight:700;"&gt;</span><span class="sc">${</span>wordB<span class="sc">}</span><span class="vs">&lt;/span&gt; = (</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">y</span><span class="sc">}</span><span class="vs">)&lt;br&gt;</span></span>
+<span id="cb7-398"><a href="#cb7-398" aria-hidden="true" tabindex="-1"></a><span class="vs">    내적 = </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">×</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">a</span><span class="op">.</span><span class="at">y</span><span class="sc">}</span><span class="vs">×</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">b</span><span class="op">.</span><span class="at">y</span><span class="sc">}</span><span class="vs"> = &lt;strong&gt;</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">dot</span><span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;br&gt;</span></span>
+<span id="cb7-399"><a href="#cb7-399" aria-hidden="true" tabindex="-1"></a><span class="vs">    크기 = </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">na</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">, </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">nb</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span></span>
+<span id="cb7-400"><a href="#cb7-400" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb7-401"><a href="#cb7-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-402"><a href="#cb7-402" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.6em 0.8em;border-radius:5px;line-height:1.6;</span></span>
+<span id="cb7-403"><a href="#cb7-403" aria-hidden="true" tabindex="-1"></a><span class="vs">    background:</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">'#E8F5E9'</span> <span class="op">:</span> simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">'#FFEBEE'</span> <span class="op">:</span> <span class="st">'#F5F5F5'</span><span class="sc">}</span><span class="vs">;</span></span>
+<span id="cb7-404"><a href="#cb7-404" aria-hidden="true" tabindex="-1"></a><span class="vs">    border:1.5px solid </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">'#2E7D32'</span> <span class="op">:</span> simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">'#8C1515'</span> <span class="op">:</span> <span class="st">'#999'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb7-405"><a href="#cb7-405" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;span style="font-size:1.25em;font-weight:700;color:</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">'#2E7D32'</span> <span class="op">:</span> simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">'#8C1515'</span> <span class="op">:</span> <span class="st">'#555'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb7-406"><a href="#cb7-406" aria-hidden="true" tabindex="-1"></a><span class="vs">      코사인 유사도 = </span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">3</span>)<span class="sc">}</span></span>
+<span id="cb7-407"><a href="#cb7-407" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/span&gt;&lt;br&gt;</span></span>
+<span id="cb7-408"><a href="#cb7-408" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;span style="color:#555;"&gt;</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.85</span> <span class="op">?</span> <span class="st">'거의 같은 방향 — 아주 비슷한 단어'</span> <span class="op">:</span></span>
+<span id="cb7-409"><a href="#cb7-409" aria-hidden="true" tabindex="-1"></a>      simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.4</span> <span class="op">?</span> <span class="st">'비슷한 쪽을 향한다'</span> <span class="op">:</span></span>
+<span id="cb7-410"><a href="#cb7-410" aria-hidden="true" tabindex="-1"></a>      simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="op">-</span><span class="fl">0.2</span> <span class="op">?</span> <span class="st">'거의 수직 — 무관한 사이'</span> <span class="op">:</span> <span class="st">'반대 방향 — 지도의 정반대편'</span><span class="sc">}</span><span class="vs">&lt;/span&gt;</span></span>
+<span id="cb7-411"><a href="#cb7-411" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb7-412"><a href="#cb7-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-413"><a href="#cb7-413" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.6em;"&gt;</span></span>
+<span id="cb7-414"><a href="#cb7-414" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="height:10px;background:#EEE;border-radius:5px;overflow:hidden;position:relative;"&gt;</span></span>
+<span id="cb7-415"><a href="#cb7-415" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="height:100%;width:</span><span class="sc">${</span>((simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">/</span> <span class="dv">2</span> <span class="op">*</span> <span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%;</span></span>
+<span id="cb7-416"><a href="#cb7-416" aria-hidden="true" tabindex="-1"></a><span class="vs">        background:</span><span class="sc">${</span>simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&gt;</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">'#2E7D32'</span> <span class="op">:</span> simCalc<span class="op">.</span><span class="at">cos</span> <span class="op">&lt;</span> <span class="dv">0</span> <span class="op">?</span> <span class="st">'#8C1515'</span> <span class="op">:</span> <span class="st">'#999'</span><span class="sc">}</span><span class="vs">;border-radius:5px;"&gt;&lt;/div&gt;</span></span>
+<span id="cb7-417"><a href="#cb7-417" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="position:absolute;left:50%;top:-2px;width:2px;height:14px;background:#555;"&gt;&lt;/div&gt;</span></span>
+<span id="cb7-418"><a href="#cb7-418" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb7-419"><a href="#cb7-419" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.75em;color:#888;display:flex;justify-content:space-between;margin-top:0.2em;"&gt;</span></span>
+<span id="cb7-420"><a href="#cb7-420" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;span&gt;−1&lt;/span&gt;&lt;span&gt;0 (가운데 눈금)&lt;/span&gt;&lt;span&gt;+1&lt;/span&gt;</span></span>
+<span id="cb7-421"><a href="#cb7-421" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb7-422"><a href="#cb7-422" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb7-423"><a href="#cb7-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-424"><a href="#cb7-424" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="ojs-cell-5" data-nodetype="expression">
+
+</div>
+</div>
+</div>
+</div>
+</div>
+<blockquote class="blockquote">
+<p><strong>시도해 보세요</strong>: ① 고양이-강아지(0.96) → 고양이-자동차(0.00) → 고양이-미분방정식(−0.99) 순서로 골라 보세요. 유사도가 +1에서 −1까지 미끄러져 내려갑니다. ② 고양이-호랑이를 고르면 코사인이 정확히 1.000 — 크기는 두 배 달라도 <strong>방향이 같으면</strong> 유사도는 만점입니다.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="임베딩-공간의-성질-의미가-기하학이-된다" class="level2">
+<h2 class="anchored" data-anchor-id="임베딩-공간의-성질-의미가-기하학이-된다">임베딩 공간의 성질: 의미가 기하학이 된다</h2>
+<p>좋은 임베딩 공간에서는 놀라운 일이 벌어진다. 단어 사이의 <strong>의미 관계</strong>가 <strong>벡터의 방향</strong>으로 나타나는 것이다. 가장 유명한 예:</p>
+<p><span class="math display">\[\vec{\text{왕}} - \vec{\text{남자}} + \vec{\text{여자}} \approx \vec{\text{여왕}}\]</span></p>
+<p>“왕에서 남자를 빼고 여자를 더하면 여왕이 된다” — 성별이라는 의미의 차이가 공간에서 <strong>일정한 방향의 이동</strong>으로 표현되기 때문이다. 장난감 2D 좌표로 산술을 직접 확인해 보자. 가로축이 성별, 세로축이 신분을 나타내도록 배치된 임베딩이라면:</p>
+<p><span class="math display">\[\text{왕} = (4, 7), \quad \text{여왕} = (1, 7), \quad \text{남자} = (4, 2), \quad \text{여자} = (1, 2)\]</span></p>
+<p><span class="math display">\[\vec{\text{왕}} - \vec{\text{남자}} + \vec{\text{여자}} = (4-4+1,\; 7-2+2) = (1, 7) = \vec{\text{여왕}}\]</span></p>
+<p>“남자→여자” 이동은 어느 신분에서 출발하든 똑같이 <span class="math inline">\((-3, 0)\)</span>이다. 같은 원리로 실제 학습된 임베딩에서는 “서울 − 한국 + 일본 ≈ 도쿄”, “walked − walk + swim ≈ swam” 같은 관계가 발견된다.</p>
+<blockquote class="blockquote">
+<p>아무도 임베딩에게 “성별”이나 “수도”라는 개념을 가르치지 않았다. 손실을 줄이는 학습만 시켰을 뿐인데, <strong>의미의 구조가 공간의 구조로</strong> 떠오른 것이다. 단어를 좌표로 만든 순간, 의미를 다루는 일이 기하학이 되었다.</p>
+</blockquote>
+<hr>
+</section>
+<section id="문장을-텐서로-b-t-d" class="level2">
+<h2 class="anchored" data-anchor-id="문장을-텐서로-b-t-d">문장을 텐서로 — <span class="math inline">\((B, T, d)\)</span></h2>
+<p>임베딩까지 왔으니, <strong>문장 하나가 신경망에 들어갈 때 어떤 모양의 텐서가 되는지</strong> 정리하자. Ch05에서 이미지가 <span class="math inline">\((B, C, H, W)\)</span> 였던 것처럼, 텍스트에도 정해진 모양이 있다.</p>
+<section id="문장-하나가-텐서가-되기까지" class="level3">
+<h3 class="anchored" data-anchor-id="문장-하나가-텐서가-되기까지">문장 하나가 텐서가 되기까지</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">단계</th>
+<th>결과</th>
+<th style="text-align: center;">모양</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">원문</td>
+<td><code>"고양이가 생선을 먹었다"</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">토큰화</td>
+<td><code>['고양이', '가', ' 생선', '을', ' 먹었', '다']</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">어휘 번호로</td>
+<td><code>[812, 15, 3049, 21, 577, 9]</code></td>
+<td style="text-align: center;"><span class="math inline">\((T,)\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">임베딩 통과</td>
+<td>각 번호가 <span class="math inline">\(d\)</span>차원 벡터로</td>
+<td style="text-align: center;"><span class="math inline">\((T, d)\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">배치로 묶기</td>
+<td>문장 <span class="math inline">\(B\)</span>개를 한 번에</td>
+<td style="text-align: center;"><span class="math inline">\((B, T, d)\)</span></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+세 글자의 뜻
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong><span class="math inline">\(B\)</span> (Batch)</strong> — 한 번에 처리하는 문장 수. Ch04의 배치 크기 그대로다</li>
+<li><strong><span class="math inline">\(T\)</span> (Time / Tokens)</strong> — 문장의 토큰 개수. <strong>문장마다 다르다</strong></li>
+<li><strong><span class="math inline">\(d\)</span> (dimension)</strong> — 임베딩 차원. 보통 256, 768, 4096 …</li>
+</ul>
+</div>
+</div>
+<p><span class="math inline">\((B, T, d)\)</span> 는 앞으로 Ch11·Ch12에서 계속 나온다. <strong>텍스트 모델의 표준 모양</strong>이라고 외워 두자.</p>
+</section>
+<section id="임베딩-층의-파라미터-수" class="level3">
+<h3 class="anchored" data-anchor-id="임베딩-층의-파라미터-수">임베딩 층의 파라미터 수</h3>
+<p>임베딩은 룩업 테이블 하나 — 즉 <strong>행렬 하나</strong>다. 그러니 파라미터 수도 바로 나온다.</p>
+<p><span class="math display">\[\text{임베딩 파라미터 수} = V \times d \qquad (V = \text{어휘 크기})\]</span></p>
+<p>Ch02의 완전연결층과 달리 <strong>편향이 없다</strong> — 곱셈이 아니라 “행을 꺼내는” 연산이기 때문이다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">어휘 <span class="math inline">\(V\)</span></th>
+<th style="text-align: center;">차원 <span class="math inline">\(d\)</span></th>
+<th style="text-align: center;">파라미터 수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">5,000</td>
+<td style="text-align: center;">128</td>
+<td style="text-align: center;">640,000</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">32,000</td>
+<td style="text-align: center;">768</td>
+<td style="text-align: center;">24,576,000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">50,257 (GPT-2)</td>
+<td style="text-align: center;">768</td>
+<td style="text-align: center;">38,597,376</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p>GPT-2는 <strong>임베딩 층 하나만으로 3,860만 파라미터</strong>다. 어휘가 크면 이 층이 모델에서 가장 무거운 층이 되기도 한다.</p>
+</blockquote>
+</section>
+<section id="길이가-다른-문장을-어떻게-한-배치에-담는가" class="level3">
+<h3 class="anchored" data-anchor-id="길이가-다른-문장을-어떻게-한-배치에-담는가">길이가 다른 문장을 어떻게 한 배치에 담는가</h3>
+<p>여기서 첫 절의 두 번째 난관 — <strong>가변 길이</strong> — 가 실제 문제로 돌아온다. 텐서는 <strong>직사각형</strong>이어야 한다. 3토큰 문장과 6토큰 문장을 한 배치에 담을 수 없다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+패딩 (Padding)과 마스크 (Mask)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>패딩</strong>: 짧은 문장 뒤에 의미 없는 특수 토큰 <code>[PAD]</code>를 채워 <strong>길이를 맞춘다</strong></li>
+<li><strong>마스크</strong>: 어디가 진짜 토큰이고 어디가 패딩인지 알려주는 <strong>0/1 표</strong></li>
+</ul>
+</div>
+</div>
+<pre><code>문장 A: [812, 15, 3049]           → [812, 15, 3049,  0,  0,  0]   마스크 [1,1,1,0,0,0]
+문장 B: [45, 900, 12, 77, 3, 88]  → [ 45, 900,  12, 77,  3, 88]   마스크 [1,1,1,1,1,1]
+                                     └────── (B=2, T=6) ──────┘</code></pre>
+<p><strong>마스크가 없으면 모델이 패딩을 진짜 단어로 취급한다.</strong> 평균을 낼 때 0들이 섞여 값이 희석되고, Ch11의 어텐션에서는 <strong>의미 없는 자리에 집중</strong>해 버린다. 그래서 패딩과 마스크는 항상 짝으로 다닌다.</p>
+<blockquote class="blockquote">
+<p>Ch04에서 결측치를 대치하고 “결측이었음”을 표시하는 열을 따로 두자고 했던 것과 같은 발상이다. 자리를 채우되, <strong>채운 자리를 기억해 둔다.</strong></p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="순서라는-마지막-문제" class="level2">
+<h2 class="anchored" data-anchor-id="순서라는-마지막-문제">순서라는 마지막 문제</h2>
+<p>여기까지 정리하자. 토큰화가 글자를 조각냈고, 임베딩이 조각을 좌표로 바꿨다. 문장은 이제 <strong>벡터의 나열</strong>이다. 하지만 첫 절의 세 번째 난관이 그대로 남아 있다 — “개가 사람을 물었다”와 “사람이 개를 물었다”는 <strong>같은 벡터들의 다른 나열</strong>이다. 벡터를 그냥 합치거나 평균 내면 순서 정보가 증발한다. 순서를 읽는 장치가 필요하다.</p>
+<section id="rnn-요약-메모를-옆으로-넘기며-읽는다" class="level3">
+<h3 class="anchored" data-anchor-id="rnn-요약-메모를-옆으로-넘기며-읽는다">RNN: 요약 메모를 옆으로 넘기며 읽는다</h3>
+<p><strong>RNN(Recurrent Neural Network, 순환 신경망)</strong>의 아이디어는 사람이 글을 읽는 방식과 닮았다. 왼쪽에서 오른쪽으로 한 토큰씩 읽되, <strong>“지금까지 읽은 내용의 요약”을 상태(state) <span class="math inline">\(h\)</span>에 담아 다음 칸으로 넘긴다.</strong> 매 시점의 입력은 두 개다: 지금 읽는 토큰, 그리고 직전까지의 요약. 출력도 두 개다: 필요하면 예측, 그리고 갱신된 요약.</p>
+<svg viewbox="0 0 720 190" style="max-width:720px;width:100%;font-family:Pretendard,sans-serif;">
+<defs> <marker id="rnnArr" viewbox="0 0 10 10" refx="8" refy="5" markerwidth="6" markerheight="6" orient="auto"> <path d="M 0 0 L 10 5 L 0 10 z" fill="#E65100"></path> </marker> <marker id="rnnArrG" viewbox="0 0 10 10" refx="8" refy="5" markerwidth="6" markerheight="6" orient="auto"> <path d="M 0 0 L 10 5 L 0 10 z" fill="#999"></path> </marker> <marker id="rnnArrOut" viewbox="0 0 10 10" refx="8" refy="5" markerwidth="6" markerheight="6" orient="auto"> <path d="M 0 0 L 10 5 L 0 10 z" fill="#2E7D32"></path> </marker> </defs> <!-- cells --> <rect x="40" y="60" width="110" height="52" rx="8" fill="#E8F0FE" stroke="#1F3F7A" stroke-width="2"></rect> <rect x="210" y="60" width="110" height="52" rx="8" fill="#E8F0FE" stroke="#1F3F7A" stroke-width="2"></rect> <rect x="380" y="60" width="110" height="52" rx="8" fill="#E8F0FE" stroke="#1F3F7A" stroke-width="2"></rect> <rect x="550" y="60" width="110" height="52" rx="8" fill="#E8F0FE" stroke="#1F3F7A" stroke-width="2"></rect> <text x="95" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#1F3F7A">RNN</text> <text x="265" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#1F3F7A">RNN</text> <text x="435" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#1F3F7A">RNN</text> <text x="605" y="91" text-anchor="middle" font-size="14" font-weight="700" fill="#1F3F7A">RNN</text> <!-- h arrows --> <line x1="150" y1="86" x2="204" y2="86" stroke="#E65100" stroke-width="2.5" marker-end="url(#rnnArr)"></line> <line x1="320" y1="86" x2="374" y2="86" stroke="#E65100" stroke-width="2.5" marker-end="url(#rnnArr)"></line> <line x1="490" y1="86" x2="544" y2="86" stroke="#E65100" stroke-width="2.5" marker-end="url(#rnnArr)"></line> <text x="177" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#E65100">h₁</text> <text x="347" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#E65100">h₂</text> <text x="517" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="#E65100">h₃</text> <!-- tokens in --> <line x1="95" y1="150" x2="95" y2="118" stroke="#999" stroke-width="1.8" marker-end="url(#rnnArrG)"></line> <line x1="265" y1="150" x2="265" y2="118" stroke="#999" stroke-width="1.8" marker-end="url(#rnnArrG)"></line> <line x1="435" y1="150" x2="435" y2="118" stroke="#999" stroke-width="1.8" marker-end="url(#rnnArrG)"></line> <line x1="605" y1="150" x2="605" y2="118" stroke="#999" stroke-width="1.8" marker-end="url(#rnnArrG)"></line> <text x="95" y="172" text-anchor="middle" font-size="13" fill="#333">나는</text> <text x="265" y="172" text-anchor="middle" font-size="13" fill="#333">어제</text> <text x="435" y="172" text-anchor="middle" font-size="13" fill="#333">영화를</text> <text x="605" y="172" text-anchor="middle" font-size="13" fill="#333">봤다</text> <!-- output --> <line x1="605" y1="54" x2="605" y2="26" stroke="#2E7D32" stroke-width="2.5" marker-end="url(#rnnArrOut)"></line> <text x="605" y="16" text-anchor="middle" font-size="12.5" font-weight="700" fill="#2E7D32">h₄ = 문장 전체의 요약 → 예측</text> <!-- annotation --> <text x="177" y="135" text-anchor="middle" font-size="10.5" fill="#888">“나는”까지 기억</text> <text x="347" y="135" text-anchor="middle" font-size="10.5" fill="#888">“나는 어제”까지 기억</text> <text x="517" y="135" text-anchor="middle" font-size="10.5" fill="#888">세 단어까지 기억</text>
+</svg>
+<p>토큰이 들어오는 <strong>순서가 요약 <span class="math inline">\(h\)</span>에 새겨지므로</strong>, “개가 사람을”과 “사람이 개를”은 다른 <span class="math inline">\(h\)</span>를 만든다. 순서 문제가 드디어 풀린 것처럼 보인다. 게다가 매 칸이 <strong>같은 신경망을 재사용</strong>하므로 문장이 3단어든 300단어든 같은 구조로 처리한다 — 가변 길이 문제도 함께 풀린다.</p>
+</section>
+<section id="그러나-두-가지-한계" class="level3">
+<h3 class="anchored" data-anchor-id="그러나-두-가지-한계">그러나 두 가지 한계</h3>
+<p><strong>한계 1 — 먼 기억이 흐려진다 (장기 의존성 문제)</strong>. <span class="math inline">\(h\)</span>는 크기가 고정된 요약 메모다. 새 토큰이 들어올 때마다 메모를 덮어쓰며 갱신하는데, 문장이 길어지면 <strong>앞쪽 단어의 흔적은 갱신을 거듭하며 점점 희미해진다.</strong> 전언 게임에서 첫 사람의 말이 열 번 건너면 뭉개지는 것과 같다.</p>
+<blockquote class="blockquote">
+<p>“<strong>어릴 때 프랑스에서 자란</strong> 그 학생은, 대학에서 통계학을 전공하고 회사에서 삼 년을 일한 뒤, 유창한 ___를 살려 해외 지사로 발령받았다.”</p>
+</blockquote>
+<p>빈칸에 “프랑스어”를 넣으려면 <strong>문장 맨 앞의 기억</strong>이 필요하다. RNN은 수십 토큰을 거쳐 온 그 기억을 자주 잃어버린다.</p>
+<p><strong>한계 2 — 병렬화가 불가능하다</strong>. <span class="math inline">\(h_2\)</span>를 계산하려면 <span class="math inline">\(h_1\)</span>이 먼저 나와야 하고, <span class="math inline">\(h_3\)</span>는 <span class="math inline">\(h_2\)</span>를 기다려야 한다. 본질적으로 <strong>한 단어씩 순서대로</strong>만 처리할 수 있다. 그런데 Ch01과 Ch07에서 봤듯 딥러닝의 엔진은 GPU이고, GPU의 힘은 <strong>수천 개의 계산을 동시에</strong> 해치우는 데서 나온다. 인터넷 전체 규모의 텍스트로 모델을 키우려는 시대에, “한 칸씩 차례로”는 치명적인 병목이다.</p>
+<p>기억을 오래 유지하려는 개선안(<strong>LSTM</strong>이라는 구조가 대표적이다)이 나와 첫 번째 한계를 상당히 완화했지만, 근본 해결은 아니었다 — 특히 두 번째 한계, 순차 처리라는 태생은 그대로였다.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+깊이 계약 확인
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>이 장에서 문제집과 시험이 다루는 것은 <strong>토큰화 절차(BPE 병합 따라가기)</strong>, <strong>임베딩 유사도 계산(내적·코사인)</strong>, 그리고 <strong>임베딩 층의 파라미터 수 <span class="math inline">\(V \times d\)</span></strong> 까지다. BPE의 전체 알고리즘 구현, RNN의 내부 수식, LSTM의 게이트 구조는 범위 밖이다 — RNN은 “요약을 옆으로 넘긴다”는 아이디어와 두 한계만 설명할 수 있으면 된다.</p>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="다음-장으로-가는-질문" class="level2">
+<h2 class="anchored" data-anchor-id="다음-장으로-가는-질문">다음 장으로 가는 질문</h2>
+<p>RNN의 두 한계를 나란히 놓고 보면, 해법의 조건이 저절로 읽힌다.</p>
+<ul>
+<li>먼 기억이 흐려지는 이유 → 모든 것을 <strong>하나의 요약에 눌러 담아 릴레이</strong>하기 때문</li>
+<li>병렬화가 안 되는 이유 → <strong>앞 칸이 끝나야 뒷 칸을 시작</strong>하기 때문</li>
+</ul>
+<p>둘 다 “순서대로 한 칸씩”이라는 설계 자체에서 나온 문제다. 그렇다면 —</p>
+<blockquote class="blockquote">
+<p>문장의 <strong>모든 단어를 동시에</strong> 보되, 지금 필요한 단어에 <strong>집중</strong>할 수는 없을까? 빈칸을 채울 때 “프랑스에서”를 릴레이 없이 <strong>곧바로 돌아볼</strong> 수는 없을까?</p>
+</blockquote>
+<p>이 질문에 대한 답이 <strong>어텐션(Attention)</strong>이고, 어텐션으로 지은 건축물이 <strong>트랜스포머(Transformer)</strong> — 오늘날 모든 LLM의 뼈대다. 다음 장에서 만난다. 그리고 그 어텐션의 핵심 계산이 바로 오늘 손으로 연습한 <strong>벡터의 내적</strong>이다.</p>
+<hr>
+</section>
+<section id="핵심-요약" class="level2">
+<h2 class="anchored" data-anchor-id="핵심-요약">핵심 요약</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 64%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>개념</th>
+<th>핵심 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>텍스트의 어려움</strong></td>
+<td>이산적 기호, 가변 길이, 순서가 의미를 바꿈 — 이미지(연속·고정·순서 무관)보다 까다롭다</td>
+</tr>
+<tr class="even">
+<td><strong>토큰화</strong></td>
+<td>텍스트를 최소 단위(토큰)로 쪼개기 — 단어 단위는 어휘 폭발·미등록 단어로 실패</td>
+</tr>
+<tr class="odd">
+<td><strong>BPE</strong></td>
+<td>최다 빈도 인접 쌍을 반복 병합 — “자주 나오는 조각”을 데이터가 스스로 정한다</td>
+</tr>
+<tr class="even">
+<td><strong>원-핫의 실패</strong></td>
+<td>5만 차원 희소 벡터의 낭비 + 모든 단어 쌍의 내적이 0 (유사성 표현 불가)</td>
+</tr>
+<tr class="odd">
+<td><strong>임베딩</strong></td>
+<td>단어 → 저차원 밀집 벡터(좌표). 값은 <strong>학습되는 파라미터</strong>, 구현은 룩업 테이블</td>
+</tr>
+<tr class="even">
+<td><strong>내적·코사인</strong></td>
+<td><span class="math inline">\(\mathbf{a}\cdot\mathbf{b} = \sum a_i b_i\)</span>, <span class="math inline">\(\cos\theta = \mathbf{a}\cdot\mathbf{b}/(\|\mathbf{a}\|\|\mathbf{b}\|)\)</span> — 코사인은 크기를 정규화해 방향만 본다</td>
+</tr>
+<tr class="odd">
+<td><strong>임베딩 공간의 성질</strong></td>
+<td>왕 − 남자 + 여자 ≈ 여왕 — 의미 관계가 벡터 방향으로 나타난다</td>
+</tr>
+<tr class="even">
+<td><strong><span class="math inline">\((B, T, d)\)</span></strong></td>
+<td>텍스트 모델의 표준 텐서 모양 — 문장 수 × 토큰 수 × 임베딩 차원</td>
+</tr>
+<tr class="odd">
+<td><strong>임베딩 파라미터 수</strong></td>
+<td><span class="math inline">\(V \times d\)</span> — 편향 없음. 어휘가 크면 가장 무거운 층이 되기도</td>
+</tr>
+<tr class="even">
+<td><strong>패딩과 마스크</strong></td>
+<td>길이를 맞추되(패딩), 채운 자리를 기억한다(마스크)</td>
+</tr>
+<tr class="odd">
+<td><strong>RNN</strong></td>
+<td>요약 상태 <span class="math inline">\(h\)</span>를 앞에서 뒤로 넘기며 읽기 — 순서·가변 길이를 처리</td>
+</tr>
+<tr class="even">
+<td><strong>RNN의 두 한계</strong></td>
+<td>먼 기억이 흐려진다(장기 의존성) + 순차 처리라 병렬화 불가(GPU 시대에 치명적)</td>
+</tr>
+</tbody>
+</table>
+<blockquote class="blockquote">
+<p><strong>다음 장 예고</strong>: 모든 단어를 동시에 보고, 필요한 단어에 집중한다 — <strong>어텐션과 트랜스포머</strong>. 오늘 배운 내적이 “얼마나 집중할지”를 계산하는 자가 된다.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="ojs-module-contents">
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6ImVtYldvcmRzID0gW1xuICB7d29yZDogXCLqs6DslpHsnbRcIiwgeDogMywgeTogNH0sIHt3b3JkOiBcIuqwleyVhOyngFwiLCB4OiA0LCB5OiAzfSxcbiAge3dvcmQ6IFwi7Zi4656R7J20XCIsIHg6IDYsIHk6IDh9LCB7d29yZDogXCLthqDrgbxcIiwgeDogMiwgeTogNX0sXG4gIHt3b3JkOiBcIuunkFwiLCB4OiA1LCB5OiA1fSxcbiAge3dvcmQ6IFwi7J6Q64+Z7LCoXCIsIHg6IDQsIHk6IC0zfSwge3dvcmQ6IFwi67KE7IqkXCIsIHg6IDUsIHk6IC00fSxcbiAge3dvcmQ6IFwi6riw7LCoXCIsIHg6IDYsIHk6IC0yfSwge3dvcmQ6IFwi7J6Q7KCE6rGwXCIsIHg6IDIsIHk6IC00fSxcbiAge3dvcmQ6IFwi7Jik7Yag67CU7J20XCIsIHg6IDMsIHk6IC01fSxcbiAge3dvcmQ6IFwi7IKs6rO8XCIsIHg6IC00LCB5OiAzfSwge3dvcmQ6IFwi67CU64KY64KYXCIsIHg6IC01LCB5OiAyfSxcbiAge3dvcmQ6IFwi7Y+s64+EXCIsIHg6IC0zLCB5OiA0fSxcbiAge3dvcmQ6IFwi66+467aE67Cp7KCV7IudXCIsIHg6IC01LCB5OiAtNX1cbl1cbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiB3b3JkQSA9IElucHV0cy5zZWxlY3QoZW1iV29yZHMubWFwKGQgPT4gZC53b3JkKSwgeyBsYWJlbDogXCLri6jslrQgQVwiLCB2YWx1ZTogXCLqs6DslpHsnbRcIiB9KVxudmlld29mIHdvcmRCID0gSW5wdXRzLnNlbGVjdChlbWJXb3Jkcy5tYXAoZCA9PiBkLndvcmQpLCB7IGxhYmVsOiBcIuuLqOyWtCBCXCIsIHZhbHVlOiBcIuqwleyVhOyngFwiIH0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJzaW1DYWxjID0ge1xuICBjb25zdCBhID0gZW1iV29yZHMuZmluZChkID0+IGQud29yZCA9PT0gd29yZEEpO1xuICBjb25zdCBiID0gZW1iV29yZHMuZmluZChkID0+IGQud29yZCA9PT0gd29yZEIpO1xuICBjb25zdCBkb3QgPSBhLnggKiBiLnggKyBhLnkgKiBiLnk7XG4gIGNvbnN0IG5hID0gTWF0aC5oeXBvdChhLngsIGEueSk7XG4gIGNvbnN0IG5iID0gTWF0aC5oeXBvdChiLngsIGIueSk7XG4gIHJldHVybiB7IGEsIGIsIGRvdCwgbmEsIG5iLCBjb3M6IGRvdCAvIChuYSAqIG5iKSB9O1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoie1xuICBjb25zdCB4bWluID0gLTcsIHhtYXggPSA4LCB5bWluID0gLTcsIHltYXggPSAxMDtcbiAgY29uc3QgcyA9IDMwLCBwYWQgPSAyNjtcbiAgY29uc3QgVyA9ICh4bWF4IC0geG1pbikgKiBzICsgcGFkICogMiwgSCA9ICh5bWF4IC0geW1pbikgKiBzICsgcGFkICogMjtcbiAgY29uc3QgcHggPSB4ID0+IHBhZCArICh4IC0geG1pbikgKiBzO1xuICBjb25zdCBweSA9IHkgPT4gcGFkICsgKHltYXggLSB5KSAqIHM7XG4gIGNvbnN0IGNBID0gXCIjMUYzRjdBXCIsIGNCID0gXCIjRTY1MTAwXCI7XG5cbiAgY29uc3Qgc3ZnID0gZDMuY3JlYXRlKFwic3ZnXCIpXG4gICAgLmF0dHIoXCJ2aWV3Qm94XCIsIGAwIDAgJHtXfSAke0h9YClcbiAgICAuYXR0cihcIndpZHRoXCIsIFwiMTAwJVwiKVxuICAgIC5zdHlsZShcIm1heC13aWR0aFwiLCBcIjU0MHB4XCIpXG4gICAgLnN0eWxlKFwiZm9udC1mYW1pbHlcIiwgXCJQcmV0ZW5kYXJkLCBzYW5zLXNlcmlmXCIpO1xuXG4gIC8vIGdyaWRcbiAgZm9yIChsZXQgaSA9IHhtaW47IGkgPD0geG1heDsgaSsrKVxuICAgIHN2Zy5hcHBlbmQoXCJsaW5lXCIpLmF0dHIoXCJ4MVwiLCBweChpKSkuYXR0cihcInkxXCIsIHB5KHltaW4pKS5hdHRyKFwieDJcIiwgcHgoaSkpLmF0dHIoXCJ5MlwiLCBweSh5bWF4KSlcbiAgICAgIC5hdHRyKFwic3Ryb2tlXCIsIGkgPT09IDAgPyBcIiNiYmJcIiA6IFwiI2YwZjBmMFwiKS5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIGkgPT09IDAgPyAxLjUgOiAxKTtcbiAgZm9yIChsZXQgaiA9IHltaW47IGogPD0geW1heDsgaisrKVxuICAgIHN2Zy5hcHBlbmQoXCJsaW5lXCIpLmF0dHIoXCJ4MVwiLCBweCh4bWluKSkuYXR0cihcInkxXCIsIHB5KGopKS5hdHRyKFwieDJcIiwgcHgoeG1heCkpLmF0dHIoXCJ5MlwiLCBweShqKSlcbiAgICAgIC5hdHRyKFwic3Ryb2tlXCIsIGogPT09IDAgPyBcIiNiYmJcIiA6IFwiI2YwZjBmMFwiKS5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIGogPT09IDAgPyAxLjUgOiAxKTtcblxuICAvLyBhcnJvdyBtYXJrZXJzXG4gIGNvbnN0IGRlZnMgPSBzdmcuYXBwZW5kKFwiZGVmc1wiKTtcbiAgZm9yIChjb25zdCBbaWQsIGNvbG9yXSBvZiBbW1wiYXJyQVwiLCBjQV0sIFtcImFyckJcIiwgY0JdXSkge1xuICAgIGRlZnMuYXBwZW5kKFwibWFya2VyXCIpLmF0dHIoXCJpZFwiLCBpZClcbiAgICAgIC5hdHRyKFwidmlld0JveFwiLCBcIjAgMCAxMCAxMFwiKS5hdHRyKFwicmVmWFwiLCA4KS5hdHRyKFwicmVmWVwiLCA1KVxuICAgICAgLmF0dHIoXCJtYXJrZXJXaWR0aFwiLCA2KS5hdHRyKFwibWFya2VySGVpZ2h0XCIsIDYpLmF0dHIoXCJvcmllbnRcIiwgXCJhdXRvLXN0YXJ0LXJldmVyc2VcIilcbiAgICAgIC5hcHBlbmQoXCJwYXRoXCIpLmF0dHIoXCJkXCIsIFwiTSAwIDAgTCAxMCA1IEwgMCAxMCB6XCIpLmF0dHIoXCJmaWxsXCIsIGNvbG9yKTtcbiAgfVxuXG4gIC8vIGFsbCB3b3JkIHBvaW50c1xuICBmb3IgKGNvbnN0IGQgb2YgZW1iV29yZHMpIHtcbiAgICBjb25zdCBzZWwgPSBkLndvcmQgPT09IHdvcmRBIHx8IGQud29yZCA9PT0gd29yZEI7XG4gICAgc3ZnLmFwcGVuZChcImNpcmNsZVwiKS5hdHRyKFwiY3hcIiwgcHgoZC54KSkuYXR0cihcImN5XCIsIHB5KGQueSkpLmF0dHIoXCJyXCIsIHNlbCA/IDYgOiA0KVxuICAgICAgLmF0dHIoXCJmaWxsXCIsIGQud29yZCA9PT0gd29yZEEgPyBjQSA6IGQud29yZCA9PT0gd29yZEIgPyBjQiA6IFwiIzk5OVwiKTtcbiAgICBzdmcuYXBwZW5kKFwidGV4dFwiKS5hdHRyKFwieFwiLCBweChkLngpICsgOCkuYXR0cihcInlcIiwgcHkoZC55KSAtIDcpXG4gICAgICAuYXR0cihcImZvbnQtc2l6ZVwiLCBzZWwgPyBcIjEzXCIgOiBcIjExLjVcIikuYXR0cihcImZvbnQtd2VpZ2h0XCIsIHNlbCA/IFwiNzAwXCIgOiBcIjQwMFwiKVxuICAgICAgLmF0dHIoXCJmaWxsXCIsIGQud29yZCA9PT0gd29yZEEgPyBjQSA6IGQud29yZCA9PT0gd29yZEIgPyBjQiA6IFwiIzY2NlwiKS50ZXh0KGQud29yZCk7XG4gIH1cblxuICAvLyB2ZWN0b3JzIGZyb20gb3JpZ2luXG4gIGNvbnN0IGMgPSBzaW1DYWxjO1xuICBzdmcuYXBwZW5kKFwibGluZVwiKS5hdHRyKFwieDFcIiwgcHgoMCkpLmF0dHIoXCJ5MVwiLCBweSgwKSkuYXR0cihcIngyXCIsIHB4KGMuYS54KSkuYXR0cihcInkyXCIsIHB5KGMuYS55KSlcbiAgICAuYXR0cihcInN0cm9rZVwiLCBjQSkuYXR0cihcInN0cm9rZS13aWR0aFwiLCAzKS5hdHRyKFwibWFya2VyLWVuZFwiLCBcInVybCgjYXJyQSlcIik7XG4gIHN2Zy5hcHBlbmQoXCJsaW5lXCIpLmF0dHIoXCJ4MVwiLCBweCgwKSkuYXR0cihcInkxXCIsIHB5KDApKS5hdHRyKFwieDJcIiwgcHgoYy5iLngpKS5hdHRyKFwieTJcIiwgcHkoYy5iLnkpKVxuICAgIC5hdHRyKFwic3Ryb2tlXCIsIGNCKS5hdHRyKFwic3Ryb2tlLXdpZHRoXCIsIDMpLmF0dHIoXCJtYXJrZXItZW5kXCIsIFwidXJsKCNhcnJCKVwiKTtcblxuICBzdmcuYXBwZW5kKFwiY2lyY2xlXCIpLmF0dHIoXCJjeFwiLCBweCgwKSkuYXR0cihcImN5XCIsIHB5KDApKS5hdHRyKFwiclwiLCAzKS5hdHRyKFwiZmlsbFwiLCBcIiMzMzNcIik7XG4gIHN2Zy5hcHBlbmQoXCJ0ZXh0XCIpLmF0dHIoXCJ4XCIsIHB4KDApICsgNikuYXR0cihcInlcIiwgcHkoMCkgKyAxNSlcbiAgICAuYXR0cihcImZvbnQtc2l6ZVwiLCBcIjExXCIpLmF0dHIoXCJmaWxsXCIsIFwiIzg4OFwiKS50ZXh0KFwi7JuQ7KCQXCIpO1xuXG4gIHJldHVybiBzdmcubm9kZSgpO1xufVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2IHN0eWxlPVwiZm9udC1mYW1pbHk6J1ByZXRlbmRhcmQnLHNhbnMtc2VyaWY7Zm9udC1zaXplOjAuODVlbTtcIj5cblxuICA8ZGl2IHN0eWxlPVwicGFkZGluZzowLjVlbSAwLjhlbTtiYWNrZ3JvdW5kOiNGRkY4RTE7XG4gICAgYm9yZGVyLWxlZnQ6M3B4IHNvbGlkICNENEEwMTc7Ym9yZGVyLXJhZGl1czo0cHg7bWFyZ2luLWJvdHRvbTowLjZlbTtsaW5lLWhlaWdodDoxLjk7XCI+XG4gICAgPHNwYW4gc3R5bGU9XCJjb2xvcjojMUYzRjdBO2ZvbnQtd2VpZ2h0OjcwMDtcIj4ke3dvcmRBfTwvc3Bhbj4gPSAoJHtzaW1DYWxjLmEueH0sICR7c2ltQ2FsYy5hLnl9KSxcbiAgICA8c3BhbiBzdHlsZT1cImNvbG9yOiNFNjUxMDA7Zm9udC13ZWlnaHQ6NzAwO1wiPiR7d29yZEJ9PC9zcGFuPiA9ICgke3NpbUNhbGMuYi54fSwgJHtzaW1DYWxjLmIueX0pPGJyPlxuICAgIOuCtOyggSA9ICR7c2ltQ2FsYy5hLnh9w5cke3NpbUNhbGMuYi54fSArICR7c2ltQ2FsYy5hLnl9w5cke3NpbUNhbGMuYi55fSA9IDxzdHJvbmc+JHtzaW1DYWxjLmRvdH08L3N0cm9uZz48YnI+XG4gICAg7YGs6riwID0gJHtzaW1DYWxjLm5hLnRvRml4ZWQoMil9LCAke3NpbUNhbGMubmIudG9GaXhlZCgyKX1cbiAgPC9kaXY+XG5cbiAgPGRpdiBzdHlsZT1cInBhZGRpbmc6MC42ZW0gMC44ZW07Ym9yZGVyLXJhZGl1czo1cHg7bGluZS1oZWlnaHQ6MS42O1xuICAgIGJhY2tncm91bmQ6JHtzaW1DYWxjLmNvcyA+IDAuNSA/ICcjRThGNUU5JyA6IHNpbUNhbGMuY29zIDwgMCA/ICcjRkZFQkVFJyA6ICcjRjVGNUY1J307XG4gICAgYm9yZGVyOjEuNXB4IHNvbGlkICR7c2ltQ2FsYy5jb3MgPiAwLjUgPyAnIzJFN0QzMicgOiBzaW1DYWxjLmNvcyA8IDAgPyAnIzhDMTUxNScgOiAnIzk5OSd9O1wiPlxuICAgIDxzcGFuIHN0eWxlPVwiZm9udC1zaXplOjEuMjVlbTtmb250LXdlaWdodDo3MDA7Y29sb3I6JHtzaW1DYWxjLmNvcyA+IDAuNSA/ICcjMkU3RDMyJyA6IHNpbUNhbGMuY29zIDwgMCA/ICcjOEMxNTE1JyA6ICcjNTU1J307XCI+XG4gICAgICDsvZTsgqzsnbgg7Jyg7IKs64+EID0gJHtzaW1DYWxjLmNvcy50b0ZpeGVkKDMpfVxuICAgIDwvc3Bhbj48YnI+XG4gICAgPHNwYW4gc3R5bGU9XCJjb2xvcjojNTU1O1wiPiR7c2ltQ2FsYy5jb3MgPiAwLjg1ID8gJ+qxsOydmCDqsJnsnYAg67Cp7ZalIOKAlCDslYTso7wg67mE7Iq37ZWcIOuLqOyWtCcgOlxuICAgICAgc2ltQ2FsYy5jb3MgPiAwLjQgPyAn67mE7Iq37ZWcIOyqveydhCDtlqXtlZzri6QnIDpcbiAgICAgIHNpbUNhbGMuY29zID4gLTAuMiA/ICfqsbDsnZgg7IiY7KeBIOKAlCDrrLTqtIDtlZwg7IKs7J20JyA6ICfrsJjrjIAg67Cp7ZalIOKAlCDsp4Drj4TsnZgg7KCV67CY64yA7Y64J308L3NwYW4+XG4gIDwvZGl2PlxuXG4gIDxkaXYgc3R5bGU9XCJtYXJnaW4tdG9wOjAuNmVtO1wiPlxuICAgIDxkaXYgc3R5bGU9XCJoZWlnaHQ6MTBweDtiYWNrZ3JvdW5kOiNFRUU7Ym9yZGVyLXJhZGl1czo1cHg7b3ZlcmZsb3c6aGlkZGVuO3Bvc2l0aW9uOnJlbGF0aXZlO1wiPlxuICAgICAgPGRpdiBzdHlsZT1cImhlaWdodDoxMDAlO3dpZHRoOiR7KChzaW1DYWxjLmNvcyArIDEpIC8gMiAqIDEwMCkudG9GaXhlZCgxKX0lO1xuICAgICAgICBiYWNrZ3JvdW5kOiR7c2ltQ2FsYy5jb3MgPiAwLjUgPyAnIzJFN0QzMicgOiBzaW1DYWxjLmNvcyA8IDAgPyAnIzhDMTUxNScgOiAnIzk5OSd9O2JvcmRlci1yYWRpdXM6NXB4O1wiPjwvZGl2PlxuICAgICAgPGRpdiBzdHlsZT1cInBvc2l0aW9uOmFic29sdXRlO2xlZnQ6NTAlO3RvcDotMnB4O3dpZHRoOjJweDtoZWlnaHQ6MTRweDtiYWNrZ3JvdW5kOiM1NTU7XCI+PC9kaXY+XG4gICAgPC9kaXY+XG4gICAgPGRpdiBzdHlsZT1cImZvbnQtc2l6ZTowLjc1ZW07Y29sb3I6Izg4ODtkaXNwbGF5OmZsZXg7anVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47bWFyZ2luLXRvcDowLjJlbTtcIj5cbiAgICAgIDxzcGFuPuKIkjE8L3NwYW4+PHNwYW4+MCAo6rCA7Jq0642wIOuIiOq4iCk8L3NwYW4+PHNwYW4+KzE8L3NwYW4+XG4gICAgPC9kaXY+XG4gIDwvZGl2PlxuXG48L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3dvcmRBJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3dvcmRCJykifV19
+</script>
+<script type="module">
+if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
+window._ojs.paths.runtimeToDoc = "../../chapters";
+window._ojs.paths.runtimeToRoot = "../..";
+window._ojs.paths.docToRoot = "..";
+window._ojs.selfContained = false;
+window._ojs.runtime.interpretFromScriptTags();
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>부경대학교 시스템경영공학부 · 이지환</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
