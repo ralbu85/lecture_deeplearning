@@ -257,7 +257,7 @@ window.Quarto = {
 </ul>
 </div>
 </div>
-<div id="90e340d4" class="cell" data-execution_count="1">
+<div id="e67ed20e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -267,13 +267,13 @@ window.Quarto = {
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>&lt;torch._C.Generator at 0x7a2f45dd3870&gt;</code></pre>
+<pre><code>&lt;torch._C.Generator at 0x7f77c8b88890&gt;</code></pre>
 </div>
 </div>
 <hr>
 <section id="직선으로-안-된다는-것을-눈으로-본다" class="level1">
 <h1>1. 직선으로 안 된다는 것을 눈으로 본다</h1>
-<div id="9e3a143e" class="cell" data-execution_count="2">
+<div id="023ede2d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>URL <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/ralbu85/Lecture_DeepLearning_2022/main/auto.csv'</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> pd.read_csv(URL)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>a.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -357,13 +357,13 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="01fb1e36" class="cell" data-execution_count="3">
+<div id="569c700c" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>a.shape               <span class="co"># 자동차 392대</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>(392, 8)</code></pre>
 </div>
 </div>
-<div id="efc1f9e6" class="cell" data-execution_count="4">
+<div id="30e5070f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(a[<span class="st">'horsepower'</span>], a[<span class="st">'mpg'</span>], s<span class="op">=</span><span class="dv">14</span>, alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'horsepower'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'mpg'</span>)<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -375,7 +375,7 @@ window.Quarto = {
 </div>
 </div>
 <p><strong>휘어 있다.</strong> 마력이 낮을 때는 급하게 떨어지고, 150 이상에서는 거의 평평하다. 직선을 그어 보면 양쪽 끝에서 빗나간다.</p>
-<div id="0ff61653" class="cell" data-execution_count="5">
+<div id="6afa514a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Xn <span class="op">=</span> a[[<span class="st">'horsepower'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>)</span>
@@ -400,28 +400,28 @@ window.Quarto = {
 <section id="퍼셉트론-하나-nn.linear" class="level1">
 <h1>2. 퍼셉트론 하나 = <code>nn.Linear</code></h1>
 <p>1주차에 <code>X @ w + b</code> 로 예측했다. <strong>이것이 퍼셉트론 하나</strong>다. PyTorch에는 그것을 담은 부품이 이미 있다.</p>
-<div id="a1b752d8" class="cell" data-execution_count="6">
+<div id="7e7b0e1e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> nn.Linear(<span class="dv">3</span>, <span class="dv">1</span>)      <span class="co"># 입력 3개 → 출력 1개</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>layer</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>Linear(in_features=3, out_features=1, bias=True)</code></pre>
 </div>
 </div>
-<div id="6e567ae2" class="cell" data-execution_count="7">
+<div id="35776029" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>layer.weight          <span class="co"># 가중치 — 모양이 (출력, 입력) 이다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>Parameter containing:
 tensor([[ 0.4414,  0.4792, -0.1353]], requires_grad=True)</code></pre>
 </div>
 </div>
-<div id="f6a203cd" class="cell" data-execution_count="8">
+<div id="abc0fc98" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>layer.bias            <span class="co"># 편향</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <pre><code>Parameter containing:
 tensor([0.5304], requires_grad=True)</code></pre>
 </div>
 </div>
-<div id="c8ff1191" class="cell" data-execution_count="9">
+<div id="3d24eb82" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> layer.parameters())    <span class="co"># 3 x 1 + 1</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>4</code></pre>
@@ -442,7 +442,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 </div>
 <section id="손계산과-맞춰-본다" class="level2">
 <h2 class="anchored" data-anchor-id="손계산과-맞춰-본다">2-1. 손계산과 맞춰 본다</h2>
-<div id="178c063c" class="cell" data-execution_count="10">
+<div id="e3697825" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>])</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> torch.tensor([<span class="fl">0.5</span>, <span class="op">-</span><span class="fl">1.0</span>, <span class="fl">2.0</span>])</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="fl">0.1</span></span>
@@ -452,7 +452,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 <pre><code>tensor(4.6000)</code></pre>
 </div>
 </div>
-<div id="da12559f" class="cell" data-execution_count="11">
+<div id="6190f8ee" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():             <span class="co"># 우리 숫자를 그대로 넣는다</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    layer.weight.copy_(w.unsqueeze(<span class="dv">0</span>))</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    layer.bias.copy_(torch.tensor([b]))</span>
@@ -465,7 +465,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 </section>
 <section id="여러-대를-한-번에" class="level2">
 <h2 class="anchored" data-anchor-id="여러-대를-한-번에">2-2. 여러 대를 한 번에</h2>
-<div id="fc243e91" class="cell" data-execution_count="12">
+<div id="4dc12697" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X5 <span class="op">=</span> torch.randn(<span class="dv">5</span>, <span class="dv">3</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>layer(X5).shape       <span class="co"># 대당 하나씩</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
@@ -485,14 +485,14 @@ tensor([0.5304], requires_grad=True)</code></pre>
 <p>입력 4개, 출력 1개인 퍼셉트론을 만들고 자동차 10대짜리 입력을 통과시키시오.</p>
 </div>
 </div>
-<div id="f11728f1" class="cell" data-execution_count="13">
+<div id="1cb991b9" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="va">None</span>                    <span class="co"># ← nn.Linear(...)</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>out10 <span class="op">=</span> <span class="va">None</span>                <span class="co"># ← p(torch.randn(10, 4))</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> out10 <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">tuple</span>(out10.shape) <span class="op">==</span> (<span class="dv">10</span>, <span class="dv">1</span>)</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="42f15087" class="cell" data-execution_count="14">
+<div id="3cb1ba8a" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> nn.Linear(<span class="dv">4</span>, <span class="dv">1</span>)</span>
@@ -509,20 +509,20 @@ tensor([0.5304], requires_grad=True)</code></pre>
 <section id="노드를-여러-개로-층" class="level1">
 <h1>3. 노드를 여러 개로 — 층</h1>
 <p>퍼셉트론 하나는 숫자 하나를 낸다. <strong>여러 개를 나란히 놓은 것</strong>이 층이다.</p>
-<div id="7040ee67" class="cell" data-execution_count="15">
+<div id="a853fdee" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>hidden <span class="op">=</span> nn.Linear(<span class="dv">1</span>, <span class="dv">8</span>)      <span class="co"># 입력 1개 → 노드 8개</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>hidden.weight.shape           <span class="co"># (출력 8, 입력 1)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>torch.Size([8, 1])</code></pre>
 </div>
 </div>
-<div id="3f25f688" class="cell" data-execution_count="16">
+<div id="398b870d" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> hidden.parameters())     <span class="co"># 1 x 8 + 8</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <pre><code>16</code></pre>
 </div>
 </div>
-<div id="07d71d12" class="cell" data-execution_count="17">
+<div id="cdc608dc" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>hidden(torch.tensor([[<span class="fl">100.0</span>]])).shape           <span class="co"># 마력 100인 차 한 대 → 8개 값</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <pre><code>torch.Size([1, 8])</code></pre>
@@ -542,14 +542,14 @@ tensor([0.5304], requires_grad=True)</code></pre>
 <p><code>nn.Linear(5, 12)</code> 의 파라미터 수는? <strong>먼저 계산한 뒤</strong> 확인하시오.</p>
 </div>
 </div>
-<div id="a4e96f5d" class="cell" data-execution_count="18">
+<div id="518eb4f6" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← 예상한 숫자</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>real <span class="op">=</span> <span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> nn.Linear(<span class="dv">5</span>, <span class="dv">12</span>).parameters())</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> my_answer <span class="op">==</span> real, <span class="ss">f'다릅니다. 실제는 </span><span class="sc">{</span>real<span class="sc">}</span><span class="ss">'</span></span>
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2503a8d1" class="cell" data-execution_count="19">
+<div id="23f81da7" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> <span class="op">*</span> <span class="dv">12</span> <span class="op">+</span> <span class="dv">12</span>, <span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> nn.Linear(<span class="dv">5</span>, <span class="dv">12</span>).parameters())     <span class="co"># (입력x출력) + 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -562,38 +562,38 @@ tensor([0.5304], requires_grad=True)</code></pre>
 </section>
 <section id="활성화-함수" class="level1">
 <h1>4. 활성화 함수</h1>
-<div id="eddd4663" class="cell" data-execution_count="20">
+<div id="14aa3a2c" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.tensor([<span class="op">-</span><span class="fl">2.0</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">0.0</span>, <span class="fl">1.5</span>, <span class="fl">3.0</span>])</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>tensor([-2.0000, -0.5000,  0.0000,  1.5000,  3.0000])</code></pre>
 </div>
 </div>
-<div id="0af6a59f" class="cell" data-execution_count="21">
+<div id="8b49e1fe" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>nn.ReLU()(z)          <span class="co"># 음수를 0으로</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>tensor([0.0000, 0.0000, 0.0000, 1.5000, 3.0000])</code></pre>
 </div>
 </div>
-<div id="8b8c6ce6" class="cell" data-execution_count="22">
+<div id="e0957453" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>nn.Sigmoid()(z)       <span class="co"># 0~1로 눌러 담는다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="20">
 <pre><code>tensor([0.1192, 0.3775, 0.5000, 0.8176, 0.9526])</code></pre>
 </div>
 </div>
-<div id="e844bda9" class="cell" data-execution_count="23">
+<div id="55ec0542" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>nn.Tanh()(z)          <span class="co"># -1~1로</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="21">
 <pre><code>tensor([-0.9640, -0.4621,  0.0000,  0.9051,  0.9951])</code></pre>
 </div>
 </div>
-<div id="c40ad3e3" class="cell" data-execution_count="24">
+<div id="ac3769a1" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> nn.ReLU().parameters())      <span class="co"># 배우는 것이 없다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="22">
 <pre><code>0</code></pre>
 </div>
 </div>
-<div id="dfdca293" class="cell" data-execution_count="25">
+<div id="312d1e18" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.linspace(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">200</span>)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> f, name <span class="kw">in</span> [(nn.ReLU(), <span class="st">'ReLU'</span>), (nn.Sigmoid(), <span class="st">'Sigmoid'</span>), (nn.Tanh(), <span class="st">'Tanh'</span>)]:</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    plt.plot(t, f(t), label<span class="op">=</span>name)</span>
@@ -608,7 +608,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 </div>
 <section id="활성화가-없으면-층을-쌓아도-층-하나다" class="level2">
 <h2 class="anchored" data-anchor-id="활성화가-없으면-층을-쌓아도-층-하나다">4-1. 활성화가 없으면 층을 쌓아도 층 하나다</h2>
-<div id="3d7b722c" class="cell" data-execution_count="26">
+<div id="07a740ab" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>L1 <span class="op">=</span> nn.Linear(<span class="dv">3</span>, <span class="dv">8</span>, bias<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>L2 <span class="op">=</span> nn.Linear(<span class="dv">8</span>, <span class="dv">2</span>, bias<span class="op">=</span><span class="va">False</span>)</span>
@@ -622,14 +622,14 @@ tensor([0.5304], requires_grad=True)</code></pre>
         [-0.2906, -0.6372]], grad_fn=&lt;MmBackward0&gt;)</code></pre>
 </div>
 </div>
-<div id="284d3135" class="cell" data-execution_count="27">
+<div id="66723017" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> L2.weight <span class="op">@</span> L1.weight     <span class="co"># 가중치 두 개를 미리 곱해 두면</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>W.shape                       <span class="co"># (2,8) @ (8,3) → (2,3), 결국 한 층</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="25">
 <pre><code>torch.Size([2, 3])</code></pre>
 </div>
 </div>
-<div id="3227d2c3" class="cell" data-execution_count="28">
+<div id="3cb6a969" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Xc <span class="op">@</span> W.T              <span class="co"># 층 하나로 계산해도 같은 값이다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
 <pre><code>tensor([[ 0.6120,  0.4294],
@@ -638,7 +638,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
         [-0.2906, -0.6372]], grad_fn=&lt;MmBackward0&gt;)</code></pre>
 </div>
 </div>
-<div id="40ecca1e" class="cell" data-execution_count="29">
+<div id="76d5147d" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>torch.allclose(L2(L1(Xc)), Xc <span class="op">@</span> W.T, atol<span class="op">=</span><span class="fl">1e-5</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="27">
 <pre><code>True</code></pre>
@@ -658,7 +658,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 <p>행렬 두 개를 곱하면 <strong>행렬 하나</strong>다. 활성화 없이 층을 100개 쌓아도 결국 <strong>직선 하나</strong>다. 중간에 ReLU처럼 <strong>직선이 아닌 함수</strong>를 끼워야 층이 층 노릇을 한다.</p>
 </div>
 </div>
-<div id="12dac8a1" class="cell" data-execution_count="30">
+<div id="50d73561" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>torch.allclose(L2(nn.ReLU()(L1(Xc))), Xc <span class="op">@</span> W.T, atol<span class="op">=</span><span class="fl">1e-5</span>)   <span class="co"># ReLU를 넣으면 더 이상 같지 않다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="28">
 <pre><code>False</code></pre>
@@ -669,7 +669,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 </section>
 <section id="층-쌓기-nn.sequential" class="level1">
 <h1>5. 층 쌓기 — <code>nn.Sequential</code></h1>
-<div id="3f31c260" class="cell" data-execution_count="31">
+<div id="47161c77" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>mlp <span class="op">=</span> nn.Sequential(</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">1</span>, <span class="dv">16</span>),      <span class="co"># 마력 1개 → 은닉 16개</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
@@ -684,7 +684,7 @@ tensor([0.5304], requires_grad=True)</code></pre>
 )</code></pre>
 </div>
 </div>
-<div id="1601398d" class="cell" data-execution_count="32">
+<div id="168a261e" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> torch.zeros(<span class="dv">5</span>, <span class="dv">1</span>)</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> lay <span class="kw">in</span> mlp:                        <span class="co"># 층을 하나씩 통과시키며 모양을 본다</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> lay(h)</span>
@@ -695,7 +695,7 @@ ReLU     → (5, 16)
 Linear   → (5, 1)</code></pre>
 </div>
 </div>
-<div id="706e2564" class="cell" data-execution_count="33">
+<div id="4a68d668" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> mlp.parameters())      <span class="co"># (1x16+16) + (16x1+1)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="31">
 <pre><code>49</code></pre>
@@ -708,7 +708,7 @@ Linear   → (5, 1)</code></pre>
 <section id="데이터셋과-데이터로더" class="level2">
 <h2 class="anchored" data-anchor-id="데이터셋과-데이터로더">6-1. 데이터셋과 데이터로더</h2>
 <p>1주차의 텐서에 <strong><code>DataLoader</code></strong> 를 붙인다. <code>Dataset</code> 이 “무엇이 있는가”라면 <code>DataLoader</code> 는 <strong>“어떻게 꺼내는가”</strong> 다.</p>
-<div id="b7ffc3e1" class="cell" data-execution_count="34">
+<div id="58fc94cb" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor(Xn)</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor(yn).unsqueeze(<span class="dv">1</span>)</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -724,20 +724,20 @@ Linear   → (5, 1)</code></pre>
 <pre><code>392</code></pre>
 </div>
 </div>
-<div id="ff7f7311" class="cell" data-execution_count="35">
+<div id="bd7f54cd" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ds[<span class="dv">0</span>]                 <span class="co"># 0번 자동차의 (입력, 정답)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="33">
 <pre><code>(tensor([0.6641]), tensor([-0.6986]))</code></pre>
 </div>
 </div>
-<div id="532591b3" class="cell" data-execution_count="36">
+<div id="b29fa64a" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> DataLoader(ds, batch_size<span class="op">=</span><span class="bu">len</span>(ds))    <span class="co"># 오늘은 전부 한 번에 꺼낸다</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(loader)                                    <span class="co"># 에폭당 배치 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="34">
 <pre><code>1</code></pre>
 </div>
 </div>
-<div id="05980bee" class="cell" data-execution_count="37">
+<div id="0dd31cd9" class="cell" data-execution_count="37">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(loader))</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>xb.shape, yb.shape</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="35">
@@ -757,7 +757,7 @@ Linear   → (5, 1)</code></pre>
 </section>
 <section id="표준-학습-루프" class="level2">
 <h2 class="anchored" data-anchor-id="표준-학습-루프">6-2. 표준 학습 루프</h2>
-<div id="44c05b90" class="cell" data-execution_count="38">
+<div id="aa1c3c90" class="cell" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(model, epochs<span class="op">=</span><span class="dv">1000</span>, lr<span class="op">=</span><span class="fl">0.05</span>):</span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span>lr)</span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    criterion <span class="op">=</span> nn.MSELoss()</span>
@@ -787,7 +787,7 @@ Linear   → (5, 1)</code></pre>
 </section>
 <section id="세-모형" class="level2">
 <h2 class="anchored" data-anchor-id="세-모형">6-3. 세 모형</h2>
-<div id="6465bcec" class="cell" data-execution_count="39">
+<div id="9c100b47" class="cell" data-execution_count="39">
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rmse_of(model):</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> model(Xs).squeeze(<span class="dv">1</span>) <span class="op">*</span> ys <span class="op">+</span> ym          <span class="co"># 원래 단위(mpg)로 되돌린다</span></span>
@@ -806,7 +806,7 @@ Linear   → (5, 1)</code></pre>
 <span id="cb70-16"><a href="#cb70-16" aria-hidden="true" tabindex="-1"></a>    hists[name] <span class="op">=</span> train(m)</span>
 <span id="cb70-17"><a href="#cb70-17" aria-hidden="true" tabindex="-1"></a>    trained[name] <span class="op">=</span> m</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b645bce4" class="cell" data-execution_count="40">
+<div id="59fcd38f" class="cell" data-execution_count="40">
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>pd.DataFrame([{<span class="st">'모형'</span>: n,</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>               <span class="st">'파라미터'</span>: <span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> m.parameters()),</span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>               <span class="st">'RMSE (mpg)'</span>: <span class="bu">round</span>(rmse_of(m), <span class="dv">3</span>)}</span>
@@ -865,7 +865,7 @@ Linear   → (5, 1)</code></pre>
 </section>
 <section id="손실이-내려가는-모습" class="level2">
 <h2 class="anchored" data-anchor-id="손실이-내려가는-모습">6-4. 손실이 내려가는 모습</h2>
-<div id="5a979170" class="cell" data-execution_count="41">
+<div id="7045f9ca" class="cell" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> models:</span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>    plt.plot(hists[name], label<span class="op">=</span>name)</span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)<span class="op">;</span> plt.xlabel(<span class="st">'epoch'</span>)<span class="op">;</span> plt.ylabel(<span class="st">'MSE'</span>)<span class="op">;</span> plt.legend()<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -880,7 +880,7 @@ Linear   → (5, 1)</code></pre>
 </section>
 <section id="무엇을-그렸는지-눈으로-확인한다" class="level2">
 <h2 class="anchored" data-anchor-id="무엇을-그렸는지-눈으로-확인한다">6-5. 무엇을 그렸는지 눈으로 확인한다</h2>
-<div id="e55238ee" class="cell" data-execution_count="42">
+<div id="dfb0eb37" class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>gt <span class="op">=</span> torch.tensor((grid <span class="op">-</span> mu.numpy()) <span class="op">/</span> sd.numpy())</span>
 <span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(Xn, yn, s<span class="op">=</span><span class="dv">14</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
@@ -910,7 +910,7 @@ Linear   → (5, 1)</code></pre>
 <p>은닉 노드를 <code>2, 4, 16, 64</code> 로 바꿔 학습시키고 예측 곡선을 한 그림에 겹쳐 보시오. 노드가 적으면 곡선이 어떻게 되는가?</p>
 </div>
 </div>
-<div id="3cd48429" class="cell" data-execution_count="43">
+<div id="21d3f9da" class="cell" data-execution_count="43">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(Xn, yn, s<span class="op">=</span><span class="dv">14</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> hsize <span class="kw">in</span> [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">16</span>, <span class="dv">64</span>]:</span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(<span class="dv">42</span>)</span>
@@ -920,7 +920,7 @@ Linear   → (5, 1)</code></pre>
 <span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>        plt.plot(grid, m(gt).squeeze(<span class="dv">1</span>).numpy() <span class="op">*</span> <span class="bu">float</span>(ys) <span class="op">+</span> <span class="bu">float</span>(ym), label<span class="op">=</span><span class="ss">f'hidden </span><span class="sc">{</span>hsize<span class="sc">}</span><span class="ss">'</span>)</span>
 <span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>plt.legend()<span class="op">;</span> plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a2755211" class="cell" data-execution_count="44">
+<div id="31f439c8" class="cell" data-execution_count="44">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>plt.scatter(Xn, yn, s<span class="op">=</span><span class="dv">14</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
@@ -1009,7 +1009,7 @@ Linear   → (5, 1)</code></pre>
 <section id="스스로-확인해-보기" class="level2">
 <h2 class="anchored" data-anchor-id="스스로-확인해-보기">스스로 확인해 보기</h2>
 <p><strong>먼저 답을 예상한 뒤</strong> 한 셀씩 실행해서 맞춰 본다.</p>
-<div id="60035db0" class="cell" data-execution_count="45">
+<div id="03cb3ee6" class="cell" data-execution_count="45">
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>net <span class="op">=</span> nn.Sequential(</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">4</span>, <span class="dv">10</span>), nn.ReLU(),</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">10</span>, <span class="dv">6</span>), nn.ReLU(),</span>
@@ -1017,25 +1017,25 @@ Linear   → (5, 1)</code></pre>
 <span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>xq <span class="op">=</span> torch.randn(<span class="dv">7</span>, <span class="dv">4</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="0211a6d8" class="cell" data-execution_count="46">
+<div id="b7419e34" class="cell" data-execution_count="46">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>net(xq).shape</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="43">
 <pre><code>torch.Size([7, 3])</code></pre>
 </div>
 </div>
-<div id="6a428944" class="cell" data-execution_count="47">
+<div id="00cb9a96" class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="bu">sum</span>(q.numel() <span class="cf">for</span> q <span class="kw">in</span> net.parameters())      <span class="co"># (4x10+10) + (10x6+6) + (6x3+3)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="44">
 <pre><code>137</code></pre>
 </div>
 </div>
-<div id="da0f4dbb" class="cell" data-execution_count="48">
+<div id="54773d7f" class="cell" data-execution_count="48">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>net[<span class="dv">0</span>].weight.shape</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="45">
 <pre><code>torch.Size([10, 4])</code></pre>
 </div>
 </div>
-<div id="21aff830" class="cell" data-execution_count="49">
+<div id="83b32ccf" class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(DataLoader(TensorDataset(xq, torch.randn(<span class="dv">7</span>, <span class="dv">3</span>)), batch_size<span class="op">=</span><span class="dv">3</span>))   <span class="co"># 7건을 3씩</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="46">
 <pre><code>3</code></pre>

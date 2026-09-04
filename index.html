@@ -142,7 +142,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p><strong>원리를 손으로 확인하는 딥러닝.</strong></p>
-<p>이 수업은 시스템경영공학부 3학년을 대상으로, 딥러닝의 원리를 수식의 유도가 아니라 <strong>직접 계산하고 실험하는 방식</strong>으로 배운다. 다루는 다섯 축은 실무에서 가장 많이 쓰이는 것들이다: <strong>정형 데이터, 이미지, 객체탐지, 텍스트, LLM.</strong></p>
+<p>이 수업은 시스템경영공학부 3학년을 대상으로, 딥러닝의 원리를 수식의 유도가 아니라 <strong>직접 계산하고 실험하는 방식</strong>으로 배운다. 다루는 네 축은 실무에서 가장 많이 쓰이는 것들이다: <strong>정형 데이터, 이미지, 텍스트, LLM.</strong></p>
 <style>
 .wk-board { margin: 1.6rem 0 0.6rem; }
 
@@ -271,21 +271,31 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
 
   <div class="wk" style="--wk-accent:#1F3F7A;">
     <div class="wk-no">WEEK 03</div>
-    <div class="wk-title">딥러닝의 학습 — 손실함수, 경사하강법</div>
+    <div class="wk-title">딥러닝의 학습 ① — 순전파, 손실, 교차 엔트로피, 좋은 가중치란</div>
     <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch03.html">이론 Ch03</a>
+      <a class="wk-chip t" href="chapters/ch03.html">이론 Ch03 전반</a>
       <a class="wk-chip d" href="dojo/dojo03.html">도장 03</a>
+      <span class="wk-note">실습 없음 · 손계산 집중</span>
+    </div>
+  </div>
+
+  <div class="wk" style="--wk-accent:#1F3F7A;">
+    <div class="wk-no">WEEK 04</div>
+    <div class="wk-title">딥러닝의 학습 ② — 미분, 경사하강법, 2차원 확장</div>
+    <div class="wk-chips">
+      <a class="wk-chip t" href="chapters/ch03.html">이론 Ch03 후반</a>
+      <a class="wk-chip d" href="dojo/dojo04.html">도장 04</a>
       <a class="wk-chip l" href="labs/lab03.html">실습 03</a>
       <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab03.ipynb" target="_blank">Colab</a>
     </div>
   </div>
 
   <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 04</div>
+    <div class="wk-no">WEEK 05</div>
     <div class="wk-title">학습의 실전 — 학습률·배치·역전파·일반화, 정형 데이터</div>
     <div class="wk-chips">
       <a class="wk-chip t" href="chapters/ch04.html">이론 Ch04</a>
-      <a class="wk-chip d" href="dojo/dojo04.html">도장 04</a>
+      <a class="wk-chip d" href="dojo/dojo05.html">도장 05</a>
       <a class="wk-chip l" href="labs/lab04.html">실습 04</a>
       <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab04.ipynb" target="_blank">Colab</a>
     </div>
@@ -298,37 +308,25 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
 
   <div class="wk is-event" style="--wk-accent:#8C1515;">
     <div class="wk-ev">HW1 출제</div>
-    <div class="wk-no">WEEK 05</div>
+    <div class="wk-no">WEEK 06</div>
     <div class="wk-title">이미지 데이터와 콘볼루션 연산</div>
     <div class="wk-chips">
       <a class="wk-chip t" href="chapters/ch05.html">이론 Ch05</a>
       <a class="wk-chip t" href="chapters/ch06.html">이론 Ch06</a>
-      <span class="wk-chip soon">도장 05</span>
+      <span class="wk-chip soon">도장 06</span>
       <a class="wk-chip l" href="labs/lab05.html">실습 05</a>
       <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab05.ipynb" target="_blank">Colab</a>
     </div>
   </div>
 
   <div class="wk" style="--wk-accent:#8C1515;">
-    <div class="wk-no">WEEK 06</div>
+    <div class="wk-no">WEEK 07</div>
     <div class="wk-title">CNN 구조와 아키텍처</div>
     <div class="wk-chips">
       <a class="wk-chip t" href="chapters/ch07.html">이론 Ch07</a>
-      <span class="wk-chip soon">도장 06</span>
+      <span class="wk-chip soon">도장 07</span>
       <a class="wk-chip l" href="labs/lab06.html">실습 06</a>
       <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab06.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk is-event" style="--wk-accent:#8C1515;">
-    <div class="wk-ev">프로젝트 킥오프</div>
-    <div class="wk-no">WEEK 07</div>
-    <div class="wk-title">CNN 학습 전략과 전이학습</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch08.html">이론 Ch08</a>
-      <span class="wk-chip soon">도장 07</span>
-      <a class="wk-chip l" href="labs/lab07.html">실습 07</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab07.ipynb" target="_blank">Colab</a>
     </div>
   </div>
 
@@ -341,14 +339,14 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
   </div>
 
   <div class="wk is-event" style="--wk-accent:#8C1515;">
-    <div class="wk-ev">1차 제출</div>
+    <div class="wk-ev">프로젝트 킥오프 · HW2</div>
     <div class="wk-no">WEEK 09</div>
-    <div class="wk-title">객체탐지 — 분류에서 위치로 (IoU·NMS)</div>
+    <div class="wk-title">CNN 학습 전략과 전이학습</div>
     <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch09.html">이론 Ch09</a>
+      <a class="wk-chip t" href="chapters/ch08.html">이론 Ch08</a>
       <span class="wk-chip soon">도장 09</span>
-      <a class="wk-chip l" href="labs/lab09.html">실습 09</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab09.ipynb" target="_blank">Colab</a>
+      <a class="wk-chip l" href="labs/lab07.html">실습 07</a>
+      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab07.ipynb" target="_blank">Colab</a>
     </div>
   </div>
 
@@ -369,7 +367,7 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
   </div>
 
   <div class="wk is-event" style="--wk-accent:#6A1B9A;">
-    <div class="wk-ev">현장 테스트</div>
+    <div class="wk-ev">1차 제출</div>
     <div class="wk-no">WEEK 11</div>
     <div class="wk-title">어텐션과 Self-Attention — 마스크, Multi-Head</div>
     <div class="wk-chips">
@@ -381,6 +379,7 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
   </div>
 
   <div class="wk is-event" style="--wk-accent:#6A1B9A;">
+    <div class="wk-ev">HW3 출제</div>
     <div class="wk-no">WEEK 12</div>
     <div class="wk-title">Transformer 블록과 언어모델</div>
     <div class="wk-chips">
@@ -391,18 +390,19 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
     </div>
   </div>
 
-</div>
-
-<div class="wk-part" style="--wk-accent:#2E7D32;">PART 4 · 프로젝트와 마무리</div>
-<div class="wk-grid">
-
-  <div class="wk" style="--wk-accent:#2E7D32;">
+  <div class="wk is-event" style="--wk-accent:#6A1B9A;">
+    <div class="wk-ev">현장 테스트 공유</div>
     <div class="wk-no">WEEK 13</div>
     <div class="wk-title">사전학습 생태계와 활용</div>
     <div class="wk-chips">
       <a class="wk-chip t" href="chapters/ch13.html">이론 Ch13</a>
     </div>
   </div>
+
+</div>
+
+<div class="wk-part" style="--wk-accent:#2E7D32;">PART 4 · 마무리</div>
+<div class="wk-grid">
 
   <div class="wk" style="--wk-accent:#2E7D32;">
     <div class="wk-no">WEEK 14</div>
@@ -416,7 +416,23 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
     <div class="wk-no">WEEK 15</div>
     <div class="wk-title">기말고사</div>
     <div class="wk-chips">
-      <span class="wk-note">9~12주 · 손계산 + 개념</span>
+      <span class="wk-note">9~13주 · 손계산 + 개념</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="wk-part" style="--wk-accent:#8A9099;">심화 자료 · 주차 계획 밖</div>
+<div class="wk-grid">
+
+  <div class="wk" style="--wk-accent:#8A9099;">
+    <div class="wk-no">EXTRA</div>
+    <div class="wk-title">객체탐지 — 분류에서 위치로 (IoU·NMS)</div>
+    <div class="wk-chips">
+      <a class="wk-chip t" href="chapters/ch09.html">이론 Ch09</a>
+      <a class="wk-chip l" href="labs/lab09.html">실습 09</a>
+      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab09.ipynb" target="_blank">Colab</a>
+      <span class="wk-note">수업·시험 범위 아님</span>
     </div>
   </div>
 
@@ -458,7 +474,7 @@ a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
 </tr>
 </tbody>
 </table>
-<p>시험도 이 구조를 따른다 — 중간고사는 매주 문제집과 같은 유형의 손계산이다. 문제집을 성실히 풀었다면 시험 준비는 끝나 있다.</p>
+<p>시험도 이 구조를 따른다 — 중간·기말고사는 매주 문제집과 같은 유형의 손계산이다. 문제집을 성실히 풀었다면 시험 준비는 끝나 있다.</p>
 </section>
 <section id="교재-사용법" class="level2">
 <h2 class="anchored" data-anchor-id="교재-사용법">교재 사용법</h2>

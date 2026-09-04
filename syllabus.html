@@ -191,7 +191,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="수업-방향" class="level2">
 <h2 class="anchored" data-anchor-id="수업-방향">수업 방향</h2>
 <p><strong>원리를 손으로 확인하는 딥러닝.</strong> 수식의 유도보다 의미와 계산 가능성에 집중한다. 퍼셉트론 → 콘볼루션 → 어텐션으로 이어지는 <strong>손계산 훈련</strong>이 수업의 등뼈이며, 실습은 백지 구현이 아니라 동작하는 코드를 <strong>읽고, 고치고, 실험하고, 해석</strong>하는 방식으로 진행한다.</p>
-<p>다루는 다섯 축은 실무에서 가장 많이 쓰이는 것들이다: <strong>정형 데이터, 이미지, 객체탐지, 텍스트, LLM.</strong></p>
+<p>다루는 네 축은 실무에서 가장 많이 쓰이는 것들이다: <strong>정형 데이터, 이미지, 텍스트, LLM.</strong></p>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -209,9 +209,9 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="깊이의-계약">깊이의 계약</h3>
 <p>각 주제를 어디까지 다루는지 미리 정한다.</p>
 <ul>
-<li><strong>원리(손계산 수준)</strong>: 퍼셉트론 순전파, 손실함수, 경사하강 1스텝, 역전파(2층 연쇄법칙 1회), 콘볼루션 연산, IoU, <strong>어텐션 스코어</strong>, <strong>인과 마스크</strong>, <strong>Multi-Head 분할과 파라미터 수</strong>, <strong>LayerNorm</strong>, <strong>Transformer 블록 파라미터 수</strong></li>
-<li><strong>개념 수준</strong>: 층 쌓기, 사전학습 스케일, RLHF, 파인튜닝 전략 선택</li>
-<li><strong>다루지 않음</strong>: LSTM 게이트 수식, GAN·VAE·확산모델, BERT/GPT 계보 상세, 탐지 모델 내부 구조, <strong>어텐션의 역전파 유도</strong>, <strong>encoder-decoder 구조</strong>, <strong>sin/cos 위치 인코딩 수식</strong></li>
+<li><strong>원리(손계산 수준)</strong>: 퍼셉트론 순전파, 손실함수, 경사하강 1스텝, 역전파(2층 연쇄법칙 1회), 콘볼루션 연산, CNN 파라미터 수, <strong>어텐션 스코어</strong>, <strong>인과 마스크</strong>, <strong>Multi-Head 분할과 파라미터 수</strong>, <strong>LayerNorm</strong>, <strong>Transformer 블록 파라미터 수</strong></li>
+<li><strong>개념 수준</strong>: 층 쌓기, 전이학습 전략 선택, 객체탐지·시맨틱 분할의 출력 형태, 사전학습 스케일, RLHF</li>
+<li><strong>다루지 않음</strong>: 객체탐지의 계산(IoU·NMS)과 탐지 모델 내부 구조(심화 자료로만 제공), LSTM 게이트 수식, GAN·VAE·확산모델, BERT/GPT 계보 상세, <strong>어텐션의 역전파 유도</strong>, <strong>encoder-decoder 구조</strong>, <strong>sin/cos 위치 인코딩 수식</strong></li>
 </ul>
 <p>트랜스포머는 <strong>블록 하나를 직접 조립하고 파라미터 수를 손으로 세는 수준</strong>까지 간다. 그 위(사전학습, 활용)는 개념과 실습으로 다룬다.</p>
 </section>
@@ -248,68 +248,68 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td style="text-align: center;">3</td>
-<td>딥러닝의 학습: 손실함수, 경사하강법</td>
+<td>딥러닝의 학습 ①: 순전파, 손실, 교차 엔트로피와 Softmax, 좋은 가중치란</td>
 <td></td>
-<td style="text-align: center;">3장</td>
+<td style="text-align: center;">3장 전반</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">4</td>
+<td>딥러닝의 학습 ②: 미분, 경사하강법, 편미분과 2차원 확장</td>
+<td></td>
+<td style="text-align: center;">3장 후반</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
 <td>학습의 실전: 학습률·배치, 역전파 개념, 일반화, 정형 데이터</td>
 <td></td>
 <td style="text-align: center;">4장</td>
 </tr>
-<tr class="odd">
-<td style="text-align: center;">5</td>
+<tr class="even">
+<td style="text-align: center;">6</td>
 <td>이미지 데이터와 콘볼루션 연산</td>
 <td><strong>HW1 출제</strong></td>
 <td style="text-align: center;">5·6장</td>
 </tr>
-<tr class="even">
-<td style="text-align: center;">6</td>
+<tr class="odd">
+<td style="text-align: center;">7</td>
 <td>CNN 구조와 아키텍처</td>
 <td></td>
 <td style="text-align: center;">7장</td>
 </tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td><strong>중간고사</strong> (1~7주 범위)</td>
+<td></td>
+<td style="text-align: center;"></td>
+</tr>
 <tr class="odd">
-<td style="text-align: center;">7</td>
+<td style="text-align: center;">9</td>
 <td>CNN 학습 전략과 전이학습</td>
 <td><strong>프로젝트 킥오프</strong> — 팀 구성, 주제 승인 / HW2 출제</td>
 <td style="text-align: center;">8장</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">8</td>
-<td><strong>중간고사</strong> (1~7주 범위)</td>
-<td><em>(1차 수집 기간)</em></td>
-<td style="text-align: center;"></td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">9</td>
-<td>객체탐지: 분류에서 위치로 (IoU·NMS)</td>
-<td><strong>1차 제출</strong> — 데이터셋 + 베이스라인</td>
-<td style="text-align: center;">9장</td>
-</tr>
-<tr class="even">
 <td style="text-align: center;">10</td>
 <td>텍스트를 숫자로: 토큰화, 임베딩, 시퀀스 텐서</td>
-<td><em>(1차 진단 · 현장 테스트 촬영)</em></td>
+<td><em>(1차 수집 기간)</em></td>
 <td style="text-align: center;">10장</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">11</td>
 <td>어텐션과 Self-Attention: 인과 마스크, Multi-Head</td>
-<td><strong>현장 테스트 결과 공유</strong> (수업 내 30분)</td>
+<td><strong>1차 제출</strong> — 데이터셋 + 베이스라인</td>
 <td style="text-align: center;">11장</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">12</td>
 <td><strong>Transformer 블록과 언어모델</strong> — 블록 조립, 다음 토큰 예측</td>
-<td>HW3 출제 / <em>(2차 수집 · 재학습)</em></td>
+<td>HW3 출제 / <em>(진단 · 현장 테스트 촬영)</em></td>
 <td style="text-align: center;">12장</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">13</td>
 <td>사전학습 생태계와 활용</td>
-<td></td>
+<td><strong>현장 테스트 결과 공유</strong> (수업 내 30분) / <em>(2차 수집 · 재학습)</em></td>
 <td style="text-align: center;">13장</td>
 </tr>
 <tr class="even">
@@ -320,16 +320,17 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td style="text-align: center;">15</td>
-<td>기말고사 (9~12주 범위)</td>
+<td>기말고사 (9~13주 범위)</td>
 <td></td>
 <td style="text-align: center;"></td>
 </tr>
 </tbody>
 </table>
+<p>3장은 두 주에 걸쳐 진행한다. 3주차는 “좋은 가중치란 무엇인가”까지, 4주차는 “미분: 어느 쪽으로 움직여야 하나”부터다. 객체탐지(9장)는 주차 계획에서 빠졌다. 관심 있는 학생을 위해 사이트에 심화 자료로 남겨 둔다.</p>
 </section>
 <section id="매주-손계산-문제집-도장" class="level2">
 <h2 class="anchored" data-anchor-id="매주-손계산-문제집-도장">매주 손계산 문제집 (도장)</h2>
-<p>이론이 진행되는 모든 주(1~7, 9~12주, 총 11회)에 그 주의 개념을 <strong>손으로 계산하는 문제집</strong>이 나간다. 계산기 없이(또는 계산기만으로) 풀 수 있는 분량이다. <strong>제출하지 않고, 성적에도 직접 반영되지 않는다</strong> — 대신 <strong>중간·기말고사가 문제집과 같은 유형으로 출제된다.</strong> 문제집이 곧 시험의 기출이다.</p>
+<p>이론이 진행되는 주(1~7, 9~12주, 총 11회)에 그 주의 개념을 <strong>손으로 계산하는 문제집</strong>이 나간다. 계산기 없이(또는 계산기만으로) 풀 수 있는 분량이다. <strong>제출하지 않고, 성적에도 직접 반영되지 않는다</strong> — 대신 <strong>중간·기말고사가 문제집과 같은 유형으로 출제된다.</strong> 문제집이 곧 시험의 기출이다.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 62%">
@@ -352,27 +353,27 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="odd">
 <td style="text-align: center;">3</td>
-<td>MSE·교차 엔트로피 계산, Softmax, 경사하강 1스텝</td>
+<td>MSE 계산, Softmax, 이진·다중 클래스 교차 엔트로피, 여러 건의 교차 엔트로피 평균</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">4</td>
-<td>2층 네트워크 역전파(연쇄법칙), 러닝커브 읽고 과적합 진단</td>
+<td>경사하강 1스텝, 퍼셉트론 파라미터의 경사하강 1스텝, 학습률과 수렴 판정</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">5</td>
-<td>콘볼루션 연산, 출력 크기 공식(패딩·스트라이드)</td>
+<td>2층 네트워크 역전파(연쇄법칙), 러닝커브 읽고 과적합 진단, 표준화·원-핫</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">6</td>
-<td>풀링 계산, CNN 파라미터 수, 층별 출력 크기 추적</td>
+<td>콘볼루션 연산, 출력 크기 공식(패딩·스트라이드)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">7</td>
-<td>동결 층의 학습 파라미터 수, 전이학습 시나리오 판단</td>
+<td>풀링 계산, CNN 파라미터 수, 층별 출력 크기 추적</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">9</td>
-<td>IoU 계산, NMS 손절차 따라가기</td>
+<td>동결 층의 학습 파라미터 수, 전이학습 시나리오 판단</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">10</td>
@@ -413,13 +414,13 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">HW1</td>
-<td style="text-align: center;">5주</td>
+<td style="text-align: center;">6주</td>
 <td>정형 데이터 MLP — 부스팅 계열과 성능 비교, 결과 해석</td>
 <td style="text-align: center;">개인</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">HW2</td>
-<td style="text-align: center;">7주</td>
+<td style="text-align: center;">9주</td>
 <td><strong>내가 찍은 사진</strong>으로 이미지 분류 — 전이학습, 클래스 2~3개 × 50장</td>
 <td style="text-align: center;">개인</td>
 </tr>
@@ -432,6 +433,7 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p>HW2는 팀 프로젝트와 같은 주에 시작한다. 개인이 소규모(2~3클래스 × 50장)로 수집→학습→평가 파이프라인을 한 번 돌려 보고, 그 경험을 팀 프로젝트의 1차 수집에 바로 적용한다.</p>
+<p>실습(코딩) 페이지는 이론 장의 순서를 따라 번호가 붙어 있고, 주차와는 다를 수 있다. 어느 주에 어느 실습을 하는지는 <a href="./index.html">주차별 계획</a>의 카드를 따른다. 3주차는 새 실습 없이 손계산(도장)에 집중한다.</p>
 </section>
 <section id="팀-프로젝트-내가-모은-데이터로-이미지-분류" class="level2">
 <h2 class="anchored" data-anchor-id="팀-프로젝트-내가-모은-데이터로-이미지-분류">팀 프로젝트: 내가 모은 데이터로 이미지 분류</h2>
@@ -489,7 +491,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="세-단계로-진행한다" class="level3">
 <h3 class="anchored" data-anchor-id="세-단계로-진행한다">세 단계로 진행한다</h3>
 <pre><code>1차 수집  →  학습·진단  →  현장 테스트(충격)  →  2차 수집  →  재학습  →  발표
-  7~9주        9~10주          10~11주            11~12주      12~13주    14주</code></pre>
+  9~10주       11주            11~12주            12~13주      13주      14주</code></pre>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 29%">
@@ -505,38 +507,38 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>7주 킥오프</strong></td>
+<td style="text-align: center;"><strong>9주 킥오프</strong></td>
 <td>팀 구성, 주제 선정, <strong>클래스 정의 합의</strong></td>
 <td>주제 제안서 (교수 승인 필요)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">8주</td>
-<td>시험 기간 — 사진만 모은다</td>
+<td style="text-align: center;">10주</td>
+<td>1차 수집 — 팀원 전원이 나눠 찍는다</td>
 <td></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><strong>9주 1차 제출</strong></td>
+<td style="text-align: center;"><strong>11주 1차 제출</strong></td>
 <td>1차 데이터셋 + 베이스라인 모델</td>
 <td>데이터 명세 + 러닝커브 + 혼동행렬</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">10주</td>
+<td style="text-align: center;">11~12주</td>
 <td>진단 — <strong>틀린 사진을 실제로 열어본다</strong></td>
 <td></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">10~11주</td>
+<td style="text-align: center;">11~12주</td>
 <td><strong>현장 테스트 촬영</strong> — 지금까지와 <strong>다른 조건 3가지</strong>로 새로 찍는다</td>
 <td></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>11주</strong></td>
+<td style="text-align: center;"><strong>13주</strong></td>
 <td>현장 테스트 결과를 수업에서 공유 (팀당 1분)</td>
 <td>검증 성능 → 현장 성능</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">11~12주</td>
-<td>진단에 근거한 <strong>2차 수집</strong></td>
+<td style="text-align: center;">12~13주</td>
+<td>진단에 근거한 <strong>2차 수집</strong>과 재학습</td>
 <td></td>
 </tr>
 <tr class="even">
@@ -556,9 +558,9 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>10~11주에 팀은 <strong>지금까지와 다른 조건</strong>에서 사진을 새로 찍어 온다 (다른 시간대 · 다른 장소 · 다른 각도 · 다른 조명 중 <strong>3가지 이상</strong>).</p>
+<p>11~12주에 팀은 <strong>지금까지와 다른 조건</strong>에서 사진을 새로 찍어 온다 (다른 시간대 · 다른 장소 · 다른 각도 · 다른 조명 중 <strong>3가지 이상</strong>).</p>
 <p>그 사진을 <strong>이미 학습된 모델에 그대로</strong> 넣는다. 대부분의 팀은 성능이 크게 떨어진다.</p>
-<p>11주 수업에서 팀별 하락폭을 칠판에 나열하고, <strong>왜 어떤 팀은 덜 떨어졌는지</strong> 함께 찾는다. 여기서 나온 답이 2차 수집의 근거가 되고, 그대로 발표의 중심이 된다.</p>
+<p>13주 수업에서 팀별 하락폭을 칠판에 나열하고, <strong>왜 어떤 팀은 덜 떨어졌는지</strong> 함께 찾는다. 여기서 나온 답이 2차 수집의 근거가 되고, 그대로 발표의 중심이 된다.</p>
 </div>
 </div>
 </section>
@@ -729,7 +731,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>기말고사</td>
 <td style="text-align: center;">25%</td>
-<td>9~12주, 손계산 + 개념 — 문제집(도장)과 같은 유형</td>
+<td>9~13주, 손계산 + 개념 — 문제집(도장)과 같은 유형</td>
 </tr>
 </tbody>
 </table>
