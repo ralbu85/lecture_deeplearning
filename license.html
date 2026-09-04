@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>수업 안내 – 딥러닝</title>
+<title>저작권 안내 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -90,7 +90,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">주차별 계획</span></a>
   </li>  
   <li class="nav-item">
@@ -100,7 +100,7 @@ ul.task-list li input[type="checkbox"] {
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./license.html"> 
+    <a class="nav-link active" href="./license.html" aria-current="page"> 
 <span class="menu-text">저작권</span></a>
   </li>  
 </ul>
@@ -119,9 +119,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">목차</h2>
    
   <ul>
-  <li><a href="#수업의-세-층" id="toc-수업의-세-층" class="nav-link active" data-scroll-target="#수업의-세-층">수업의 세 층</a></li>
-  <li><a href="#교재-사용법" id="toc-교재-사용법" class="nav-link" data-scroll-target="#교재-사용법">교재 사용법</a></li>
-  <li><a href="#수강-환경" id="toc-수강-환경" class="nav-link" data-scroll-target="#수강-환경">수강 환경</a></li>
+  <li><a href="#교재-cc-by-nc-sa-4.0" id="toc-교재-cc-by-nc-sa-4.0" class="nav-link active" data-scroll-target="#교재-cc-by-nc-sa-4.0">교재: CC BY-NC-SA 4.0</a></li>
+  <li><a href="#실습-코드-mit-라이선스" id="toc-실습-코드-mit-라이선스" class="nav-link" data-scroll-target="#실습-코드-mit-라이선스">실습 코드: MIT 라이선스</a></li>
+  <li><a href="#제3자-자료의-출처" id="toc-제3자-자료의-출처" class="nav-link" data-scroll-target="#제3자-자료의-출처">제3자 자료의 출처</a></li>
+  <li><a href="#문의" id="toc-문의" class="nav-link" data-scroll-target="#문의">문의</a></li>
   </ul>
 </nav>
     </div>
@@ -130,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">수업 안내</h1>
+<h1 class="title">저작권 안내</h1>
 </div>
 
 
@@ -147,360 +148,96 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><strong>원리를 손으로 확인하는 딥러닝.</strong></p>
-<p>이 수업은 시스템경영공학부 3학년을 대상으로, 딥러닝의 원리를 수식의 유도가 아니라 <strong>직접 계산하고 실험하는 방식</strong>으로 배운다. 다루는 네 축은 실무에서 가장 많이 쓰이는 것들이다: <strong>정형 데이터, 이미지, 텍스트, LLM.</strong></p>
-<style>
-.wk-board { margin: 1.6rem 0 0.6rem; }
-
-.wk-legend {
-  display: flex; flex-wrap: wrap; gap: 1.1rem 1.6rem;
-  align-items: center; font-size: 0.78rem; line-height: 1.5;
-  padding: 0.6rem 0.9rem; margin-bottom: 1.1rem;
-  background: #FAFAFB; border: 1px solid #EAECF0; border-radius: 8px;
-}
-.wk-legend b { font-weight: 700; }
-.wk-legend .lg { display: inline-flex; align-items: center; gap: 0.4em; }
-.wk-legend .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
-
-.wk-part {
-  display: flex; align-items: center; gap: 0.7em;
-  font-size: 0.76rem; font-weight: 700; letter-spacing: 0.06em;
-  color: var(--wk-accent); margin: 1.5rem 0 0.55rem; text-transform: none;
-}
-.wk-part::after {
-  content: ""; flex: 1; height: 1px;
-  background: linear-gradient(to right, var(--wk-accent), rgba(0,0,0,0.06));
-  opacity: 0.35;
-}
-.wk-part:first-child { margin-top: 0.2rem; }
-
-.wk-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
-  gap: 0.7rem;
-}
-
-.wk {
-  position: relative; background: #fff;
-  border: 1px solid #E6E8EC; border-top: 3px solid var(--wk-accent);
-  border-radius: 9px; padding: 0.62rem 0.75rem 0.7rem;
-  line-height: 1.5; transition: box-shadow .15s ease, transform .15s ease;
-}
-.wk:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.09); transform: translateY(-1px); }
-
-.wk-no {
-  font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em;
-  color: var(--wk-accent);
-}
-.wk-title {
-  font-size: 0.9rem; font-weight: 600; color: #1A1A1A;
-  margin: 0.1em 0 0.55em; line-height: 1.42;
-}
-.wk-chips { display: flex; flex-wrap: wrap; gap: 0.28rem; }
-
-.wk-chip {
-  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.01em;
-  padding: 0.18em 0.5em; border-radius: 5px; white-space: nowrap;
-  border: 1px solid transparent; text-decoration: none !important;
-  display: inline-block;
-}
-a.wk-chip.t { background: #EAF0FA; color: #1F3F7A; border-color: #C9D8EE; }
-a.wk-chip.t:hover { background: #1F3F7A; color: #fff; }
-a.wk-chip.d { background: #FBEDED; color: #8C1515; border-color: #EFCFCF; }
-a.wk-chip.d:hover { background: #8C1515; color: #fff; }
-a.wk-chip.l { background: #E9F4EA; color: #2E7D32; border-color: #C6E3C8; }
-a.wk-chip.l:hover { background: #2E7D32; color: #fff; }
-a.wk-chip.c { background: #FFF4E0; color: #B05A00; border-color: #F0DCB8; }
-a.wk-chip.c:hover { background: #F9AB00; color: #fff; border-color: #F9AB00; }
-.wk-chip.soon {
-  background: #fff; color: #A6ACB6; border: 1px dashed #D6DAE0;
-  cursor: default;
-}
-
-.wk-ev {
-  position: absolute; top: -9px; right: 8px;
-  font-size: 0.63rem; font-weight: 700; letter-spacing: 0.02em;
-  padding: 0.15em 0.5em; border-radius: 20px;
-  background: #D4A017; color: #fff; border: 1.5px solid #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.13);
-}
-
-.wk.is-event {
-  background: #FCFAF7; border-color: #E4DED2;
-  border-top-color: var(--wk-accent); border-style: solid;
-}
-.wk.is-exam {
-  background: linear-gradient(180deg, #FBF6F6 0%, #fff 100%);
-  border-color: #E7D5D5;
-}
-.wk.is-exam .wk-title { color: #8C1515; font-weight: 700; }
-.wk-note { font-size: 0.7rem; color: #8A9099; }
-
-@media (max-width: 560px) {
-  .wk-grid { grid-template-columns: 1fr; }
-}
-</style>
-
-<div class="wk-board">
-
-<div class="wk-legend">
-  <span class="lg"><span class="sw" style="background:#EAF0FA;border:1px solid #C9D8EE;"></span><b>이론</b> — 개념 · 손계산 예시 · 인터랙티브 위젯</span>
-  <span class="lg"><span class="sw" style="background:#FBEDED;border:1px solid #EFCFCF;"></span><b>도장</b> — 무한 생성 손계산 문제은행</span>
-  <span class="lg"><span class="sw" style="background:#E9F4EA;border:1px solid #C6E3C8;"></span><b>실습</b> — 코드를 읽고 · 고치고 · 해석</span>
-  <span class="lg"><span class="sw" style="background:#fff;border:1px dashed #D6DAE0;"></span>준비 중</span>
-</div>
-
-<div class="wk-part" style="--wk-accent:#1F3F7A;">PART 1 · 딥러닝 기초</div>
-<div class="wk-grid">
-
-  <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 01</div>
-    <div class="wk-title">딥러닝 개요, 데이터와 모형</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch01.html">이론 Ch01</a>
-      <a class="wk-chip d" href="dojo/dojo01.html">도장 01</a>
-      <a class="wk-chip l" href="labs/lab01.html">실습 01</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab01.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 02</div>
-    <div class="wk-title">퍼셉트론과 다층 퍼셉트론</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch02.html">이론 Ch02</a>
-      <a class="wk-chip d" href="dojo/dojo02.html">도장 02</a>
-      <a class="wk-chip l" href="labs/lab02.html">실습 02</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab02.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 03</div>
-    <div class="wk-title">딥러닝의 학습 ① — 순전파, 손실, 교차 엔트로피, 좋은 가중치란</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch03.html">이론 Ch03 전반</a>
-      <a class="wk-chip d" href="dojo/dojo03.html">도장 03</a>
-      <span class="wk-note">실습 없음 · 손계산 집중</span>
-    </div>
-  </div>
-
-  <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 04</div>
-    <div class="wk-title">딥러닝의 학습 ② — 미분, 경사하강법, 2차원 확장</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch03.html">이론 Ch03 후반</a>
-      <a class="wk-chip d" href="dojo/dojo04.html">도장 04</a>
-      <a class="wk-chip l" href="labs/lab03.html">실습 03</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab03.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk" style="--wk-accent:#1F3F7A;">
-    <div class="wk-no">WEEK 05</div>
-    <div class="wk-title">학습의 실전 — 학습률·배치·역전파·일반화, 정형 데이터</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch04.html">이론 Ch04</a>
-      <a class="wk-chip d" href="dojo/dojo05.html">도장 05</a>
-      <a class="wk-chip l" href="labs/lab04.html">실습 04</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab04.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-</div>
-
-<div class="wk-part" style="--wk-accent:#8C1515;">PART 2 · 딥러닝과 컴퓨터 비전</div>
-<div class="wk-grid">
-
-  <div class="wk is-event" style="--wk-accent:#8C1515;">
-    <div class="wk-ev">HW1 출제</div>
-    <div class="wk-no">WEEK 06</div>
-    <div class="wk-title">이미지 데이터와 콘볼루션 연산</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch05.html">이론 Ch05</a>
-      <a class="wk-chip t" href="chapters/ch06.html">이론 Ch06</a>
-      <span class="wk-chip soon">도장 06</span>
-      <a class="wk-chip l" href="labs/lab05.html">실습 05</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab05.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk" style="--wk-accent:#8C1515;">
-    <div class="wk-no">WEEK 07</div>
-    <div class="wk-title">CNN 구조와 아키텍처</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch07.html">이론 Ch07</a>
-      <span class="wk-chip soon">도장 07</span>
-      <a class="wk-chip l" href="labs/lab06.html">실습 06</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab06.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk is-exam" style="--wk-accent:#8C1515;">
-    <div class="wk-no">WEEK 08</div>
-    <div class="wk-title">중간고사</div>
-    <div class="wk-chips">
-      <span class="wk-note">1~7주 · 손계산 중심 — 도장과 같은 유형</span>
-    </div>
-  </div>
-
-  <div class="wk is-event" style="--wk-accent:#8C1515;">
-    <div class="wk-ev">프로젝트 킥오프 · HW2</div>
-    <div class="wk-no">WEEK 09</div>
-    <div class="wk-title">CNN 학습 전략과 전이학습</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch08.html">이론 Ch08</a>
-      <span class="wk-chip soon">도장 09</span>
-      <a class="wk-chip l" href="labs/lab07.html">실습 07</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab07.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-</div>
-
-<div class="wk-part" style="--wk-accent:#6A1B9A;">PART 3 · 텍스트와 LLM</div>
-<div class="wk-grid">
-
-  <div class="wk" style="--wk-accent:#6A1B9A;">
-    <div class="wk-no">WEEK 10</div>
-    <div class="wk-title">텍스트를 숫자로 — 토큰화, 임베딩</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch10.html">이론 Ch10</a>
-      <span class="wk-chip soon">도장 10</span>
-      <a class="wk-chip l" href="labs/lab10.html">실습 10</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab10.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk is-event" style="--wk-accent:#6A1B9A;">
-    <div class="wk-ev">1차 제출</div>
-    <div class="wk-no">WEEK 11</div>
-    <div class="wk-title">어텐션과 Self-Attention — 마스크, Multi-Head</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch11.html">이론 Ch11</a>
-      <span class="wk-chip soon">도장 11</span>
-      <a class="wk-chip l" href="labs/lab11.html">실습 11</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab11.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk is-event" style="--wk-accent:#6A1B9A;">
-    <div class="wk-ev">HW3 출제</div>
-    <div class="wk-no">WEEK 12</div>
-    <div class="wk-title">Transformer 블록과 언어모델</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch12.html">이론 Ch12</a>
-      <span class="wk-chip soon">도장 12</span>
-      <a class="wk-chip l" href="labs/lab12.html">실습 12</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab12.ipynb" target="_blank">Colab</a>
-    </div>
-  </div>
-
-  <div class="wk is-event" style="--wk-accent:#6A1B9A;">
-    <div class="wk-ev">현장 테스트 공유</div>
-    <div class="wk-no">WEEK 13</div>
-    <div class="wk-title">사전학습 생태계와 활용</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch13.html">이론 Ch13</a>
-    </div>
-  </div>
-
-</div>
-
-<div class="wk-part" style="--wk-accent:#2E7D32;">PART 4 · 마무리</div>
-<div class="wk-grid">
-
-  <div class="wk" style="--wk-accent:#2E7D32;">
-    <div class="wk-no">WEEK 14</div>
-    <div class="wk-title">프로젝트 발표</div>
-    <div class="wk-chips">
-      <span class="wk-note">발표 + 자료 제출</span>
-    </div>
-  </div>
-
-  <div class="wk is-exam" style="--wk-accent:#2E7D32;">
-    <div class="wk-no">WEEK 15</div>
-    <div class="wk-title">기말고사</div>
-    <div class="wk-chips">
-      <span class="wk-note">9~13주 · 손계산 + 개념</span>
-    </div>
-  </div>
-
-</div>
-
-<div class="wk-part" style="--wk-accent:#8A9099;">심화 자료 · 주차 계획 밖</div>
-<div class="wk-grid">
-
-  <div class="wk" style="--wk-accent:#8A9099;">
-    <div class="wk-no">EXTRA</div>
-    <div class="wk-title">객체탐지 — 분류에서 위치로 (IoU·NMS)</div>
-    <div class="wk-chips">
-      <a class="wk-chip t" href="chapters/ch09.html">이론 Ch09</a>
-      <a class="wk-chip l" href="labs/lab09.html">실습 09</a>
-      <a class="wk-chip c" href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab09.ipynb" target="_blank">Colab</a>
-      <span class="wk-note">수업·시험 범위 아님</span>
-    </div>
-  </div>
-
-</div>
-
-</div>
-<p>과제·평가 기준·프로젝트 규정 등 상세는 <a href="./syllabus.html">강의계획서</a>를 보라.</p>
-<hr>
-<section id="수업의-세-층" class="level2">
-<h2 class="anchored" data-anchor-id="수업의-세-층">수업의 세 층</h2>
+<p>이 사이트의 모든 자료(이론 챕터, 도장 문제은행, 그림, 인터랙티브 보드, 실습 설명)는 <strong>이지환(부경대학교 시스템경영공학부)</strong>의 저작물이다.</p>
+<p>© 2026 이지환. All rights reserved except as licensed below.</p>
+<section id="교재-cc-by-nc-sa-4.0" class="level2">
+<h2 class="anchored" data-anchor-id="교재-cc-by-nc-sa-4.0">교재: CC BY-NC-SA 4.0</h2>
+<p><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ko"><img alt="크리에이티브 커먼즈 라이선스" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a></p>
+<p>이론 챕터, 도장, 그림, 인터랙티브 보드, 실습 페이지의 설명 글은 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ko">크리에이티브 커먼즈 저작자표시-비영리-동일조건변경허락 4.0 국제 라이선스</a>에 따라 이용할 수 있다.</p>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 45%">
-<col style="width: 27%">
-<col style="width: 27%">
+<col style="width: 62%">
+<col style="width: 37%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;">층</th>
-<th>무엇을</th>
-<th>어떻게</th>
+<th style="text-align: center;">조건</th>
+<th>뜻</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>손계산</strong></td>
-<td>원리</td>
-<td>매주 문제집(도장) — 퍼셉트론, 콘볼루션, 어텐션을 손으로 계산</td>
+<td style="text-align: center;"><strong>저작자표시 (BY)</strong></td>
+<td>이용할 때 원저작자 “이지환, 딥러닝(부경대학교)”과 이 사이트 주소를 밝혀야 한다. 출처를 지우고 자기 저작물처럼 쓰는 것은 라이선스 위반이자 저작권 침해다</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>실습</strong></td>
-<td>응용</td>
-<td>동작하는 코드를 읽고, 고치고, 실험하고, 해석 (백지 구현 없음)</td>
+<td style="text-align: center;"><strong>비영리 (NC)</strong></td>
+<td>영리 목적으로 쓸 수 없다. 유료 강의, 출판, 광고가 붙는 매체에 쓰려면 별도 허락이 필요하다</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><strong>프로젝트</strong></td>
-<td>종합</td>
-<td>팀별로 <strong>직접 수집한 데이터</strong>로 이미지 분류 모델 구축</td>
+<td style="text-align: center;"><strong>동일조건변경허락 (SA)</strong></td>
+<td>고쳐서 배포할 때는 같은 라이선스를 붙여야 한다</td>
 </tr>
 </tbody>
 </table>
-<p>시험도 이 구조를 따른다 — 중간·기말고사는 매주 문제집과 같은 유형의 손계산이다. 문제집을 성실히 풀었다면 시험 준비는 끝나 있다.</p>
+<p>라이선스 조건을 어기면 이용 허락은 자동으로 종료되며, 그 이후의 이용은 저작권 침해로 다룬다. 학교 수업, 개인 학습, 비영리 스터디에서 출처를 밝히고 쓰는 것은 따로 허락을 구하지 않아도 된다.</p>
+<p><strong>인용 예</strong></p>
+<blockquote class="blockquote">
+<p>이지환, 『딥러닝』 (부경대학교 시스템경영공학부 강의 교재, 2026), https://ralbu85.github.io/lecture_deeplearning/</p>
+</blockquote>
 </section>
-<section id="교재-사용법" class="level2">
-<h2 class="anchored" data-anchor-id="교재-사용법">교재 사용법</h2>
-<p>이 사이트가 교재다. 각 장은 같은 리듬으로 진행된다:</p>
-<ol type="1">
-<li><strong>학습 목표</strong> — 이 장을 마치면 할 수 있어야 하는 것</li>
-<li><strong>개념과 수식</strong> — 모든 수식은 숫자를 넣은 계산 예시와 함께 나온다</li>
-<li><strong>인터랙티브 위젯</strong> — 슬라이더를 직접 움직여 개념을 실험한다. 눈으로만 읽지 말 것</li>
-<li><strong>핵심 요약</strong> — 복습용 한 장 표</li>
-</ol>
-<p>인터랙티브 위젯은 브라우저에서 바로 동작한다.</p>
-<p><strong>도장</strong>은 학번을 입력하면 본인 전용 문제가 만들어진다. “새 문제” 버튼으로 같은 유형을 무한히 연습할 수 있고, 답은 즉시 채점된다.</p>
+<section id="실습-코드-mit-라이선스" class="level2">
+<h2 class="anchored" data-anchor-id="실습-코드-mit-라이선스">실습 코드: MIT 라이선스</h2>
+<p>실습(labs) 페이지와 Colab 노트북의 <strong>코드</strong>는 <a href="https://opensource.org/licenses/MIT">MIT 라이선스</a>로 공개한다. 출처 표시만 유지하면 수정·재배포·상업적 이용이 모두 가능하다. 노트북 저장소: <a href="https://github.com/ralbu85/lecture_deeplearning_labs" class="uri">https://github.com/ralbu85/lecture_deeplearning_labs</a></p>
 </section>
-<section id="수강-환경" class="level2">
-<h2 class="anchored" data-anchor-id="수강-환경">수강 환경</h2>
-<ul>
-<li>이론·도장: 브라우저만 있으면 된다</li>
-<li>실습: <strong>Google Colab</strong> — 주차 카드의 <strong>Colab</strong> 배지를 누르면 노트북이 바로 열린다 (<a href="https://github.com/ralbu85/lecture_deeplearning_labs">노트북 저장소</a>)</li>
-</ul>
-<p>1장에서는 딥러닝 이전의 기초 — 데이터, 모형, 파라미터, 학습이 무엇인지부터 시작한다.</p>
+<section id="제3자-자료의-출처" class="level2">
+<h2 class="anchored" data-anchor-id="제3자-자료의-출처">제3자 자료의 출처</h2>
+<p>이 사이트가 사용한 외부 자료와 그 조건은 다음과 같다. 각 자료는 원저작자의 조건을 따른다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>자료</th>
+<th>쓰인 곳</th>
+<th>출처 · 조건</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>건물 사진 (china.jpg)</td>
+<td>6장 특성 맵 보드, 7장 풀링 그림</td>
+<td><a href="https://www.flickr.com/photos/danielbuechele/6061409035/">Daniel Büchele</a>, Flickr, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. scikit-learn 샘플 이미지에서 가져와 64×64 흑백으로 축소</td>
+</tr>
+<tr class="even">
+<td>꽃 사진 (flower.jpg)</td>
+<td>5장 컬러 이미지 보드</td>
+<td><a href="https://www.flickr.com/photos/vultilion/6056698931/">vultilion</a>, Flickr, <a href="https://creativecommons.org/licenses/by/2.0/">CC BY 2.0</a>. scikit-learn 샘플 이미지에서 가져와 24×24로 축소</td>
+</tr>
+<tr class="odd">
+<td>손글씨 숫자</td>
+<td>5장·6장 흑백 이미지 보드</td>
+<td>MNIST 데이터셋 (Yann LeCun, Corinna Cortes, Christopher J.C. Burges), <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a></td>
+</tr>
+<tr class="even">
+<td>실습 데이터셋</td>
+<td>각 실습 페이지</td>
+<td>실습 코드가 내려받는 공개 데이터셋(펭귄, 자동차 연비, Fashion-MNIST, CIFAR-10, 개미·벌, NSMC 등)은 각 데이터셋의 라이선스를 따른다. 출처는 해당 실습 페이지에 적혀 있다</td>
+</tr>
+<tr class="odd">
+<td>강의 자료 PDF</td>
+<td>원본 슬라이드(reference/)</td>
+<td>이지환 저작. 사이트에는 게시하지 않는다</td>
+</tr>
+<tr class="even">
+<td>Pretendard 글꼴</td>
+<td>사이트 전체</td>
+<td>길형진, <a href="https://github.com/orioncactus/pretendard">SIL Open Font License 1.1</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="문의" class="level2">
+<h2 class="anchored" data-anchor-id="문의">문의</h2>
+<p>출판·유료 강의 등 비영리 범위를 넘는 이용, 또는 이 안내에 없는 이용은 <a href="mailto:ralbu85@gmail.com" class="email">ralbu85@gmail.com</a>으로 문의하면 된다.</p>
 
 
 </section>
