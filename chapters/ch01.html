@@ -212,12 +212,13 @@ window.Quarto = {
   <li><a href="#파라미터-parameter" id="toc-파라미터-parameter" class="nav-link" data-scroll-target="#파라미터-parameter">파라미터 (Parameter)</a>
   <ul class="collapse">
   <li><a href="#정의-2" id="toc-정의-2" class="nav-link" data-scroll-target="#정의-2">정의</a></li>
-  <li><a href="#파라미터-vs-하이퍼파라미터" id="toc-파라미터-vs-하이퍼파라미터" class="nav-link" data-scroll-target="#파라미터-vs-하이퍼파라미터">파라미터 vs 하이퍼파라미터</a></li>
   <li><a href="#수치-예시-파라미터에-따른-예측-변화" id="toc-수치-예시-파라미터에-따른-예측-변화" class="nav-link" data-scroll-target="#수치-예시-파라미터에-따른-예측-변화">수치 예시: 파라미터에 따른 예측 변화</a></li>
   </ul></li>
   <li><a href="#모형의-학습-learning" id="toc-모형의-학습-learning" class="nav-link" data-scroll-target="#모형의-학습-learning">모형의 학습 (Learning)</a>
   <ul class="collapse">
+  <li><a href="#데이터를-잘-나타낸다는-것은-무엇인가" id="toc-데이터를-잘-나타낸다는-것은-무엇인가" class="nav-link" data-scroll-target="#데이터를-잘-나타낸다는-것은-무엇인가">“데이터를 잘 나타낸다”는 것은 무엇인가</a></li>
   <li><a href="#학습이란" id="toc-학습이란" class="nav-link" data-scroll-target="#학습이란">학습이란</a></li>
+  <li><a href="#학습이-정하지-않는-것-하이퍼파라미터" id="toc-학습이-정하지-않는-것-하이퍼파라미터" class="nav-link" data-scroll-target="#학습이-정하지-않는-것-하이퍼파라미터">학습이 정하지 않는 것: 하이퍼파라미터</a></li>
   </ul></li>
   <li><a href="#모형의-이용-예측과-추론" id="toc-모형의-이용-예측과-추론" class="nav-link" data-scroll-target="#모형의-이용-예측과-추론">모형의 이용: 예측과 추론</a>
   <ul class="collapse">
@@ -293,8 +294,8 @@ window.Quarto = {
 <li>정형 데이터와 비정형 데이터를 구분하고, 데이터의 크기를 <span class="math inline">\((n, p)\)</span>로 말할 수 있다</li>
 <li>숫자형·순서형·범주형 변수를 구분할 수 있다</li>
 <li>모형(model)과 파라미터(parameter)의 개념을 이해한다</li>
+<li>모형의 학습이 오차를 최소화하는 파라미터 찾기임을 이해한다</li>
 <li>파라미터와 하이퍼파라미터의 차이를 설명할 수 있다</li>
-<li>모형의 학습이 파라미터 최적화임을 이해한다</li>
 <li>회귀와 분류 문제를 구분할 수 있다</li>
 <li>지도학습과 비지도학습의 차이를 설명할 수 있다</li>
 <li>딥러닝이 각광받는 이유를 세 가지 이상 제시할 수 있다</li>
@@ -1146,58 +1147,37 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>모형 안에서 독립변수(<span class="math inline">\(X\)</span>)와 종속변수(<span class="math inline">\(y\)</span>) 간의 관계를 표현하기 위해 <strong>조절할 수 있는 매개변수</strong>.</p>
+<p>모형 안에서 독립변수(<span class="math inline">\(X\)</span>)와 종속변수(<span class="math inline">\(y\)</span>)의 관계를 표현하기 위해 <strong>조절할 수 있는 숫자</strong>.</p>
 <p>파라미터의 값이 달라지면, 같은 모형이라도 <strong>다른 예측</strong>을 한다.</p>
 </div>
 </div>
-</section>
-<section id="파라미터-vs-하이퍼파라미터" class="level3">
-<h3 class="anchored" data-anchor-id="파라미터-vs-하이퍼파라미터">파라미터 vs 하이퍼파라미터</h3>
-<p>모형에 관련된 숫자가 전부 학습으로 정해지는 것은 아니다.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-하이퍼파라미터 (Hyperparameter)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>학습으로 정해지지 <strong>않고</strong>, 사람이 <strong>미리 정해 주어야</strong> 하는 값.</p>
+<p>앞의 첫 번째 가설 <span class="math inline">\(y = w_0 + w_1 x\)</span>로 돌아가 보자. 이 모형에서 조절할 수 있는 숫자는 딱 두 개다.</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 31%">
-<col style="width: 31%">
-<col style="width: 37%">
-</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;"></th>
-<th style="text-align: center;">누가 정하는가</th>
-<th>예</th>
+<th style="text-align: center;">파라미터</th>
+<th style="text-align: center;">이름</th>
+<th>뜻</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>파라미터</strong></td>
-<td style="text-align: center;">데이터가 정한다 (= 학습)</td>
-<td>가중치 <span class="math inline">\(w_1\)</span>, 편향 <span class="math inline">\(w_0\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(w_0\)</span></td>
+<td style="text-align: center;">절편</td>
+<td>경력이 0년일 때의 연봉. 직선이 <span class="math inline">\(y\)</span>축과 만나는 높이</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>하이퍼파라미터</strong></td>
-<td style="text-align: center;">사람이 정한다</td>
-<td>다항식의 <strong>차수</strong>, 은닉층의 <strong>노드 수</strong>(Ch02), <strong>학습률</strong>·<strong>배치 크기</strong>(Ch04)</td>
+<td style="text-align: center;"><span class="math inline">\(w_1\)</span></td>
+<td style="text-align: center;">기울기</td>
+<td>경력이 1년 늘 때 연봉이 얼마나 오르는가</td>
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<p><span class="math inline">\(y = w_0 + w_1 x + w_2 x^2\)</span>에서 “2차식으로 하자”는 <strong>사람의 결정</strong>(하이퍼파라미터)이고, <span class="math inline">\(w_0, w_1, w_2\)</span>의 값은 <strong>데이터가 정한다</strong>(파라미터). 하이퍼파라미터를 잘못 고르면 학습을 아무리 잘해도 좋은 모형이 나오지 않는다 — Ch04에서 확인한다.</p>
+<p>이 두 값을 정하기 전의 모형은 “연봉은 경력에 비례한다”는 <strong>뼈대</strong>일 뿐이라 아무 숫자도 내놓지 못한다. <span class="math inline">\(w_0, w_1\)</span>에 값을 넣는 순간 모형은 하나의 구체적인 직선이 되고, 그제서야 경력을 넣으면 연봉이 나온다.</p>
 </section>
 <section id="수치-예시-파라미터에-따른-예측-변화" class="level3">
 <h3 class="anchored" data-anchor-id="수치-예시-파라미터에-따른-예측-변화">수치 예시: 파라미터에 따른 예측 변화</h3>
-<p>모형 <span class="math inline">\(y = w_0 + w_1 x\)</span>에서 파라미터를 다르게 설정하면 같은 경력(7년)에 대해 다른 연봉을 예측한다.</p>
+<p>같은 모형 <span class="math inline">\(y = w_0 + w_1 x\)</span>에 서로 다른 파라미터를 넣은 세 후보를 만들어 보자. 같은 경력(7년)에 대해 세 후보는 서로 다른 연봉을 예측한다.</p>
 <div class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>코드</summary>
@@ -1336,12 +1316,489 @@ $64,000
 </figure>
 </div>
 </div>
-<p>어떤 파라미터가 “좋은” 것인지 판단하려면, <strong>데이터를 가장 잘 설명하는 파라미터</strong>를 찾아야 한다.</p>
+<p>모형은 하나인데 파라미터가 다르니 답이 세 가지다. 그렇다면 이 중 어느 것이 <strong>“좋은” 파라미터</strong>인가? 이 질문에 답하려면 먼저 “좋다”의 기준이 있어야 한다. 그 기준을 세우고, 기준에 맞는 파라미터를 찾는 일이 다음 절의 <strong>학습</strong>이다.</p>
 <hr>
 </section>
 </section>
 <section id="모형의-학습-learning" class="level2">
 <h2 class="anchored" data-anchor-id="모형의-학습-learning">모형의 학습 (Learning)</h2>
+<section id="데이터를-잘-나타낸다는-것은-무엇인가" class="level3">
+<h3 class="anchored" data-anchor-id="데이터를-잘-나타낸다는-것은-무엇인가">“데이터를 잘 나타낸다”는 것은 무엇인가</h3>
+<p>모형은 <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계에 대한 가설이고, 파라미터를 정하면 그 가설은 구체적인 식이 된다고 했다. 그 식이 데이터를 “잘 나타낸다”는 말의 뜻을 정확히 해 두자. 절차는 세 단계다.</p>
+<ol type="1">
+<li>파라미터가 정해진 모형에 <strong>데이터 포인트 하나의 <span class="math inline">\(x\)</span>를 넣는다.</strong> 모형이 내놓는 값이 <strong>예측값 <span class="math inline">\(\hat{y}\)</span></strong>다.</li>
+<li>그 데이터 포인트에 실제로 기록된 <strong><span class="math inline">\(y\)</span>와 비교한다.</strong> 둘의 차이 <span class="math inline">\(e = y - \hat{y}\)</span>가 <strong>오차(잔차)</strong>다.</li>
+<li><strong>모든 데이터 포인트</strong>에 대해 1~2를 반복해 오차를 모은다. 오차가 전체적으로 작을수록 “잘 나타내는” 파라미터다.</li>
+</ol>
+<p>후보 A(<span class="math inline">\(w_0 = 20000,\ w_1 = 5000\)</span>)에 사원 8명의 경력을 하나씩 넣어 보자.</p>
+<div class="cell" data-execution_count="5">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>sal_x <span class="op">=</span> [<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.2</span>, <span class="fl">5.1</span>, <span class="fl">6.7</span>, <span class="fl">8.3</span>, <span class="fl">9.5</span>, <span class="fl">13.0</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sal_y <span class="op">=</span> [<span class="dv">31000</span>, <span class="dv">39000</span>, <span class="dv">43000</span>, <span class="dv">49000</span>, <span class="dv">54000</span>, <span class="dv">67000</span>, <span class="dv">92000</span>, <span class="dv">129000</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>b0, b1 <span class="op">=</span> <span class="dv">20000</span>, <span class="dv">5000</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (x, y) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(sal_x, sal_y), start<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="op">=</span> b0 <span class="op">+</span> b1 <span class="op">*</span> x</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    e <span class="op">=</span> y <span class="op">-</span> y_hat</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">'사원'</span>: i,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">'경력 $x$'</span>: x,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'실제 연봉 $y$'</span>: <span class="ss">f'</span><span class="sc">{</span>y<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측 ŷ = 20000 + 5000x'</span>: <span class="ss">f'</span><span class="sc">{</span>y_hat<span class="sc">:,.0f}</span><span class="ss">'</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'오차 e = y − ŷ'</span>: <span class="ss">f'</span><span class="sc">{</span>e<span class="sc">:+,.0f}</span><span class="ss">'</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'e²'</span>: <span class="ss">f'</span><span class="sc">{</span>e<span class="op">*</span>e<span class="op">/</span><span class="fl">1e6</span><span class="sc">:,.1f}</span><span class="ss">M'</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>rows.append({<span class="st">'사원'</span>: <span class="st">'합'</span>, <span class="st">'경력 $x$'</span>: <span class="st">''</span>, <span class="st">'실제 연봉 $y$'</span>: <span class="st">''</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>             <span class="st">'예측 ŷ = 20000 + 5000x'</span>: <span class="st">''</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>             <span class="st">'오차 e = y − ŷ'</span>: <span class="ss">f'</span><span class="sc">{</span><span class="bu">sum</span>(y <span class="op">-</span> (b0 <span class="op">+</span> b1<span class="op">*</span>x) <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(sal_x, sal_y))<span class="sc">:+,.0f}</span><span class="ss">'</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>             <span class="st">'e²'</span>: <span class="ss">f'</span><span class="sc">{</span><span class="bu">sum</span>((y <span class="op">-</span> (b0 <span class="op">+</span> b1<span class="op">*</span>x))<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(sal_x, sal_y))<span class="op">/</span><span class="fl">1e6</span><span class="sc">:,.1f}</span><span class="ss">M'</span>})</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-fit-check" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="5">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fit-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;5: 후보 A (ŷ = 20000 + 5000x)를 사원 8명에게 적용한 결과
+</figcaption>
+<div aria-describedby="tbl-fit-check-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="5">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+사원
+</th>
+
+<th>
+경력 <span class="math inline">\(x\)</span>
+</th>
+
+<th>
+실제 연봉 <span class="math inline">\(y\)</span>
+</th>
+
+<th>
+예측 ŷ = 20000 + 5000x
+</th>
+
+<th>
+오차 e = y − ŷ
+</th>
+
+<th>
+e²
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+1
+</td>
+
+<td>
+1.5
+</td>
+
+<td>
+31,000
+</td>
+
+<td>
+27,500
+</td>
+
+<td>
++3,500
+</td>
+
+<td>
+12.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+2
+</td>
+
+<td>
+2.5
+</td>
+
+<td>
+39,000
+</td>
+
+<td>
+32,500
+</td>
+
+<td>
++6,500
+</td>
+
+<td>
+42.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+3
+</td>
+
+<td>
+4.2
+</td>
+
+<td>
+43,000
+</td>
+
+<td>
+41,000
+</td>
+
+<td>
++2,000
+</td>
+
+<td>
+4.0M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+4
+</td>
+
+<td>
+5.1
+</td>
+
+<td>
+49,000
+</td>
+
+<td>
+45,500
+</td>
+
+<td>
++3,500
+</td>
+
+<td>
+12.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+5
+</td>
+
+<td>
+6.7
+</td>
+
+<td>
+54,000
+</td>
+
+<td>
+53,500
+</td>
+
+<td>
++500
+</td>
+
+<td>
+0.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+6
+</td>
+
+<td>
+8.3
+</td>
+
+<td>
+67,000
+</td>
+
+<td>
+61,500
+</td>
+
+<td>
++5,500
+</td>
+
+<td>
+30.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+7
+</td>
+
+<td>
+9.5
+</td>
+
+<td>
+92,000
+</td>
+
+<td>
+67,500
+</td>
+
+<td>
++24,500
+</td>
+
+<td>
+600.2M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+8
+</td>
+
+<td>
+13.0
+</td>
+
+<td>
+129,000
+</td>
+
+<td>
+85,000
+</td>
+
+<td>
++44,000
+</td>
+
+<td>
+1,936.0M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+합
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+<td>
+</td>
+
+<td>
++90,000
+</td>
+
+<td>
+2,637.5M
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<ul>
+<li>사원 3(경력 4.2년): 예측 41,000 vs 실제 43,000. 거의 맞았다.</li>
+<li>사원 8(경력 13년): 예측 85,000 vs 실제 129,000. 44,000이나 모자란다.</li>
+</ul>
+<p>후보 A는 오차가 전부 <span class="math inline">\(+\)</span>다. 직선이 모든 점 <strong>아래</strong>에 있다는 뜻이니, 이 직선은 전체적으로 너무 낮다. 다른 파라미터에서는 오차에 <span class="math inline">\(+\)</span>와 <span class="math inline">\(-\)</span>가 섞이고(아래 보드에서 확인할 수 있다), 그대로 더하면 서로 상쇄되어 얼마나 틀렸는지 보이지 않는다. 그래서 부호를 없애기 위해 <strong>제곱해서</strong> 더한다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+잔차 제곱합 (Sum of Squared Errors)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[L = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\]</span></p>
+<p>파라미터가 데이터를 <strong>얼마나 못 맞히는지</strong>를 숫자 하나로 요약한 값. 작을수록 잘 맞는다. Ch03에서 <strong>손실함수(loss function)</strong>라는 이름으로 일반화한다.</p>
+</div>
+</div>
+<p>이제 세 후보를 같은 기준으로 비교할 수 있다.</p>
+<div class="cell" data-execution_count="6">
+<details class="code-fold">
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>sal_x <span class="op">=</span> [<span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">4.2</span>, <span class="fl">5.1</span>, <span class="fl">6.7</span>, <span class="fl">8.3</span>, <span class="fl">9.5</span>, <span class="fl">13.0</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sal_y <span class="op">=</span> [<span class="dv">31000</span>, <span class="dv">39000</span>, <span class="dv">43000</span>, <span class="dv">49000</span>, <span class="dv">54000</span>, <span class="dv">67000</span>, <span class="dv">92000</span>, <span class="dv">129000</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, b0, b1 <span class="kw">in</span> [(<span class="st">'A'</span>, <span class="dv">20000</span>, <span class="dv">5000</span>), (<span class="st">'B'</span>, <span class="dv">10000</span>, <span class="dv">8000</span>), (<span class="st">'C'</span>, <span class="dv">15000</span>, <span class="dv">7000</span>)]:</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    L <span class="op">=</span> <span class="bu">sum</span>((y <span class="op">-</span> (b0 <span class="op">+</span> b1 <span class="op">*</span> x)) <span class="op">**</span> <span class="dv">2</span> <span class="cf">for</span> x, y <span class="kw">in</span> <span class="bu">zip</span>(sal_x, sal_y))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    rows.append({<span class="st">'후보'</span>: name, <span class="st">'$w_0$'</span>: <span class="ss">f'</span><span class="sc">{</span>b0<span class="sc">:,}</span><span class="ss">'</span>, <span class="st">'$w_1$'</span>: <span class="ss">f'</span><span class="sc">{</span>b1<span class="sc">:,}</span><span class="ss">'</span>, <span class="st">'$L$'</span>: <span class="ss">f'</span><span class="sc">{</span>L<span class="op">/</span><span class="fl">1e6</span><span class="sc">:,.1f}</span><span class="ss">M'</span>})</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div id="tbl-fit-compare" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fit-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+표&nbsp;6: 세 후보의 잔차 제곱합 비교
+</figcaption>
+<div aria-describedby="tbl-fit-compare-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output cell-output-display" data-execution_count="6">
+<table class="dataframe table table-sm table-striped small">
+
+<thead>
+
+<tr>
+
+<th>
+후보
+</th>
+
+<th>
+<span class="math inline">\(w_0\)</span>
+</th>
+
+<th>
+<span class="math inline">\(w_1\)</span>
+</th>
+
+<th>
+<span class="math inline">\(L\)</span>
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+A
+</td>
+
+<td>
+20,000
+</td>
+
+<td>
+5,000
+</td>
+
+<td>
+2,637.5M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+B
+</td>
+
+<td>
+10,000
+</td>
+
+<td>
+8,000
+</td>
+
+<td>
+607.1M
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+C
+</td>
+
+<td>
+15,000
+</td>
+
+<td>
+7,000
+</td>
+
+<td>
+816.2M
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<p>B가 셋 중 가장 낫다. 그런데 B보다 더 나은 파라미터가 있을까? <span class="math inline">\((w_0, w_1)\)</span> 조합은 셀 수 없이 많고, 그 가운데 <span class="math inline">\(L\)</span>을 <strong>가장 작게</strong> 만드는 조합을 찾아야 한다.</p>
+</section>
 <section id="학습이란" class="level3">
 <h3 class="anchored" data-anchor-id="학습이란">학습이란</h3>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
@@ -1354,14 +1811,15 @@ $64,000
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>주어진 데이터를 <strong>가장 잘 나타내는 파라미터를 찾아나가는 과정</strong>.</p>
+<p>주어진 데이터에 대해 <strong>오차(<span class="math inline">\(L\)</span>)가 가장 작아지는 파라미터를 찾아나가는 과정</strong>.</p>
 <ul>
-<li>모형: <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>에 대한 수학적 관계</li>
-<li>학습: 그 관계를 가장 잘 표현하는 파라미터를 데이터로부터 결정</li>
+<li>모형: <span class="math inline">\(X\)</span>와 <span class="math inline">\(y\)</span>의 관계에 대한 가설 (뼈대)</li>
+<li>파라미터: 그 가설을 구체적인 식으로 만드는 숫자</li>
+<li>학습: 데이터의 <span class="math inline">\(x\)</span>를 넣어 나온 <span class="math inline">\(\hat{y}\)</span>가 실제 <span class="math inline">\(y\)</span>와 가장 가까워지도록, 파라미터를 <strong>데이터로부터</strong> 결정</li>
 </ul>
 </div>
 </div>
-<hr>
+<p>컴퓨터가 이 탐색을 어떻게 하는지(경사하강법)는 Ch03에서 다룬다. 지금은 직접 손으로 찾아보자.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1372,18 +1830,18 @@ $64,000
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><span class="math inline">\(w_0\)</span> (절편)과 <span class="math inline">\(w_1\)</span> (기울기)을 조정하면서, 데이터를 가장 잘 설명하는 직선을 찾아보세요. 잔차 제곱합(L)이 최소가 되는 파라미터가 최적입니다.</p>
+<p><span class="math inline">\(w_0\)</span> (절편)과 <span class="math inline">\(w_1\)</span> (기울기)을 움직이면 직선이 바뀌고, 각 사원의 예측값 <span class="math inline">\(\hat{y}\)</span>와 오차, 그리고 <span class="math inline">\(L\)</span>이 함께 바뀝니다. <span class="math inline">\(L\)</span>이 최소가 되는 파라미터가 최적입니다.</p>
 </div>
 </div>
-<div id="6e181633" class="cell" data-execution_count="5">
+<div id="c4f6ca96" class="cell" data-execution_count="7">
 <div class="cell-output cell-output-display">
 <script type="ojs-define">{"contents": [{"name": "sal_data", "value": [{"x": 1.5, "y": 31000.0}, {"x": 2.5, "y": 39000.0}, {"x": 4.2, "y": 43000.0}, {"x": 5.1, "y": 49000.0}, {"x": 6.7, "y": 54000.0}, {"x": 8.3, "y": 67000.0}, {"x": 9.5, "y": 92000.0}, {"x": 13.0, "y": 129000.0}]}, {"name": "sal_b0_star", "value": 10826.023391812863}, {"name": "sal_b1_star", "value": 8216.374269005848}, {"name": "sal_L_star", "value": 563596491.2280703}]}</script>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb5" data-startfrom="433" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 432;"><span id="cb5-433"><a href="#cb5-433" aria-hidden="true" tabindex="-1"></a>viewof sal_b0 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">20000</span><span class="op">,</span> <span class="dv">50000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">1000</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₀ (절편)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">20000</span> })</span>
-<span id="cb5-434"><a href="#cb5-434" aria-hidden="true" tabindex="-1"></a>viewof sal_b1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">15000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₁ (기울기)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">5000</span> })</span>
-<span id="cb5-435"><a href="#cb5-435" aria-hidden="true" tabindex="-1"></a>viewof sal_ans <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({ <span class="dt">label</span><span class="op">:</span> <span class="st">"✅ 정답 보기"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="kw">false</span> })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="509" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 508;"><span id="cb7-509"><a href="#cb7-509" aria-hidden="true" tabindex="-1"></a>viewof sal_b0 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="op">-</span><span class="dv">20000</span><span class="op">,</span> <span class="dv">50000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">1000</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₀ (절편)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">20000</span> })</span>
+<span id="cb7-510"><a href="#cb7-510" aria-hidden="true" tabindex="-1"></a>viewof sal_b1 <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">15000</span>]<span class="op">,</span> { <span class="dt">step</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"w₁ (기울기)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">5000</span> })</span>
+<span id="cb7-511"><a href="#cb7-511" aria-hidden="true" tabindex="-1"></a>viewof sal_ans <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">toggle</span>({ <span class="dt">label</span><span class="op">:</span> <span class="st">"✅ 정답 보기"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="kw">false</span> })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -1407,16 +1865,17 @@ $64,000
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb6" data-startfrom="439" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 438;"><span id="cb6-439"><a href="#cb6-439" aria-hidden="true" tabindex="-1"></a>sal_b0e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b0_star <span class="op">:</span> sal_b0</span>
-<span id="cb6-440"><a href="#cb6-440" aria-hidden="true" tabindex="-1"></a>sal_b1e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b1_star <span class="op">:</span> sal_b1</span>
-<span id="cb6-441"><a href="#cb6-441" aria-hidden="true" tabindex="-1"></a>sal_rows <span class="op">=</span> sal_data<span class="op">.</span><span class="fu">map</span>((d<span class="op">,</span> i) <span class="kw">=&gt;</span> {</span>
-<span id="cb6-442"><a href="#cb6-442" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yhat <span class="op">=</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> d<span class="op">.</span><span class="at">x</span></span>
-<span id="cb6-443"><a href="#cb6-443" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> e <span class="op">=</span> d<span class="op">.</span><span class="at">y</span> <span class="op">-</span> yhat</span>
-<span id="cb6-444"><a href="#cb6-444" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">i</span><span class="op">:</span> i<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">...</span>d<span class="op">,</span> yhat<span class="op">,</span> e<span class="op">,</span> <span class="dt">err2</span><span class="op">:</span> e <span class="op">*</span> e }</span>
-<span id="cb6-445"><a href="#cb6-445" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-446"><a href="#cb6-446" aria-hidden="true" tabindex="-1"></a>sal_L <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(sal_rows<span class="op">,</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">err2</span>)</span>
-<span id="cb6-447"><a href="#cb6-447" aria-hidden="true" tabindex="-1"></a>sal_pct <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">1</span> <span class="op">-</span> (sal_L <span class="op">-</span> sal_L_star) <span class="op">/</span> (sal_L_star <span class="op">*</span> <span class="dv">20</span>)))</span>
-<span id="cb6-448"><a href="#cb6-448" aria-hidden="true" tabindex="-1"></a>sal_clr <span class="op">=</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="fl">1.05</span> <span class="op">?</span> <span class="st">"#2E7D32"</span> <span class="op">:</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="dv">3</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#8C1515"</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="515" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 514;"><span id="cb8-515"><a href="#cb8-515" aria-hidden="true" tabindex="-1"></a>sal_b0e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b0_star <span class="op">:</span> sal_b0</span>
+<span id="cb8-516"><a href="#cb8-516" aria-hidden="true" tabindex="-1"></a>sal_b1e <span class="op">=</span> sal_ans <span class="op">?</span> sal_b1_star <span class="op">:</span> sal_b1</span>
+<span id="cb8-517"><a href="#cb8-517" aria-hidden="true" tabindex="-1"></a>sal_rows <span class="op">=</span> sal_data<span class="op">.</span><span class="fu">map</span>((d<span class="op">,</span> i) <span class="kw">=&gt;</span> {</span>
+<span id="cb8-518"><a href="#cb8-518" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> yhat <span class="op">=</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> d<span class="op">.</span><span class="at">x</span></span>
+<span id="cb8-519"><a href="#cb8-519" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> e <span class="op">=</span> d<span class="op">.</span><span class="at">y</span> <span class="op">-</span> yhat</span>
+<span id="cb8-520"><a href="#cb8-520" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> { <span class="dt">i</span><span class="op">:</span> i<span class="op">+</span><span class="dv">1</span><span class="op">,</span> <span class="op">...</span>d<span class="op">,</span> yhat<span class="op">,</span> e<span class="op">,</span> <span class="dt">err2</span><span class="op">:</span> e <span class="op">*</span> e }</span>
+<span id="cb8-521"><a href="#cb8-521" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-522"><a href="#cb8-522" aria-hidden="true" tabindex="-1"></a>sal_L <span class="op">=</span> d3<span class="op">.</span><span class="fu">sum</span>(sal_rows<span class="op">,</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">err2</span>)</span>
+<span id="cb8-523"><a href="#cb8-523" aria-hidden="true" tabindex="-1"></a>sal_pct <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span><span class="op">,</span> <span class="dv">1</span> <span class="op">-</span> (sal_L <span class="op">-</span> sal_L_star) <span class="op">/</span> (sal_L_star <span class="op">*</span> <span class="dv">20</span>)))</span>
+<span id="cb8-524"><a href="#cb8-524" aria-hidden="true" tabindex="-1"></a>sal_clr <span class="op">=</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="fl">1.05</span> <span class="op">?</span> <span class="st">"#2E7D32"</span> <span class="op">:</span> sal_L <span class="op">&lt;</span> sal_L_star <span class="op">*</span> <span class="dv">3</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#8C1515"</span></span>
+<span id="cb8-525"><a href="#cb8-525" aria-hidden="true" tabindex="-1"></a>sal_line <span class="op">=</span> [{ <span class="dt">x</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e }<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="dv">15</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> <span class="dv">15</span> }]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-2-1" data-nodetype="declaration">
@@ -1459,64 +1918,71 @@ $64,000
 </div>
 </div>
 </div>
+<div class="cell-output cell-output-display">
+<div>
+<div id="ojs-cell-2-7" data-nodetype="declaration">
+
+</div>
+</div>
+</div>
 </div>
 <div class="columns">
 <div class="column" style="width:40%;">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb7" data-startfrom="453" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 452;"><span id="cb7-453"><a href="#cb7-453" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="font-size:0.83em;font-family:'Pretendard',sans-serif;"&gt;</span></span>
-<span id="cb7-454"><a href="#cb7-454" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-455"><a href="#cb7-455" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.42em 0.8em;background:#FFF8E1;</span></span>
-<span id="cb7-456"><a href="#cb7-456" aria-hidden="true" tabindex="-1"></a><span class="vs">    border-left:3px solid #D4A017;border-radius:4px;margin-bottom:0.7em;line-height:1.7;"&gt;</span></span>
-<span id="cb7-457"><a href="#cb7-457" aria-hidden="true" tabindex="-1"></a><span class="vs">    ŷ = &lt;strong&gt;</span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; + &lt;strong&gt;</span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; · x</span></span>
-<span id="cb7-458"><a href="#cb7-458" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
-<span id="cb7-459"><a href="#cb7-459" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-460"><a href="#cb7-460" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width:100%;border-collapse:collapse;"&gt;</span></span>
-<span id="cb7-461"><a href="#cb7-461" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;thead&gt;&lt;tr&gt;</span></span>
-<span id="cb7-462"><a href="#cb7-462" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>[<span class="st">"i"</span><span class="op">,</span><span class="st">"xᵢ"</span><span class="op">,</span><span class="st">"yᵢ"</span><span class="op">,</span><span class="st">"ŷᵢ"</span><span class="op">,</span><span class="st">"eᵢ²"</span>]<span class="op">.</span><span class="fu">map</span>(h <span class="kw">=&gt;</span></span>
-<span id="cb7-463"><a href="#cb7-463" aria-hidden="true" tabindex="-1"></a>        <span class="vs">`&lt;th style="background:#8C1515;color:white;padding:0.3em 0.4em;text-align:center;font-size:0.9em;"&gt;</span><span class="sc">${</span>h<span class="sc">}</span><span class="vs">&lt;/th&gt;`</span></span>
-<span id="cb7-464"><a href="#cb7-464" aria-hidden="true" tabindex="-1"></a>      )<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
-<span id="cb7-465"><a href="#cb7-465" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;&lt;/thead&gt;</span></span>
-<span id="cb7-466"><a href="#cb7-466" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tbody&gt;</span></span>
-<span id="cb7-467"><a href="#cb7-467" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_rows<span class="op">.</span><span class="fu">map</span>((r<span class="op">,</span> idx) <span class="kw">=&gt;</span> <span class="vs">`</span></span>
-<span id="cb7-468"><a href="#cb7-468" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;tr style="background:</span><span class="sc">${</span>idx<span class="op">%</span><span class="dv">2</span><span class="op">===</span><span class="dv">0</span><span class="op">?</span><span class="st">'white'</span><span class="op">:</span><span class="st">'#F9FAFB'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
-<span id="cb7-469"><a href="#cb7-469" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">i</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb7-470"><a href="#cb7-470" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb7-471"><a href="#cb7-471" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">y</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb7-472"><a href="#cb7-472" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
-<span id="cb7-473"><a href="#cb7-473" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:#1F3F7A;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">yhat</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
-<span id="cb7-474"><a href="#cb7-474" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
-<span id="cb7-475"><a href="#cb7-475" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:</span><span class="sc">${</span>r<span class="op">.</span><span class="at">err2</span><span class="op">&gt;</span><span class="fl">1e8</span><span class="op">?</span><span class="st">'#E65100'</span><span class="op">:</span><span class="st">'#333'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(r<span class="op">.</span><span class="at">err2</span><span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
-<span id="cb7-476"><a href="#cb7-476" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/tr&gt;`</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
-<span id="cb7-477"><a href="#cb7-477" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;tr style="background:#FFF8E1;"&gt;</span></span>
-<span id="cb7-478"><a href="#cb7-478" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td colspan="4" style="padding:0.32em 0.4em;text-align:right;font-weight:700;</span></span>
-<span id="cb7-479"><a href="#cb7-479" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;"&gt;L =&lt;/td&gt;</span></span>
-<span id="cb7-480"><a href="#cb7-480" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td style="padding:0.32em 0.4em;text-align:center;font-size:1.05em;font-weight:700;</span></span>
-<span id="cb7-481"><a href="#cb7-481" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;color:</span><span class="sc">${</span>sal_clr<span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(sal_L<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
-<span id="cb7-482"><a href="#cb7-482" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/tr&gt;</span></span>
-<span id="cb7-483"><a href="#cb7-483" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tbody&gt;</span></span>
-<span id="cb7-484"><a href="#cb7-484" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
-<span id="cb7-485"><a href="#cb7-485" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-486"><a href="#cb7-486" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.55em;"&gt;</span></span>
-<span id="cb7-487"><a href="#cb7-487" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="height:7px;background:#EEE;border-radius:4px;overflow:hidden;"&gt;</span></span>
-<span id="cb7-488"><a href="#cb7-488" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="height:100%;width:</span><span class="sc">${</span>(sal_pct<span class="op">*</span><span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%;</span></span>
-<span id="cb7-489"><a href="#cb7-489" aria-hidden="true" tabindex="-1"></a><span class="vs">        background:</span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.9</span><span class="op">?</span><span class="st">'#2E7D32'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.6</span><span class="op">?</span><span class="st">'#D4A017'</span><span class="op">:</span><span class="st">'#8C1515'</span><span class="sc">}</span><span class="vs">;</span></span>
-<span id="cb7-490"><a href="#cb7-490" aria-hidden="true" tabindex="-1"></a><span class="vs">        transition:width 0.2s;border-radius:4px;"&gt;&lt;/div&gt;</span></span>
-<span id="cb7-491"><a href="#cb7-491" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
-<span id="cb7-492"><a href="#cb7-492" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.74em;color:#666;margin-top:0.15em;text-align:center;"&gt;</span></span>
-<span id="cb7-493"><a href="#cb7-493" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.98</span><span class="op">?</span><span class="st">'최솟값 도달!'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.7</span><span class="op">?</span><span class="st">'거의 다 왔어요!'</span><span class="op">:</span><span class="st">'슬라이더로 L을 최소화해 보세요'</span><span class="sc">}</span></span>
-<span id="cb7-494"><a href="#cb7-494" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
-<span id="cb7-495"><a href="#cb7-495" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
-<span id="cb7-496"><a href="#cb7-496" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-497"><a href="#cb7-497" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>sal_ans <span class="op">?</span> <span class="vs">`</span></span>
-<span id="cb7-498"><a href="#cb7-498" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.6em;padding:0.45em 0.8em;background:#E8F5E9;</span></span>
-<span id="cb7-499"><a href="#cb7-499" aria-hidden="true" tabindex="-1"></a><span class="vs">    border:1.5px solid #2E7D32;border-radius:5px;color:#2E7D32;line-height:1.8;"&gt;</span></span>
-<span id="cb7-500"><a href="#cb7-500" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-weight:700;margin-bottom:0.1em;"&gt;최적 파라미터&lt;/div&gt;</span></span>
-<span id="cb7-501"><a href="#cb7-501" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₀* = &lt;strong&gt;</span><span class="sc">${</span>sal_b0_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
-<span id="cb7-502"><a href="#cb7-502" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₁* = &lt;strong&gt;</span><span class="sc">${</span>sal_b1_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
-<span id="cb7-503"><a href="#cb7-503" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;L*  = &lt;strong&gt;</span><span class="sc">${</span>(sal_L_star<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/strong&gt;&lt;/div&gt;</span></span>
-<span id="cb7-504"><a href="#cb7-504" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;`</span> <span class="op">:</span> <span class="st">''</span><span class="sc">}</span></span>
-<span id="cb7-505"><a href="#cb7-505" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-506"><a href="#cb7-506" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb9" data-startfrom="530" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 529;"><span id="cb9-530"><a href="#cb9-530" aria-hidden="true" tabindex="-1"></a><span class="fu">html</span><span class="vs">`&lt;div style="font-size:0.83em;font-family:'Pretendard',sans-serif;"&gt;</span></span>
+<span id="cb9-531"><a href="#cb9-531" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-532"><a href="#cb9-532" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="padding:0.42em 0.8em;background:#FFF8E1;</span></span>
+<span id="cb9-533"><a href="#cb9-533" aria-hidden="true" tabindex="-1"></a><span class="vs">    border-left:3px solid #D4A017;border-radius:4px;margin-bottom:0.7em;line-height:1.7;"&gt;</span></span>
+<span id="cb9-534"><a href="#cb9-534" aria-hidden="true" tabindex="-1"></a><span class="vs">    ŷ = &lt;strong&gt;</span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; + &lt;strong&gt;</span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt; · x</span></span>
+<span id="cb9-535"><a href="#cb9-535" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb9-536"><a href="#cb9-536" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-537"><a href="#cb9-537" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;table style="width:100%;border-collapse:collapse;"&gt;</span></span>
+<span id="cb9-538"><a href="#cb9-538" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;thead&gt;&lt;tr&gt;</span></span>
+<span id="cb9-539"><a href="#cb9-539" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>[<span class="st">"i"</span><span class="op">,</span><span class="st">"xᵢ"</span><span class="op">,</span><span class="st">"yᵢ"</span><span class="op">,</span><span class="st">"ŷᵢ"</span><span class="op">,</span><span class="st">"eᵢ²"</span>]<span class="op">.</span><span class="fu">map</span>(h <span class="kw">=&gt;</span></span>
+<span id="cb9-540"><a href="#cb9-540" aria-hidden="true" tabindex="-1"></a>        <span class="vs">`&lt;th style="background:#8C1515;color:white;padding:0.3em 0.4em;text-align:center;font-size:0.9em;"&gt;</span><span class="sc">${</span>h<span class="sc">}</span><span class="vs">&lt;/th&gt;`</span></span>
+<span id="cb9-541"><a href="#cb9-541" aria-hidden="true" tabindex="-1"></a>      )<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb9-542"><a href="#cb9-542" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tr&gt;&lt;/thead&gt;</span></span>
+<span id="cb9-543"><a href="#cb9-543" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;tbody&gt;</span></span>
+<span id="cb9-544"><a href="#cb9-544" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_rows<span class="op">.</span><span class="fu">map</span>((r<span class="op">,</span> idx) <span class="kw">=&gt;</span> <span class="vs">`</span></span>
+<span id="cb9-545"><a href="#cb9-545" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;tr style="background:</span><span class="sc">${</span>idx<span class="op">%</span><span class="dv">2</span><span class="op">===</span><span class="dv">0</span><span class="op">?</span><span class="st">'white'</span><span class="op">:</span><span class="st">'#F9FAFB'</span><span class="sc">}</span><span class="vs">;"&gt;</span></span>
+<span id="cb9-546"><a href="#cb9-546" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">i</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb9-547"><a href="#cb9-547" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">x</span><span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb9-548"><a href="#cb9-548" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">y</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb9-549"><a href="#cb9-549" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
+<span id="cb9-550"><a href="#cb9-550" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:#1F3F7A;"&gt;</span><span class="sc">${</span>r<span class="op">.</span><span class="at">yhat</span><span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/td&gt;</span></span>
+<span id="cb9-551"><a href="#cb9-551" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;td style="padding:0.22em 0.4em;text-align:center;border-bottom:1px solid #E5E7EB;</span></span>
+<span id="cb9-552"><a href="#cb9-552" aria-hidden="true" tabindex="-1"></a><span class="vs">            font-weight:600;color:</span><span class="sc">${</span>r<span class="op">.</span><span class="at">err2</span><span class="op">&gt;</span><span class="fl">1e8</span><span class="op">?</span><span class="st">'#E65100'</span><span class="op">:</span><span class="st">'#333'</span><span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(r<span class="op">.</span><span class="at">err2</span><span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
+<span id="cb9-553"><a href="#cb9-553" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/tr&gt;`</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="sc">}</span></span>
+<span id="cb9-554"><a href="#cb9-554" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;tr style="background:#FFF8E1;"&gt;</span></span>
+<span id="cb9-555"><a href="#cb9-555" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td colspan="4" style="padding:0.32em 0.4em;text-align:right;font-weight:700;</span></span>
+<span id="cb9-556"><a href="#cb9-556" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;"&gt;L =&lt;/td&gt;</span></span>
+<span id="cb9-557"><a href="#cb9-557" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;td style="padding:0.32em 0.4em;text-align:center;font-size:1.05em;font-weight:700;</span></span>
+<span id="cb9-558"><a href="#cb9-558" aria-hidden="true" tabindex="-1"></a><span class="vs">          border-top:2px solid #D4A017;color:</span><span class="sc">${</span>sal_clr<span class="sc">}</span><span class="vs">;"&gt;</span><span class="sc">${</span>(sal_L<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/td&gt;</span></span>
+<span id="cb9-559"><a href="#cb9-559" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;/tr&gt;</span></span>
+<span id="cb9-560"><a href="#cb9-560" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/tbody&gt;</span></span>
+<span id="cb9-561"><a href="#cb9-561" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/table&gt;</span></span>
+<span id="cb9-562"><a href="#cb9-562" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-563"><a href="#cb9-563" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.55em;"&gt;</span></span>
+<span id="cb9-564"><a href="#cb9-564" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="height:7px;background:#EEE;border-radius:4px;overflow:hidden;"&gt;</span></span>
+<span id="cb9-565"><a href="#cb9-565" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;div style="height:100%;width:</span><span class="sc">${</span>(sal_pct<span class="op">*</span><span class="dv">100</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">1</span>)<span class="sc">}</span><span class="vs">%;</span></span>
+<span id="cb9-566"><a href="#cb9-566" aria-hidden="true" tabindex="-1"></a><span class="vs">        background:</span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.9</span><span class="op">?</span><span class="st">'#2E7D32'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.6</span><span class="op">?</span><span class="st">'#D4A017'</span><span class="op">:</span><span class="st">'#8C1515'</span><span class="sc">}</span><span class="vs">;</span></span>
+<span id="cb9-567"><a href="#cb9-567" aria-hidden="true" tabindex="-1"></a><span class="vs">        transition:width 0.2s;border-radius:4px;"&gt;&lt;/div&gt;</span></span>
+<span id="cb9-568"><a href="#cb9-568" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb9-569"><a href="#cb9-569" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-size:0.74em;color:#666;margin-top:0.15em;text-align:center;"&gt;</span></span>
+<span id="cb9-570"><a href="#cb9-570" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>sal_pct<span class="op">&gt;</span><span class="fl">0.98</span><span class="op">?</span><span class="st">'최솟값 도달!'</span><span class="op">:</span>sal_pct<span class="op">&gt;</span><span class="fl">0.7</span><span class="op">?</span><span class="st">'거의 다 왔어요!'</span><span class="op">:</span><span class="st">'슬라이더로 L을 최소화해 보세요'</span><span class="sc">}</span></span>
+<span id="cb9-571"><a href="#cb9-571" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/div&gt;</span></span>
+<span id="cb9-572"><a href="#cb9-572" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;</span></span>
+<span id="cb9-573"><a href="#cb9-573" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-574"><a href="#cb9-574" aria-hidden="true" tabindex="-1"></a><span class="vs">  </span><span class="sc">${</span>sal_ans <span class="op">?</span> <span class="vs">`</span></span>
+<span id="cb9-575"><a href="#cb9-575" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;div style="margin-top:0.6em;padding:0.45em 0.8em;background:#E8F5E9;</span></span>
+<span id="cb9-576"><a href="#cb9-576" aria-hidden="true" tabindex="-1"></a><span class="vs">    border:1.5px solid #2E7D32;border-radius:5px;color:#2E7D32;line-height:1.8;"&gt;</span></span>
+<span id="cb9-577"><a href="#cb9-577" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div style="font-weight:700;margin-bottom:0.1em;"&gt;최적 파라미터&lt;/div&gt;</span></span>
+<span id="cb9-578"><a href="#cb9-578" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₀* = &lt;strong&gt;</span><span class="sc">${</span>sal_b0_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb9-579"><a href="#cb9-579" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;w₁* = &lt;strong&gt;</span><span class="sc">${</span>sal_b1_star<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb9-580"><a href="#cb9-580" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;div&gt;L*  = &lt;strong&gt;</span><span class="sc">${</span>(sal_L_star<span class="op">/</span><span class="fl">1e6</span>)<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">M&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb9-581"><a href="#cb9-581" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/div&gt;`</span> <span class="op">:</span> <span class="st">''</span><span class="sc">}</span></span>
+<span id="cb9-582"><a href="#cb9-582" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-583"><a href="#cb9-583" aria-hidden="true" tabindex="-1"></a><span class="vs">&lt;/div&gt;`</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="expression">
 
@@ -1525,38 +1991,31 @@ $64,000
 </div>
 </div><div class="column" style="width:60%;">
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb8" data-startfrom="511" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 510;"><span id="cb8-511"><a href="#cb8-511" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb8-512"><a href="#cb8-512" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> xLo <span class="op">=</span> <span class="dv">0</span><span class="op">,</span> xHi <span class="op">=</span> <span class="dv">15</span></span>
-<span id="cb8-513"><a href="#cb8-513" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb8-514"><a href="#cb8-514" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">400</span><span class="op">,</span></span>
-<span id="cb8-515"><a href="#cb8-515" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
-<span id="cb8-516"><a href="#cb8-516" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [xLo<span class="op">,</span> xHi]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb8-517"><a href="#cb8-517" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">160000</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb8-518"><a href="#cb8-518" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb8-519"><a href="#cb8-519" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 잔차 점선</span></span>
-<span id="cb8-520"><a href="#cb8-520" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">ruleX</span>(sal_rows<span class="op">,</span> {</span>
-<span id="cb8-521"><a href="#cb8-521" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y1</span><span class="op">:</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">yhat</span><span class="op">,</span> <span class="dt">y2</span><span class="op">:</span> r <span class="kw">=&gt;</span> r<span class="op">.</span><span class="at">y</span><span class="op">,</span></span>
-<span id="cb8-522"><a href="#cb8-522" aria-hidden="true" tabindex="-1"></a>        <span class="dt">stroke</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">&gt;</span> <span class="dv">10000</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#BDBDBD"</span><span class="op">,</span></span>
-<span id="cb8-523"><a href="#cb8-523" aria-hidden="true" tabindex="-1"></a>        <span class="dt">strokeWidth</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">1</span> <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">/</span> <span class="dv">20000</span>)<span class="op">,</span></span>
-<span id="cb8-524"><a href="#cb8-524" aria-hidden="true" tabindex="-1"></a>        <span class="dt">strokeDasharray</span><span class="op">:</span> <span class="st">"5,3"</span></span>
-<span id="cb8-525"><a href="#cb8-525" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
-<span id="cb8-526"><a href="#cb8-526" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 현재 회귀선</span></span>
-<span id="cb8-527"><a href="#cb8-527" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">line</span>(</span>
-<span id="cb8-528"><a href="#cb8-528" aria-hidden="true" tabindex="-1"></a>        [{ <span class="dt">x</span><span class="op">:</span> xLo<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> xLo }<span class="op">,</span></span>
-<span id="cb8-529"><a href="#cb8-529" aria-hidden="true" tabindex="-1"></a>         { <span class="dt">x</span><span class="op">:</span> xHi<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> sal_b0e <span class="op">+</span> sal_b1e <span class="op">*</span> xHi }]<span class="op">,</span></span>
-<span id="cb8-530"><a href="#cb8-530" aria-hidden="true" tabindex="-1"></a>        { <span class="dt">stroke</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> }</span>
-<span id="cb8-531"><a href="#cb8-531" aria-hidden="true" tabindex="-1"></a>      )<span class="op">,</span></span>
-<span id="cb8-532"><a href="#cb8-532" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 회귀식 라벨</span></span>
-<span id="cb8-533"><a href="#cb8-533" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
-<span id="cb8-534"><a href="#cb8-534" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="vs">`ŷ = </span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">·x`</span><span class="op">,</span></span>
-<span id="cb8-535"><a href="#cb8-535" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span></span>
-<span id="cb8-536"><a href="#cb8-536" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">11</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">8</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
-<span id="cb8-537"><a href="#cb8-537" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
-<span id="cb8-538"><a href="#cb8-538" aria-hidden="true" tabindex="-1"></a>      <span class="co">// 데이터 포인트</span></span>
-<span id="cb8-539"><a href="#cb8-539" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(sal_rows<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.9</span> })</span>
-<span id="cb8-540"><a href="#cb8-540" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb8-541"><a href="#cb8-541" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb8-542"><a href="#cb8-542" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb10" data-startfrom="588" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 587;"><span id="cb10-588"><a href="#cb10-588" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb10-589"><a href="#cb10-589" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">500</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">400</span><span class="op">,</span> <span class="dt">marginLeft</span><span class="op">:</span> <span class="dv">70</span><span class="op">,</span></span>
+<span id="cb10-590"><a href="#cb10-590" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb10-591"><a href="#cb10-591" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">15</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb10-592"><a href="#cb10-592" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="op">-</span><span class="dv">20000</span><span class="op">,</span> <span class="dv">160000</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">tickFormat</span><span class="op">:</span> d <span class="kw">=&gt;</span> (d<span class="op">/</span><span class="dv">1000</span>) <span class="op">+</span> <span class="st">"k"</span> }<span class="op">,</span></span>
+<span id="cb10-593"><a href="#cb10-593" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb10-594"><a href="#cb10-594" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleY</span>([<span class="dv">0</span>]<span class="op">,</span> { <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#999"</span> })<span class="op">,</span></span>
+<span id="cb10-595"><a href="#cb10-595" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 잔차 점선: 실제 y 와 예측 ŷ 사이</span></span>
+<span id="cb10-596"><a href="#cb10-596" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">ruleX</span>(sal_rows<span class="op">,</span> {</span>
+<span id="cb10-597"><a href="#cb10-597" aria-hidden="true" tabindex="-1"></a>      <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y1</span><span class="op">:</span> <span class="st">"yhat"</span><span class="op">,</span> <span class="dt">y2</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span></span>
+<span id="cb10-598"><a href="#cb10-598" aria-hidden="true" tabindex="-1"></a>      <span class="dt">stroke</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">&gt;</span> <span class="dv">10000</span> <span class="op">?</span> <span class="st">"#E65100"</span> <span class="op">:</span> <span class="st">"#BDBDBD"</span><span class="op">,</span></span>
+<span id="cb10-599"><a href="#cb10-599" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeWidth</span><span class="op">:</span> r <span class="kw">=&gt;</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">1</span> <span class="op">+</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(r<span class="op">.</span><span class="at">e</span>) <span class="op">/</span> <span class="dv">20000</span>)<span class="op">,</span></span>
+<span id="cb10-600"><a href="#cb10-600" aria-hidden="true" tabindex="-1"></a>      <span class="dt">strokeDasharray</span><span class="op">:</span> <span class="st">"5,3"</span></span>
+<span id="cb10-601"><a href="#cb10-601" aria-hidden="true" tabindex="-1"></a>    })<span class="op">,</span></span>
+<span id="cb10-602"><a href="#cb10-602" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 현재 파라미터의 직선 ŷ = w₀ + w₁·x</span></span>
+<span id="cb10-603"><a href="#cb10-603" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(sal_line<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> })<span class="op">,</span></span>
+<span id="cb10-604"><a href="#cb10-604" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 예측값 ŷᵢ (직선 위의 점)</span></span>
+<span id="cb10-605"><a href="#cb10-605" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(sal_rows<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"yhat"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"white"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">1.5</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">4</span> })<span class="op">,</span></span>
+<span id="cb10-606"><a href="#cb10-606" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 실제 데이터 포인트 (x, y)</span></span>
+<span id="cb10-607"><a href="#cb10-607" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">dot</span>(sal_rows<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.9</span> })<span class="op">,</span></span>
+<span id="cb10-608"><a href="#cb10-608" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>([<span class="vs">`ŷ = </span><span class="sc">${</span>sal_b0e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>sal_b1e<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">0</span>)<span class="sc">}</span><span class="vs">·x`</span>]<span class="op">,</span> {</span>
+<span id="cb10-609"><a href="#cb10-609" aria-hidden="true" tabindex="-1"></a>      <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> sal_clr<span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">11</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">8</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
+<span id="cb10-610"><a href="#cb10-610" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb10-611"><a href="#cb10-611" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb10-612"><a href="#cb10-612" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="expression">
 
@@ -1566,8 +2025,52 @@ $64,000
 </div>
 </div>
 <blockquote class="blockquote">
-<p><strong>직선으로 충분한가?</strong> 슬라이더를 아무리 조절해도 이 데이터의 모든 점을 지나는 직선은 없다. 실제로 이 사원 데이터는 경력이 길어질수록 연봉이 <strong>가팔라지는</strong> 모양이라, 직선보다 곡선이 더 잘 맞는다. 그렇다면 2차식, 3차식으로 차수를 계속 올리면 항상 좋아질까? — 이 질문의 답은 Ch04의 <strong>과적합</strong>에서 만난다. (차수는 사람이 정하는 <strong>하이퍼파라미터</strong>였음을 기억하라.)</p>
+<p><strong>직선으로 충분한가?</strong> 슬라이더를 아무리 조절해도 이 데이터의 모든 점을 지나는 직선은 없다. 실제로 이 사원 데이터는 경력이 길어질수록 연봉이 <strong>가팔라지는</strong> 모양이라, 직선보다 곡선이 더 잘 맞는다. 그렇다면 2차식, 3차식으로 차수를 계속 올리면 항상 좋아질까? — 이 질문의 답은 Ch04의 <strong>과적합</strong>에서 만난다.</p>
 </blockquote>
+</section>
+<section id="학습이-정하지-않는-것-하이퍼파라미터" class="level3">
+<h3 class="anchored" data-anchor-id="학습이-정하지-않는-것-하이퍼파라미터">학습이 정하지 않는 것: 하이퍼파라미터</h3>
+<p>방금 보드에서 우리가 찾은 것은 <span class="math inline">\(w_0\)</span>와 <span class="math inline">\(w_1\)</span>이었다. 그런데 “직선으로 하자”, 즉 <strong>차수를 1로 하자</strong>는 결정은 누가 했는가? 데이터가 아니라 <strong>우리</strong>가 했다. 학습은 이미 정해진 모형 안에서 파라미터를 찾을 뿐, 모형의 형태 자체를 바꾸지는 않는다. 이렇게 학습이 시작되기 전에 사람이 정해 두어야 하는 값이 따로 있다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+하이퍼파라미터 (Hyperparameter)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>학습으로 정해지지 <strong>않고</strong>, 학습을 시작하기 전에 사람이 <strong>미리 정해 주어야</strong> 하는 값.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 31%">
+<col style="width: 31%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;">누가 정하는가</th>
+<th>예</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><strong>파라미터</strong></td>
+<td style="text-align: center;">데이터가 정한다 (= 학습)</td>
+<td>절편 <span class="math inline">\(w_0\)</span>, 기울기 <span class="math inline">\(w_1\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><strong>하이퍼파라미터</strong></td>
+<td style="text-align: center;">사람이 정한다</td>
+<td>다항식의 <strong>차수</strong>, 은닉층의 <strong>노드 수</strong>(Ch02), <strong>학습률</strong>·<strong>배치 크기</strong>(Ch04)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><span class="math inline">\(y = w_0 + w_1 x + w_2 x^2\)</span>에서 “2차식으로 하자”는 <strong>사람의 결정</strong>(하이퍼파라미터)이고, <span class="math inline">\(w_0, w_1, w_2\)</span>의 값은 <strong>데이터가 정한다</strong>(파라미터). 하이퍼파라미터를 잘못 고르면 학습을 아무리 잘해도 좋은 모형이 나오지 않는다 — Ch04에서 확인한다.</p>
 <hr>
 </section>
 </section>
@@ -1589,29 +2092,29 @@ $64,000
 </div>
 </div>
 <p>학습된 모형이 <span class="math inline">\(y = 15000 + 8000x\)</span>라면:</p>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x_new <span class="kw">in</span> [<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>]:</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> <span class="dv">15000</span> <span class="op">+</span> <span class="dv">8000</span> <span class="op">*</span> x_new</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'경력 (년)'</span>: x_new,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측식'</span>: <span class="ss">f'15000 + 8000 × </span><span class="sc">{</span>x_new<span class="sc">}</span><span class="ss">'</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측 연봉 ($)'</span>: <span class="ss">f'</span><span class="sc">{</span>y_pred<span class="sc">:,}</span><span class="ss">'</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x_new <span class="kw">in</span> [<span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">10</span>]:</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> <span class="dv">15000</span> <span class="op">+</span> <span class="dv">8000</span> <span class="op">*</span> x_new</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    rows.append({</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'경력 (년)'</span>: x_new,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측식'</span>: <span class="ss">f'15000 + 8000 × </span><span class="sc">{</span>x_new<span class="sc">}</span><span class="ss">'</span>,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'예측 연봉 ($)'</span>: <span class="ss">f'</span><span class="sc">{</span>y_pred<span class="sc">:,}</span><span class="ss">'</span>,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>pd.DataFrame(rows).to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>, escape<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div id="tbl-prediction-example" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="6">
+<div id="tbl-prediction-example" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="8">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-prediction-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-표&nbsp;5: 학습된 모형을 이용한 예측
+표&nbsp;7: 학습된 모형을 이용한 예측
 </figcaption>
 <div aria-describedby="tbl-prediction-example-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="6">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <table class="dataframe table table-sm table-striped small">
 
 <thead>
@@ -1873,27 +2376,27 @@ $64,000
 </section>
 <section id="수치-예시-변수-유형-비교" class="level3">
 <h3 class="anchored" data-anchor-id="수치-예시-변수-유형-비교">수치 예시: 변수 유형 비교</h3>
-<div class="cell" data-execution_count="7">
+<div class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">''</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'나이'</span>: [<span class="dv">24</span>, <span class="dv">23</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">27</span>],</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'성별'</span>: [<span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'여'</span>],</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'직업'</span>: [<span class="st">'군인'</span>, <span class="st">'디자이너'</span>, <span class="st">'디자이너'</span>, <span class="st">'회사원'</span>, <span class="st">'요리사'</span>],</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'브랜드'</span>: [<span class="st">'삼성'</span>, <span class="st">'애플'</span>, <span class="st">'애플'</span>, <span class="st">'삼성'</span>, <span class="st">'삼성'</span>],</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">''</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>],</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'나이'</span>: [<span class="dv">24</span>, <span class="dv">23</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">27</span>],</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'성별'</span>: [<span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'남'</span>, <span class="st">'여'</span>, <span class="st">'여'</span>],</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'직업'</span>: [<span class="st">'군인'</span>, <span class="st">'디자이너'</span>, <span class="st">'디자이너'</span>, <span class="st">'회사원'</span>, <span class="st">'요리사'</span>],</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'브랜드'</span>: [<span class="st">'삼성'</span>, <span class="st">'애플'</span>, <span class="st">'애플'</span>, <span class="st">'삼성'</span>, <span class="st">'삼성'</span>],</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>df.to_html(index<span class="op">=</span><span class="va">False</span>, border<span class="op">=</span><span class="dv">0</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div id="tbl-variable-types" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="7">
+<div id="tbl-variable-types" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-execution_count="9">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-variable-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-표&nbsp;6: 숫자형 변수와 범주형 변수 비교
+표&nbsp;8: 숫자형 변수와 범주형 변수 비교
 </figcaption>
 <div aria-describedby="tbl-variable-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="9">
 <table class="dataframe table table-sm table-striped small">
 
 <thead>
@@ -2113,17 +2616,17 @@ $64,000
 <p>토글을 바꾸면서 같은 데이터 구조에서 종속변수의 유형에 따라 문제가 어떻게 달라지는지 관찰하세요.</p>
 </div>
 </div>
-<div id="4a30be8c" class="cell" data-execution_count="8">
+<div id="d91612fe" class="cell" data-execution_count="10">
 <div class="cell-output cell-output-display">
 <script type="ojs-define">{"contents": [{"name": "rc_reg_data", "value": [{"x": 5.49448142616835, "y": 53200.88352223528}, {"x": 12.408571676918994, "y": 116147.06350708033}, {"x": 9.783927301736862, "y": 90268.22496430087}, {"x": 8.18390181036444, "y": 79012.74573394914}, {"x": 2.872223685309238, "y": 34969.25642132692}, {"x": 2.8719342440344318, "y": 47236.864874820145}, {"x": 1.6970033460183935, "y": 28508.54064445748}, {"x": 11.394113749299223, "y": 100864.35534961427}, {"x": 8.213380140918506, "y": 84819.76568786398}, {"x": 9.496870933552547, "y": 84870.74921856527}, {"x": 1.2470139315496294, "y": 26020.42942742081}, {"x": 12.638918225943932, "y": 106312.99518815259}, {"x": 10.98931168960506, "y": 96273.56327234833}, {"x": 3.548069328139314, "y": 44368.86080446013}, {"x": 3.1818996064852074, "y": 44147.52975185871}, {"x": 3.200854118241206, "y": 41463.674351879505}, {"x": 4.650906915514453, "y": 51629.013912174414}, {"x": 7.297077179586854, "y": 71871.09895874838}, {"x": 6.18334022370539, "y": 57074.111837805984}, {"x": 4.4947496823765025, "y": 47358.776417038476}, {"x": 8.342234736668553, "y": 79434.68403854949}, {"x": 2.673926327824502, "y": 41677.02175369059}, {"x": 4.505735782422618, "y": 52763.977707223254}, {"x": 5.3963421195243, "y": 49355.53617938074}, {"x": 6.472839810604431, "y": 68403.13833180943}, {"x": 10.422111536716162, "y": 96451.48089164772}, {"x": 3.396085385900317, "y": 38784.07308567274}, {"x": 7.170813260963339, "y": 75424.88753191105}, {"x": 8.10897482634451, "y": 85026.79622323583}, {"x": 1.5574049526399727, "y": 32115.640216700773}]}, {"name": "rc_cls_data", "value": [{"x1": 50.85081386743783, "x2": 66934.46307320667, "label": "\uc0bc\uc131"}, {"x1": 22.961786069363615, "x2": 97999.60246887438, "label": "\uc0bc\uc131"}, {"x1": 34.33862914177091, "x2": 50591.83489424602, "label": "\uc560\ud50c"}, {"x1": 24.63476238100519, "x2": 36928.19188459137, "label": "\uc0bc\uc131"}, {"x1": 54.52413703502374, "x2": 56077.63076223912, "label": "\uc0bc\uc131"}, {"x1": 44.93192507310232, "x2": 44509.9158528604, "label": "\uc0bc\uc131"}, {"x1": 33.23592099410597, "x2": 113672.78871083158, "label": "\uc560\ud50c"}, {"x1": 22.542334011440946, "x2": 102730.83416079753, "label": "\uc0bc\uc131"}, {"x1": 32.43929286862649, "x2": 87006.33808593811, "label": "\uc560\ud50c"}, {"x1": 33.007332881069885, "x2": 108431.4531168946, "label": "\uc560\ud50c"}, {"x1": 49.18424713352256, "x2": 102330.4869209203, "label": "\uc560\ud50c"}, {"x1": 45.502298854208526, "x2": 46791.305299743224, "label": "\uc0bc\uc131"}, {"x1": 55.48850970305306, "x2": 110330.309864098, "label": "\uc560\ud50c"}, {"x1": 38.88859700647797, "x2": 78540.80177240857, "label": "\uc0bc\uc131"}, {"x1": 24.78376983753207, "x2": 102669.61396476562, "label": "\uc0bc\uc131"}, {"x1": 48.5297914889198, "x2": 110648.21699311439, "label": "\uc560\ud50c"}, {"x1": 50.4314019446759, "x2": 58620.312747467746, "label": "\uc0bc\uc131"}, {"x1": 42.45108790277985, "x2": 39904.67320749091, "label": "\uc0bc\uc131"}, {"x1": 50.83868719818244, "x2": 50514.16462877475, "label": "\uc0bc\uc131"}, {"x1": 39.75182385457563, "x2": 68439.70097636306, "label": "\uc0bc\uc131"}, {"x1": 40.90931317527976, "x2": 103621.32893302439, "label": "\uc560\ud50c"}, {"x1": 37.101640734341984, "x2": 107465.7524930709, "label": "\uc560\ud50c"}, {"x1": 21.016765069763807, "x2": 30625.691747807163, "label": "\uc0bc\uc131"}, {"x1": 24.315657079732176, "x2": 75967.25723198091, "label": "\uc0bc\uc131"}, {"x1": 21.25716742746937, "x2": 67566.9902833901, "label": "\uc0bc\uc131"}, {"x1": 45.45641645055122, "x2": 49989.70294236572, "label": "\uc0bc\uc131"}, {"x1": 32.57423924305307, "x2": 40787.883060031454, "label": "\uc560\ud50c"}, {"x1": 40.34282764658811, "x2": 60385.36542632652, "label": "\uc0bc\uc131"}, {"x1": 56.30265895704372, "x2": 114861.87335212673, "label": "\uc560\ud50c"}, {"x1": 29.971689165955, "x2": 59088.26388186797, "label": "\uc0bc\uc131"}]}]}</script>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb11" data-startfrom="756" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 755;"><span id="cb11-756"><a href="#cb11-756" aria-hidden="true" tabindex="-1"></a>viewof rc_mode <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"regression"</span><span class="op">,</span> <span class="st">"classification"</span>]<span class="op">,</span> {</span>
-<span id="cb11-757"><a href="#cb11-757" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"문제 유형"</span><span class="op">,</span></span>
-<span id="cb11-758"><a href="#cb11-758" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="st">"regression"</span><span class="op">,</span></span>
-<span id="cb11-759"><a href="#cb11-759" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> k <span class="kw">=&gt;</span> k <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span> <span class="st">"회귀 (연봉 예측)"</span> <span class="op">:</span> <span class="st">"분류 (브랜드 선택)"</span></span>
-<span id="cb11-760"><a href="#cb11-760" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="847" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 846;"><span id="cb13-847"><a href="#cb13-847" aria-hidden="true" tabindex="-1"></a>viewof rc_mode <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"regression"</span><span class="op">,</span> <span class="st">"classification"</span>]<span class="op">,</span> {</span>
+<span id="cb13-848"><a href="#cb13-848" aria-hidden="true" tabindex="-1"></a>  <span class="dt">label</span><span class="op">:</span> <span class="st">"문제 유형"</span><span class="op">,</span></span>
+<span id="cb13-849"><a href="#cb13-849" aria-hidden="true" tabindex="-1"></a>  <span class="dt">value</span><span class="op">:</span> <span class="st">"regression"</span><span class="op">,</span></span>
+<span id="cb13-850"><a href="#cb13-850" aria-hidden="true" tabindex="-1"></a>  <span class="dt">format</span><span class="op">:</span> k <span class="kw">=&gt;</span> k <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span> <span class="st">"회귀 (연봉 예측)"</span> <span class="op">:</span> <span class="st">"분류 (브랜드 선택)"</span></span>
+<span id="cb13-851"><a href="#cb13-851" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="declaration">
 
@@ -2131,41 +2634,41 @@ $64,000
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb12" data-startfrom="764" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 763;"><span id="cb12-764"><a href="#cb12-764" aria-hidden="true" tabindex="-1"></a>rc_mode <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span></span>
-<span id="cb12-765"><a href="#cb12-765" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb12-766"><a href="#cb12-766" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
-<span id="cb12-767"><a href="#cb12-767" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
-<span id="cb12-768"><a href="#cb12-768" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb12-769"><a href="#cb12-769" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb12-770"><a href="#cb12-770" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb12-771"><a href="#cb12-771" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span> })<span class="op">,</span></span>
-<span id="cb12-772"><a href="#cb12-772" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">linearRegressionY</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> })<span class="op">,</span></span>
-<span id="cb12-773"><a href="#cb12-773" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
-<span id="cb12-774"><a href="#cb12-774" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 연봉 (실수값)"</span><span class="op">,</span></span>
-<span id="cb12-775"><a href="#cb12-775" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
-<span id="cb12-776"><a href="#cb12-776" aria-hidden="true" tabindex="-1"></a>      })</span>
-<span id="cb12-777"><a href="#cb12-777" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb12-778"><a href="#cb12-778" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb12-779"><a href="#cb12-779" aria-hidden="true" tabindex="-1"></a><span class="op">:</span></span>
-<span id="cb12-780"><a href="#cb12-780" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb12-781"><a href="#cb12-781" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
-<span id="cb12-782"><a href="#cb12-782" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
-<span id="cb12-783"><a href="#cb12-783" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"나이"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb12-784"><a href="#cb12-784" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"소득 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb12-785"><a href="#cb12-785" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb12-786"><a href="#cb12-786" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb12-787"><a href="#cb12-787" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_cls_data<span class="op">,</span> {</span>
-<span id="cb12-788"><a href="#cb12-788" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> <span class="st">"x1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"x2"</span><span class="op">,</span></span>
-<span id="cb12-789"><a href="#cb12-789" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"#1428A0"</span> <span class="op">:</span> <span class="st">"#555555"</span><span class="op">,</span></span>
-<span id="cb12-790"><a href="#cb12-790" aria-hidden="true" tabindex="-1"></a>        <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span><span class="op">,</span></span>
-<span id="cb12-791"><a href="#cb12-791" aria-hidden="true" tabindex="-1"></a>        <span class="dt">symbol</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"circle"</span> <span class="op">:</span> <span class="st">"diamond"</span></span>
-<span id="cb12-792"><a href="#cb12-792" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
-<span id="cb12-793"><a href="#cb12-793" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
-<span id="cb12-794"><a href="#cb12-794" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 브랜드 (범주값)"</span><span class="op">,</span></span>
-<span id="cb12-795"><a href="#cb12-795" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
-<span id="cb12-796"><a href="#cb12-796" aria-hidden="true" tabindex="-1"></a>      })</span>
-<span id="cb12-797"><a href="#cb12-797" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb12-798"><a href="#cb12-798" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb14" data-startfrom="855" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 854;"><span id="cb14-855"><a href="#cb14-855" aria-hidden="true" tabindex="-1"></a>rc_mode <span class="op">===</span> <span class="st">"regression"</span> <span class="op">?</span></span>
+<span id="cb14-856"><a href="#cb14-856" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb14-857"><a href="#cb14-857" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb14-858"><a href="#cb14-858" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb14-859"><a href="#cb14-859" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"경력 (년)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb14-860"><a href="#cb14-860" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"연봉 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb14-861"><a href="#cb14-861" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb14-862"><a href="#cb14-862" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#1F3F7A"</span><span class="op">,</span> <span class="dt">r</span><span class="op">:</span> <span class="dv">5</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span> })<span class="op">,</span></span>
+<span id="cb14-863"><a href="#cb14-863" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">linearRegressionY</span>(rc_reg_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.5</span> })<span class="op">,</span></span>
+<span id="cb14-864"><a href="#cb14-864" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb14-865"><a href="#cb14-865" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 연봉 (실수값)"</span><span class="op">,</span></span>
+<span id="cb14-866"><a href="#cb14-866" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
+<span id="cb14-867"><a href="#cb14-867" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb14-868"><a href="#cb14-868" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb14-869"><a href="#cb14-869" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb14-870"><a href="#cb14-870" aria-hidden="true" tabindex="-1"></a><span class="op">:</span></span>
+<span id="cb14-871"><a href="#cb14-871" aria-hidden="true" tabindex="-1"></a>  Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb14-872"><a href="#cb14-872" aria-hidden="true" tabindex="-1"></a>    <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb14-873"><a href="#cb14-873" aria-hidden="true" tabindex="-1"></a>    <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb14-874"><a href="#cb14-874" aria-hidden="true" tabindex="-1"></a>    <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"나이"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb14-875"><a href="#cb14-875" aria-hidden="true" tabindex="-1"></a>    <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"소득 ($)"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb14-876"><a href="#cb14-876" aria-hidden="true" tabindex="-1"></a>    <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb14-877"><a href="#cb14-877" aria-hidden="true" tabindex="-1"></a>    <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb14-878"><a href="#cb14-878" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">dot</span>(rc_cls_data<span class="op">,</span> {</span>
+<span id="cb14-879"><a href="#cb14-879" aria-hidden="true" tabindex="-1"></a>        <span class="dt">x</span><span class="op">:</span> <span class="st">"x1"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"x2"</span><span class="op">,</span></span>
+<span id="cb14-880"><a href="#cb14-880" aria-hidden="true" tabindex="-1"></a>        <span class="dt">fill</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"#1428A0"</span> <span class="op">:</span> <span class="st">"#555555"</span><span class="op">,</span></span>
+<span id="cb14-881"><a href="#cb14-881" aria-hidden="true" tabindex="-1"></a>        <span class="dt">r</span><span class="op">:</span> <span class="dv">6</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span> <span class="fl">0.7</span><span class="op">,</span></span>
+<span id="cb14-882"><a href="#cb14-882" aria-hidden="true" tabindex="-1"></a>        <span class="dt">symbol</span><span class="op">:</span> d <span class="kw">=&gt;</span> d<span class="op">.</span><span class="at">label</span> <span class="op">===</span> <span class="st">"삼성"</span> <span class="op">?</span> <span class="st">"circle"</span> <span class="op">:</span> <span class="st">"diamond"</span></span>
+<span id="cb14-883"><a href="#cb14-883" aria-hidden="true" tabindex="-1"></a>      })<span class="op">,</span></span>
+<span id="cb14-884"><a href="#cb14-884" aria-hidden="true" tabindex="-1"></a>      Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb14-885"><a href="#cb14-885" aria-hidden="true" tabindex="-1"></a>        <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"종속변수 y = 브랜드 (범주값)"</span><span class="op">,</span></span>
+<span id="cb14-886"><a href="#cb14-886" aria-hidden="true" tabindex="-1"></a>        <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"top-left"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#8C1515"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">12</span><span class="op">,</span> <span class="dt">fontWeight</span><span class="op">:</span> <span class="st">"700"</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="dv">14</span></span>
+<span id="cb14-887"><a href="#cb14-887" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb14-888"><a href="#cb14-888" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb14-889"><a href="#cb14-889" aria-hidden="true" tabindex="-1"></a>  })</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-6" data-nodetype="expression">
 
@@ -2361,26 +2864,26 @@ $64,000
 <h3 class="anchored" data-anchor-id="모델의-유연성">모델의 유연성</h3>
 <p>딥러닝은 기존 모형에 비하여 유연성이 높아 <strong>복잡한 비선형 관계</strong>를 표현할 수 있다.</p>
 <p>특히 <strong>학습에 사용되는 데이터가 많을수록</strong> 딥러닝이 유리하다.</p>
-<div id="5f252638" class="cell" data-execution_count="9">
+<div id="f8569cee" class="cell" data-execution_count="11">
 <div class="cell-output cell-output-display">
 <script type="ojs-define">{"contents": [{"name": "flex_data", "value": [{"x": 1.0, "y": 15.381855752935497, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.4974874371859297, "y": 17.903088892989015, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.9949748743718594, "y": 20.32595002591401, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 2.492462311557789, "y": 22.65427737342539, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 2.9899497487437188, "y": 24.8917593997373, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 3.487437185929648, "y": 27.041940654714097, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 3.9849246231155777, "y": 29.108227389036724, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 4.482412060301508, "y": 31.093892950279738, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 4.9798994974874375, "y": 33.00208296844728, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 5.477386934673366, "y": 34.83582033918305, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 5.974874371859296, "y": 36.59801001254799, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 6.472361809045226, "y": 38.291443594952455, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 6.969849246231155, "y": 39.9188037715328, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 7.467336683417085, "y": 41.48266855597823, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 7.964824120603015, "y": 42.98551537454042, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 8.462311557788944, "y": 44.429724990695554, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 8.959798994974875, "y": 45.81758527667629, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 9.457286432160803, "y": 47.151294837848226, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 9.954773869346733, "y": 48.43296649567252, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 10.452261306532662, "y": 49.66463063477236, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 10.949748743718592, "y": 50.848238419405554, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 11.447236180904522, "y": 51.98566488443859, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 11.944723618090451, "y": 53.07871190571894, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 12.442211055276381, "y": 54.1291110545511, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 12.93969849246231, "y": 55.13852634079824, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 13.43718592964824, "y": 56.108556848955324, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 13.93467336683417, "y": 57.04073927136921, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 14.4321608040201, "y": 57.93655034261926, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 14.92964824120603, "y": 58.79740917891458, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 15.42713567839196, "y": 59.624679526214024, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 15.924623115577889, "y": 60.419671920630456, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 16.42211055276382, "y": 61.18364576454149, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 16.91959798994975, "y": 61.91781132169581, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 17.417085427135678, "y": 62.62333163447563, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 17.914572864321606, "y": 63.301324366352475, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 18.412060301507537, "y": 63.9528635724551, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 18.909547738693465, "y": 64.57898140105436, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 19.407035175879397, "y": 65.18066972866073, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 19.904522613065325, "y": 65.7588817313243, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 20.402010050251256, "y": 66.31453339462686, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 20.899497487437184, "y": 66.84850496475796, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 21.396984924623116, "y": 67.36164234297365, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 21.894472361809044, "y": 67.85475842564716, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 22.391959798994975, "y": 68.32863439203419, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 22.889447236180903, "y": 68.78402094179293, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 23.386934673366834, "y": 69.22163948421931, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 23.884422110552762, "y": 69.64218328108122, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 24.381909547738694, "y": 70.0463185448624, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 24.87939698492462, "y": 70.43468549415574, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 25.376884422110553, "y": 70.80789936787767, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 25.87437185929648, "y": 71.1665513999107, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 26.371859296482413, "y": 71.51120975571789, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 26.86934673366834, "y": 71.84242043241292, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 27.366834170854272, "y": 72.16070812371191, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 27.8643216080402, "y": 72.46657705113702, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 28.36180904522613, "y": 72.76051176278847, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 28.85929648241206, "y": 73.0429779009508, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 29.35678391959799, "y": 73.31442293974894, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 29.85427135678392, "y": 73.5752768940228, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 30.35175879396985, "y": 73.82595300054368, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 30.849246231155778, "y": 74.06684837265094, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 31.34673366834171, "y": 74.2983446293469, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 31.844221105527637, "y": 74.52080849984574, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 32.34170854271357, "y": 74.73459240453465, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 32.8391959798995, "y": 74.94003501326726, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 33.336683417085425, "y": 75.13746178187398, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 33.834170854271356, "y": 75.32718546773908, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 34.33165829145729, "y": 75.50950662526125, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 34.82914572864321, "y": 75.68471408198262, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 35.32663316582914, "y": 75.85308539614034, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 35.824120603015075, "y": 76.01488729636588, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 36.321608040201006, "y": 76.17037610422818, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 36.81909547738693, "y": 76.31979814029044, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 37.31658291457286, "y": 76.46339011432346, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 37.814070351758794, "y": 76.601379500294, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 38.311557788944725, "y": 76.733984896722, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 38.80904522613065, "y": 76.86141637297759, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 39.30653266331658, "y": 76.98387580206648, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 39.80402010050251, "y": 77.10155718043092, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 40.301507537688444, "y": 77.21464693527295, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 40.79899497487437, "y": 77.32332421988653, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 41.2964824120603, "y": 77.42776119746667, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 41.79396984924623, "y": 77.52812331384504, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 42.29145728643216, "y": 77.62456955958419, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 42.78894472361809, "y": 77.71725272184538, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 43.28643216080402, "y": 77.80631962642941, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 43.78391959798995, "y": 77.89191137037342, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 44.28140703517588, "y": 77.97416354547245, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 44.778894472361806, "y": 78.05320645307987, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 45.27638190954774, "y": 78.12916531052663, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 45.77386934673367, "y": 78.2021604494868, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 46.2713567839196, "y": 78.27230750660317, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 46.768844221105525, "y": 78.33971760667535, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 47.266331658291456, "y": 78.40449753870021, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 47.76381909547739, "y": 78.46674992504367, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 48.26130653266332, "y": 78.52657338401194, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 48.75879396984924, "y": 78.58406268607952, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 49.256281407035175, "y": 78.63930890402173, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 49.753768844221106, "y": 78.69239955718936, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 50.25125628140703, "y": 78.74341875015408, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 50.74874371859296, "y": 78.79244730594435, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 51.246231155778894, "y": 78.83956289408277, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 51.743718592964825, "y": 78.8848401536277, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 52.24120603015075, "y": 78.92835081141418, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 52.73869346733668, "y": 78.97016379568132, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 53.23618090452261, "y": 79.01034534526633, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 53.733668341708544, "y": 79.04895911453805, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 54.23115577889447, "y": 79.08606627423617, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 54.7286432160804, "y": 79.12172560837611, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 55.22613065326633, "y": 79.15599360737274, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 55.72361809045226, "y": 79.18892455753084, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 56.22110552763819, "y": 79.22057062704373, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 56.71859296482412, "y": 79.25098194863655, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 57.21608040201005, "y": 79.28020669898493, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 57.71356783919598, "y": 79.30829117503501, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 58.211055276381906, "y": 79.33527986734566, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 58.70854271356784, "y": 79.361215530569, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 59.20603015075377, "y": 79.38613925118102, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 59.7035175879397, "y": 79.41009051256951, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 60.201005025125625, "y": 79.4331072575824, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 60.698492462311556, "y": 79.45522594863573, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 61.19597989949749, "y": 79.4764816254761, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 61.69346733668342, "y": 79.49690796068978, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 62.19095477386934, "y": 79.51653731304562, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 62.688442211055275, "y": 79.53540077875687, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 63.185929648241206, "y": 79.5535282407428, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 63.68341708542714, "y": 79.57094841596842, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 64.18090452261306, "y": 79.58768890093681, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 64.678391959799, "y": 79.6037762154068, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 65.17587939698493, "y": 79.61923584440473, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 65.67336683417085, "y": 79.63409227859697, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 66.17085427135679, "y": 79.64836905308735, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 66.66834170854271, "y": 79.66208878470073, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 67.16582914572864, "y": 79.67527320781186, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 67.66331658291458, "y": 79.68794320877625, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 68.1608040201005, "y": 79.70011885901782, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 68.65829145728642, "y": 79.71181944682533, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 69.15577889447236, "y": 79.72306350790832, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 69.65326633165829, "y": 79.73386885476079, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 70.15075376884423, "y": 79.7442526048792, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 70.64824120603015, "y": 79.75423120787956, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 71.14572864321607, "y": 79.76382047155626, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 71.64321608040201, "y": 79.77303558692445, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 72.14070351758794, "y": 79.78189115228501, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 72.63819095477386, "y": 79.7904011963509, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 73.1356783919598, "y": 79.79857920047084, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 73.63316582914572, "y": 79.8064381199862, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 74.13065326633166, "y": 79.81399040475432, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 74.62814070351759, "y": 79.82124801887132, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 75.12562814070351, "y": 79.82822245962512, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 75.62311557788945, "y": 79.8349247757092, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 76.12060301507537, "y": 79.84136558472551, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 76.6180904522613, "y": 79.8475550900046, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 77.11557788944724, "y": 79.85350309676944, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 77.61306532663316, "y": 79.85921902766849, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 78.1105527638191, "y": 79.86471193770276, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 78.60804020100502, "y": 79.86999052857057, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 79.10552763819095, "y": 79.8750631624524, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 79.60301507537689, "y": 79.87993787525805, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 80.10050251256281, "y": 79.88462238935686, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 80.59798994974874, "y": 79.88912412581128, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 81.09547738693468, "y": 79.89345021613303, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 81.5929648241206, "y": 79.8976075135807, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 82.09045226130652, "y": 79.90160260401638, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 82.58793969849246, "y": 79.90544181633885, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 83.08542713567839, "y": 79.90913123250962, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 83.58291457286433, "y": 79.91267669718772, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 84.08040201005025, "y": 79.91608382698871, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 84.57788944723617, "y": 79.91935801938232, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 85.07537688442211, "y": 79.92250446124291, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 85.57286432160804, "y": 79.92552813706644, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 86.07035175879396, "y": 79.92843383686666, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 86.5678391959799, "y": 79.9312261637634, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 87.06532663316582, "y": 79.9339095412746, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 87.56281407035176, "y": 79.93648822032398, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 88.06030150753769, "y": 79.93896628597518, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 88.55778894472361, "y": 79.9413476639032, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 89.05527638190955, "y": 79.94363612661336, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 89.55276381909547, "y": 79.94583529941754, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 90.0502512562814, "y": 79.9479486661773, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 90.54773869346734, "y": 79.94997957482296, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 91.04522613065326, "y": 79.95193124265721, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 91.5427135678392, "y": 79.9538067614519, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 92.04020100502512, "y": 79.95560910234596, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 92.53768844221105, "y": 79.95734112055207, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 93.03517587939699, "y": 79.95900555988, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 93.53266331658291, "y": 79.96060505708303, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 94.03015075376884, "y": 79.9621421460352, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 94.52763819095478, "y": 79.96361926174535, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 95.0251256281407, "y": 79.9650387442145, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 95.52261306532664, "y": 79.9664028421429, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 96.02010050251256, "y": 79.96771371649231, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 96.51758793969849, "y": 79.96897344390939, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 97.01507537688443, "y": 79.97018402001537, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 97.51256281407035, "y": 79.97134736256747, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 98.01005025125627, "y": 79.97246531449701, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 98.50753768844221, "y": 79.9735396468289, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 99.00502512562814, "y": 79.9745720614872, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 99.50251256281406, "y": 79.97556419399129, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 100.0, "y": 79.97651761604682, "type": "\uba38\uc2e0\ub7ec\ub2dd"}, {"x": 1.0, "y": 7.659901980634256, "type": "\ub525\ub7ec\ub2dd"}, {"x": 1.4974874371859297, "y": 8.953740980537226, "type": "\ub525\ub7ec\ub2dd"}, {"x": 1.9949748743718594, "y": 10.228413304473113, "type": "\ub525\ub7ec\ub2dd"}, {"x": 2.492462311557789, "y": 11.48420288380252, "type": "\ub525\ub7ec\ub2dd"}, {"x": 2.9899497487437188, "y": 12.721389443782794, "type": "\ub525\ub7ec\ub2dd"}, {"x": 3.487437185929648, "y": 13.940248565876496, "type": "\ub525\ub7ec\ub2dd"}, {"x": 3.9849246231155777, "y": 15.141051749136665, "type": "\ub525\ub7ec\ub2dd"}, {"x": 4.482412060301508, "y": 16.324066470682883, "type": "\ub525\ub7ec\ub2dd"}, {"x": 4.9798994974874375, "y": 17.48955624528141, "type": "\ub525\ub7ec\ub2dd"}, {"x": 5.477386934673366, "y": 18.637780684042674, "type": "\ub525\ub7ec\ub2dd"}, {"x": 5.974874371859296, "y": 19.768995552249272, "type": "\ub525\ub7ec\ub2dd"}, {"x": 6.472361809045226, "y": 20.883452826327343, "type": "\ub525\ub7ec\ub2dd"}, {"x": 6.969849246231155, "y": 21.98140074997386, "type": "\ub525\ub7ec\ub2dd"}, {"x": 7.467336683417085, "y": 23.063083889452614, "type": "\ub525\ub7ec\ub2dd"}, {"x": 7.964824120603015, "y": 24.128743188070946, "type": "\ub525\ub7ec\ub2dd"}, {"x": 8.462311557788944, "y": 25.178616019849546, "type": "\ub525\ub7ec\ub2dd"}, {"x": 8.959798994974875, "y": 26.212936242397134, "type": "\ub525\ub7ec\ub2dd"}, {"x": 9.457286432160803, "y": 27.231934249001895, "type": "\ub525\ub7ec\ub2dd"}, {"x": 9.954773869346733, "y": 28.235837019951248, "type": "\ub525\ub7ec\ub2dd"}, {"x": 10.452261306532662, "y": 29.22486817309137, "type": "\ub525\ub7ec\ub2dd"}, {"x": 10.949748743718592, "y": 30.19924801363773, "type": "\ub525\ub7ec\ub2dd"}, {"x": 11.447236180904522, "y": 31.159193583247752, "type": "\ub525\ub7ec\ub2dd"}, {"x": 11.944723618090451, "y": 32.104918708366526, "type": "\ub525\ub7ec\ub2dd"}, {"x": 12.442211055276381, "y": 33.03663404785628, "type": "\ub525\ub7ec\ub2dd"}, {"x": 12.93969849246231, "y": 33.95454713992046, "type": "\ub525\ub7ec\ub2dd"}, {"x": 13.43718592964824, "y": 34.85886244833235, "type": "\ub525\ub7ec\ub2dd"}, {"x": 13.93467336683417, "y": 35.749781407979306, "type": "\ub525\ub7ec\ub2dd"}, {"x": 14.4321608040201, "y": 36.627502469731894, "type": "\ub525\ub7ec\ub2dd"}, {"x": 14.92964824120603, "y": 37.49222114464858, "type": "\ub525\ub7ec\ub2dd"}, {"x": 15.42713567839196, "y": 38.344130047525596, "type": "\ub525\ub7ec\ub2dd"}, {"x": 15.924623115577889, "y": 39.1834189398015, "type": "\ub525\ub7ec\ub2dd"}, {"x": 16.42211055276382, "y": 40.010274771826296, "type": "\ub525\ub7ec\ub2dd"}, {"x": 16.91959798994975, "y": 40.824881724504365, "type": "\ub525\ub7ec\ub2dd"}, {"x": 17.417085427135678, "y": 41.62742125032045, "type": "\ub525\ub7ec\ub2dd"}, {"x": 17.914572864321606, "y": 42.418072113757944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 18.412060301507537, "y": 43.19701043111844, "type": "\ub525\ub7ec\ub2dd"}, {"x": 18.909547738693465, "y": 43.9644097097513, "type": "\ub525\ub7ec\ub2dd"}, {"x": 19.407035175879397, "y": 44.72044088670226, "type": "\ub525\ub7ec\ub2dd"}, {"x": 19.904522613065325, "y": 45.4652723667893, "type": "\ub525\ub7ec\ub2dd"}, {"x": 20.402010050251256, "y": 46.199070060114636, "type": "\ub525\ub7ec\ub2dd"}, {"x": 20.899497487437184, "y": 46.92199741902092, "type": "\ub525\ub7ec\ub2dd"}, {"x": 21.396984924623116, "y": 47.63421547450001, "type": "\ub525\ub7ec\ub2dd"}, {"x": 21.894472361809044, "y": 48.33588287206239, "type": "\ub525\ub7ec\ub2dd"}, {"x": 22.391959798994975, "y": 49.02715590707523, "type": "\ub525\ub7ec\ub2dd"}, {"x": 22.889447236180903, "y": 49.7081885595769, "type": "\ub525\ub7ec\ub2dd"}, {"x": 23.386934673366834, "y": 50.37913252857586, "type": "\ub525\ub7ec\ub2dd"}, {"x": 23.884422110552762, "y": 51.04013726584131, "type": "\ub525\ub7ec\ub2dd"}, {"x": 24.381909547738694, "y": 51.69135000919344, "type": "\ub525\ub7ec\ub2dd"}, {"x": 24.87939698492462, "y": 52.33291581530038, "type": "\ub525\ub7ec\ub2dd"}, {"x": 25.376884422110553, "y": 52.96497759198933, "type": "\ub525\ub7ec\ub2dd"}, {"x": 25.87437185929648, "y": 53.58767613007913, "type": "\ub525\ub7ec\ub2dd"}, {"x": 26.371859296482413, "y": 54.201150134741184, "type": "\ub525\ub7ec\ub2dd"}, {"x": 26.86934673366834, "y": 54.80553625639578, "type": "\ub525\ub7ec\ub2dd"}, {"x": 27.366834170854272, "y": 55.40096912115087, "type": "\ub525\ub7ec\ub2dd"}, {"x": 27.8643216080402, "y": 55.98758136078972, "type": "\ub525\ub7ec\ub2dd"}, {"x": 28.36180904522613, "y": 56.565503642314525, "type": "\ub525\ub7ec\ub2dd"}, {"x": 28.85929648241206, "y": 57.134864697052244, "type": "\ub525\ub7ec\ub2dd"}, {"x": 29.35678391959799, "y": 57.69579134932934, "type": "\ub525\ub7ec\ub2dd"}, {"x": 29.85427135678392, "y": 58.24840854472169, "type": "\ub525\ub7ec\ub2dd"}, {"x": 30.35175879396985, "y": 58.79283937788604, "type": "\ub525\ub7ec\ub2dd"}, {"x": 30.849246231155778, "y": 59.32920511997915, "type": "\ub525\ub7ec\ub2dd"}, {"x": 31.34673366834171, "y": 59.85762524567077, "type": "\ub525\ub7ec\ub2dd"}, {"x": 31.844221105527637, "y": 60.378217459756364, "type": "\ub525\ub7ec\ub2dd"}, {"x": 32.34170854271357, "y": 60.8910977233759, "type": "\ub525\ub7ec\ub2dd"}, {"x": 32.8391959798995, "y": 61.39638027984371, "type": "\ub525\ub7ec\ub2dd"}, {"x": 33.336683417085425, "y": 61.8941776800963, "type": "\ub525\ub7ec\ub2dd"}, {"x": 33.834170854271356, "y": 62.384600807762716, "type": "\ub525\ub7ec\ub2dd"}, {"x": 34.33165829145729, "y": 62.86775890386382, "type": "\ub525\ub7ec\ub2dd"}, {"x": 34.82914572864321, "y": 63.343759591145485, "type": "\ub525\ub7ec\ub2dd"}, {"x": 35.32663316582914, "y": 63.81270889805145, "type": "\ub525\ub7ec\ub2dd"}, {"x": 35.824120603015075, "y": 64.27471128234097, "type": "\ub525\ub7ec\ub2dd"}, {"x": 36.321608040201006, "y": 64.72986965435666, "type": "\ub525\ub7ec\ub2dd"}, {"x": 36.81909547738693, "y": 65.17828539994761, "type": "\ub525\ub7ec\ub2dd"}, {"x": 37.31658291457286, "y": 65.62005840305287, "type": "\ub525\ub7ec\ub2dd"}, {"x": 37.814070351758794, "y": 66.05528706795056, "type": "\ub525\ub7ec\ub2dd"}, {"x": 38.311557788944725, "y": 66.48406834117716, "type": "\ub525\ub7ec\ub2dd"}, {"x": 38.80904522613065, "y": 66.90649773312234, "type": "\ub525\ub7ec\ub2dd"}, {"x": 39.30653266331658, "y": 67.32266933930362, "type": "\ub525\ub7ec\ub2dd"}, {"x": 39.80402010050251, "y": 67.73267586132604, "type": "\ub525\ub7ec\ub2dd"}, {"x": 40.301507537688444, "y": 68.13660862753144, "type": "\ub525\ub7ec\ub2dd"}, {"x": 40.79899497487437, "y": 68.53455761334148, "type": "\ub525\ub7ec\ub2dd"}, {"x": 41.2964824120603, "y": 68.92661146129974, "type": "\ub525\ub7ec\ub2dd"}, {"x": 41.79396984924623, "y": 69.31285750081659, "type": "\ub525\ub7ec\ub2dd"}, {"x": 42.29145728643216, "y": 69.69338176762173, "type": "\ub525\ub7ec\ub2dd"}, {"x": 42.78894472361809, "y": 70.06826902292853, "type": "\ub525\ub7ec\ub2dd"}, {"x": 43.28643216080402, "y": 70.43760277231442, "type": "\ub525\ub7ec\ub2dd"}, {"x": 43.78391959798995, "y": 70.80146528432171, "type": "\ub525\ub7ec\ub2dd"}, {"x": 44.28140703517588, "y": 71.15993760878266, "type": "\ub525\ub7ec\ub2dd"}, {"x": 44.778894472361806, "y": 71.51309959487338, "type": "\ub525\ub7ec\ub2dd"}, {"x": 45.27638190954774, "y": 71.86102990889995, "type": "\ub525\ub7ec\ub2dd"}, {"x": 45.77386934673367, "y": 72.20380605182132, "type": "\ub525\ub7ec\ub2dd"}, {"x": 46.2713567839196, "y": 72.54150437651253, "type": "\ub525\ub7ec\ub2dd"}, {"x": 46.768844221105525, "y": 72.87420010477213, "type": "\ub525\ub7ec\ub2dd"}, {"x": 47.266331658291456, "y": 73.20196734407781, "type": "\ub525\ub7ec\ub2dd"}, {"x": 47.76381909547739, "y": 73.52487910409367, "type": "\ub525\ub7ec\ub2dd"}, {"x": 48.26130653266332, "y": 73.84300731293303, "type": "\ub525\ub7ec\ub2dd"}, {"x": 48.75879396984924, "y": 74.15642283318032, "type": "\ub525\ub7ec\ub2dd"}, {"x": 49.256281407035175, "y": 74.46519547767562, "type": "\ub525\ub7ec\ub2dd"}, {"x": 49.753768844221106, "y": 74.76939402506534, "type": "\ub525\ub7ec\ub2dd"}, {"x": 50.25125628140703, "y": 75.06908623512258, "type": "\ub525\ub7ec\ub2dd"}, {"x": 50.74874371859296, "y": 75.36433886384053, "type": "\ub525\ub7ec\ub2dd"}, {"x": 51.246231155778894, "y": 75.65521767830225, "type": "\ub525\ub7ec\ub2dd"}, {"x": 51.743718592964825, "y": 75.94178747133014, "type": "\ub525\ub7ec\ub2dd"}, {"x": 52.24120603015075, "y": 76.22411207591855, "type": "\ub525\ub7ec\ub2dd"}, {"x": 52.73869346733668, "y": 76.50225437945248, "type": "\ub525\ub7ec\ub2dd"}, {"x": 53.23618090452261, "y": 76.77627633771547, "type": "\ub525\ub7ec\ub2dd"}, {"x": 53.733668341708544, "y": 77.0462389886904, "type": "\ub525\ub7ec\ub2dd"}, {"x": 54.23115577889447, "y": 77.31220246615545, "type": "\ub525\ub7ec\ub2dd"}, {"x": 54.7286432160804, "y": 77.57422601307891, "type": "\ub525\ub7ec\ub2dd"}, {"x": 55.22613065326633, "y": 77.83236799481534, "type": "\ub525\ub7ec\ub2dd"}, {"x": 55.72361809045226, "y": 78.0866859121065, "type": "\ub525\ub7ec\ub2dd"}, {"x": 56.22110552763819, "y": 78.33723641388944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 56.71859296482412, "y": 78.58407530991511, "type": "\ub525\ub7ec\ub2dd"}, {"x": 57.21608040201005, "y": 78.8272575831797, "type": "\ub525\ub7ec\ub2dd"}, {"x": 57.71356783919598, "y": 79.0668374021722, "type": "\ub525\ub7ec\ub2dd"}, {"x": 58.211055276381906, "y": 79.30286813294026, "type": "\ub525\ub7ec\ub2dd"}, {"x": 58.70854271356784, "y": 79.53540235097742, "type": "\ub525\ub7ec\ub2dd"}, {"x": 59.20603015075377, "y": 79.7644918529342, "type": "\ub525\ub7ec\ub2dd"}, {"x": 59.7035175879397, "y": 79.99018766815577, "type": "\ub525\ub7ec\ub2dd"}, {"x": 60.201005025125625, "y": 80.21254007004863, "type": "\ub525\ub7ec\ub2dd"}, {"x": 60.698492462311556, "y": 80.43159858727897, "type": "\ub525\ub7ec\ub2dd"}, {"x": 61.19597989949749, "y": 80.64741201480501, "type": "\ub525\ub7ec\ub2dd"}, {"x": 61.69346733668342, "y": 80.86002842474613, "type": "\ub525\ub7ec\ub2dd"}, {"x": 62.19095477386934, "y": 81.06949517709083, "type": "\ub525\ub7ec\ub2dd"}, {"x": 62.688442211055275, "y": 81.27585893024599, "type": "\ub525\ub7ec\ub2dd"}, {"x": 63.185929648241206, "y": 81.47916565143012, "type": "\ub525\ub7ec\ub2dd"}, {"x": 63.68341708542714, "y": 81.67946062691239, "type": "\ub525\ub7ec\ub2dd"}, {"x": 64.18090452261306, "y": 81.87678847210007, "type": "\ub525\ub7ec\ub2dd"}, {"x": 64.678391959799, "y": 82.07119314147667, "type": "\ub525\ub7ec\ub2dd"}, {"x": 65.17587939698493, "y": 82.26271793839253, "type": "\ub525\ub7ec\ub2dd"}, {"x": 65.67336683417085, "y": 82.45140552471075, "type": "\ub525\ub7ec\ub2dd"}, {"x": 66.17085427135679, "y": 82.63729793031003, "type": "\ub525\ub7ec\ub2dd"}, {"x": 66.66834170854271, "y": 82.82043656244666, "type": "\ub525\ub7ec\ub2dd"}, {"x": 67.16582914572864, "y": 83.00086221497804, "type": "\ub525\ub7ec\ub2dd"}, {"x": 67.66331658291458, "y": 83.1786150774494, "type": "\ub525\ub7ec\ub2dd"}, {"x": 68.1608040201005, "y": 83.35373474404594, "type": "\ub525\ub7ec\ub2dd"}, {"x": 68.65829145728642, "y": 83.52626022241245, "type": "\ub525\ub7ec\ub2dd"}, {"x": 69.15577889447236, "y": 83.69622994234209, "type": "\ub525\ub7ec\ub2dd"}, {"x": 69.65326633165829, "y": 83.86368176433673, "type": "\ub525\ub7ec\ub2dd"}, {"x": 70.15075376884423, "y": 84.02865298804016, "type": "\ub525\ub7ec\ub2dd"}, {"x": 70.64824120603015, "y": 84.1911803605466, "type": "\ub525\ub7ec\ub2dd"}, {"x": 71.14572864321607, "y": 84.35130008458609, "type": "\ub525\ub7ec\ub2dd"}, {"x": 71.64321608040201, "y": 84.5090478265885, "type": "\ub525\ub7ec\ub2dd"}, {"x": 72.14070351758794, "y": 84.66445872462835, "type": "\ub525\ub7ec\ub2dd"}, {"x": 72.63819095477386, "y": 84.8175673962515, "type": "\ub525\ub7ec\ub2dd"}, {"x": 73.1356783919598, "y": 84.96840794618646, "type": "\ub525\ub7ec\ub2dd"}, {"x": 73.63316582914572, "y": 85.11701397394089, "type": "\ub525\ub7ec\ub2dd"}, {"x": 74.13065326633166, "y": 85.26341858128603, "type": "\ub525\ub7ec\ub2dd"}, {"x": 74.62814070351759, "y": 85.40765437962999, "type": "\ub525\ub7ec\ub2dd"}, {"x": 75.12562814070351, "y": 85.5497534972819, "type": "\ub525\ub7ec\ub2dd"}, {"x": 75.62311557788945, "y": 85.68974758660845, "type": "\ub525\ub7ec\ub2dd"}, {"x": 76.12060301507537, "y": 85.82766783108443, "type": "\ub525\ub7ec\ub2dd"}, {"x": 76.6180904522613, "y": 85.96354495223875, "type": "\ub525\ub7ec\ub2dd"}, {"x": 77.11557788944724, "y": 86.09740921649765, "type": "\ub525\ub7ec\ub2dd"}, {"x": 77.61306532663316, "y": 86.22929044192654, "type": "\ub525\ub7ec\ub2dd"}, {"x": 78.1105527638191, "y": 86.3592180048718, "type": "\ub525\ub7ec\ub2dd"}, {"x": 78.60804020100502, "y": 86.48722084650448, "type": "\ub525\ub7ec\ub2dd"}, {"x": 79.10552763819095, "y": 86.61332747926681, "type": "\ub525\ub7ec\ub2dd"}, {"x": 79.60301507537689, "y": 86.7375659932233, "type": "\ub525\ub7ec\ub2dd"}, {"x": 80.10050251256281, "y": 86.85996406231776, "type": "\ub525\ub7ec\ub2dd"}, {"x": 80.59798994974874, "y": 86.98054895053771, "type": "\ub525\ub7ec\ub2dd"}, {"x": 81.09547738693468, "y": 87.0993475179873, "type": "\ub525\ub7ec\ub2dd"}, {"x": 81.5929648241206, "y": 87.21638622687038, "type": "\ub525\ub7ec\ub2dd"}, {"x": 82.09045226130652, "y": 87.33169114738494, "type": "\ub525\ub7ec\ub2dd"}, {"x": 82.58793969849246, "y": 87.44528796353019, "type": "\ub525\ub7ec\ub2dd"}, {"x": 83.08542713567839, "y": 87.55720197882766, "type": "\ub525\ub7ec\ub2dd"}, {"x": 83.58291457286433, "y": 87.66745812195745, "type": "\ub525\ub7ec\ub2dd"}, {"x": 84.08040201005025, "y": 87.77608095231115, "type": "\ub525\ub7ec\ub2dd"}, {"x": 84.57788944723617, "y": 87.88309466546235, "type": "\ub525\ub7ec\ub2dd"}, {"x": 85.07537688442211, "y": 87.98852309855617, "type": "\ub525\ub7ec\ub2dd"}, {"x": 85.57286432160804, "y": 88.09238973561897, "type": "\ub525\ub7ec\ub2dd"}, {"x": 86.07035175879396, "y": 88.19471771278937, "type": "\ub525\ub7ec\ub2dd"}, {"x": 86.5678391959799, "y": 88.2955298234718, "type": "\ub525\ub7ec\ub2dd"}, {"x": 87.06532663316582, "y": 88.39484852341366, "type": "\ub525\ub7ec\ub2dd"}, {"x": 87.56281407035176, "y": 88.49269593570737, "type": "\ub525\ub7ec\ub2dd"}, {"x": 88.06030150753769, "y": 88.5890938557182, "type": "\ub525\ub7ec\ub2dd"}, {"x": 88.55778894472361, "y": 88.68406375593918, "type": "\ub525\ub7ec\ub2dd"}, {"x": 89.05527638190955, "y": 88.77762679077404, "type": "\ub525\ub7ec\ub2dd"}, {"x": 89.55276381909547, "y": 88.86980380124938, "type": "\ub525\ub7ec\ub2dd"}, {"x": 90.0502512562814, "y": 88.9606153196569, "type": "\ub525\ub7ec\ub2dd"}, {"x": 90.54773869346734, "y": 89.050081574127, "type": "\ub525\ub7ec\ub2dd"}, {"x": 91.04522613065326, "y": 89.13822249313455, "type": "\ub525\ub7ec\ub2dd"}, {"x": 91.5427135678392, "y": 89.22505770993789, "type": "\ub525\ub7ec\ub2dd"}, {"x": 92.04020100502512, "y": 89.31060656695216, "type": "\ub525\ub7ec\ub2dd"}, {"x": 92.53768844221105, "y": 89.39488812005777, "type": "\ub525\ub7ec\ub2dd"}, {"x": 93.03517587939699, "y": 89.47792114284509, "type": "\ub525\ub7ec\ub2dd"}, {"x": 93.53266331658291, "y": 89.5597241307962, "type": "\ub525\ub7ec\ub2dd"}, {"x": 94.03015075376884, "y": 89.64031530540476, "type": "\ub525\ub7ec\ub2dd"}, {"x": 94.52763819095478, "y": 89.7197126182348, "type": "\ub525\ub7ec\ub2dd"}, {"x": 95.0251256281407, "y": 89.79793375491944, "type": "\ub525\ub7ec\ub2dd"}, {"x": 95.52261306532664, "y": 89.87499613910033, "type": "\ub525\ub7ec\ub2dd"}, {"x": 96.02010050251256, "y": 89.95091693630867, "type": "\ub525\ub7ec\ub2dd"}, {"x": 96.51758793969849, "y": 90.02571305778892, "type": "\ub525\ub7ec\ub2dd"}, {"x": 97.01507537688443, "y": 90.09940116426567, "type": "\ub525\ub7ec\ub2dd"}, {"x": 97.51256281407035, "y": 90.17199766965481, "type": "\ub525\ub7ec\ub2dd"}, {"x": 98.01005025125627, "y": 90.24351874471976, "type": "\ub525\ub7ec\ub2dd"}, {"x": 98.50753768844221, "y": 90.3139803206734, "type": "\ub525\ub7ec\ub2dd"}, {"x": 99.00502512562814, "y": 90.38339809272675, "type": "\ub525\ub7ec\ub2dd"}, {"x": 99.50251256281406, "y": 90.4517875235851, "type": "\ub525\ub7ec\ub2dd"}, {"x": 100.0, "y": 90.51916384689224, "type": "\ub525\ub7ec\ub2dd"}]}]}</script>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb13" data-startfrom="926" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 925;"><span id="cb13-926"><a href="#cb13-926" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
-<span id="cb13-927"><a href="#cb13-927" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
-<span id="cb13-928"><a href="#cb13-928" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
-<span id="cb13-929"><a href="#cb13-929" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"데이터양"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb13-930"><a href="#cb13-930" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"성능"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
-<span id="cb13-931"><a href="#cb13-931" aria-hidden="true" tabindex="-1"></a>  <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="st">"머신러닝"</span><span class="op">,</span> <span class="st">"딥러닝"</span>]<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> [<span class="st">"#999"</span><span class="op">,</span> <span class="st">"#8C1515"</span>] }<span class="op">,</span></span>
-<span id="cb13-932"><a href="#cb13-932" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
-<span id="cb13-933"><a href="#cb13-933" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(flex_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"type"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.8</span> })<span class="op">,</span></span>
-<span id="cb13-934"><a href="#cb13-934" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
-<span id="cb13-935"><a href="#cb13-935" aria-hidden="true" tabindex="-1"></a>      <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"데이터가 많을수록 딥러닝이 유리"</span><span class="op">,</span></span>
-<span id="cb13-936"><a href="#cb13-936" aria-hidden="true" tabindex="-1"></a>      <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#555"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
-<span id="cb13-937"><a href="#cb13-937" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb13-938"><a href="#cb13-938" aria-hidden="true" tabindex="-1"></a>  ]</span>
-<span id="cb13-939"><a href="#cb13-939" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb15" data-startfrom="1017" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 1016;"><span id="cb15-1017"><a href="#cb15-1017" aria-hidden="true" tabindex="-1"></a>Plot<span class="op">.</span><span class="fu">plot</span>({</span>
+<span id="cb15-1018"><a href="#cb15-1018" aria-hidden="true" tabindex="-1"></a>  <span class="dt">width</span><span class="op">:</span> <span class="dv">600</span><span class="op">,</span> <span class="dt">height</span><span class="op">:</span> <span class="dv">350</span><span class="op">,</span></span>
+<span id="cb15-1019"><a href="#cb15-1019" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> { <span class="dt">fontFamily</span><span class="op">:</span> <span class="st">"Pretendard, sans-serif"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="st">"12px"</span> }<span class="op">,</span></span>
+<span id="cb15-1020"><a href="#cb15-1020" aria-hidden="true" tabindex="-1"></a>  <span class="dt">x</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"데이터양"</span><span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb15-1021"><a href="#cb15-1021" aria-hidden="true" tabindex="-1"></a>  <span class="dt">y</span><span class="op">:</span> { <span class="dt">label</span><span class="op">:</span> <span class="st">"성능"</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">100</span>]<span class="op">,</span> <span class="dt">grid</span><span class="op">:</span> <span class="kw">true</span> }<span class="op">,</span></span>
+<span id="cb15-1022"><a href="#cb15-1022" aria-hidden="true" tabindex="-1"></a>  <span class="dt">color</span><span class="op">:</span> { <span class="dt">legend</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span> <span class="dt">domain</span><span class="op">:</span> [<span class="st">"머신러닝"</span><span class="op">,</span> <span class="st">"딥러닝"</span>]<span class="op">,</span> <span class="dt">range</span><span class="op">:</span> [<span class="st">"#999"</span><span class="op">,</span> <span class="st">"#8C1515"</span>] }<span class="op">,</span></span>
+<span id="cb15-1023"><a href="#cb15-1023" aria-hidden="true" tabindex="-1"></a>  <span class="dt">marks</span><span class="op">:</span> [</span>
+<span id="cb15-1024"><a href="#cb15-1024" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">line</span>(flex_data<span class="op">,</span> { <span class="dt">x</span><span class="op">:</span> <span class="st">"x"</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="st">"y"</span><span class="op">,</span> <span class="dt">stroke</span><span class="op">:</span> <span class="st">"type"</span><span class="op">,</span> <span class="dt">strokeWidth</span><span class="op">:</span> <span class="fl">2.8</span> })<span class="op">,</span></span>
+<span id="cb15-1025"><a href="#cb15-1025" aria-hidden="true" tabindex="-1"></a>    Plot<span class="op">.</span><span class="fu">text</span>([<span class="kw">null</span>]<span class="op">,</span> {</span>
+<span id="cb15-1026"><a href="#cb15-1026" aria-hidden="true" tabindex="-1"></a>      <span class="dt">text</span><span class="op">:</span> () <span class="kw">=&gt;</span> <span class="st">"데이터가 많을수록 딥러닝이 유리"</span><span class="op">,</span></span>
+<span id="cb15-1027"><a href="#cb15-1027" aria-hidden="true" tabindex="-1"></a>      <span class="dt">frameAnchor</span><span class="op">:</span> <span class="st">"bottom-right"</span><span class="op">,</span> <span class="dt">fill</span><span class="op">:</span> <span class="st">"#555"</span><span class="op">,</span> <span class="dt">fontSize</span><span class="op">:</span> <span class="dv">10</span><span class="op">,</span> <span class="dt">dx</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span><span class="op">,</span> <span class="dt">dy</span><span class="op">:</span> <span class="op">-</span><span class="dv">10</span></span>
+<span id="cb15-1028"><a href="#cb15-1028" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb15-1029"><a href="#cb15-1029" aria-hidden="true" tabindex="-1"></a>  ]</span>
+<span id="cb15-1030"><a href="#cb15-1030" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-7" data-nodetype="expression">
 
@@ -2519,7 +3022,7 @@ $64,000
 </tr>
 <tr class="odd">
 <td><strong>학습</strong></td>
-<td>데이터를 가장 잘 설명하는 파라미터를 찾는 과정</td>
+<td>데이터의 <span class="math inline">\(x\)</span>를 넣어 나온 <span class="math inline">\(\hat{y}\)</span>가 실제 <span class="math inline">\(y\)</span>와 가장 가까워지도록(오차 <span class="math inline">\(L\)</span> 최소) 파라미터를 찾는 과정</td>
 </tr>
 <tr class="even">
 <td><strong>변수의 종류</strong></td>
@@ -2549,7 +3052,7 @@ $64,000
 
 </main> <!-- /main -->
 <script type="ojs-module-contents">
-eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBzYWxfYjAgPSBJbnB1dHMucmFuZ2UoWy0yMDAwMCwgNTAwMDBdLCB7IHN0ZXA6IDEwMDAsIGxhYmVsOiBcInfigoAgKOygiO2OuClcIiwgdmFsdWU6IDIwMDAwIH0pXG52aWV3b2Ygc2FsX2IxID0gSW5wdXRzLnJhbmdlKFswLCAxNTAwMF0sIHsgc3RlcDogNTAwLCBsYWJlbDogXCJ34oKBICjquLDsmrjquLApXCIsIHZhbHVlOiA1MDAwIH0pXG52aWV3b2Ygc2FsX2FucyA9IElucHV0cy50b2dnbGUoeyBsYWJlbDogXCLinIUg7KCV64u1IOuztOq4sFwiLCB2YWx1ZTogZmFsc2UgfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InNhbF9iMGUgPSBzYWxfYW5zID8gc2FsX2IwX3N0YXIgOiBzYWxfYjBcbnNhbF9iMWUgPSBzYWxfYW5zID8gc2FsX2IxX3N0YXIgOiBzYWxfYjFcbnNhbF9yb3dzID0gc2FsX2RhdGEubWFwKChkLCBpKSA9PiB7XG4gIGNvbnN0IHloYXQgPSBzYWxfYjBlICsgc2FsX2IxZSAqIGQueFxuICBjb25zdCBlID0gZC55IC0geWhhdFxuICByZXR1cm4geyBpOiBpKzEsIC4uLmQsIHloYXQsIGUsIGVycjI6IGUgKiBlIH1cbn0pXG5zYWxfTCA9IGQzLnN1bShzYWxfcm93cywgciA9PiByLmVycjIpXG5zYWxfcGN0ID0gTWF0aC5tYXgoMCwgTWF0aC5taW4oMSwgMSAtIChzYWxfTCAtIHNhbF9MX3N0YXIpIC8gKHNhbF9MX3N0YXIgKiAyMCkpKVxuc2FsX2NsciA9IHNhbF9MIDwgc2FsX0xfc3RhciAqIDEuMDUgPyBcIiMyRTdEMzJcIiA6IHNhbF9MIDwgc2FsX0xfc3RhciAqIDMgPyBcIiNFNjUxMDBcIiA6IFwiIzhDMTUxNVwiXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTMiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJodG1sYDxkaXYgc3R5bGU9XCJmb250LXNpemU6MC44M2VtO2ZvbnQtZmFtaWx5OidQcmV0ZW5kYXJkJyxzYW5zLXNlcmlmO1wiPlxuXG4gIDxkaXYgc3R5bGU9XCJwYWRkaW5nOjAuNDJlbSAwLjhlbTtiYWNrZ3JvdW5kOiNGRkY4RTE7XG4gICAgYm9yZGVyLWxlZnQ6M3B4IHNvbGlkICNENEEwMTc7Ym9yZGVyLXJhZGl1czo0cHg7bWFyZ2luLWJvdHRvbTowLjdlbTtsaW5lLWhlaWdodDoxLjc7XCI+XG4gICAgxbcgPSA8c3Ryb25nPiR7c2FsX2IwZS50b0ZpeGVkKDApfTwvc3Ryb25nPiArIDxzdHJvbmc+JHtzYWxfYjFlLnRvRml4ZWQoMCl9PC9zdHJvbmc+IMK3IHhcbiAgPC9kaXY+XG5cbiAgPHRhYmxlIHN0eWxlPVwid2lkdGg6MTAwJTtib3JkZXItY29sbGFwc2U6Y29sbGFwc2U7XCI+XG4gICAgPHRoZWFkPjx0cj5cbiAgICAgICR7W1wiaVwiLFwieOG1olwiLFwieeG1olwiLFwixbfhtaJcIixcImXhtaLCslwiXS5tYXAoaCA9PlxuICAgICAgICBgPHRoIHN0eWxlPVwiYmFja2dyb3VuZDojOEMxNTE1O2NvbG9yOndoaXRlO3BhZGRpbmc6MC4zZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Zm9udC1zaXplOjAuOWVtO1wiPiR7aH08L3RoPmBcbiAgICAgICkuam9pbihcIlwiKX1cbiAgICA8L3RyPjwvdGhlYWQ+XG4gICAgPHRib2R5PlxuICAgICAgJHtzYWxfcm93cy5tYXAoKHIsIGlkeCkgPT4gYFxuICAgICAgICA8dHIgc3R5bGU9XCJiYWNrZ3JvdW5kOiR7aWR4JTI9PT0wPyd3aGl0ZSc6JyNGOUZBRkInfTtcIj5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjJlbSAwLjRlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPiR7ci5pfTwvdGQ+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjIyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcIj4ke3IueH08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XCI+JHtyLnkudG9GaXhlZCgwKX08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XG4gICAgICAgICAgICBmb250LXdlaWdodDo2MDA7Y29sb3I6IzFGM0Y3QTtcIj4ke3IueWhhdC50b0ZpeGVkKDApfTwvdGQ+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjIyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcbiAgICAgICAgICAgIGZvbnQtd2VpZ2h0OjYwMDtjb2xvcjoke3IuZXJyMj4xZTg/JyNFNjUxMDAnOicjMzMzJ307XCI+JHsoci5lcnIyLzFlNikudG9GaXhlZCgxKX1NPC90ZD5cbiAgICAgICAgPC90cj5gKS5qb2luKFwiXCIpfVxuICAgICAgPHRyIHN0eWxlPVwiYmFja2dyb3VuZDojRkZGOEUxO1wiPlxuICAgICAgICA8dGQgY29sc3Bhbj1cIjRcIiBzdHlsZT1cInBhZGRpbmc6MC4zMmVtIDAuNGVtO3RleHQtYWxpZ246cmlnaHQ7Zm9udC13ZWlnaHQ6NzAwO1xuICAgICAgICAgIGJvcmRlci10b3A6MnB4IHNvbGlkICNENEEwMTc7XCI+TCA9PC90ZD5cbiAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjMyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Zm9udC1zaXplOjEuMDVlbTtmb250LXdlaWdodDo3MDA7XG4gICAgICAgICAgYm9yZGVyLXRvcDoycHggc29saWQgI0Q0QTAxNztjb2xvcjoke3NhbF9jbHJ9O1wiPiR7KHNhbF9MLzFlNikudG9GaXhlZCgyKX1NPC90ZD5cbiAgICAgIDwvdHI+XG4gICAgPC90Ym9keT5cbiAgPC90YWJsZT5cblxuICA8ZGl2IHN0eWxlPVwibWFyZ2luLXRvcDowLjU1ZW07XCI+XG4gICAgPGRpdiBzdHlsZT1cImhlaWdodDo3cHg7YmFja2dyb3VuZDojRUVFO2JvcmRlci1yYWRpdXM6NHB4O292ZXJmbG93OmhpZGRlbjtcIj5cbiAgICAgIDxkaXYgc3R5bGU9XCJoZWlnaHQ6MTAwJTt3aWR0aDokeyhzYWxfcGN0KjEwMCkudG9GaXhlZCgxKX0lO1xuICAgICAgICBiYWNrZ3JvdW5kOiR7c2FsX3BjdD4wLjk/JyMyRTdEMzInOnNhbF9wY3Q+MC42PycjRDRBMDE3JzonIzhDMTUxNSd9O1xuICAgICAgICB0cmFuc2l0aW9uOndpZHRoIDAuMnM7Ym9yZGVyLXJhZGl1czo0cHg7XCI+PC9kaXY+XG4gICAgPC9kaXY+XG4gICAgPGRpdiBzdHlsZT1cImZvbnQtc2l6ZTowLjc0ZW07Y29sb3I6IzY2NjttYXJnaW4tdG9wOjAuMTVlbTt0ZXh0LWFsaWduOmNlbnRlcjtcIj5cbiAgICAgICR7c2FsX3BjdD4wLjk4PyfstZzshp/qsJIg64+E64usISc6c2FsX3BjdD4wLjc/J+qxsOydmCDri6Qg7JmU7Ja07JqUISc6J+yKrOudvOydtOuNlOuhnCBM7J2EIOy1nOyGjO2ZlO2VtCDrs7TshLjsmpQnfVxuICAgIDwvZGl2PlxuICA8L2Rpdj5cblxuICAke3NhbF9hbnMgPyBgXG4gIDxkaXYgc3R5bGU9XCJtYXJnaW4tdG9wOjAuNmVtO3BhZGRpbmc6MC40NWVtIDAuOGVtO2JhY2tncm91bmQ6I0U4RjVFOTtcbiAgICBib3JkZXI6MS41cHggc29saWQgIzJFN0QzMjtib3JkZXItcmFkaXVzOjVweDtjb2xvcjojMkU3RDMyO2xpbmUtaGVpZ2h0OjEuODtcIj5cbiAgICA8ZGl2IHN0eWxlPVwiZm9udC13ZWlnaHQ6NzAwO21hcmdpbi1ib3R0b206MC4xZW07XCI+7LWc7KCBIO2MjOudvOuvuO2EsDwvZGl2PlxuICAgIDxkaXY+d+KCgCogPSA8c3Ryb25nPiR7c2FsX2IwX3N0YXIudG9GaXhlZCgwKX08L3N0cm9uZz48L2Rpdj5cbiAgICA8ZGl2PnfigoEqID0gPHN0cm9uZz4ke3NhbF9iMV9zdGFyLnRvRml4ZWQoMCl9PC9zdHJvbmc+PC9kaXY+XG4gICAgPGRpdj5MKiAgPSA8c3Ryb25nPiR7KHNhbF9MX3N0YXIvMWU2KS50b0ZpeGVkKDIpfU08L3N0cm9uZz48L2Rpdj5cbiAgPC9kaXY+YCA6ICcnfVxuXG48L2Rpdj5gXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTQiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ7XG4gIGNvbnN0IHhMbyA9IDAsIHhIaSA9IDE1XG4gIHJldHVybiBQbG90LnBsb3Qoe1xuICAgIHdpZHRoOiA1MDAsIGhlaWdodDogNDAwLFxuICAgIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcIuqyveugpSAo64WEKVwiLCBkb21haW46IFt4TG8sIHhIaV0sIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyXsOu0iSAoJClcIiwgZG9tYWluOiBbMCwgMTYwMDAwXSwgZ3JpZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICAvLyDsnpTssKgg7KCQ7ISgXG4gICAgICBQbG90LnJ1bGVYKHNhbF9yb3dzLCB7XG4gICAgICAgIHg6IFwieFwiLCB5MTogciA9PiByLnloYXQsIHkyOiByID0+IHIueSxcbiAgICAgICAgc3Ryb2tlOiByID0+IE1hdGguYWJzKHIuZSkgPiAxMDAwMCA/IFwiI0U2NTEwMFwiIDogXCIjQkRCREJEXCIsXG4gICAgICAgIHN0cm9rZVdpZHRoOiByID0+IE1hdGgubWluKDMsIDEgKyBNYXRoLmFicyhyLmUpIC8gMjAwMDApLFxuICAgICAgICBzdHJva2VEYXNoYXJyYXk6IFwiNSwzXCJcbiAgICAgIH0pLFxuICAgICAgLy8g7ZiE7J6sIO2ajOq3gOyEoFxuICAgICAgUGxvdC5saW5lKFxuICAgICAgICBbeyB4OiB4TG8sIHk6IHNhbF9iMGUgKyBzYWxfYjFlICogeExvIH0sXG4gICAgICAgICB7IHg6IHhIaSwgeTogc2FsX2IwZSArIHNhbF9iMWUgKiB4SGkgfV0sXG4gICAgICAgIHsgc3Ryb2tlOiBzYWxfY2xyLCBzdHJva2VXaWR0aDogMi41IH1cbiAgICAgICksXG4gICAgICAvLyDtmozqt4Dsi50g652867KoXG4gICAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICAgIHRleHQ6ICgpID0+IGDFtyA9ICR7c2FsX2IwZS50b0ZpeGVkKDApfSArICR7c2FsX2IxZS50b0ZpeGVkKDApfcK3eGAsXG4gICAgICAgIGZyYW1lQW5jaG9yOiBcImJvdHRvbS1yaWdodFwiLFxuICAgICAgICBmaWxsOiBzYWxfY2xyLCBmb250U2l6ZTogMTEsIGZvbnRXZWlnaHQ6IFwiNzAwXCIsIGR4OiAtOCwgZHk6IC0xMFxuICAgICAgfSksXG4gICAgICAvLyDrjbDsnbTthLAg7Y+s7J247Yq4XG4gICAgICBQbG90LmRvdChzYWxfcm93cywgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IFwiIzFGM0Y3QVwiLCByOiA2LCBvcGFjaXR5OiAwLjkgfSlcbiAgICBdXG4gIH0pXG59XG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTUiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJ2aWV3b2YgcmNfbW9kZSA9IElucHV0cy5yYWRpbyhbXCJyZWdyZXNzaW9uXCIsIFwiY2xhc3NpZmljYXRpb25cIl0sIHtcbiAgbGFiZWw6IFwi66y47KCcIOycoO2YlVwiLFxuICB2YWx1ZTogXCJyZWdyZXNzaW9uXCIsXG4gIGZvcm1hdDogayA9PiBrID09PSBcInJlZ3Jlc3Npb25cIiA/IFwi7ZqM6reAICjsl7DrtIkg7JiI7LihKVwiIDogXCLrtoTrpZggKOu4jOuenOuTnCDshKDtg50pXCJcbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXQiLCJjZWxsTmFtZSI6Im9qcy1jZWxsLTYiLCJpbmxpbmUiOmZhbHNlLCJzb3VyY2UiOiJyY19tb2RlID09PSBcInJlZ3Jlc3Npb25cIiA/XG4gIFBsb3QucGxvdCh7XG4gICAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gICAgc3R5bGU6IHsgZm9udEZhbWlseTogXCJQcmV0ZW5kYXJkLCBzYW5zLXNlcmlmXCIsIGZvbnRTaXplOiBcIjEycHhcIiB9LFxuICAgIHg6IHsgbGFiZWw6IFwi6rK966ClICjrhYQpXCIsIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyXsOu0iSAoJClcIiwgZ3JpZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmRvdChyY19yZWdfZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIGZpbGw6IFwiIzFGM0Y3QVwiLCByOiA1LCBvcGFjaXR5OiAwLjcgfSksXG4gICAgICBQbG90LmxpbmVhclJlZ3Jlc3Npb25ZKHJjX3JlZ19kYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiBcIiM4QzE1MTVcIiwgc3Ryb2tlV2lkdGg6IDIuNSB9KSxcbiAgICAgIFBsb3QudGV4dChbbnVsbF0sIHtcbiAgICAgICAgdGV4dDogKCkgPT4gXCLsooXsho3rs4DsiJggeSA9IOyXsOu0iSAo7Iuk7IiY6rCSKVwiLFxuICAgICAgICBmcmFtZUFuY2hvcjogXCJ0b3AtbGVmdFwiLCBmaWxsOiBcIiM4QzE1MTVcIiwgZm9udFNpemU6IDEyLCBmb250V2VpZ2h0OiBcIjcwMFwiLCBkeDogMTAsIGR5OiAxNFxuICAgICAgfSlcbiAgICBdXG4gIH0pXG46XG4gIFBsb3QucGxvdCh7XG4gICAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gICAgc3R5bGU6IHsgZm9udEZhbWlseTogXCJQcmV0ZW5kYXJkLCBzYW5zLXNlcmlmXCIsIGZvbnRTaXplOiBcIjEycHhcIiB9LFxuICAgIHg6IHsgbGFiZWw6IFwi64KY7J20XCIsIGdyaWQ6IHRydWUgfSxcbiAgICB5OiB7IGxhYmVsOiBcIuyGjOuTnSAoJClcIiwgZ3JpZDogdHJ1ZSB9LFxuICAgIGNvbG9yOiB7IGxlZ2VuZDogdHJ1ZSB9LFxuICAgIG1hcmtzOiBbXG4gICAgICBQbG90LmRvdChyY19jbHNfZGF0YSwge1xuICAgICAgICB4OiBcIngxXCIsIHk6IFwieDJcIixcbiAgICAgICAgZmlsbDogZCA9PiBkLmxhYmVsID09PSBcIuyCvOyEsVwiID8gXCIjMTQyOEEwXCIgOiBcIiM1NTU1NTVcIixcbiAgICAgICAgcjogNiwgb3BhY2l0eTogMC43LFxuICAgICAgICBzeW1ib2w6IGQgPT4gZC5sYWJlbCA9PT0gXCLsgrzshLFcIiA/IFwiY2lyY2xlXCIgOiBcImRpYW1vbmRcIlxuICAgICAgfSksXG4gICAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICAgIHRleHQ6ICgpID0+IFwi7KKF7IaN67OA7IiYIHkgPSDruIzrnpzrk5wgKOuylOyjvOqwkilcIixcbiAgICAgICAgZnJhbWVBbmNob3I6IFwidG9wLWxlZnRcIiwgZmlsbDogXCIjOEMxNTE1XCIsIGZvbnRTaXplOiAxMiwgZm9udFdlaWdodDogXCI3MDBcIiwgZHg6IDEwLCBkeTogMTRcbiAgICAgIH0pXG4gICAgXVxuICB9KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC03IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5wbG90KHtcbiAgd2lkdGg6IDYwMCwgaGVpZ2h0OiAzNTAsXG4gIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgeDogeyBsYWJlbDogXCLrjbDsnbTthLDslpFcIiwgZ3JpZDogdHJ1ZSB9LFxuICB5OiB7IGxhYmVsOiBcIuyEseuKpVwiLCBkb21haW46IFswLCAxMDBdLCBncmlkOiB0cnVlIH0sXG4gIGNvbG9yOiB7IGxlZ2VuZDogdHJ1ZSwgZG9tYWluOiBbXCLrqLjsi6Drn6zri51cIiwgXCLrlKXrn6zri51cIl0sIHJhbmdlOiBbXCIjOTk5XCIsIFwiIzhDMTUxNVwiXSB9LFxuICBtYXJrczogW1xuICAgIFBsb3QubGluZShmbGV4X2RhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IFwidHlwZVwiLCBzdHJva2VXaWR0aDogMi44IH0pLFxuICAgIFBsb3QudGV4dChbbnVsbF0sIHtcbiAgICAgIHRleHQ6ICgpID0+IFwi642w7J207YSw6rCAIOunjuydhOyImOuhnSDrlKXrn6zri53snbQg7Jyg66asXCIsXG4gICAgICBmcmFtZUFuY2hvcjogXCJib3R0b20tcmlnaHRcIiwgZmlsbDogXCIjNTU1XCIsIGZvbnRTaXplOiAxMCwgZHg6IC0xMCwgZHk6IC0xMFxuICAgIH0pXG4gIF1cbn0pXG4ifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NhbF9iMCcpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzYWxfYjEnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsX2FucycpIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdyY19tb2RlJykifV19
+eyJjb250ZW50cyI6W3sibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMSIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InZpZXdvZiBzYWxfYjAgPSBJbnB1dHMucmFuZ2UoWy0yMDAwMCwgNTAwMDBdLCB7IHN0ZXA6IDEwMDAsIGxhYmVsOiBcInfigoAgKOygiO2OuClcIiwgdmFsdWU6IDIwMDAwIH0pXG52aWV3b2Ygc2FsX2IxID0gSW5wdXRzLnJhbmdlKFswLCAxNTAwMF0sIHsgc3RlcDogNTAwLCBsYWJlbDogXCJ34oKBICjquLDsmrjquLApXCIsIHZhbHVlOiA1MDAwIH0pXG52aWV3b2Ygc2FsX2FucyA9IElucHV0cy50b2dnbGUoeyBsYWJlbDogXCLinIUg7KCV64u1IOuztOq4sFwiLCB2YWx1ZTogZmFsc2UgfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtMiIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6InNhbF9iMGUgPSBzYWxfYW5zID8gc2FsX2IwX3N0YXIgOiBzYWxfYjBcbnNhbF9iMWUgPSBzYWxfYW5zID8gc2FsX2IxX3N0YXIgOiBzYWxfYjFcbnNhbF9yb3dzID0gc2FsX2RhdGEubWFwKChkLCBpKSA9PiB7XG4gIGNvbnN0IHloYXQgPSBzYWxfYjBlICsgc2FsX2IxZSAqIGQueFxuICBjb25zdCBlID0gZC55IC0geWhhdFxuICByZXR1cm4geyBpOiBpKzEsIC4uLmQsIHloYXQsIGUsIGVycjI6IGUgKiBlIH1cbn0pXG5zYWxfTCA9IGQzLnN1bShzYWxfcm93cywgciA9PiByLmVycjIpXG5zYWxfcGN0ID0gTWF0aC5tYXgoMCwgTWF0aC5taW4oMSwgMSAtIChzYWxfTCAtIHNhbF9MX3N0YXIpIC8gKHNhbF9MX3N0YXIgKiAyMCkpKVxuc2FsX2NsciA9IHNhbF9MIDwgc2FsX0xfc3RhciAqIDEuMDUgPyBcIiMyRTdEMzJcIiA6IHNhbF9MIDwgc2FsX0xfc3RhciAqIDMgPyBcIiNFNjUxMDBcIiA6IFwiIzhDMTUxNVwiXG5zYWxfbGluZSA9IFt7IHg6IDAsIHk6IHNhbF9iMGUgfSwgeyB4OiAxNSwgeTogc2FsX2IwZSArIHNhbF9iMWUgKiAxNSB9XVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC0zIiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiaHRtbGA8ZGl2IHN0eWxlPVwiZm9udC1zaXplOjAuODNlbTtmb250LWZhbWlseTonUHJldGVuZGFyZCcsc2Fucy1zZXJpZjtcIj5cblxuICA8ZGl2IHN0eWxlPVwicGFkZGluZzowLjQyZW0gMC44ZW07YmFja2dyb3VuZDojRkZGOEUxO1xuICAgIGJvcmRlci1sZWZ0OjNweCBzb2xpZCAjRDRBMDE3O2JvcmRlci1yYWRpdXM6NHB4O21hcmdpbi1ib3R0b206MC43ZW07bGluZS1oZWlnaHQ6MS43O1wiPlxuICAgIMW3ID0gPHN0cm9uZz4ke3NhbF9iMGUudG9GaXhlZCgwKX08L3N0cm9uZz4gKyA8c3Ryb25nPiR7c2FsX2IxZS50b0ZpeGVkKDApfTwvc3Ryb25nPiDCtyB4XG4gIDwvZGl2PlxuXG4gIDx0YWJsZSBzdHlsZT1cIndpZHRoOjEwMCU7Ym9yZGVyLWNvbGxhcHNlOmNvbGxhcHNlO1wiPlxuICAgIDx0aGVhZD48dHI+XG4gICAgICAke1tcImlcIixcInjhtaJcIixcInnhtaJcIixcIsW34bWiXCIsXCJl4bWiwrJcIl0ubWFwKGggPT5cbiAgICAgICAgYDx0aCBzdHlsZT1cImJhY2tncm91bmQ6IzhDMTUxNTtjb2xvcjp3aGl0ZTtwYWRkaW5nOjAuM2VtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2ZvbnQtc2l6ZTowLjllbTtcIj4ke2h9PC90aD5gXG4gICAgICApLmpvaW4oXCJcIil9XG4gICAgPC90cj48L3RoZWFkPlxuICAgIDx0Ym9keT5cbiAgICAgICR7c2FsX3Jvd3MubWFwKChyLCBpZHgpID0+IGBcbiAgICAgICAgPHRyIHN0eWxlPVwiYmFja2dyb3VuZDoke2lkeCUyPT09MD8nd2hpdGUnOicjRjlGQUZCJ307XCI+XG4gICAgICAgICAgPHRkIHN0eWxlPVwicGFkZGluZzowLjIyZW0gMC40ZW07dGV4dC1hbGlnbjpjZW50ZXI7Ym9yZGVyLWJvdHRvbToxcHggc29saWQgI0U1RTdFQjtcIj4ke3IuaX08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XCI+JHtyLnh9PC90ZD5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjJlbSAwLjRlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1wiPiR7ci55LnRvRml4ZWQoMCl9PC90ZD5cbiAgICAgICAgICA8dGQgc3R5bGU9XCJwYWRkaW5nOjAuMjJlbSAwLjRlbTt0ZXh0LWFsaWduOmNlbnRlcjtib3JkZXItYm90dG9tOjFweCBzb2xpZCAjRTVFN0VCO1xuICAgICAgICAgICAgZm9udC13ZWlnaHQ6NjAwO2NvbG9yOiMxRjNGN0E7XCI+JHtyLnloYXQudG9GaXhlZCgwKX08L3RkPlxuICAgICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4yMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2JvcmRlci1ib3R0b206MXB4IHNvbGlkICNFNUU3RUI7XG4gICAgICAgICAgICBmb250LXdlaWdodDo2MDA7Y29sb3I6JHtyLmVycjI+MWU4PycjRTY1MTAwJzonIzMzMyd9O1wiPiR7KHIuZXJyMi8xZTYpLnRvRml4ZWQoMSl9TTwvdGQ+XG4gICAgICAgIDwvdHI+YCkuam9pbihcIlwiKX1cbiAgICAgIDx0ciBzdHlsZT1cImJhY2tncm91bmQ6I0ZGRjhFMTtcIj5cbiAgICAgICAgPHRkIGNvbHNwYW49XCI0XCIgc3R5bGU9XCJwYWRkaW5nOjAuMzJlbSAwLjRlbTt0ZXh0LWFsaWduOnJpZ2h0O2ZvbnQtd2VpZ2h0OjcwMDtcbiAgICAgICAgICBib3JkZXItdG9wOjJweCBzb2xpZCAjRDRBMDE3O1wiPkwgPTwvdGQ+XG4gICAgICAgIDx0ZCBzdHlsZT1cInBhZGRpbmc6MC4zMmVtIDAuNGVtO3RleHQtYWxpZ246Y2VudGVyO2ZvbnQtc2l6ZToxLjA1ZW07Zm9udC13ZWlnaHQ6NzAwO1xuICAgICAgICAgIGJvcmRlci10b3A6MnB4IHNvbGlkICNENEEwMTc7Y29sb3I6JHtzYWxfY2xyfTtcIj4keyhzYWxfTC8xZTYpLnRvRml4ZWQoMil9TTwvdGQ+XG4gICAgICA8L3RyPlxuICAgIDwvdGJvZHk+XG4gIDwvdGFibGU+XG5cbiAgPGRpdiBzdHlsZT1cIm1hcmdpbi10b3A6MC41NWVtO1wiPlxuICAgIDxkaXYgc3R5bGU9XCJoZWlnaHQ6N3B4O2JhY2tncm91bmQ6I0VFRTtib3JkZXItcmFkaXVzOjRweDtvdmVyZmxvdzpoaWRkZW47XCI+XG4gICAgICA8ZGl2IHN0eWxlPVwiaGVpZ2h0OjEwMCU7d2lkdGg6JHsoc2FsX3BjdCoxMDApLnRvRml4ZWQoMSl9JTtcbiAgICAgICAgYmFja2dyb3VuZDoke3NhbF9wY3Q+MC45PycjMkU3RDMyJzpzYWxfcGN0PjAuNj8nI0Q0QTAxNyc6JyM4QzE1MTUnfTtcbiAgICAgICAgdHJhbnNpdGlvbjp3aWR0aCAwLjJzO2JvcmRlci1yYWRpdXM6NHB4O1wiPjwvZGl2PlxuICAgIDwvZGl2PlxuICAgIDxkaXYgc3R5bGU9XCJmb250LXNpemU6MC43NGVtO2NvbG9yOiM2NjY7bWFyZ2luLXRvcDowLjE1ZW07dGV4dC1hbGlnbjpjZW50ZXI7XCI+XG4gICAgICAke3NhbF9wY3Q+MC45OD8n7LWc7Iaf6rCSIOuPhOuLrCEnOnNhbF9wY3Q+MC43PyfqsbDsnZgg64ukIOyZlOyWtOyalCEnOifsiqzrnbzsnbTrjZTroZwgTOydhCDstZzshoztmZTtlbQg67O07IS47JqUJ31cbiAgICA8L2Rpdj5cbiAgPC9kaXY+XG5cbiAgJHtzYWxfYW5zID8gYFxuICA8ZGl2IHN0eWxlPVwibWFyZ2luLXRvcDowLjZlbTtwYWRkaW5nOjAuNDVlbSAwLjhlbTtiYWNrZ3JvdW5kOiNFOEY1RTk7XG4gICAgYm9yZGVyOjEuNXB4IHNvbGlkICMyRTdEMzI7Ym9yZGVyLXJhZGl1czo1cHg7Y29sb3I6IzJFN0QzMjtsaW5lLWhlaWdodDoxLjg7XCI+XG4gICAgPGRpdiBzdHlsZT1cImZvbnQtd2VpZ2h0OjcwMDttYXJnaW4tYm90dG9tOjAuMWVtO1wiPuy1nOyggSDtjIzrnbzrr7jthLA8L2Rpdj5cbiAgICA8ZGl2PnfigoAqID0gPHN0cm9uZz4ke3NhbF9iMF9zdGFyLnRvRml4ZWQoMCl9PC9zdHJvbmc+PC9kaXY+XG4gICAgPGRpdj534oKBKiA9IDxzdHJvbmc+JHtzYWxfYjFfc3Rhci50b0ZpeGVkKDApfTwvc3Ryb25nPjwvZGl2PlxuICAgIDxkaXY+TCogID0gPHN0cm9uZz4keyhzYWxfTF9zdGFyLzFlNikudG9GaXhlZCgyKX1NPC9zdHJvbmc+PC9kaXY+XG4gIDwvZGl2PmAgOiAnJ31cblxuPC9kaXY+YFxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC00IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoiUGxvdC5wbG90KHtcbiAgd2lkdGg6IDUwMCwgaGVpZ2h0OiA0MDAsIG1hcmdpbkxlZnQ6IDcwLFxuICBzdHlsZTogeyBmb250RmFtaWx5OiBcIlByZXRlbmRhcmQsIHNhbnMtc2VyaWZcIiwgZm9udFNpemU6IFwiMTJweFwiIH0sXG4gIHg6IHsgbGFiZWw6IFwi6rK966ClICjrhYQpXCIsIGRvbWFpbjogWzAsIDE1XSwgZ3JpZDogdHJ1ZSB9LFxuICB5OiB7IGxhYmVsOiBcIuyXsOu0iSAoJClcIiwgZG9tYWluOiBbLTIwMDAwLCAxNjAwMDBdLCBncmlkOiB0cnVlLCB0aWNrRm9ybWF0OiBkID0+IChkLzEwMDApICsgXCJrXCIgfSxcbiAgbWFya3M6IFtcbiAgICBQbG90LnJ1bGVZKFswXSwgeyBzdHJva2U6IFwiIzk5OVwiIH0pLFxuICAgIC8vIOyelOywqCDsoJDshKA6IOyLpOygnCB5IOyZgCDsmIjsuKEgxbcg7IKs7J20XG4gICAgUGxvdC5ydWxlWChzYWxfcm93cywge1xuICAgICAgeDogXCJ4XCIsIHkxOiBcInloYXRcIiwgeTI6IFwieVwiLFxuICAgICAgc3Ryb2tlOiByID0+IE1hdGguYWJzKHIuZSkgPiAxMDAwMCA/IFwiI0U2NTEwMFwiIDogXCIjQkRCREJEXCIsXG4gICAgICBzdHJva2VXaWR0aDogciA9PiBNYXRoLm1pbigzLCAxICsgTWF0aC5hYnMoci5lKSAvIDIwMDAwKSxcbiAgICAgIHN0cm9rZURhc2hhcnJheTogXCI1LDNcIlxuICAgIH0pLFxuICAgIC8vIO2YhOyerCDtjIzrnbzrr7jthLDsnZgg7KeB7ISgIMW3ID0gd+KCgCArIHfigoHCt3hcbiAgICBQbG90LmxpbmUoc2FsX2xpbmUsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBzdHJva2U6IHNhbF9jbHIsIHN0cm9rZVdpZHRoOiAyLjUgfSksXG4gICAgLy8g7JiI7Lih6rCSIMW34bWiICjsp4HshKAg7JyE7J2YIOygkClcbiAgICBQbG90LmRvdChzYWxfcm93cywgeyB4OiBcInhcIiwgeTogXCJ5aGF0XCIsIGZpbGw6IFwid2hpdGVcIiwgc3Ryb2tlOiBzYWxfY2xyLCBzdHJva2VXaWR0aDogMS41LCByOiA0IH0pLFxuICAgIC8vIOyLpOygnCDrjbDsnbTthLAg7Y+s7J247Yq4ICh4LCB5KVxuICAgIFBsb3QuZG90KHNhbF9yb3dzLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgZmlsbDogXCIjMUYzRjdBXCIsIHI6IDYsIG9wYWNpdHk6IDAuOSB9KSxcbiAgICBQbG90LnRleHQoW2DFtyA9ICR7c2FsX2IwZS50b0ZpeGVkKDApfSArICR7c2FsX2IxZS50b0ZpeGVkKDApfcK3eGBdLCB7XG4gICAgICBmcmFtZUFuY2hvcjogXCJib3R0b20tcmlnaHRcIiwgZmlsbDogc2FsX2NsciwgZm9udFNpemU6IDExLCBmb250V2VpZ2h0OiBcIjcwMFwiLCBkeDogLTgsIGR5OiAtMTBcbiAgICB9KVxuICBdXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC01IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoidmlld29mIHJjX21vZGUgPSBJbnB1dHMucmFkaW8oW1wicmVncmVzc2lvblwiLCBcImNsYXNzaWZpY2F0aW9uXCJdLCB7XG4gIGxhYmVsOiBcIuusuOygnCDsnKDtmJVcIixcbiAgdmFsdWU6IFwicmVncmVzc2lvblwiLFxuICBmb3JtYXQ6IGsgPT4gayA9PT0gXCJyZWdyZXNzaW9uXCIgPyBcIu2ajOq3gCAo7Jew67SJIOyYiOy4oSlcIiA6IFwi67aE66WYICjruIzrnpzrk5wg7ISg7YOdKVwiXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0IiwiY2VsbE5hbWUiOiJvanMtY2VsbC02IiwiaW5saW5lIjpmYWxzZSwic291cmNlIjoicmNfbW9kZSA9PT0gXCJyZWdyZXNzaW9uXCIgP1xuICBQbG90LnBsb3Qoe1xuICAgIHdpZHRoOiA2MDAsIGhlaWdodDogMzUwLFxuICAgIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcIuqyveugpSAo64WEKVwiLCBncmlkOiB0cnVlIH0sXG4gICAgeTogeyBsYWJlbDogXCLsl7DrtIkgKCQpXCIsIGdyaWQ6IHRydWUgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5kb3QocmNfcmVnX2RhdGEsIHsgeDogXCJ4XCIsIHk6IFwieVwiLCBmaWxsOiBcIiMxRjNGN0FcIiwgcjogNSwgb3BhY2l0eTogMC43IH0pLFxuICAgICAgUGxvdC5saW5lYXJSZWdyZXNzaW9uWShyY19yZWdfZGF0YSwgeyB4OiBcInhcIiwgeTogXCJ5XCIsIHN0cm9rZTogXCIjOEMxNTE1XCIsIHN0cm9rZVdpZHRoOiAyLjUgfSksXG4gICAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICAgIHRleHQ6ICgpID0+IFwi7KKF7IaN67OA7IiYIHkgPSDsl7DrtIkgKOyLpOyImOqwkilcIixcbiAgICAgICAgZnJhbWVBbmNob3I6IFwidG9wLWxlZnRcIiwgZmlsbDogXCIjOEMxNTE1XCIsIGZvbnRTaXplOiAxMiwgZm9udFdlaWdodDogXCI3MDBcIiwgZHg6IDEwLCBkeTogMTRcbiAgICAgIH0pXG4gICAgXVxuICB9KVxuOlxuICBQbG90LnBsb3Qoe1xuICAgIHdpZHRoOiA2MDAsIGhlaWdodDogMzUwLFxuICAgIHN0eWxlOiB7IGZvbnRGYW1pbHk6IFwiUHJldGVuZGFyZCwgc2Fucy1zZXJpZlwiLCBmb250U2l6ZTogXCIxMnB4XCIgfSxcbiAgICB4OiB7IGxhYmVsOiBcIuuCmOydtFwiLCBncmlkOiB0cnVlIH0sXG4gICAgeTogeyBsYWJlbDogXCLshozrk50gKCQpXCIsIGdyaWQ6IHRydWUgfSxcbiAgICBjb2xvcjogeyBsZWdlbmQ6IHRydWUgfSxcbiAgICBtYXJrczogW1xuICAgICAgUGxvdC5kb3QocmNfY2xzX2RhdGEsIHtcbiAgICAgICAgeDogXCJ4MVwiLCB5OiBcIngyXCIsXG4gICAgICAgIGZpbGw6IGQgPT4gZC5sYWJlbCA9PT0gXCLsgrzshLFcIiA/IFwiIzE0MjhBMFwiIDogXCIjNTU1NTU1XCIsXG4gICAgICAgIHI6IDYsIG9wYWNpdHk6IDAuNyxcbiAgICAgICAgc3ltYm9sOiBkID0+IGQubGFiZWwgPT09IFwi7IK87ISxXCIgPyBcImNpcmNsZVwiIDogXCJkaWFtb25kXCJcbiAgICAgIH0pLFxuICAgICAgUGxvdC50ZXh0KFtudWxsXSwge1xuICAgICAgICB0ZXh0OiAoKSA9PiBcIuyiheyGjeuzgOyImCB5ID0g67iM656c65OcICjrspTso7zqsJIpXCIsXG4gICAgICAgIGZyYW1lQW5jaG9yOiBcInRvcC1sZWZ0XCIsIGZpbGw6IFwiIzhDMTUxNVwiLCBmb250U2l6ZTogMTIsIGZvbnRXZWlnaHQ6IFwiNzAwXCIsIGR4OiAxMCwgZHk6IDE0XG4gICAgICB9KVxuICAgIF1cbiAgfSlcbiJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldCIsImNlbGxOYW1lIjoib2pzLWNlbGwtNyIsImlubGluZSI6ZmFsc2UsInNvdXJjZSI6IlBsb3QucGxvdCh7XG4gIHdpZHRoOiA2MDAsIGhlaWdodDogMzUwLFxuICBzdHlsZTogeyBmb250RmFtaWx5OiBcIlByZXRlbmRhcmQsIHNhbnMtc2VyaWZcIiwgZm9udFNpemU6IFwiMTJweFwiIH0sXG4gIHg6IHsgbGFiZWw6IFwi642w7J207YSw7JaRXCIsIGdyaWQ6IHRydWUgfSxcbiAgeTogeyBsYWJlbDogXCLshLHriqVcIiwgZG9tYWluOiBbMCwgMTAwXSwgZ3JpZDogdHJ1ZSB9LFxuICBjb2xvcjogeyBsZWdlbmQ6IHRydWUsIGRvbWFpbjogW1wi66i47Iug65+s64udXCIsIFwi65Sl65+s64udXCJdLCByYW5nZTogW1wiIzk5OVwiLCBcIiM4QzE1MTVcIl0gfSxcbiAgbWFya3M6IFtcbiAgICBQbG90LmxpbmUoZmxleF9kYXRhLCB7IHg6IFwieFwiLCB5OiBcInlcIiwgc3Ryb2tlOiBcInR5cGVcIiwgc3Ryb2tlV2lkdGg6IDIuOCB9KSxcbiAgICBQbG90LnRleHQoW251bGxdLCB7XG4gICAgICB0ZXh0OiAoKSA9PiBcIuuNsOydtO2EsOqwgCDrp47snYTsiJjroZ0g65Sl65+s64ud7J20IOycoOumrFwiLFxuICAgICAgZnJhbWVBbmNob3I6IFwiYm90dG9tLXJpZ2h0XCIsIGZpbGw6IFwiIzU1NVwiLCBmb250U2l6ZTogMTAsIGR4OiAtMTAsIGR5OiAtMTBcbiAgICB9KVxuICBdXG59KVxuIn0seyJtZXRob2ROYW1lIjoiaW50ZXJwcmV0UXVpZXQiLCJzb3VyY2UiOiJzaGlueUlucHV0KCdzYWxfYjAnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgnc2FsX2IxJykifSx7Im1ldGhvZE5hbWUiOiJpbnRlcnByZXRRdWlldCIsInNvdXJjZSI6InNoaW55SW5wdXQoJ3NhbF9hbnMnKSJ9LHsibWV0aG9kTmFtZSI6ImludGVycHJldFF1aWV0Iiwic291cmNlIjoic2hpbnlJbnB1dCgncmNfbW9kZScpIn1dfQ==
 </script>
 <script type="module">
 if (window.location.protocol === "file:") { alert("The OJS runtime does not work with file:// URLs. Please use a web server to view this document."); }
