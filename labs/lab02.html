@@ -201,9 +201,8 @@ window.Quarto = {
   <li><a href="#이론의-xor을-층별로-계산-18분" id="toc-이론의-xor을-층별로-계산-18분" class="nav-link" data-scroll-target="#이론의-xor을-층별로-계산-18분">4. 이론의 XOR을 층별로 계산 — 18분</a>
   <ul class="collapse">
   <li><a href="#여기서는-왜-nn.linear2-2인가" id="toc-여기서는-왜-nn.linear2-2인가" class="nav-link" data-scroll-target="#여기서는-왜-nn.linear2-2인가">여기서는 왜 <code>nn.Linear(2, 2)</code>인가?</a></li>
-  <li><a href="#은닉층-출력이-다음-층의-입력이다" id="toc-은닉층-출력이-다음-층의-입력이다" class="nav-link" data-scroll-target="#은닉층-출력이-다음-층의-입력이다">은닉층 출력이 다음 층의 입력이다</a></li>
-  <li><a href="#직접-해보기-은닉-출력으로-xor-완성하기" id="toc-직접-해보기-은닉-출력으로-xor-완성하기" class="nav-link" data-scroll-target="#직접-해보기-은닉-출력으로-xor-완성하기">직접 해보기 — 은닉 출력으로 XOR 완성하기</a></li>
-  <li><a href="#은닉-활성화를-빼면-어떻게-될까" id="toc-은닉-활성화를-빼면-어떻게-될까" class="nav-link" data-scroll-target="#은닉-활성화를-빼면-어떻게-될까">은닉 활성화를 빼면 어떻게 될까?</a></li>
+  <li><a href="#함께-계산하기-1-or과-nand의-출력" id="toc-함께-계산하기-1-or과-nand의-출력" class="nav-link" data-scroll-target="#함께-계산하기-1-or과-nand의-출력">함께 계산하기 1 — OR과 NAND의 출력</a></li>
+  <li><a href="#함께-계산하기-2-두-출력을-and에-넣기" id="toc-함께-계산하기-2-두-출력을-and에-넣기" class="nav-link" data-scroll-target="#함께-계산하기-2-두-출력을-and에-넣기">함께 계산하기 2 — 두 출력을 AND에 넣기</a></li>
   </ul></li>
   <li><a href="#자주-쓸-구조를-nn.sequential로-묶기-10분" id="toc-자주-쓸-구조를-nn.sequential로-묶기-10분" class="nav-link" data-scroll-target="#자주-쓸-구조를-nn.sequential로-묶기-10분">5. 자주 쓸 구조를 <code>nn.Sequential</code>로 묶기 — 10분</a>
   <ul class="collapse">
@@ -220,7 +219,6 @@ window.Quarto = {
   <li><a href="#생성과-호출-구분" id="toc-생성과-호출-구분" class="nav-link" data-scroll-target="#생성과-호출-구분">생성과 호출 구분</a></li>
   <li><a href="#편향의-효과-예상하기" id="toc-편향의-효과-예상하기" class="nav-link" data-scroll-target="#편향의-효과-예상하기">편향의 효과 예상하기</a></li>
   <li><a href="#활성화만-바꾸기" id="toc-활성화만-바꾸기" class="nav-link" data-scroll-target="#활성화만-바꾸기">활성화만 바꾸기</a></li>
-  <li><a href="#은닉-출력으로-xor-완성하기" id="toc-은닉-출력으로-xor-완성하기" class="nav-link" data-scroll-target="#은닉-출력으로-xor-완성하기">은닉 출력으로 XOR 완성하기</a></li>
   <li><a href="#그림을-읽고-모형-조립하기" id="toc-그림을-읽고-모형-조립하기" class="nav-link" data-scroll-target="#그림을-읽고-모형-조립하기">그림을 읽고 모형 조립하기</a></li>
   </ul></li>
   </ul>
@@ -281,7 +279,7 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>37–55분</td>
-<td>이론의 XOR을 층별로 계산·비교</td>
+<td>교재의 XOR을 함께 계산하고 정답 확인</td>
 </tr>
 <tr class="odd">
 <td>55–65분</td>
@@ -304,7 +302,7 @@ window.Quarto = {
 </figure>
 </div>
 <p><code>X</code>의 한 행은 입력 한 건이다. 가중치 <code>W</code>는 <strong>출력별로 한 행</strong>, 편향 <code>b</code>는 <strong>출력별로 하나</strong>씩 담는다. 이는 뒤에서 사용할 PyTorch 층의 저장 방식과 같다. <code>.T</code>는 행렬의 행과 열을 바꾼다. <code>W.T</code>로 두 가중치를 세로로 놓으면 실습 1의 행렬 곱을 적용할 수 있다.</p>
-<div id="ccccb5fd" class="cell" data-execution_count="1">
+<div id="865ba988" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor([[<span class="fl">0.</span>, <span class="fl">0.</span>],</span>
@@ -335,28 +333,28 @@ window.Quarto = {
 <pre class="text"><code>x₁, x₂  →  nn.Linear(2, 1)  →  z
 입력 2개                       출력 1개</code></pre>
 <p>출력 하나를 계산하려면 두 입력에 곱할 <strong>가중치 2개</strong>와 더할 <strong>편향 1개</strong>가 필요하다. <code>layer = nn.Linear(2, 1)</code>로 층을 만들고, <code>layer(X)</code>로 입력을 넣어 계산한다.</p>
-<div id="81703218" class="cell" data-execution_count="2">
+<div id="c719affb" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>)   <span class="co"># 입력 2개 → 출력 1개</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>입력 4건을 넣으면 각 건에서 값 하나씩, 총 4개의 값이 나온다. <strong>입력 개수 2는 한 건에 있는 변수 수</strong>다. 데이터가 4건이라고 <code>nn.Linear(4, 1)</code>로 쓰지 않는다.</p>
 <p>층을 만들 때 가중치와 편향은 무작위로 초기화된다. <code>weight</code>와 <code>bias</code> 속성으로 값을 읽을 수 있다.</p>
-<div id="f7fb48e8" class="cell" data-execution_count="3">
+<div id="85f720db" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(layer.weight)   <span class="co"># 출력 하나에 연결된 가중치 두 개</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(layer.bias)     <span class="co"># 출력 하나의 편향</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Parameter containing:
-tensor([[-0.4794,  0.2499]], requires_grad=True)
+tensor([[-0.5480,  0.0241]], requires_grad=True)
 Parameter containing:
-tensor([-0.5480], requires_grad=True)</code></pre>
+tensor([-0.2735], requires_grad=True)</code></pre>
 </div>
 </div>
 </section>
 <section id="앞에서-쓴-가중치를-그대로-넣는다-제공-코드" class="level3">
 <h3 class="anchored" data-anchor-id="앞에서-쓴-가중치를-그대로-넣는다-제공-코드">앞에서 쓴 가중치를 그대로 넣는다 — 제공 코드</h3>
 <p><code>copy_(텐서)</code>는 기존 파라미터에 값을 복사한다. <code>with torch.no_grad():</code> 아래에서는 기울기를 기록하지 않고 값을 설정한다. 아래 두 줄로 앞에서 만든 <code>W</code>, <code>b</code>를 넣는다.</p>
-<div id="2b3e51d1" class="cell" data-execution_count="4">
+<div id="1e9c69ab" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    layer.weight.copy_(W)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    layer.bias.copy_(b)</span>
@@ -371,7 +369,7 @@ tensor([-0.5480], requires_grad=True)</code></pre>
 </div>
 </div>
 <p><code>layer(X)</code>는 입력 4건 각각에 대해 값 하나를 계산한다. 결과는 <code>(4, 1)</code>이다. 앞의 행렬 계산과 나란히 출력해 비교한다. 두 결과 모두 <span class="math inline">\((-0.3,0.2,0.2,0.7)\)</span>이다.</p>
-<div id="bdd8a8aa" class="cell" data-execution_count="5">
+<div id="dc544d55" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z_matrix)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -413,13 +411,13 @@ tensor([[-0.3000],
 <h3 class="anchored" data-anchor-id="직접-해보기-생성과-호출-구분">직접 해보기 — 생성과 호출 구분</h3>
 <p>입력 2개로 출력 1개를 만드는 새 층 <code>practice_layer</code>를 생성하고, 네 입력 <code>X</code>의 출력 <code>practice_z</code>를 구한다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="3aaba182" class="cell" data-execution_count="6">
+<div id="d8c96be7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>practice_layer <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>practice_z <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 첫 줄에서는 층을 만들고, 다음 줄에서는 그 층으로 계산한다.</p>
 <p><strong>출력 확인 — 작성 후 실행</strong></p>
-<div id="bcbd9bdf" class="cell" data-execution_count="7">
+<div id="bae291db" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(practice_z)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(practice_z.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -429,7 +427,7 @@ tensor([[-0.3000],
 <section id="편향만-바꾸면" class="level3">
 <h3 class="anchored" data-anchor-id="편향만-바꾸면">편향만 바꾸면?</h3>
 <p>비교할 층을 하나 더 만든다. 가중치는 같고 편향만 -0.3에서 0.2로 바꾼다.</p>
-<div id="669a04b0" class="cell" data-execution_count="8">
+<div id="7f08d806" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>shifted_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    shifted_layer.weight.copy_(torch.tensor([[<span class="fl">0.5</span>, <span class="fl">0.5</span>]]))</span>
@@ -440,13 +438,13 @@ tensor([[-0.3000],
 <h3 class="anchored" data-anchor-id="직접-해보기-편향의-효과-예상하기">직접 해보기 — 편향의 효과 예상하기</h3>
 <p>새 층의 출력 네 값을 먼저 예상해서 <code>expected_shift</code>에 텐서로 적는다. 그다음 <code>shifted_layer(X)</code>를 <code>shifted_z</code>에 담는다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="a3cbb80f" class="cell" data-execution_count="9">
+<div id="d5785547" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>expected_shift <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>shifted_z <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 편향이 얼마나 증가했는지 먼저 계산한다.</p>
 <p><strong>출력 확인 — 작성 후 실행</strong></p>
-<div id="f7486682" class="cell" data-execution_count="10">
+<div id="ec0f6b49" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'예상:'</span>, expected_shift)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'계산:'</span>, shifted_z)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'변화량:'</span>, shifted_z <span class="op">-</span> z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -497,7 +495,7 @@ tensor([[-0.3000],
 <section id="계단-함수를-정의한다" class="level3">
 <h3 class="anchored" data-anchor-id="계단-함수를-정의한다">계단 함수를 정의한다</h3>
 <p>입력 텐서의 각 값이 0 이상이면 1, 아니면 0을 반환하는 함수다. <code>.float()</code>는 비교 결과의 참·거짓을 실수 1과 0으로 바꾼다.</p>
-<div id="0b004b4d" class="cell" data-execution_count="11">
+<div id="e17fa020" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step(x):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (x <span class="op">&gt;=</span> <span class="dv">0</span>).<span class="bu">float</span>()</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -515,7 +513,7 @@ tensor([[-0.3000],
 <section id="sigmoid와-relu는-부품으로-적용한다" class="level3">
 <h3 class="anchored" data-anchor-id="sigmoid와-relu는-부품으로-적용한다">Sigmoid와 ReLU는 부품으로 적용한다</h3>
 <p>Sigmoid와 ReLU도 <strong>부품 생성 → 입력을 넣어 호출</strong> 순서로 사용한다. 두 부품에는 학습할 가중치나 편향이 없다.</p>
-<div id="70fddc97" class="cell" data-execution_count="12">
+<div id="d04a75a0" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sigmoid <span class="op">=</span> nn.Sigmoid()</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>relu <span class="op">=</span> nn.ReLU()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -525,13 +523,13 @@ tensor([[-0.3000],
 <h3 class="anchored" data-anchor-id="직접-해보기-활성화만-바꾸기">직접 해보기 — 활성화만 바꾸기</h3>
 <p><code>sigmoid(z)</code>를 <code>prob</code>, <code>relu(z)</code>를 <code>relu_z</code>에 담는다. ReLU가 바꿀 행을 먼저 짚고, 실행 후 계단 함수 출력과 비교한다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="b7a5a89d" class="cell" data-execution_count="13">
+<div id="94571ce2" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>relu_z <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 부품은 이미 위에서 만들었다. 이번에는 입력을 넣어 호출한다.</p>
 <p><strong>출력 확인 — 작성 후 실행</strong></p>
-<div id="18be7f5c" class="cell" data-execution_count="14">
+<div id="c4248851" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Sigmoid:'</span>, prob)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ReLU:'</span>, relu_z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -613,7 +611,7 @@ x₁, x₂ → Linear(2, 2) ──┤
 </tbody>
 </table>
 <p><strong>앞 층이 내보내는 개수와 다음 층이 받는 개수가 같아야 연결된다.</strong> 여기서는 은닉 출력 2개를 출력층이 그대로 받는다. 아래는 이론의 가중치를 넣는 제공 코드다.</p>
-<div id="5c4908de" class="cell" data-execution_count="15">
+<div id="485382fe" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">2</span>)   <span class="co"># x₁, x₂ 두 개 → 가중합 두 개</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>output_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>)   <span class="co"># s₁, s₂ 두 개 → 가중합 하나</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -624,78 +622,113 @@ x₁, x₂ → Linear(2, 2) ──┤
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    output_layer.bias.copy_(torch.tensor([<span class="op">-</span><span class="fl">0.7</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="은닉층-출력이-다음-층의-입력이다" class="level3">
-<h3 class="anchored" data-anchor-id="은닉층-출력이-다음-층의-입력이다">은닉층 출력이 다음 층의 입력이다</h3>
-<p><code>hidden_z</code>는 가중합 두 개, <code>hidden_output</code>은 계단 함수를 적용한 두 값이다. 먼저 <code>(1,0)</code>인 두 번째 입력이 은닉층에서 어떤 두 값을 만드는지 계산한다.</p>
-<div id="fdf70eb4" class="cell" data-execution_count="16">
+<section id="함께-계산하기-1-or과-nand의-출력" class="level3">
+<h3 class="anchored" data-anchor-id="함께-계산하기-1-or과-nand의-출력">함께 계산하기 1 — OR과 NAND의 출력</h3>
+<p>교재처럼 먼저 두 퍼셉트론의 출력을 구한다. <code>hidden_layer(X)</code>로 가중합을 계산하고, 앞에서 만든 <code>step</code> 함수를 적용한다. 첫 열이 OR의 출력 <span class="math inline">\(s_1\)</span>, 둘째 열이 NAND의 출력 <span class="math inline">\(s_2\)</span>다.</p>
+<div id="025996d7" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>hidden_z <span class="op">=</span> hidden_layer(X)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>hidden_output <span class="op">=</span> step(hidden_z)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hidden_z)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hidden_output)</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hidden_output.shape)    <span class="co"># (4, 2): 데이터 4건, 은닉 출력 2개</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(hidden_output)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>tensor([[-0.3000,  0.7000],
-        [ 0.2000,  0.2000],
-        [ 0.2000,  0.2000],
-        [ 0.7000, -0.3000]], grad_fn=&lt;AddmmBackward0&gt;)
-tensor([[0., 1.],
+<pre><code>tensor([[0., 1.],
         [1., 1.],
         [1., 1.],
-        [1., 0.]])
-torch.Size([4, 2])</code></pre>
+        [1., 0.]])</code></pre>
 </div>
 </div>
+<p>출력을 교재의 값과 함께 확인한다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>입력 <span class="math inline">\((x_1,x_2)\)</span></th>
+<th><span class="math inline">\(s_1\)</span>: OR</th>
+<th><span class="math inline">\(s_2\)</span>: NAND</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(0, 0)</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>(1, 0)</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>(0, 1)</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>(1, 1)</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="직접-해보기-은닉-출력으로-xor-완성하기" class="level3">
-<h3 class="anchored" data-anchor-id="직접-해보기-은닉-출력으로-xor-완성하기">직접 해보기 — 은닉 출력으로 XOR 완성하기</h3>
-<p><code>hidden_output</code>을 출력층에 넣어 <code>output_z</code>를 구하고, <code>step</code>을 적용해 <code>xor_pred</code>를 만든다.</p>
-<p><strong>작성 셀</strong></p>
-<div id="c48c681c" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>output_z <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>xor_pred <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>힌트: <code>output_layer(앞 층의 출력)</code>으로 가중합을 구한 뒤 <code>step(가중합)</code>을 계산한다.</p>
-<p><strong>출력 확인 — 작성 후 실행</strong></p>
-<div id="2173bdff" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'출력층 가중합:'</span>, output_z)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'최종 판정:'</span>, xor_pred)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>가중합은 <code>(-0.2, 0.3, 0.3, -0.2)</code>, 최종 판정은 XOR 정답 <code>(0, 1, 1, 0)</code>이다.</p>
-<p><strong>설명하기:</strong> 단일 OR 퍼셉트론과 비교하면 어느 입력의 최종 판정이 달라졌는가?</p>
-</section>
-<section id="은닉-활성화를-빼면-어떻게-될까" class="level3">
-<h3 class="anchored" data-anchor-id="은닉-활성화를-빼면-어떻게-될까">은닉 활성화를 빼면 어떻게 될까?</h3>
-<p>가중치는 그대로 두고, 은닉 가중합을 계단 함수 없이 출력층에 바로 넣는다. 결과를 예상한 뒤 실행한다. 앞 문제를 아직 못 풀었어도 아래 비교는 실행할 수 있다.</p>
-<div id="66457a28" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>with_step_z <span class="op">=</span> output_layer(hidden_output)</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>with_hidden_step <span class="op">=</span> step(with_step_z)</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>without_step_z <span class="op">=</span> output_layer(hidden_z)</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>without_hidden_step <span class="op">=</span> step(without_step_z)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'은닉 계단 있음:'</span>, with_hidden_step)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'은닉 계단 없음:'</span>, without_hidden_step)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="함께-계산하기-2-두-출력을-and에-넣기" class="level3">
+<h3 class="anchored" data-anchor-id="함께-계산하기-2-두-출력을-and에-넣기">함께 계산하기 2 — 두 출력을 AND에 넣기</h3>
+<p>방금 구한 <code>hidden_output</code>을 출력층에 넣고 <code>step</code>을 적용한다. 교재의 계산식은 <span class="math inline">\(\hat{y}=\operatorname{step}(0.5s_1+0.5s_2-0.7)\)</span>이다.</p>
+<div id="39bd3a75" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>output_z <span class="op">=</span> output_layer(hidden_output)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>xor_pred <span class="op">=</span> step(output_z)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xor_pred)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>은닉 계단 있음: tensor([[0.],
+<pre><code>tensor([[0.],
         [1.],
         [1.],
-        [0.]])
-은닉 계단 없음: tensor([[0.],
-        [0.],
-        [0.],
         [0.]])</code></pre>
 </div>
 </div>
-<p>은닉 가중합 두 개의 합은 모든 행에서 0.4다. 따라서 은닉 활성화를 빼면 출력층의 합은 항상 <span class="math inline">\(0.5\times0.4-0.7=-0.5\)</span>여서 네 판정이 모두 0이 된다. 이 비교는 <strong>같은 가중치에서 은닉 활성화가 한 역할</strong>을 보여준다. 활성화 없는 가중합 층들을 하나로 합칠 수 있다는 일반적인 이유는 이론의 해당 절과 연결한다.</p>
-<p>계단 함수는 이론의 XOR 계산을 재현하기 위해 썼다. 뒤의 학습 실습에서는 ReLU나 Sigmoid 같은 활성화를 사용한다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>입력 <span class="math inline">\((x_1,x_2)\)</span></th>
+<th>출력층 가중합</th>
+<th>최종 출력</th>
+<th>XOR 정답</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>(0, 0)</td>
+<td>-0.2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>(1, 0)</td>
+<td>0.3</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>(0, 1)</td>
+<td>0.3</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>(1, 1)</td>
+<td>-0.2</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>최종 출력은 위에서부터 <strong>0, 1, 1, 0</strong>으로, 교재의 XOR 정답과 같다.</p>
 </section>
 </section>
 <section id="자주-쓸-구조를-nn.sequential로-묶기-10분" class="level2">
 <h2 class="anchored" data-anchor-id="자주-쓸-구조를-nn.sequential로-묶기-10분">5. 자주 쓸 구조를 <code>nn.Sequential</code>로 묶기 — 10분</h2>
 <p><code>nn.Sequential</code>은 전달한 부품을 <strong>적힌 순서대로 실행하는 모형</strong>이다. 각 부품의 출력이 다음 부품의 입력이 된다. 반환된 모형도 <code>model(X)</code>로 호출한다.</p>
 <p>먼저 앞에서 만든 단일 층과 Sigmoid를 묶는다. <strong>같은 부품을 묶으므로 가중치도 그대로</strong>다.</p>
-<div id="79ec69e5" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>prob_model <span class="op">=</span> nn.Sequential(layer, sigmoid)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(prob_model(X))          <span class="co"># sigmoid(layer(X))와 같은 네 값</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0d4083ba" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>prob_model <span class="op">=</span> nn.Sequential(layer, sigmoid)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(prob_model(X))          <span class="co"># sigmoid(layer(X))와 같은 네 값</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([[0.4256],
         [0.5498],
@@ -708,18 +741,18 @@ torch.Size([4, 2])</code></pre>
 <p>이제 이후 학습에서 쓸 형태를 만든다. 각 <code>Linear</code>를 새로 생성하므로 가중치도 새로 초기화된다. 이 모형은 출력 실수 하나를 예측할 구조이며, 앞의 XOR 정답을 재현하도록 설정한 모형이 아니다.</p>
 <pre class="text"><code>입력 2개 → Linear(2, 2) → ReLU → Linear(2, 1) → 실수 출력 1개</code></pre>
 <p>회귀 출력은 항등 함수이므로 마지막 <code>Linear</code>의 결과를 그대로 쓴다. 중간 활성화는 <code>Sequential</code> 안에 명시적으로 넣어야 한다.</p>
-<div id="78ca9195" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">2</span>),</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>),</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(X))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="57e97a9d" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">2</span>),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(X))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>tensor([[0.3847],
-        [0.3548],
-        [0.6904],
-        [0.7966]], grad_fn=&lt;AddmmBackward0&gt;)</code></pre>
+<pre><code>tensor([[-0.1871],
+        [-0.1875],
+        [-0.0512],
+        [-0.1875]], grad_fn=&lt;AddmmBackward0&gt;)</code></pre>
 </div>
 </div>
 </section>
@@ -727,11 +760,11 @@ torch.Size([4, 2])</code></pre>
 <h3 class="anchored" data-anchor-id="파라미터-수를-코드로-확인">파라미터 수를 코드로 확인</h3>
 <p>이론에서 한 층의 파라미터 수는 <strong>입력 수 × 출력 수 + 출력 수</strong>다. 위 모형은 <span class="math inline">\((2\times2+2)+(2\times1+1)=9\)</span>개다.</p>
 <p><code>model.parameters()</code>는 모형의 가중치·편향 텐서들을 차례로 꺼낼 수 있게 한다. <code>for parameter in ...:</code>는 텐서를 하나씩 꺼내 들여쓴 코드를 반복한다. <code>parameter.numel()</code>은 그 텐서의 전체 원소 수를 반환한다.</p>
-<div id="1169411e" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> parameter <span class="kw">in</span> model.parameters():</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> count <span class="op">+</span> parameter.numel()</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="09e8930e" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> parameter <span class="kw">in</span> model.parameters():</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> count <span class="op">+</span> parameter.numel()</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>9</code></pre>
 </div>
@@ -750,20 +783,20 @@ torch.Size([4, 2])</code></pre>
 <li>파라미터 수를 먼저 계산해 <code>expected_count</code>에 적는다.</li>
 </ol>
 <p><strong>작성 셀</strong></p>
-<div id="535dc06b" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>my_model <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>my_pred <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>my_one <span class="op">=</span> <span class="va">None</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>expected_count <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e34c8600" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>my_model <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>my_pred <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>my_one <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>expected_count <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 은닉노드 수가 바뀌면 앞 층의 출력 수와 뒤 층의 입력 수를 함께 바꾼다.</p>
 <p><strong>출력 확인 — 작성 후 실행</strong></p>
-<div id="b1f3267b" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_model)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_pred)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_pred.shape)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_one)</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(expected_count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8425a78a" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_model)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_pred)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_pred.shape)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(my_one)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(expected_count)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>모형은 <code>Linear(2, 3) → ReLU → Linear(3, 1)</code>이다. 네 건의 출력은 4행 1열이고, <code>my_one</code>은 그 첫 행과 같다. 파라미터 수는 13개다.</p>
 <p><strong>설명하기:</strong> 출력 모양이 맞다는 것만으로 잘 예측하는 모형이라고 할 수 있는가? 먼저 끝났다면 은닉노드를 4개로 바꾸고 증가한 파라미터 수를 설명한다.</p>
@@ -779,35 +812,30 @@ torch.Size([4, 2])</code></pre>
 <p>해설 코드를 해당 작성 셀에 옮긴 후 결과를 출력해 비교한다.</p>
 <section id="생성과-호출-구분" class="level3">
 <h3 class="anchored" data-anchor-id="생성과-호출-구분">생성과 호출 구분</h3>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>practice_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>practice_z <span class="op">=</span> practice_layer(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>practice_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">1</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>practice_z <span class="op">=</span> practice_layer(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="편향의-효과-예상하기" class="level3">
 <h3 class="anchored" data-anchor-id="편향의-효과-예상하기">편향의 효과 예상하기</h3>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>expected_shift <span class="op">=</span> torch.tensor([[<span class="fl">0.2</span>], [<span class="fl">0.7</span>], [<span class="fl">0.7</span>], [<span class="fl">1.2</span>]])</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>shifted_z <span class="op">=</span> shifted_layer(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>expected_shift <span class="op">=</span> torch.tensor([[<span class="fl">0.2</span>], [<span class="fl">0.7</span>], [<span class="fl">0.7</span>], [<span class="fl">1.2</span>]])</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>shifted_z <span class="op">=</span> shifted_layer(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="활성화만-바꾸기" class="level3">
 <h3 class="anchored" data-anchor-id="활성화만-바꾸기">활성화만 바꾸기</h3>
-<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> sigmoid(z)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>relu_z <span class="op">=</span> relu(z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="은닉-출력으로-xor-완성하기" class="level3">
-<h3 class="anchored" data-anchor-id="은닉-출력으로-xor-완성하기">은닉 출력으로 XOR 완성하기</h3>
-<div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>output_z <span class="op">=</span> output_layer(hidden_output)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>xor_pred <span class="op">=</span> step(output_z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> sigmoid(z)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>relu_z <span class="op">=</span> relu(z)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="그림을-읽고-모형-조립하기" class="level3">
 <h3 class="anchored" data-anchor-id="그림을-읽고-모형-조립하기">그림을 읽고 모형 조립하기</h3>
-<div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>my_model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">3</span>),</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">3</span>, <span class="dv">1</span>),</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>my_pred <span class="op">=</span> my_model(X)</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>my_one <span class="op">=</span> my_model(X[:<span class="dv">1</span>])</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>expected_count <span class="op">=</span> (<span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>추가 연습 해석: 은닉노드가 4개면 파라미터 수는 <span class="math inline">\((2×4+4)+(4×1+1)=17\)</span>개다. 3개일 때보다 4개 늘어난다. XOR 비교에서는 단일 OR이 1로 판정했던 <code>(1,1)</code>을 다층 모형이 0으로 판정한다.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>my_model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">3</span>),</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">3</span>, <span class="dv">1</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>my_pred <span class="op">=</span> my_model(X)</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>my_one <span class="op">=</span> my_model(X[:<span class="dv">1</span>])</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>expected_count <span class="op">=</span> (<span class="dv">2</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">+</span> <span class="dv">3</span>) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> <span class="dv">1</span> <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>추가 연습 해석: 은닉노드가 4개면 파라미터 수는 <span class="math inline">\((2×4+4)+(4×1+1)=17\)</span>개다. 3개일 때보다 4개 늘어난다.</p>
 
 
 </section>
