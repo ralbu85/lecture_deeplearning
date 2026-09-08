@@ -248,12 +248,6 @@ window.Quarto = {
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab01.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img" alt="Open In Colab"></a></p>
-<figcaption>Open In Colab</figcaption>
-</figure>
-</div>
 <section id="오늘-할-일-75분" class="level2">
 <h2 class="anchored" data-anchor-id="오늘-할-일-75분">오늘 할 일 — 75분</h2>
 <p>이론 1장의 <strong>사원 경력·연봉 표</strong>를 코드로 다룬다. 데이터 한 건과 변수 하나를 구분하고, 입력과 정답을 고르고, 주어진 예측의 오차를 계산한다. 마지막에는 신경망에서 사용할 행렬 곱을 연습한다.</p>
@@ -337,7 +331,7 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<div id="05b1fd13" class="cell" data-execution_count="1">
+<div id="a204eee3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> torch.tensor([<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>], dtype<span class="op">=</span>torch.float32)</span>
@@ -350,7 +344,7 @@ window.Quarto = {
 <section id="속성은-읽고-메서드는-실행한다" class="level3">
 <h3 class="anchored" data-anchor-id="속성은-읽고-메서드는-실행한다">속성은 읽고, 메서드는 실행한다</h3>
 <p><code>v.shape</code>와 <code>v.dtype</code>은 텐서가 가진 <strong>속성</strong>이다. 이미 가진 정보를 읽으므로 괄호를 붙이지 않는다. 반면 뒤에서 쓸 <code>v.sum()</code>은 텐서의 합을 계산하는 <strong>메서드</strong>다. 텐서에 소속된 함수를 실행하므로 괄호를 붙인다. 지금은 속성 두 개부터 확인한다.</p>
-<div id="14302102" class="cell" data-execution_count="2">
+<div id="f1eff3fd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(v.shape)     <span class="co"># 원소 3개: (3,)</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(v.dtype)     <span class="co"># torch.float32</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -359,7 +353,7 @@ torch.float32</code></pre>
 </div>
 </div>
 <p>행렬은 바깥 리스트 안에 <strong>행별 리스트</strong>를 넣어 만든다. <code>shape</code>의 첫 숫자는 행 수, 둘째 숫자는 열 수다. 다음 결과를 먼저 예상한다.</p>
-<div id="7401700d" class="cell" data-execution_count="3">
+<div id="224773ba" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> torch.tensor([[<span class="dv">1</span>, <span class="dv">2</span>],</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                      [<span class="dv">3</span>, <span class="dv">4</span>]], dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(table)</span>
@@ -375,12 +369,12 @@ torch.Size([2, 2])</code></pre>
 <h3 class="anchored" data-anchor-id="직접-해보기-텐서-만들기">직접 해보기 — 텐서 만들기</h3>
 <p>숫자 <code>[[1, 2], [3, 4], [5, 6]]</code>을 담은 실수 텐서 <code>practice</code>를 만든다. 행과 열의 수를 먼저 말해 본다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="8879bb7e" class="cell" data-execution_count="4">
+<div id="23525715" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>practice <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: <code>torch.tensor(숫자 목록, dtype=torch.float32)</code>를 사용한다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="1f729c1a" class="cell" data-execution_count="5">
+<div id="f7d45c8d" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">isinstance</span>(practice, torch.Tensor)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> practice.shape <span class="op">==</span> (<span class="dv">3</span>, <span class="dv">2</span>) <span class="kw">and</span> practice.dtype <span class="op">==</span> torch.float32</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> torch.equal(practice, torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">3.</span>, <span class="fl">4.</span>], [<span class="fl">5.</span>, <span class="fl">6.</span>]]))</span>
@@ -391,7 +385,7 @@ torch.Size([2, 2])</code></pre>
 <section id="이론의-데이터-표-고르기-15분" class="level2">
 <h2 class="anchored" data-anchor-id="이론의-데이터-표-고르기-15분">2. 이론의 데이터 표 고르기 — 15분</h2>
 <p>이론의 사원 8명 자료다. 연봉은 읽기 쉽도록 <strong>천 달러</strong> 단위로 썼다. 한 행이 사원 한 명, 한 열이 변수 하나다.</p>
-<div id="3bcc8873" class="cell" data-execution_count="6">
+<div id="f0fb5951" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#                  경력(년)  연봉(천 달러)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>staff <span class="op">=</span> torch.tensor([[<span class="fl">1.5</span>, <span class="dv">31</span>],</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                      [<span class="fl">2.5</span>, <span class="dv">39</span>],</span>
@@ -431,7 +425,7 @@ torch.Size([2, 2])</code></pre>
 </tr>
 </tbody>
 </table>
-<div id="ae2dbe38" class="cell" data-execution_count="7">
+<div id="319d759d" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(staff[<span class="dv">0</span>, <span class="dv">1</span>])</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(staff[:<span class="dv">3</span>])</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(staff[:, <span class="dv">0</span>])</span>
@@ -453,7 +447,7 @@ tensor([[ 1.5000],
 </div>
 </div>
 <p>이론에서 경력은 입력 <span class="math inline">\(X\)</span>, 연봉은 정답 <span class="math inline">\(y\)</span>다. 이번 두 실습에서는 입력과 회귀 정답을 <strong>행이 데이터, 열이 변수인 2차원 표</strong>로 둔다. <code>0:1</code>처럼 슬라이스를 쓰면 열 하나도 표로 유지된다. 한 건만 고를 때도 <code>X[:1]</code>로 행을 남긴다.</p>
-<div id="da5392f5" class="cell" data-execution_count="8">
+<div id="f74a5b0b" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> staff[:, <span class="dv">0</span>:<span class="dv">1</span>]</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> staff[:, <span class="dv">1</span>:<span class="dv">2</span>]</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.shape, y.shape)       <span class="co"># 둘 다 (8, 1)</span></span>
@@ -467,7 +461,7 @@ tensor([[1.5000]])</code></pre>
 <section id="조건으로-행을-고른다" class="level3">
 <h3 class="anchored" data-anchor-id="조건으로-행을-고른다">조건으로 행을 고른다</h3>
 <p><code>&gt;=</code>는 이상인지 비교한다. 열의 값들을 비교하면 사원마다 <code>True</code> 또는 <code>False</code>가 나온다. 이 결과를 <strong>조건 마스크</strong>라 하고 대괄호에 넣으면 <code>True</code>인 행만 남는다.</p>
-<div id="e882e9ee" class="cell" data-execution_count="9">
+<div id="90a7c2c5" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> staff[:, <span class="dv">0</span>] <span class="op">&gt;=</span> <span class="dv">8</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mask)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X[mask])</span>
@@ -487,14 +481,14 @@ tensor([[ 67.],
 <h3 class="anchored" data-anchor-id="직접-해보기-입력과-정답을-함께-고르기">직접 해보기 — 입력과 정답을 함께 고르기</h3>
 <p>경력 5년 미만인 사원의 조건 <code>junior_mask</code>, 입력 <code>junior_X</code>, 정답 <code>junior_y</code>를 만든다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="4d655997" class="cell" data-execution_count="10">
+<div id="ab33e3dd" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>junior_mask <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>junior_X <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>junior_y <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 조건은 경력 열로 만들고, 같은 조건을 <code>X</code>와 <code>y</code>에 적용한다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="2be47088" class="cell" data-execution_count="11">
+<div id="230118c3" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> junior_mask <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> junior_mask.tolist() <span class="op">==</span> [<span class="va">True</span>, <span class="va">True</span>, <span class="va">True</span>, <span class="va">False</span>, <span class="va">False</span>, <span class="va">False</span>, <span class="va">False</span>, <span class="va">False</span>]</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> junior_X <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> junior_X.shape <span class="op">==</span> (<span class="dv">3</span>, <span class="dv">1</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> torch.allclose(junior_X, torch.tensor([[<span class="fl">1.5</span>], [<span class="fl">2.5</span>], [<span class="fl">4.2</span>]]))</span>
@@ -508,7 +502,7 @@ tensor([[ 67.],
 <section id="사칙연산으로-오차-계산-10분" class="level2">
 <h2 class="anchored" data-anchor-id="사칙연산으로-오차-계산-10분">3. 사칙연산으로 오차 계산 — 10분</h2>
 <p><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>** 2</code>는 각각 더하기, 빼기, 곱하기, 나누기, 제곱이다. 텐서에 숫자 하나를 곱하면 모든 원소에 같은 곱셈을 적용한다. 모양이 같은 두 텐서는 같은 위치끼리 계산한다.</p>
-<div id="5a2bae5f" class="cell" data-execution_count="12">
+<div id="c92fdac4" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[:<span class="dv">3</span>] <span class="op">*</span> <span class="dv">1000</span>)     <span class="co"># 천 달러 → 달러</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[:<span class="dv">3</span>] <span class="op">/</span> <span class="dv">12</span>)       <span class="co"># 연봉 → 월급, 단위는 천 달러</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -521,7 +515,7 @@ tensor([[2.5833],
 </div>
 </div>
 <p>이론의 후보 모형 B는 연봉(천 달러) <span class="math inline">\(=10+8\times 경력\)</span>이다. 첫 세 사원의 예측값은 22, 30, 43.6이다. 지금은 이 예측값을 주고 <strong>정답 − 예측</strong>을 계산한다. 예측을 만드는 신경망 부품은 다음 실습에서 배운다.</p>
-<div id="b18bdc00" class="cell" data-execution_count="13">
+<div id="310b7f19" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>y_first <span class="op">=</span> y[:<span class="dv">3</span>]</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pred_B <span class="op">=</span> torch.tensor([[<span class="fl">22.</span>], [<span class="fl">30.</span>], [<span class="fl">43.6</span>]])</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>error_B <span class="op">=</span> y_first <span class="op">-</span> pred_B</span>
@@ -540,14 +534,14 @@ tensor([[81.0000],
 <h3 class="anchored" data-anchor-id="직접-해보기-다른-후보의-오차-계산">직접 해보기 — 다른 후보의 오차 계산</h3>
 <p>이론의 후보 C는 앞 세 사원에게 25.5, 32.5, 44.4를 예측한다. <code>pred_C</code>, <code>error_C</code>, <code>squared_C</code>를 작성한다. 세 번째 사원의 오차 부호를 먼저 예상한다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="efac8966" class="cell" data-execution_count="14">
+<div id="84c8d0a0" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>pred_C <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>error_C <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>squared_C <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 예측 텐서는 정답과 같은 <code>(3, 1)</code>로 만든다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="951d5638" class="cell" data-execution_count="15">
+<div id="c4debcf7" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> pred_C <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> pred_C.shape <span class="op">==</span> y_first.shape</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> torch.allclose(pred_C, torch.tensor([[<span class="fl">25.5</span>], [<span class="fl">32.5</span>], [<span class="fl">44.4</span>]]))</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> error_C <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> torch.allclose(error_C, torch.tensor([[<span class="fl">5.5</span>], [<span class="fl">6.5</span>], [<span class="op">-</span><span class="fl">1.4</span>]]), atol<span class="op">=</span><span class="fl">1e-5</span>)</span>
@@ -588,7 +582,7 @@ tensor([[81.0000],
 </tbody>
 </table>
 <p>이론의 <strong>잔차 제곱합</strong>은 오차를 제곱해서 더한 값이다. 작을수록 주어진 데이터를 더 가깝게 예측한다.</p>
-<div id="b1c03677" class="cell" data-execution_count="16">
+<div id="8cb5f4f8" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sse_B <span class="op">=</span> (error_B <span class="op">**</span> <span class="dv">2</span>).<span class="bu">sum</span>()</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sse_B.item())        <span class="co"># 약 162.36: 앞 세 사원에 대한 값</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_first.mean())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -601,7 +595,7 @@ tensor(37.6667)</code></pre>
 <section id="dim은-합치려는-축을-지정한다" class="level3">
 <h3 class="anchored" data-anchor-id="dim은-합치려는-축을-지정한다"><code>dim</code>은 합치려는 축을 지정한다</h3>
 <p>2차원 표에서 0번 축은 행, 1번 축은 열이다. <code>dim=0</code>은 여러 행을 합쳐 <strong>열별 결과</strong>, <code>dim=1</code>은 여러 열을 합쳐 <strong>행별 결과</strong>를 만든다. 인수를 생략하면 전체를 합친다.</p>
-<div id="cb697ea6" class="cell" data-execution_count="17">
+<div id="53fb55aa" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>],</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">4.</span>, <span class="fl">5.</span>, <span class="fl">6.</span>]])</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(M.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">0</span>))     <span class="co"># [5, 7, 9]</span></span>
@@ -613,7 +607,7 @@ tensor([ 6., 15.])
 tensor([2.5000, 3.5000, 4.5000])</code></pre>
 </div>
 </div>
-<div id="a46ae68d" class="cell" data-execution_count="18">
+<div id="69d4bcd5" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>all_B <span class="op">=</span> torch.tensor([[<span class="fl">22.</span>], [<span class="fl">30.</span>], [<span class="fl">43.6</span>], [<span class="fl">50.8</span>], [<span class="fl">63.6</span>], [<span class="fl">76.4</span>], [<span class="fl">86.</span>], [<span class="fl">114.</span>]])</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>all_C <span class="op">=</span> torch.tensor([[<span class="fl">25.5</span>], [<span class="fl">32.5</span>], [<span class="fl">44.4</span>], [<span class="fl">50.7</span>], [<span class="fl">61.9</span>], [<span class="fl">73.1</span>], [<span class="fl">81.5</span>], [<span class="fl">106.</span>]])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -622,14 +616,14 @@ tensor([2.5000, 3.5000, 4.5000])</code></pre>
 <h3 class="anchored" data-anchor-id="직접-해보기-같은-데이터에서-후보-비교">직접 해보기 — 같은 데이터에서 후보 비교</h3>
 <p>아래 두 예측은 사원 8명 전체에 대한 것이다. 각각의 잔차 제곱합 <code>sse_all_B</code>, <code>sse_all_C</code>와 사원 표의 열별 평균 <code>column_mean</code>을 구한다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="2e7318de" class="cell" data-execution_count="19">
+<div id="5b7af4b9" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sse_all_B <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>sse_all_C <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>column_mean <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 두 후보를 같은 8명의 정답과 비교한다. 열별 평균은 <code>dim=0</code>이다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="126c1b76" class="cell" data-execution_count="20">
+<div id="20753335" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> sse_all_B <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">abs</span>(sse_all_B.item() <span class="op">-</span> <span class="fl">607.12</span>) <span class="op">&lt;</span> <span class="fl">0.02</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> sse_all_C <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">abs</span>(sse_all_C.item() <span class="op">-</span> <span class="fl">816.22</span>) <span class="op">&lt;</span> <span class="fl">0.02</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> column_mean <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> column_mean.shape <span class="op">==</span> (<span class="dv">2</span>,)</span>
@@ -644,7 +638,7 @@ tensor([2.5000, 3.5000, 4.5000])</code></pre>
 <p><code>A @ B</code>는 <strong>왼쪽의 행과 오른쪽의 열을 곱해서 더하는 연산</strong>이다. <code>*</code>는 같은 위치끼리 곱하기만 한다. 두 결과는 다르다.</p>
 <p><span class="math display">\[(n,p)\ @\ (p,q)\longrightarrow(n,q)\]</span></p>
 <p>왼쪽의 열 수와 오른쪽의 행 수가 같아야 한다. 결과는 왼쪽의 행 수와 오른쪽의 열 수를 갖는다. 아래 <code>A @ B</code>의 첫 값은 <span class="math inline">\(1\times2+2\times1=4\)</span>다. 나머지 값도 먼저 예상한다.</p>
-<div id="b660c654" class="cell" data-execution_count="21">
+<div id="1a51921a" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">3.</span>, <span class="fl">4.</span>]])</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> torch.tensor([[<span class="fl">2.</span>, <span class="fl">0.</span>], [<span class="fl">1.</span>, <span class="fl">3.</span>]])</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(A <span class="op">*</span> B)</span>
@@ -658,20 +652,20 @@ tensor([[ 4.,  6.],
 tensor([[4., 6.]])</code></pre>
 </div>
 </div>
-<div id="bd5b5d7a" class="cell" data-execution_count="22">
+<div id="ab65008a" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>], [<span class="fl">3.</span>, <span class="fl">4.</span>], [<span class="fl">5.</span>, <span class="fl">6.</span>]])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="직접-해보기-행렬-곱으로-두-출력을-만들기" class="level3">
 <h3 class="anchored" data-anchor-id="직접-해보기-행렬-곱으로-두-출력을-만들기">직접 해보기 — 행렬 곱으로 두 출력을 만들기</h3>
 <p>입력 <code>data</code>의 각 행을 <code>B</code>와 곱한 결과를 <code>result</code>에 담는다. 첫 행만 계산한 결과는 <code>one_result</code>에 담는다. 두 결과의 모양을 먼저 예상한다.</p>
 <p><strong>작성 셀</strong></p>
-<div id="5633644d" class="cell" data-execution_count="23">
+<div id="11676521" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>one_result <span class="op">=</span> <span class="va">None</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>힌트: 데이터를 왼쪽, 계산에 쓰는 행렬을 오른쪽에 둔다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="88720375" class="cell" data-execution_count="24">
+<div id="9f5a6378" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> result <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> result.shape <span class="op">==</span> (<span class="dv">3</span>, <span class="dv">2</span>)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> torch.allclose(result, torch.tensor([[<span class="fl">4.</span>, <span class="fl">6.</span>], [<span class="fl">10.</span>, <span class="fl">12.</span>], [<span class="fl">16.</span>, <span class="fl">18.</span>]]))</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> one_result <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> one_result.shape <span class="op">==</span> (<span class="dv">1</span>, <span class="dv">2</span>)</span>
@@ -683,7 +677,7 @@ tensor([[4., 6.]])</code></pre>
 <section id="종합-연습-14분" class="level2">
 <h2 class="anchored" data-anchor-id="종합-연습-14분">6. 종합 연습 — 14분</h2>
 <p>새 카페 표에서도 같은 문법을 쓸 수 있는지 확인한다. 9분 동안 작성하고, 남은 시간에 결과를 함께 설명한다.</p>
-<div id="1ba89e61" class="cell" data-execution_count="25">
+<div id="c49f5933" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#              방문자(십 명) 광고비(만 원) 매출(만 원)</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cafe <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">0.</span>, <span class="fl">6.</span>],</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">2.</span>, <span class="fl">1.</span>, <span class="fl">12.</span>],</span>
@@ -700,7 +694,7 @@ tensor([[4., 6.]])</code></pre>
 <li>광고비가 0인 날짜의 실제 매출 평균 <code>no_ad_mean</code>을 구한다.</li>
 </ol>
 <p><strong>작성 셀</strong></p>
-<div id="d48fe54c" class="cell" data-execution_count="26">
+<div id="859e835d" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cafe_X <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>cafe_y <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>feature_mean <span class="op">=</span> <span class="va">None</span></span>
@@ -709,7 +703,7 @@ tensor([[4., 6.]])</code></pre>
 </div>
 <p>힌트: 행·열 선택은 2절, 합과 평균은 4절로 돌아가 확인한다.</p>
 <p><strong>확인 셀 — 작성 후 실행</strong></p>
-<div id="49b1c717" class="cell" data-execution_count="27">
+<div id="94abf036" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> cafe_X <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> cafe_X.shape <span class="op">==</span> (<span class="dv">4</span>, <span class="dv">2</span>) <span class="kw">and</span> torch.equal(cafe_X, cafe[:, :<span class="dv">2</span>])</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> cafe_y <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> cafe_y.shape <span class="op">==</span> (<span class="dv">4</span>, <span class="dv">1</span>) <span class="kw">and</span> torch.equal(cafe_y, cafe[:, <span class="dv">2</span>:<span class="dv">3</span>])</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> feature_mean <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> feature_mean.shape <span class="op">==</span> (<span class="dv">2</span>,)</span>
