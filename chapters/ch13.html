@@ -148,7 +148,7 @@ window.Quarto = {
     <h2 id="toc-title">목차</h2>
    
   <ul>
-  <li><a href="#사전학습-우리가-7주차에-한-것의-규모-확장" id="toc-사전학습-우리가-7주차에-한-것의-규모-확장" class="nav-link active" data-scroll-target="#사전학습-우리가-7주차에-한-것의-규모-확장">사전학습: 우리가 7주차에 한 것의 규모 확장</a>
+  <li><a href="#사전학습-우리가-9주차에-한-것의-규모-확장" id="toc-사전학습-우리가-9주차에-한-것의-규모-확장" class="nav-link active" data-scroll-target="#사전학습-우리가-9주차에-한-것의-규모-확장">사전학습: 우리가 9주차에 한 것의 규모 확장</a>
   <ul class="collapse">
   <li><a href="#원리는-이미-배웠다" id="toc-원리는-이미-배웠다" class="nav-link" data-scroll-target="#원리는-이미-배웠다">원리는 이미 배웠다</a></li>
   <li><a href="#라벨이-필요-없는-이유-자기지도" id="toc-라벨이-필요-없는-이유-자기지도" class="nav-link" data-scroll-target="#라벨이-필요-없는-이유-자기지도">라벨이 필요 없는 이유: 자기지도</a></li>
@@ -240,8 +240,8 @@ window.Quarto = {
 </div>
 </div>
 <hr>
-<section id="사전학습-우리가-7주차에-한-것의-규모-확장" class="level2">
-<h2 class="anchored" data-anchor-id="사전학습-우리가-7주차에-한-것의-규모-확장">사전학습: 우리가 7주차에 한 것의 규모 확장</h2>
+<section id="사전학습-우리가-9주차에-한-것의-규모-확장" class="level2">
+<h2 class="anchored" data-anchor-id="사전학습-우리가-9주차에-한-것의-규모-확장">사전학습: 우리가 9주차에 한 것의 규모 확장</h2>
 <section id="원리는-이미-배웠다" class="level3">
 <h3 class="anchored" data-anchor-id="원리는-이미-배웠다">원리는 이미 배웠다</h3>
 <p>Ch08에서 전이학습을 배웠다: 대규모 데이터로 <strong>사전학습</strong>된 모델을 가져와 내 작업에 맞게 <strong>파인튜닝</strong>한다. HW2에서 여러분이 직접 했다 — ImageNet으로 사전학습된 모델의 분류기를 교체하고, 직접 찍은 사진 수백 장으로 동결 학습을 했다.</p>
@@ -255,7 +255,7 @@ window.Quarto = {
 <thead>
 <tr class="header">
 <th style="text-align: center;"></th>
-<th style="text-align: center;">HW2 (7~8주차, 이미지)</th>
+<th style="text-align: center;">HW2 (9주차, 이미지)</th>
 <th style="text-align: center;">LLM (사전학습)</th>
 </tr>
 </thead>
@@ -294,7 +294,7 @@ window.Quarto = {
 </section>
 <section id="주차에-예고한-그림이-완성되었다" class="level3">
 <h3 class="anchored" data-anchor-id="주차에-예고한-그림이-완성되었다">1주차에 예고한 그림이 완성되었다</h3>
-<p>Ch01에서 딥러닝이 각광받는 이유 중 하나로 <strong>사전학습 생태계</strong>를 소개했다 — “방대한 데이터로 미리 학습된 모형을 가져와 재활용할 수 있는 생태계.” 그때는 예고였지만, 이제 그 그림의 전부를 여러분이 직접 확인했다: Ch08에서 이미지로(HW2), 그리고 오늘 언어에서. 하나의 사전학습 모델이 요약·번역·분류 등 여러 작업의 기반이 되는 이런 모델을 <strong>기초 모델(foundation model)</strong>이라고도 부른다. 1주차의 예고가 12주차에 회수된 셈이다.</p>
+<p>Ch01에서 딥러닝이 각광받는 이유 중 하나로 <strong>사전학습 생태계</strong>를 소개했다 — “방대한 데이터로 미리 학습된 모형을 가져와 재활용할 수 있는 생태계.” 그때는 예고였지만, 이제 그 그림의 전부를 여러분이 직접 확인했다: Ch08에서 이미지로(HW2), 그리고 오늘 언어에서. 하나의 사전학습 모델이 요약·번역·분류 등 여러 작업의 기반이 되는 이런 모델을 <strong>기초 모델(foundation model)</strong>이라고도 부른다. 1주차의 예고가 13주차에 회수된 셈이다.</p>
 <hr>
 </section>
 </section>
@@ -556,7 +556,7 @@ window.Quarto = {
 </section>
 <section id="산업-응용에서의-함의" class="level3">
 <h3 class="anchored" data-anchor-id="산업-응용에서의-함의">산업 응용에서의 함의</h3>
-<p>산업공학도가 LLM을 업무에 쓸 때 이 본성은 설계 조건이 된다. 설비 제원 조회, 안전 규정 안내, 고객 응대처럼 <strong>틀린 답의 비용이 큰 업무에 LLM의 출력을 검증 없이 그대로 흘려보내면 안 된다.</strong> 실무에서는 LLM을 “초안 생성기”로 두고 사람이 최종 확인하는 절차를 넣거나, 근거 문서를 함께 제공하고 그 안에서만 답하게 조건을 좁히는(앞 절의 프롬프트 원리 그대로) 방식으로 위험을 관리한다. 어느 업무에 어느 수준의 검증 절차를 붙일 것인가 — 이것은 Ch09에서 정밀도와 재현율의 균형을 문제가 결정했던 것과 같은, 전형적인 산업공학의 설계 문제다. 아울러 프롬프트에 넣은 내용은 외부 서버로 전송되므로, 사내 기밀을 입력하는 것 자체가 유출 경로가 될 수 있다는 점도 기억해 두자.</p>
+<p>산업공학도가 LLM을 업무에 쓸 때 이 본성은 설계 조건이 된다. 설비 제원 조회, 안전 규정 안내, 고객 응대처럼 <strong>틀린 답의 비용이 큰 업무에 LLM의 출력을 검증 없이 그대로 흘려보내면 안 된다.</strong> 실무에서는 LLM을 “초안 생성기”로 두고 사람이 최종 확인하는 절차를 넣거나, 근거 문서를 함께 제공하고 그 안에서만 답하게 조건을 좁히는(앞 절의 프롬프트 원리 그대로) 방식으로 위험을 관리한다. 어느 업무에 어느 수준의 검증 절차를 붙일 것인가 — 어느 쪽 오류가 더 비싼지를 문제가 결정하는, 전형적인 산업공학의 설계 문제다. 아울러 프롬프트에 넣은 내용은 외부 서버로 전송되므로, 사내 기밀을 입력하는 것 자체가 유출 경로가 될 수 있다는 점도 기억해 두자.</p>
 <hr>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -737,7 +737,7 @@ HW3 예고 — 프롬프트 개선만으로 성능 끌어올리기 (개인 과�
 </tbody>
 </table>
 <blockquote class="blockquote">
-<p>이론은 여기까지다. 13주는 이 장의 내용을 <strong>직접 손으로 돌려 보는</strong> 실습과 팀 프로젝트 워크숍을 겸한다. 14주 발표에서 만나자.</p>
+<p>이론은 여기까지다. 13주는 이 장의 내용을 <strong>직접 손으로 돌려 보는</strong> 실습과 현장 테스트 결과 공유를 겸한다. 14주 발표에서 만나자.</p>
 </blockquote>
 
 
