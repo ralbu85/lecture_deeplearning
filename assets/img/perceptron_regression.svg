@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="회귀 퍼셉트론: 입력과 편향에서 가중합, 항등 활성화 함수, 출력으로 이어지는 상세 구조" viewBox="0 0 520 235" width="100%" style="max-width:520px;font-family:Pretendard,sans-serif;">
+  <defs>
+    <marker id="arrRegression" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#555"/>
+    </marker>
+  </defs>
+  <!-- Bias node -->
+  <circle cx="60" cy="60" r="18" fill="#C8E6C9" stroke="#2E7D32" stroke-width="2.5"/>
+  <text x="60" y="64" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">1</text>
+  <text x="60" y="33" text-anchor="middle" font-size="10" fill="#2E7D32">편향</text>
+  <!-- Input nodes -->
+  <circle cx="60" cy="115" r="20" fill="#BBDEFB" stroke="#1565C0" stroke-width="2.5"/>
+  <text x="60" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#1565C0">x₁</text>
+  <circle cx="60" cy="180" r="20" fill="#BBDEFB" stroke="#1565C0" stroke-width="2.5"/>
+  <text x="60" y="185" text-anchor="middle" font-size="13" font-weight="700" fill="#1565C0">x₂</text>
+  <!-- Weights on edges -->
+  <line x1="78" y1="62" x2="212" y2="112" stroke="#2E7D32" stroke-width="2" marker-end="url(#arrRegression)"/>
+  <text x="138" y="76" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">−0.3</text>
+  <line x1="80" y1="115" x2="212" y2="119" stroke="#1565C0" stroke-width="2" marker-end="url(#arrRegression)"/>
+  <text x="148" y="108" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">0.5</text>
+  <line x1="80" y1="178" x2="212" y2="128" stroke="#1565C0" stroke-width="2" marker-end="url(#arrRegression)"/>
+  <text x="138" y="166" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">0.5</text>
+  <!-- Sum node -->
+  <circle cx="240" cy="120" r="26" fill="#FFE0B2" stroke="#E65100" stroke-width="2.5"/>
+  <text x="240" y="127" text-anchor="middle" font-size="18" font-weight="700" fill="#E65100">Σ</text>
+  <!-- Arrow to activation -->
+  <line x1="266" y1="120" x2="322" y2="120" stroke="#555" stroke-width="2" marker-end="url(#arrRegression)"/>
+  <text x="295" y="112" text-anchor="middle" font-size="11" font-weight="600" fill="#555">z</text>
+  <!-- Activation -->
+  <circle cx="352" cy="120" r="26" fill="#FFF59D" stroke="#F9A825" stroke-width="2.5"/>
+  <text x="352" y="126" text-anchor="middle" font-size="15" font-weight="700" fill="#8C1515">g</text>
+  <!-- Arrow to output -->
+  <line x1="378" y1="120" x2="434" y2="120" stroke="#555" stroke-width="2" marker-end="url(#arrRegression)"/>
+  <!-- Output node -->
+  <circle cx="460" cy="120" r="22" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="2.5"/>
+  <text x="460" y="126" text-anchor="middle" font-size="14" font-weight="700" fill="#6A1B9A">ŷ</text>
+  <!-- Bottom labels -->
+  <text x="60" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#1565C0">입력노드</text>
+  <text x="145" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">가중치</text>
+  <text x="240" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#E65100">합</text>
+  <text x="352" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#F9A825">활성화 함수</text>
+  <text x="460" y="222" text-anchor="middle" font-size="11" font-weight="700" fill="#6A1B9A">출력노드</text>
+</svg>
