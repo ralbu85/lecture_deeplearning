@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" role="img" aria-label="입력 2개, ReLU 은닉노드 3개, 출력 1개의 신경망">
+<rect width="680" height="320" fill="white"/>
+<line x1="100" y1="110" x2="340" y2="70" stroke="#9ca3af" stroke-width="2"/>
+<line x1="100" y1="110" x2="340" y2="160" stroke="#9ca3af" stroke-width="2"/>
+<line x1="100" y1="110" x2="340" y2="250" stroke="#9ca3af" stroke-width="2"/>
+<line x1="100" y1="210" x2="340" y2="70" stroke="#9ca3af" stroke-width="2"/>
+<line x1="100" y1="210" x2="340" y2="160" stroke="#9ca3af" stroke-width="2"/>
+<line x1="100" y1="210" x2="340" y2="250" stroke="#9ca3af" stroke-width="2"/>
+<line x1="340" y1="70" x2="580" y2="160" stroke="#9ca3af" stroke-width="2"/>
+<line x1="340" y1="160" x2="580" y2="160" stroke="#9ca3af" stroke-width="2"/>
+<line x1="340" y1="250" x2="580" y2="160" stroke="#9ca3af" stroke-width="2"/>
+<circle cx="100" cy="110" r="29" fill="#f3f4f6" stroke="#8C1515" stroke-width="2"/><text x="100" y="116" text-anchor="middle" font-family="sans-serif" font-size="17">x₁</text>
+<circle cx="100" cy="210" r="29" fill="#f3f4f6" stroke="#8C1515" stroke-width="2"/><text x="100" y="216" text-anchor="middle" font-family="sans-serif" font-size="17">x₂</text>
+<circle cx="340" cy="70" r="29" fill="#fff5d6" stroke="#8C1515" stroke-width="2"/><text x="340" y="76" text-anchor="middle" font-family="sans-serif" font-size="17">ReLU</text>
+<circle cx="340" cy="160" r="29" fill="#fff5d6" stroke="#8C1515" stroke-width="2"/><text x="340" y="166" text-anchor="middle" font-family="sans-serif" font-size="17">ReLU</text>
+<circle cx="340" cy="250" r="29" fill="#fff5d6" stroke="#8C1515" stroke-width="2"/><text x="340" y="256" text-anchor="middle" font-family="sans-serif" font-size="17">ReLU</text>
+<circle cx="580" cy="160" r="29" fill="#f8e8e8" stroke="#8C1515" stroke-width="2"/><text x="580" y="166" text-anchor="middle" font-family="sans-serif" font-size="17">ŷ</text>
+<text x="100" y="310" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#8C1515">입력 2개</text>
+<text x="340" y="310" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#8C1515">은닉노드 3개 · ReLU</text>
+<text x="580" y="310" text-anchor="middle" font-family="sans-serif" font-size="17" fill="#8C1515">출력 1개 · 항등</text>
+</svg>
