@@ -1,0 +1,35 @@
+.dl-widget {
+  margin: 1.2rem 0 1.5rem;
+  padding: 1.1rem;
+  border: 1px solid #d6dee8;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #172334;
+  font-variant-numeric: tabular-nums;
+}
+.dl-widget .dl-title { font-weight: 700; color: #1f3f7a; margin-bottom: .75rem; }
+.dl-widget .dl-controls { display: flex; align-items: end; flex-wrap: wrap; gap: .65rem 1.2rem; margin-bottom: .8rem; }
+.dl-widget label { display: flex; flex-direction: column; gap: .2rem; font-size: .9rem; max-width: 100%; }
+.dl-widget input[type="range"] { width: 190px; max-width: 100%; accent-color: #1f3f7a; }
+.dl-widget select { background: white; border: 1px solid #aebdce; border-radius: 4px; padding: .25rem .4rem; color: inherit; }
+.dl-widget .dl-buttons { display: flex; flex-wrap: wrap; gap: .4rem; margin: .65rem 0; }
+.dl-widget button { padding: .35rem .75rem; background: white; color: #1f3f7a; border: 1px solid #aebdce; border-radius: 5px; font: inherit; font-size: .9rem; cursor: pointer; }
+.dl-widget button:hover:not(:disabled) { background: #e7edf6; }
+.dl-widget button:disabled { opacity: .45; cursor: default; }
+.dl-widget :focus-visible { outline: 3px solid #d4a017; outline-offset: 3px; }
+.dl-widget .dl-chart { max-width: 100%; }
+.dl-widget .dl-chart svg { display: block; width: 100%; height: auto; margin: 0 auto; max-width: 650px; }
+.dl-widget[data-dl-demo="descent2"] .dl-chart svg { max-width: 520px; }
+.dl-widget .dl-readout { padding: .8rem 1rem; background: white; border-left: 3px solid #1f3f7a; line-height: 1.75; font-size: .95rem; overflow-wrap: anywhere; }
+.dl-widget .dl-readout p { margin: 0 0 .25rem; }
+.dl-widget .dl-readout p:last-child { margin-bottom: 0; }
+.dl-widget .dl-metrics { display: flex; flex-wrap: wrap; gap: .1rem 1.3rem; margin-bottom: .3rem; }
+.dl-widget .dl-legend { display: flex; flex-wrap: wrap; gap: .25rem 1rem; justify-content: center; font-size: .82rem; margin: .2rem 0 .7rem; }
+.dl-widget .dl-legend span::before { content: ''; display: inline-block; width: .8rem; height: .18rem; background: var(--key); vertical-align: middle; margin-right: .3rem; }
+.dl-widget .dl-note { font-size: .85rem; color: #43536a; margin-top: .6rem; }
+@media (max-width: 600px) {
+  .dl-widget { padding: .7rem; }
+  .dl-widget .dl-readout { padding: .65rem; }
+  .dl-widget .dl-controls { gap: .5rem .9rem; }
+  .dl-widget .dl-chart svg text { font-size: 22px; }
+}
