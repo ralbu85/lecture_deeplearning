@@ -18,7 +18,7 @@ function ticks(min, max, count) {
   return values;
 }
 
-function frame({ xmin, xmax, ymin, ymax, square = false, xlabel = '가중치 w', ylabel = '손실 J(w)', title }) {
+function frame({ xmin, xmax, ymin, ymax, square = false, tickCount = 6, xlabel = '가중치 w', ylabel = '손실 J(w)', title }) {
   const width = square ? 540 : 650, height = square ? 510 : 360;
   const left = 68, right = square ? 38 : 26, top = 38, bottom = 55;
   // Square data ranges use equal scales on both axes.
@@ -28,10 +28,10 @@ function frame({ xmin, xmax, ymin, ymax, square = false, xlabel = '가중치 w',
   const y = n => top + ph - (n - ymin) / (ymax - ymin) * ph;
   const id = `dl-clip-${++chartId}`;
   let base = `<svg viewBox="0 0 ${width} ${totalHeight}" role="img" aria-label="${title}" xmlns="http://www.w3.org/2000/svg"><title>${title}</title><defs><clipPath id="${id}"><rect x="${left}" y="${top}" width="${pw}" height="${ph}"/></clipPath></defs><rect x="${left}" y="${top}" width="${pw}" height="${ph}" fill="white"/>`;
-  for (const v of ticks(xmin, xmax, 6)) {
+  for (const v of ticks(xmin, xmax, tickCount)) {
     base += `<line x1="${x(v)}" x2="${x(v)}" y1="${top}" y2="${top + ph}" stroke="#e4e9ef"/><text x="${x(v)}" y="${top + ph + 22}" text-anchor="middle" font-size="13" fill="#536278">${fmt(Number(v.toPrecision(3)))}</text>`;
   }
-  for (const v of ticks(ymin, ymax, square ? 6 : 5)) {
+  for (const v of ticks(ymin, ymax, square ? tickCount : 5)) {
     base += `<line x1="${left}" x2="${left + pw}" y1="${y(v)}" y2="${y(v)}" stroke="#e4e9ef"/><text x="${left - 10}" y="${y(v) + 4}" text-anchor="end" font-size="13" fill="#536278">${fmt(Number(v.toPrecision(3)))}</text>`;
   }
   base += `<path d="M ${left} ${top} V ${top + ph} H ${left + pw}" fill="none" stroke="#6b7a8f"/><text x="${left}" y="21" font-size="15" font-weight="600" fill="#34465e">${ylabel}</text><text x="${left + pw / 2}" y="${top + ph + 48}" text-anchor="middle" font-size="15" fill="#34465e">${xlabel}</text>`;
@@ -106,6 +106,67 @@ function shell(root, title, controls, buttons, legend) {
   return { chart: root.querySelector('.dl-chart'), readout: root.querySelector('.dl-readout'), get: key => root.querySelector(`[data-control="${key}"]`) };
 }
 const button = (key, label) => `<button type="button" data-control="${key}">${label}</button>`;
+
+function plotGradientVector(position) {
+  const [a, b] = position, [g1, g2] = grad2(position);
+  const end = [a + g1, b + g2];
+  const radius = Math.max(3, Math.ceil(Math.max(Math.abs(end[0] - 2), Math.abs(end[1] - 1)) + 1));
+  const p = frame({ xmin: 2 - radius, xmax: 2 + radius, ymin: 1 - radius, ymax: 1 + radius,
+    square: true, tickCount: 8, xlabel: '가중치 w₁', ylabel: '가중치 w₂',
+    title: `현재 가중치 ${pair(position)}에서 기울기 벡터 ${pair([g1, g2])}. 가로 성분 ${fmt(g1)}, 세로 성분 ${fmt(g2)}.` });
+  const { x, y } = p, vertical = '#aa6a00';
+  const marker = `${p.clip}-arrow`;
+  const arrowColors = [C.tangent, vertical, C.secant];
+  let s = p.base + `<defs>${arrowColors.map((color, i) => `<marker id="${marker}-${i}" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="${color}"/></marker>`).join('')}</defs><g clip-path="url(#${p.clip})">`;
+  const levels = [100, 50, 25, 10, 5, 1];
+  const colors = ['#f8fafc', '#eff4f9', '#e5edf6', '#d8e6f3', '#c4dbee', '#a8c8e3'];
+  levels.forEach((v, i) => {
+    s += `<circle cx="${x(2)}" cy="${y(1)}" r="${Math.sqrt(v) * p.pw / (2 * radius)}" fill="${colors[i]}" stroke="#abc0d5" stroke-width="1"/>`;
+    const offset = Math.sqrt(v) / Math.sqrt(2);
+    if (offset < radius - .7) s += `<text x="${x(2 - offset)}" y="${y(1 - offset) + 16}" text-anchor="middle" font-size="12" fill="#536b83">J = ${v}</text>`;
+  });
+  s += '</g>';
+  const arrow = (from, to, color, dashed = false) => `<line x1="${x(from[0])}" y1="${y(from[1])}" x2="${x(to[0])}" y2="${y(to[1])}" stroke="${color}" stroke-width="2.8" ${dashed ? 'stroke-dasharray="6 3"' : ''} marker-end="url(#${marker}-${arrowColors.indexOf(color)})"/>`;
+  if (g1 !== 0) {
+    s += arrow(position, [end[0], b], C.tangent, true);
+    s += `<text x="${x(a + g1 / 2)}" y="${y(b) - 10}" text-anchor="middle" font-size="16" fill="${C.tangent}">${fmt(g1)}</text>`;
+  }
+  if (g2 !== 0) {
+    s += arrow([end[0], b], end, vertical, true);
+    s += `<text x="${x(end[0]) + 12}" y="${y(b + g2 / 2) + 5}" font-size="16" fill="${vertical}">${fmt(g2)}</text>`;
+  }
+  if (g1 !== 0 || g2 !== 0) {
+    s += arrow(position, end, C.secant);
+    s += `<text x="${x(a + g1 * .55) - 12}" y="${y(b + g2 * .55) + 19}" text-anchor="end" font-size="16" font-weight="700" fill="${C.secant}">∇J</text>`;
+  }
+  s += `<path d="M ${x(2)-5} ${y(1)} h 10 M ${x(2)} ${y(1)-5} v 10" stroke="#1f3f7a" stroke-width="2.5"/>`;
+  s += point(x(a), y(b), C.current, 6);
+  s += `<text x="${x(a) - 10}" y="${y(b) - 12}" text-anchor="end" font-size="14" fill="${C.current}">현재 위치</text>`;
+  return s + p.close;
+}
+
+function gradientVector(root) {
+  const ui = shell(root, '직접 확인 — 편미분값을 모으면 어느 방향을 가리키는가',
+    '<label>현재 w₁ <output data-control="w1-label">4</output><input type="range" min="0" max="4" step="0.5" value="4" data-control="w1"></label><label>현재 w₂ <output data-control="w2-label">0</output><input type="range" min="-1" max="3" step="0.5" value="0" data-control="w2"></label>',
+    button('reset', '처음으로'),
+    [[C.tangent, 'w₁의 편미분값'], ['#aa6a00', 'w₂의 편미분값'], [C.secant, '기울기 벡터 ∇J']]);
+  function render() {
+    const current = [Number(ui.get('w1').value), Number(ui.get('w2').value)];
+    const g = grad2(current);
+    root.dataset.weight = JSON.stringify(current); root.dataset.gradient = JSON.stringify(g);
+    ui.get('w1-label').textContent = fmt(current[0]); ui.get('w2-label').textContent = fmt(current[1]);
+    ui.chart.innerHTML = plotGradientVector(current);
+    const direction = (values) => [values[0] > 0 ? '오른쪽 (w₁ 증가)' : values[0] < 0 ? '왼쪽 (w₁ 감소)' : '', values[1] > 0 ? '위쪽 (w₂ 증가)' : values[1] < 0 ? '아래쪽 (w₂ 감소)' : ''].filter(Boolean).join(' · ');
+    const description = g.every(v => v === 0)
+      ? '<p>기울기 벡터가 (0, 0)이므로 방향을 가리키는 화살표가 없다. 이 예제에서는 현재 위치가 최솟점이다.</p>'
+      : `<p><strong>손실이 증가하는 방향:</strong> ${direction(g)}</p><p><strong>손실을 줄일 방향:</strong> ${direction(g.map(v => -v))}</p>`;
+    ui.readout.innerHTML = `<p>현재 가중치 (w₁, w₂) = <strong>${pair(current)}</strong></p><p>편미분값: ∂J/∂w₁ = <strong>${fmt(g[0])}</strong>, ∂J/∂w₂ = <strong>${fmt(g[1])}</strong></p><p>기울기 벡터 ∇J = <strong>${pair(g)}</strong></p>${description}`;
+  }
+  ['w1', 'w2'].forEach(key => ui.get(key).addEventListener('input', render));
+  ui.get('reset').addEventListener('click', () => { ui.get('w1').value = 4; ui.get('w2').value = 0; render(); });
+  render();
+}
+
 function explore(root) {
   let w = 4, previous;
   const ui = shell(root, '직접 확인 — 가중치를 바꾸면 손실은 어떻게 달라지는가',
@@ -201,6 +262,7 @@ function descent(root, dimension) {
 for (const root of document.querySelectorAll('[data-dl-demo]')) {
   const mode = root.dataset.dlDemo;
   if (mode === 'explore') explore(root);
+  else if (mode === 'gradient-vector') gradientVector(root);
   else if (mode === 'derivative') derivative(root);
   else if (mode === 'descent') descent(root, 1);
   else if (mode === 'descent2') descent(root, 2);
