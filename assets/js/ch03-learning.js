@@ -43,8 +43,17 @@ function point(x, y, color, r = 6) {
 function line(x1, y1, x2, y2, color, dashed = false) {
   return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="2" ${dashed ? 'stroke-dasharray="7 5"' : ''}/>`;
 }
-function plot1({ w, previous, history = [], h, tangent = false }) {
-  const values = [w, ...history, ...(previous === undefined ? [] : [previous]), ...(h === undefined ? [] : [w + h])];
+function arrow(x1, y1, x2, y2, color, name) {
+  const distance = Math.hypot(x2 - x1, y2 - y1);
+  if (distance < .15) return '';
+  const ux = (x2 - x1) / distance, uy = (y2 - y1) / distance;
+  const head = Math.min(13, distance * .45), half = head * .55;
+  const bx = x2 - head * ux, by = y2 - head * uy;
+  return `<g data-arrow="${name}"><line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="${color}" stroke-width="3"/><polygon points="${x2},${y2} ${bx - half * uy},${by + half * ux} ${bx + half * uy},${by - half * ux}" fill="${color}"/></g>`;
+}
+function plot1({ w, previous, history = [], h, tangent = false, eta }) {
+  const next = eta === undefined ? undefined : w - eta * grad(w);
+  const values = [w, ...history, ...(previous === undefined ? [] : [previous]), ...(h === undefined ? [] : [w + h]), ...(next === undefined ? [] : [next])];
   const lo = Math.min(...values), hi = Math.max(...values), top = Math.max(...values.map(loss));
   const xmin = lo < -1 ? Math.floor(lo - .5) : -1;
   const xmax = hi > 5 ? Math.ceil(hi + .5) : 5;
@@ -76,18 +85,32 @@ function plot1({ w, previous, history = [], h, tangent = false }) {
     s += line(x(previous), y(loss(previous)), x(w), y(loss(w)), C.current, true);
     s += point(x(previous), y(loss(previous)), C.other, 5);
   }
+  if (next !== undefined && grad(w) !== 0) {
+    const g = grad(w), sx = x(w), sy = y(loss(w));
+    const vx = x(w + g) - sx, vy = y(loss(w) + g * g) - sy;
+    const norm = Math.hypot(vx, vy), ux = vx / norm, uy = vy / norm;
+    const length = Math.max(0, Math.min(58,
+      ux > 0 ? (x(xmax) - sx - 5) / ux : (sx - x(xmin) - 5) / -ux,
+      (sy - y(ymax) - 5) / -uy));
+    // The dashed tangent shows the local slope; the green arrow points uphill.
+    s += line(sx - ux * 42, sy - uy * 42, sx + ux * length, sy + uy * length, C.other, true);
+    s += arrow(sx, sy, sx + ux * length, sy + uy * length, C.secant, 'gradient');
+    // This endpoint is the actual next iterate, including overshoot for a large learning rate.
+    const tx = x(next), ty = y(loss(next)), travel = Math.hypot(tx - sx, ty - sy);
+    if (travel > 7) s += arrow(sx, sy, tx - 6 * (tx - sx) / travel, ty - 6 * (ty - sy) / travel, C.tangent, 'next-update');
+    s += `<circle cx="${x(next)}" cy="${y(loss(next))}" r="5" fill="white" stroke="${C.tangent}" stroke-width="2"/>`;
+  }
   s += point(x(w), y(loss(w)), C.current, 7);
   s += '</g>';
   return s + p.close;
 }
 function plot2(history) {
   const pnow = history.at(-1);
-  const extent = Math.max(3, ...history.flatMap(([a, b]) => [Math.abs(a - 2) + .5, Math.abs(b - 1) + .5]));
-  const radius = Math.ceil(extent), xmin = 2 - radius, xmax = 2 + radius, ymin = 1 - radius, ymax = 1 + radius;
+  const radius = 3, xmin = -1, xmax = 5, ymin = -2, ymax = 4;
   const p = frame({ xmin, xmax, ymin, ymax, square: true, xlabel: '가중치 w₁', ylabel: '가중치 w₂', title: `두 가중치와 손실의 등고선. 현재 위치 ${pair(pnow)}, 손실 ${fmt(loss2(pnow))}.` });
   const { x, y } = p;
   let s = p.base + `<g clip-path="url(#${p.clip})">`;
-  const levels = radius <= 4 ? [25, 16, 9, 4, 1] : [2, 1.4, .9, .45, .15].map(v => radius * radius * v);
+  const levels = [25, 16, 9, 4, 1];
   const colors = ['#f2f6fa', '#e6eef7', '#d3e3f2', '#b9d2e9', '#8fb6d8'];
   levels.forEach((v, i) => {
     s += `<circle cx="${x(2)}" cy="${y(1)}" r="${Math.sqrt(v) * p.pw / (2 * radius)}" fill="${colors[i]}" stroke="#8ba8c4" stroke-width="1"/>`;
@@ -98,8 +121,18 @@ function plot2(history) {
   history.slice(0, -1).forEach(([a, b]) => { s += point(x(a), y(b), C.other, 4); });
   s += `<path d="M ${x(2)-5} ${y(1)} h 10 M ${x(2)} ${y(1)-5} v 10" stroke="#1f3f7a" stroke-width="2.5"/>`;
   s += `<text x="${x(2) - 8}" y="${y(1) + 21}" text-anchor="end" font-size="13" fill="#1f3f7a">최솟점 (2, 1)</text>`;
-  s += point(x(pnow[0]), y(pnow[1]), C.current, 7);
-  return s + '</g>' + p.close;
+  const outside = pnow[0] < xmin || pnow[0] > xmax || pnow[1] < ymin || pnow[1] > ymax;
+  if (!outside) s += point(x(pnow[0]), y(pnow[1]), C.current, 7);
+  else {
+    const dx = pnow[0] - 2, dy = pnow[1] - 1;
+    const scale = (radius - .12) / Math.max(Math.abs(dx), Math.abs(dy));
+    const ex = x(2 + scale * dx), ey = y(1 + scale * dy);
+    const vx = ex - x(2), vy = ey - y(1), length = Math.hypot(vx, vy);
+    s += arrow(ex - vx / length * 24, ey - vy / length * 24, ex, ey, C.current, 'outside');
+  }
+  s += '</g>';
+  if (outside) s += `<text x="${x(2)}" y="${y(ymax) + 23}" text-anchor="middle" font-size="14" fill="${C.current}">현재 위치가 표시 범위 밖에 있다</text>`;
+  return s + p.close;
 }
 function shell(root, title, controls, buttons, legend) {
   root.innerHTML = `<div class="dl-title">${title}</div><div class="dl-controls">${controls}</div><div class="dl-buttons">${buttons}</div><div class="dl-chart"></div><div class="dl-legend">${legend.map(([color, label]) => `<span style="--key:${color}">${label}</span>`).join('')}</div><div class="dl-readout" aria-live="polite" aria-atomic="true"></div>`;
@@ -110,7 +143,7 @@ const button = (key, label) => `<button type="button" data-control="${key}">${la
 function plotGradientVector(position) {
   const [a, b] = position, [g1, g2] = grad2(position);
   const end = [a + g1, b + g2];
-  const radius = Math.max(3, Math.ceil(Math.max(Math.abs(end[0] - 2), Math.abs(end[1] - 1)) + 1));
+  const radius = 7;
   const p = frame({ xmin: 2 - radius, xmax: 2 + radius, ymin: 1 - radius, ymax: 1 + radius,
     square: true, tickCount: 8, xlabel: '가중치 w₁', ylabel: '가중치 w₂',
     title: `현재 가중치 ${pair(position)}에서 기울기 벡터 ${pair([g1, g2])}. 가로 성분 ${fmt(g1)}, 세로 성분 ${fmt(g2)}.` });
@@ -214,7 +247,7 @@ function descent(root, dimension) {
   const ui = shell(root, two ? '직접 확인 — 두 가중치를 함께 갱신하기' : '직접 확인 — 미분값으로 가중치를 갱신하기',
     starts + '<label>학습률 η <output data-control="eta-label">0.1</output><input type="range" min="0.05" max="1.1" step="0.05" value="0.1" data-control="eta"></label>',
     button('step', '한 번 이동') + button('play', '자동 반복') + button('pause', '일시정지') + button('reset', '처음으로'),
-    [[C.current, '현재 위치와 이동 경로'], [C.other, '이전 위치']]);
+    two ? [[C.current, '현재 위치와 이동 경로'], [C.other, '이전 위치']] : [[C.current, '현재 위치'], [C.secant, '기울기 방향'], [C.tangent, '다음 갱신 (빈 점)']]);
   let history = [], timer = null, eta = .1;
   const cost = two ? loss2 : loss, gradient = two ? grad2 : grad;
   const display = two ? pair : fmt;
@@ -225,14 +258,16 @@ function descent(root, dimension) {
     root.dataset.step = steps;
     root.dataset.weight = two ? JSON.stringify(now) : now;
     root.dataset.loss = cost(now);
-    ui.chart.innerHTML = two ? plot2(history) : plot1({ w: now, history });
+    ui.chart.innerHTML = two ? plot2(history) : plot1({ w: now, history, eta });
     let calculation = '「한 번 이동」을 눌러 첫 갱신을 확인한다.';
     if (steps > 0) {
       const before = history.at(-2), gb = gradient(before);
       calculation = two ? `이번 갱신: ${pair(before)} − ${fmt(eta)} × ${pair(gb)} = <strong>${pair(now)}</strong>` : `이번 갱신: ${fmt(before)} − ${fmt(eta)} × ${num(gb)} = <strong>${fmt(now)}</strong>`;
     }
     const next = atMinimum() ? '현재 미분값이 0이므로 더 이동하지 않는다.' : steps >= 20 ? '20회 갱신을 마쳤다. 학습률이나 시작 위치를 바꾸어 비교할 수 있다.' : `${two ? '현재 위치의 기울기 벡터' : '현재 위치의 미분값'} = <strong>${display(g)}</strong>. 다음 갱신에는 이 값을 사용한다.`;
-    ui.readout.innerHTML = `<p><strong>갱신 ${steps}회${timer === null ? '' : ' · 반복 중'}</strong></p><div class="dl-metrics"><span>${two ? '가중치 (w₁, w₂)' : '가중치 w'} = <strong>${display(now)}</strong></span><span>손실 J = <strong>${fmt(cost(now))}</strong></span></div><p>${calculation}</p><p>${next}</p>`;
+    const preview = !two && !atMinimum() ? `<p>다음 이동량 = −${fmt(eta)} × ${num(g)} = <strong>${fmt(-eta * g)}</strong> → 다음 w = <strong>${fmt(now - eta * g)}</strong></p>` : '';
+    const outside = two && (now[0] < -1 || now[0] > 5 || now[1] < -2 || now[1] > 4) ? '<p>현재 위치가 표시 범위를 벗어났다. 위의 가중치와 손실값으로 변화를 확인한다.</p>' : '';
+    ui.readout.innerHTML = `<p><strong>갱신 ${steps}회${timer === null ? '' : ' · 반복 중'}</strong></p><div class="dl-metrics"><span>${two ? '가중치 (w₁, w₂)' : '가중치 w'} = <strong>${display(now)}</strong></span><span>손실 J = <strong>${fmt(cost(now))}</strong></span></div><p>${calculation}</p><p>${next}</p>${preview}${outside}`;
     ui.get('step').disabled = steps >= 20 || atMinimum();
     ui.get('play').disabled = timer !== null || steps >= 20 || atMinimum();
     ui.get('pause').disabled = timer === null;
