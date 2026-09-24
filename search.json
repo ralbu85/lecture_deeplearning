@@ -807,64 +807,78 @@
   {
     "objectID": "labs/lab03.html",
     "href": "labs/lab03.html",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
     "section": "",
     "text": "Open In Colab"
   },
   {
-    "objectID": "labs/lab03.html#오늘-할-일-90분",
-    "href": "labs/lab03.html#오늘-할-일-90분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "오늘 할 일 — 90분",
-    "text": "오늘 할 일 — 90분\n이론에서 배운 기울기 계산 → 가중치 갱신 → 반복을 직접 구현한다. 이론과 같은 연습용 손실함수 \\(J(w)=(w-2)^2\\)로 시작해, 마지막에는 두 가중치를 함께 갱신한다.\n각 절에서 함께 실행한 뒤, 값을 예상하거나 코드를 직접 작성한다. 시간에는 설명·작성·결과 확인이 모두 포함되어 있다. 해설은 노트북 끝에 있다.\n\n\n\n시간\n내용\n\n\n\n\n0–15분\n손실과 기울기 계산, 시작 위치를 바꾸는 연습\n\n\n15–30분\n기울기를 이용한 한 번의 갱신, 계산값 비교\n\n\n30–50분\nSGD로 갱신, 반복문 직접 작성\n\n\n50–65분\n학습률에 따른 수렴·진동·발산 비교\n\n\n65–85분\n두 가중치의 편미분과 동시 갱신\n\n\n85–90분\n코드와 이론 연결·질문\n\n\n\n대응 이론: Ch03 손실함수와 경사하강법. Colab 기본 CPU 런타임에서 위에서부터 실행한다. 그래프 코드는 제공한다.\n\nimport torch\nimport matplotlib.pyplot as plt"
-  },
-  {
-    "objectID": "labs/lab03.html#손실과-기울기를-코드로-구하기-15분",
-    "href": "labs/lab03.html#손실과-기울기를-코드로-구하기-15분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "1. 손실과 기울기를 코드로 구하기 — 15분",
-    "text": "1. 손실과 기울기를 코드로 구하기 — 15분\n\n1.1 손실함수를 함수로 작성\n이론에서 사용한 손실함수가 다음과 같다고 가정하자.\n\\[J(w)=(w-2)^2\\]\n가중치 w를 넣으면 손실을 돌려주는 함수 J를 작성한다. 파이썬의 ** 2는 제곱이다.\n\ndef J(w):\n    return (w - 2) ** 2\n\nprint(\"w=4의 손실:\", J(4.0))\nprint(\"w=2의 손실:\", J(2.0))\n\nw=4의 손실: 4.0\nw=2의 손실: 0.0\n\n\n이 예제에서는 w=2일 때 손실이 0이다. 이제 다른 위치에서 출발해 그쪽으로 이동하는 방법을 구현한다.\n\n\n1.2 자동미분으로 현재 위치의 기울기 계산\n파이토치의 자동미분은 텐서로 계산한 과정을 이용해 기울기를 구한다. 다음 세 가지를 사용한다.\n\n\n\n코드\n의미\n\n\n\n\nrequires_grad=True\n이 텐서에 대한 기울기를 계산하도록 설정한다.\n\n\nloss.backward()\n손실 계산을 거슬러 기울기를 구한다.\n\n\nw.grad\n계산된 기울기가 저장되는 속성이다.\n\n\n\n\nw = torch.tensor(4.0, requires_grad=True)\nloss = J(w)\nloss.backward()\n\nprint(\"현재 가중치:\", w.item())\nprint(\"손실:\", loss.item())\nprint(\"기울기:\", w.grad.item())\n\n현재 가중치: 4.0\n손실: 4.0\n기울기: 4.0\n\n\n.item()은 값 하나인 텐서를 파이썬 숫자로 꺼낸다. 손실과 기울기가 각각 4로 나온다. 이론의 \\(J'(w)=2(w-2)\\)에 4를 넣은 결과와 같다.\nbackward()는 기울기를 계산한다. 가중치는 아직 4다. 기울기가 양수이므로 손실을 줄이려면 가중치를 조금 줄여야 한다.\n\n\n1.3 직접 해보기 ① — 시작 위치와 이동 방향\nstart를 0.0, 2.0, 4.0으로 바꾸며 아래 셀을 완성한다. 먼저 도함수로 기울기를 예상하고, 실행 결과와 비교한다.\n\nstart = 0.0\nw = torch.tensor(start, requires_grad=True)\n\n# ① J를 호출해 loss 계산\n# ② backward로 기울기 계산\n# ③ w.grad.item() 출력\n\n\n\n\n시작값\n예상한 기울기\n실행한 기울기\n가중치를 늘릴까, 줄일까?\n\n\n\n\n0.0\n직접 기록\n직접 기록\n직접 기록\n\n\n2.0\n직접 기록\n직접 기록\n직접 기록\n\n\n4.0\n직접 기록\n직접 기록\n직접 기록"
-  },
-  {
-    "objectID": "labs/lab03.html#기울기를-이용해-한-번-갱신하기-15분",
-    "href": "labs/lab03.html#기울기를-이용해-한-번-갱신하기-15분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "2. 기울기를 이용해 한 번 갱신하기 — 15분",
-    "text": "2. 기울기를 이용해 한 번 갱신하기 — 15분\n\n2.1 갱신식을 코드로 옮기기\n기울기로 방향을 알았으므로, 학습률을 곱해 이동량을 정한다. 코드에서는 학습률을 lr로 쓴다.\n\\[w_{\\text{새}}=w-\\eta J'(w)\\]\n\\(w=4\\), 학습률이 0.1이면 새 가중치는 \\(4-0.1\\times4=3.6\\)이다. 아래 갱신 코드와 대응시켜 본다.\nw -= lr * w.grad\n이 코드는 현재 w에서 lr * w.grad를 뺀 값으로 갱신한다. 값을 갱신하는 연산은 with torch.no_grad(): 안에 작성한다. 들여쓴 부분은 미분을 위한 계산 기록에서 제외된다.\n\nw = torch.tensor(4.0, requires_grad=True)\nlr = 0.1\n\nloss = J(w)\nloss.backward()\n\nwith torch.no_grad():\n    w -= lr * w.grad\n\nprint(\"갱신한 가중치:\", w.item())\nprint(\"갱신 후 손실:\", J(w).item())\n\n갱신한 가중치: 3.5999999046325684\n갱신 후 손실: 2.559999704360962\n\n\n가중치는 약 3.6, 손실은 약 2.56이다. 갱신 효과는 새 가중치로 J(w)를 다시 계산하여 확인한다.\n\n\n2.2 직접 해보기 ② — 계산한 값과 실행값 비교\n다음 두 경우의 기울기 → 새 가중치 → 새 손실을 먼저 계산한다. 그다음 2.1절 코드의 시작값과 lr을 바꾸어 확인한다.\n\n\n\n시작값\n학습률\n현재 기울기\n새 가중치\n새 손실\n\n\n\n\n0.0\n0.1\n직접 계산\n직접 계산\n직접 계산\n\n\n4.0\n0.5\n직접 계산\n직접 계산\n직접 계산\n\n\n\n각 경우마다 셀 전체를 실행해 지정한 시작값에서 출발한다. 두 번째 경우에는 한 번의 갱신으로 어디에 도달하는가?"
-  },
-  {
-    "objectID": "labs/lab03.html#sgd로-갱신하고-반복하기-20분",
-    "href": "labs/lab03.html#sgd로-갱신하고-반복하기-20분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "3. SGD로 갱신하고 반복하기 — 20분",
-    "text": "3. SGD로 갱신하고 반복하기 — 20분\n\n3.1 갱신을 맡길 도구 준비\ntorch.optim은 가중치를 갱신하는 도구를 모은 모듈이다. torch.optim.SGD를 기본 설정으로 사용하면 방금 작성한 갱신식을 적용한다.\noptimizer = torch.optim.SGD([w], lr=0.1)\n[w]는 갱신할 텐서의 목록, lr은 학습률이다. 이렇게 만든 optimizer에서 두 메서드를 사용한다.\n\n\n\n메서드\n역할\n\n\n\n\noptimizer.zero_grad()\n이전에 계산한 기울기를 지운다.\n\n\noptimizer.step()\n저장된 기울기와 학습률로 가중치를 갱신한다.\n\n\n\n파이토치는 기울기를 계산할 때 기존 값에 누적한다. 따라서 매번 지운 뒤 현재 위치의 기울기를 구한다.\n\nw = torch.tensor(4.0, requires_grad=True)\noptimizer = torch.optim.SGD([w], lr=0.1)\n\noptimizer.zero_grad()\nloss = J(w)\nloss.backward()\noptimizer.step()\n\nprint(\"갱신한 가중치:\", w.item())\nprint(\"갱신 후 손실:\", J(w).item())\n\n갱신한 가중치: 3.5999999046325684\n갱신 후 손실: 2.559999704360962\n\n\n2.1절처럼 가중치 3.6, 손실 2.56이 나온다. 이제 이 네 줄을 반복하면 된다.\n\n\n3.2 새 위치에서 다시 계산하며 반복\n아래 코드는 start에서 시작해 steps번 갱신한다. 반복할 때마다 바뀐 w로 손실과 기울기를 다시 계산한다.\nhistory에는 시작값과 매번 갱신한 가중치를 저장한다. append()는 리스트 끝에 값을 추가한다.\n\nstart = 4.0\nlr = 0.1\nsteps = 10\n\nw = torch.tensor(start, requires_grad=True)\noptimizer = torch.optim.SGD([w], lr=lr)\nhistory = [w.item()]\n\nfor step in range(steps):\n    optimizer.zero_grad()\n    loss = J(w)\n    loss.backward()\n    optimizer.step()\n\n    history.append(w.item())\n    print(step + 1, \"회: 가중치\", round(w.item(), 4), \"손실\", round(J(w).item(), 4))\n\n1 회: 가중치 3.6 손실 2.56\n2 회: 가중치 3.28 손실 1.6384\n3 회: 가중치 3.024 손실 1.0486\n4 회: 가중치 2.8192 손실 0.6711\n5 회: 가중치 2.6554 손실 0.4295\n6 회: 가중치 2.5243 손실 0.2749\n7 회: 가중치 2.4194 손실 0.1759\n8 회: 가중치 2.3355 손실 0.1126\n9 회: 가중치 2.2684 손실 0.0721\n10 회: 가중치 2.2147 손실 0.0461\n\n\nround(값, 4)는 출력할 숫자를 소수 넷째 자리까지 반올림한다. 처음 두 번의 결과는 이론의 계산과 같다.\n\n\n\n갱신 횟수\n가중치\n손실\n\n\n\n\n0\n4.0\n4.0\n\n\n1\n3.6\n2.56\n\n\n2\n3.28\n1.6384\n\n\n\n\n\n3.3 직접 해보기 ③ — 반대편에서 출발하는 반복문\n이번에는 0.0에서 시작해 학습률 0.1로 10번 갱신한다. 아래 셀에 텐서와 optimizer를 만들고 반복문을 작성한다. 먼저 작성한 뒤 3.2절과 비교한다.\n\n# ① 시작값이 0.0인 텐서 w와 optimizer 준비\n# ② for 문 안에 학습 코드 네 줄 작성\n# ③ 마지막 가중치와 손실 출력\n\n가중치는 어느 방향으로 움직이는가? 4.0에서 출발한 경우와 비교하여, 두 경우 모두 2에 가까워지는지 확인한다."
-  },
-  {
-    "objectID": "labs/lab03.html#학습률에-따른-움직임-비교하기-15분",
-    "href": "labs/lab03.html#학습률에-따른-움직임-비교하기-15분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "4. 학습률에 따른 움직임 비교하기 — 15분",
-    "text": "4. 학습률에 따른 움직임 비교하기 — 15분\n\n4.1 이동 경로 그리기\n반복문을 만들었으므로, 이번에는 학습률이 움직임에 어떤 영향을 주는지 확인한다. 3.2절에서 start=4.0, steps=10으로 두고 lr만 바꾸어 셀 전체를 실행한다. 이어 아래 제공 코드로 가중치의 이동을 그린다.\n\nplt.plot(history, \"o-\", label=\"w\")\nplt.axhline(2.0, color=\"gray\", linestyle=\"--\", label=\"minimum: w=2\")\nplt.xlabel(\"Update\")\nplt.ylabel(\"Weight\")\nplt.legend()\nplt.grid(alpha=0.3)\nplt.show()\n\n\n\n\n\n\n\n\n가로축 0은 시작 위치이고, 점선은 이 손실함수를 최소로 만드는 w=2다.\n\n\n4.2 직접 해보기 ④ — 수렴·진동·발산\n학습률을 0.1, 1.0, 1.1로 바꾸어 각각 실행하고 기록한다. 매번 같은 시작값에서 출발해야 비교할 수 있다.\n\n\n\n학습률\n10회 후 가중치\n10회 후 손실\n가중치의 움직임\n\n\n\n\n0.1\n직접 기록\n직접 기록\n직접 기록\n\n\n1.0\n직접 기록\n직접 기록\n직접 기록\n\n\n1.1\n직접 기록\n직접 기록\n직접 기록\n\n\n\n다음 내용을 그래프와 연결해 설명한다.\n\n어떤 경우에 가중치가 2에 가까워지는가?\n어떤 경우에 두 위치를 오가며 손실이 그대로인가?\n기울기의 반대 방향으로 갱신했는데도 손실이 커지는 이유는 무엇인가?"
-  },
-  {
-    "objectID": "labs/lab03.html#두-가중치의-편미분과-동시-갱신-20분",
-    "href": "labs/lab03.html#두-가중치의-편미분과-동시-갱신-20분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "5. 두 가중치의 편미분과 동시 갱신 — 20분",
-    "text": "5. 두 가중치의 편미분과 동시 갱신 — 20분\n\n5.1 두 편미분값을 한 번에 계산\n이론 11절의 손실함수로 확장하자.\n\\[J(w_1,w_2)=(w_1-2)^2+(w_2-1)^2\\]\n두 가중치를 하나의 텐서 w에 담는다. w[0]은 첫 가중치 \\(w_1\\), w[1]은 두 번째 가중치 \\(w_2\\)다. 이를 이용해 손실함수를 작성한다.\n\ndef J2(w):\n    return (w[0] - 2) ** 2 + (w[1] - 1) ** 2\n\n이번에는 w.grad에도 두 값이 저장된다. 각각의 가중치를 바꿀 때의 손실 변화율이며, 이론의 기울기 벡터다.\n\nw = torch.tensor([4.0, 0.0], requires_grad=True)\nloss = J2(w)\nloss.backward()\n\nprint(\"손실:\", loss.item())\nprint(\"기울기 벡터:\", w.grad)\n\n손실: 5.0\n기울기 벡터: tensor([ 4., -2.])\n\n\n현재 위치 \\((4,0)\\)에서 손실은 5, 기울기 벡터는 \\((4,-2)\\)다. 손실을 줄이려면 첫 가중치는 줄이고 두 번째 가중치는 늘려야 한다.\n\n\n5.2 같은 위치의 기울기로 함께 갱신\nSGD에는 앞에서처럼 [w]를 전달한다. w 안에 값이 두 개 있으므로 step()이 두 가중치를 함께 갱신한다.\n\nw = torch.tensor([4.0, 0.0], requires_grad=True)\noptimizer = torch.optim.SGD([w], lr=0.1)\n\noptimizer.zero_grad()\nloss = J2(w)\nloss.backward()\noptimizer.step()\n\nprint(\"새 가중치:\", w.tolist())\nprint(\"새 손실:\", J2(w).item())\n\n새 가중치: [3.5999999046325684, 0.20000000298023224]\n새 손실: 3.1999998092651367\n\n\n.tolist()는 텐서의 여러 값을 파이썬 리스트로 꺼낸다. 이론에서 계산한 \\((3.6,0.2)\\), 손실 3.2가 나오는지 확인한다. 두 기울기는 모두 갱신 전 위치 \\((4,0)\\)에서 계산한 값이다.\n\n\n5.3 직접 해보기 ⑤ — 두 가중치를 반복해서 갱신\n주석을 학습 코드 네 줄로 바꾸어 두 번 갱신한다. 손실함수는 J2를 사용한다.\n\nw = torch.tensor([4.0, 0.0], requires_grad=True)\noptimizer = torch.optim.SGD([w], lr=0.1)\n\nfor step in range(2):\n    # ① 이전 기울기 지우기\n    # ② J2로 손실 계산\n    # ③ 기울기 계산\n    # ④ 가중치 갱신\n    pass  # 네 줄을 작성한 뒤 삭제\n\n    print(step + 1, \"회:\", w.tolist(), \"손실:\", J2(w).item())\n\n\n\n\n갱신 횟수\n예상 가중치\n예상 손실\n\n\n\n\n1\n\\((3.6,0.2)\\)\n3.2\n\n\n2\n\\((3.28,0.36)\\)\n2.048\n\n\n\n값을 확인한 뒤 반복 횟수를 20번으로 늘린다. 첫 가중치는 2에, 두 번째 가중치는 1에 가까워지는지 확인한다."
-  },
-  {
-    "objectID": "labs/lab03.html#코드와-이론-연결하기-5분",
-    "href": "labs/lab03.html#코드와-이론-연결하기-5분",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
-    "section": "6. 코드와 이론 연결하기 — 5분",
-    "text": "6. 코드와 이론 연결하기 — 5분\n오늘 구현한 경사하강법의 핵심은 다음 네 줄이다.\noptimizer.zero_grad()  # 이전 기울기 초기화\nloss = J(w)            # 현재 위치의 손실\nloss.backward()        # 현재 위치의 기울기\noptimizer.step()       # 기울기의 반대 방향으로 갱신\n가중치가 두 개일 때도 같은 순서로 계산했다. 기울기를 구하는 줄과 실제 값을 바꾸는 줄을 구분하고, 학습률을 바꾸는 위치를 짚어 본다.\n신경망 학습에서는 [w] 대신 model.parameters()로 모델의 가중치와 편향을 전달하고, 예측과 정답으로 손실을 계산한다. 다음 실습 4에서는 이 과정을 실제 데이터에 적용한다."
-  },
-  {
     "objectID": "labs/lab03.html#직접-해보기-해설-먼저-작성한-뒤-확인",
     "href": "labs/lab03.html#직접-해보기-해설-먼저-작성한-뒤-확인",
-    "title": "실습 3: 미분과 경사하강법을 코드로 구현하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
     "section": "직접 해보기 해설 — 먼저 작성한 뒤 확인",
-    "text": "직접 해보기 해설 — 먼저 작성한 뒤 확인\n\n\n\n\n\n\n① 시작 위치와 이동 방향\n\n\n\n\n\nloss = J(w)\nloss.backward()\nprint(w.grad.item())\n\n\n\n시작값\n기울기\n이동 방향\n\n\n\n\n0.0\n-4\n가중치를 늘린다.\n\n\n2.0\n0\n갱신해도 그대로다. 이 함수의 최솟점이다.\n\n\n4.0\n4\n가중치를 줄인다.\n\n\n\n\n\n\n\n\n\n\n\n\n② 한 번의 갱신\n\n\n\n\n\n\n\n\n시작값\n학습률\n현재 기울기\n새 가중치\n새 손실\n\n\n\n\n0.0\n0.1\n-4\n0.4\n2.56\n\n\n4.0\n0.5\n4\n2.0\n0.0\n\n\n\n두 번째 경우에는 이 함수의 최솟점에 한 번에 도달한다.\n\n\n\n\n\n\n\n\n\n③ 반대편에서 출발하는 반복문\n\n\n\n\n\nw = torch.tensor(0.0, requires_grad=True)\noptimizer = torch.optim.SGD([w], lr=0.1)\n\nfor step in range(10):\n    optimizer.zero_grad()\n    loss = J(w)\n    loss.backward()\n    optimizer.step()\n\nprint(\"마지막 가중치:\", w.item())\nprint(\"마지막 손실:\", J(w).item())\n가중치는 약 1.7853, 손실은 약 0.0461이다. 4.0에서 출발하면 가중치는 약 2.2147이고 손실은 같다. 서로 반대편에서 2에 가까워진다.\n\n\n\n\n\n\n\n\n\n④ 학습률 비교\n\n\n\n\n\n\n\n\n학습률\n10회 후 가중치\n10회 후 손실\n움직임\n\n\n\n\n0.1\n약 2.2147\n약 0.0461\n2에 수렴한다.\n\n\n1.0\n4.0\n4.0\n4와 0을 오간다.\n\n\n1.1\n약 14.3835\n약 153.35\n최솟점의 양쪽을 오가며 멀어진다.\n\n\n\n학습률이 크면 한 번의 이동이 너무 커져 최솟점을 지나칠 수 있다. 현재 위치에서 손실을 줄이는 방향이라도 멀리 이동하면 손실이 늘어날 수 있다.\n\n\n\n\n\n\n\n\n\n⑤ 두 가중치의 반복 갱신\n\n\n\n\n\n반복문 안의 네 줄은 다음과 같다.\noptimizer.zero_grad()\nloss = J2(w)\nloss.backward()\noptimizer.step()\n20번 갱신하면 가중치는 약 \\((2.0231,0.9885)\\), 손실은 약 0.000665가 된다. 두 가중치가 함께 \\((2,1)\\)에 가까워진다."
+    "text": "직접 해보기 해설 — 먼저 작성한 뒤 확인\n\n\n\n\n\n\n① 1차식\n\n\n\n\n\nx = torch.tensor(5.0, requires_grad=True)\nvalue = 2 * x + 1\nvalue.backward()\nprint(value.item())\nprint(x.grad.item())\n함수값은 11, 기울기는 2다. 1차식 \\(2x+1\\)은 어느 위치에서도 기울기가 2로 같다.\n\n\n\n\n\n\n\n\n\n② 2차식\n\n\n\n\n\nstart = -3.0\nx = torch.tensor(start, requires_grad=True)\nvalue = x ** 2\nvalue.backward()\nprint(value.item())\nprint(x.grad.item())\n\n\n\n입력\n함수값\n기울기\n\n\n\n\n-3.0\n9\n-6\n\n\n0.0\n0\n0\n\n\n3.0\n9\n6\n\n\n\n-3과 3에서는 함수값이 같지만 기울기의 부호가 다르다. 함수값을 줄이려면 서로 반대 방향으로 이동해야 한다.\n\n\n\n\n\n\n\n\n\n③ 손실값 예상\n\n\n\n\n\nprint(criterion(y, y).item())\nprint(criterion(y + 1, y).item())\n첫 경우는 모든 오차가 0이므로 손실도 0이다. 두 번째는 모든 제곱오차가 1이므로 평균인 손실도 1이다.\n\n\n\n\n\n\n\n\n\n④ 학습 코드\n\n\n\n\n\nfor epoch in range(200):\n    optimizer.zero_grad()\n    pred = model(X)\n    loss = criterion(pred, y)\n    loss.backward()\n    optimizer.step()\n\nprint(\"학습 후 손실:\", criterion(model(X), y).item())\n기울기는 loss.backward()에서 구하고, 가중치는 optimizer.step()에서 바꾼다.\n은닉층이 6개라면 nn.Linear(2, 6)과 nn.Linear(6, 1)을 연결한다. 모델과 optimizer를 만드는 준비 셀을 다시 실행하고, 같은 반복문으로 학습시킨다."
+  },
+  {
+    "objectID": "labs/lab03.html#이번-실습의-흐름",
+    "href": "labs/lab03.html#이번-실습의-흐름",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "이번 실습의 흐름",
+    "text": "이번 실습의 흐름\n1차식 → 2차식 → 신경망의 예측과 손실 → 기울기 계산 → 가중치 갱신 → 반복 학습 순서로 진행한다.\n각 셀을 실행하고 출력값을 확인한 뒤 다음 셀로 넘어간다. 앞의 두 예제에서는 함수값과 기울기를 구분하고, 이후에는 같은 자동미분으로 신경망을 학습시킨다. 중간의 직접 해보기는 먼저 작성한 뒤 노트북 끝의 해설과 비교한다.\n대응 이론: Ch03 손실함수와 경사하강법. Colab 기본 CPU 런타임을 사용한다. 입력값을 바꾸어 다시 확인할 때는 해당 예제의 텐서를 만드는 셀부터 차례로 실행한다."
+  },
+  {
+    "objectID": "labs/lab03.html#차식에서-함수값과-기울기-구하기",
+    "href": "labs/lab03.html#차식에서-함수값과-기울기-구하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "1. 1차식에서 함수값과 기울기 구하기",
+    "text": "1. 1차식에서 함수값과 기울기 구하기\n\n1.1 미분할 값 준비\n다음 함수가 있다고 하자.\n\\[f(x)=2x+1\\]\n\\(x=3\\)에서 함수값과 기울기를 구해 보자. requires_grad=True는 이 텐서에 대한 기울기를 계산하도록 설정한다.\n\nimport torch\n\nx = torch.tensor(3.0, requires_grad=True)\nprint(x)\n\ntensor(3., requires_grad=True)\n\n\nx에는 3이 들어 있다. 이제 이 텐서를 사용해 함수값을 계산한다.\n\n\n1.2 함수값 계산\n계산한 값을 value에 저장한다. .item()은 값 하나인 텐서를 파이썬 숫자로 꺼낸다.\n\nvalue = 2 * x + 1\nprint(value.item())\n\n7.0\n\n\n출력은 7이다. \\(f(3)=2\\times3+1\\)을 계산한 결과다.\n\n\n1.3 기울기 계산\nvalue.backward()는 방금 계산한 과정을 거슬러 미분한다. 결과는 입력 텐서의 x.grad에 저장된다.\n\nvalue.backward()\nprint(x.grad.item())\n\n2.0\n\n\n출력은 2다. 함수값 7과는 다른 값이며, \\(x\\)가 1 증가할 때 함수값이 2 증가한다는 뜻이다.\n\n\n\n확인한 것\n코드\n값\n\n\n\n\n현재 입력\nx\n3\n\n\n함수값\nvalue\n7\n\n\n현재 위치의 기울기\nx.grad\n2\n\n\n\n\n\n1.4 직접 해보기 ① — 입력을 바꾸면\n\\(x=5\\)일 때 함수값과 기울기를 먼저 예상한다. 아래 셀을 완성해 두 값을 확인한다.\n\nx = torch.tensor(5.0, requires_grad=True)\n\n# ① value에 2 * x + 1 계산\n# ② value.backward()로 기울기 계산\n# ③ value.item()과 x.grad.item() 출력\n\n함수값이 달라졌을 때 기울기도 달라지는가?"
+  },
+  {
+    "objectID": "labs/lab03.html#차식에서는-위치에-따라-기울기가-달라진다",
+    "href": "labs/lab03.html#차식에서는-위치에-따라-기울기가-달라진다",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "2. 2차식에서는 위치에 따라 기울기가 달라진다",
+    "text": "2. 2차식에서는 위치에 따라 기울기가 달라진다\n\n2.1 함수값 계산\n이번에는 다음 함수를 사용한다.\n\\[f(x)=x^2\\]\n새 텐서로 \\(x=3\\)을 준비하고, ** 2로 제곱을 계산한다.\n\nx = torch.tensor(3.0, requires_grad=True)\nvalue = x ** 2\nprint(value.item())\n\n9.0\n\n\n함수값은 9다. 이번에도 같은 backward()로 기울기를 구할 수 있다.\n\n\n2.2 기울기 계산\n\nvalue.backward()\nprint(x.grad.item())\n\n6.0\n\n\n출력은 6이다. 도함수 \\(f'(x)=2x\\)에 3을 넣은 결과와 같다. 파이토치는 도함수를 직접 적지 않아도 텐서로 계산한 과정에서 기울기를 구해 준다.\n\n\n2.3 직접 해보기 ② — 다른 위치에서 확인\n아래 셀을 완성하고 start를 -3.0, 0.0, 3.0으로 바꾸어 실행한다. 각 위치의 함수값과 기울기를 먼저 예상한다.\n\nstart = -3.0\nx = torch.tensor(start, requires_grad=True)\n\n# ① value에 x의 제곱 계산\n# ② 기울기 계산\n# ③ 함수값과 기울기 출력\n\n\n\n\n입력\n함수값\n기울기\n\n\n\n\n-3.0\n직접 기록\n직접 기록\n\n\n0.0\n직접 기록\n직접 기록\n\n\n3.0\n직접 기록\n직접 기록\n\n\n\n\\(x=3\\)에서는 기울기가 양수이므로 \\(x\\)를 조금 줄이면 함수값이 작아진다. \\(x=-3\\)에서는 기울기가 음수이므로 \\(x\\)를 조금 늘려야 한다.\n이제 이 원리를 학습에 적용한다. 신경망에서는 가중치를 바꿀 때 손실이 어떻게 변하는지 구한다. 먼저 모델의 예측과 정답으로 손실을 만들어 보자."
+  },
+  {
+    "objectID": "labs/lab03.html#신경망의-예측과-정답-준비하기",
+    "href": "labs/lab03.html#신경망의-예측과-정답-준비하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "3. 신경망의 예측과 정답 준비하기",
+    "text": "3. 신경망의 예측과 정답 준비하기\n\n3.1 학습할 데이터\n두 입력 변수로 숫자 하나를 예측하는 작은 회귀 문제를 가정하자. 입력과 정답은 아래에 준비되어 있다. 각 입력 행과 같은 순서의 정답 행이 한 쌍이다.\n\nX = torch.tensor([[0., 0.],\n                  [0., 1.],\n                  [1., 0.],\n                  [1., 1.],\n                  [2., 0.],\n                  [0., 2.]])\n\ny = torch.tensor([[1.0],\n                  [2.0],\n                  [1.5],\n                  [2.5],\n                  [2.0],\n                  [3.0]])\n\nprint(\"입력:\", X.shape)\nprint(\"정답:\", y.shape)\n\n입력: torch.Size([6, 2])\n정답: torch.Size([6, 1])\n\n\nX는 행이 데이터, 열이 입력 변수다. 데이터 6건에 입력 변수가 2개이므로 (6, 2)다. 정답은 각 데이터에 숫자 하나씩 있으므로 (6, 1)이다.\n\n\n3.2 입력과 출력에 맞는 모델 만들기\n실습 2처럼 torch.nn의 층을 nn.Sequential로 연결한다. nn.Linear(입력 개수, 출력 개수)의 두 숫자를 다음 구조에 맞춘다.\n입력 2개 → Linear(2, 4) → ReLU → Linear(4, 1) → 예측값 1개\n입력 변수는 2개이고 예측할 값은 하나다. 은닉층의 뉴런 수는 4개로 정한다. 마지막 층의 가중치를 나중에 확인할 수 있도록 output_layer라는 이름을 붙인다.\n\nimport torch.nn as nn\n\ntorch.manual_seed(42)  # 같은 초기 가중치로 결과 비교\nhidden_layer = nn.Linear(2, 4)\noutput_layer = nn.Linear(4, 1)\n\nmodel = nn.Sequential(\n    hidden_layer,\n    nn.ReLU(),\n    output_layer,\n)\nprint(model)\n\nSequential(\n  (0): Linear(in_features=2, out_features=4, bias=True)\n  (1): ReLU()\n  (2): Linear(in_features=4, out_features=1, bias=True)\n)\n\n\n첫 층의 출력 4개가 마지막 층의 입력 4개로 연결되는지 확인한다.\n\n\n3.3 현재 모델로 예측\nmodel(X)는 현재 가중치로 여섯 입력의 예측값을 계산한다.\n\npred = model(X)\nprint(\"예측값:\")\nprint(pred)\nprint(\"정답:\")\nprint(y)\n\n예측값:\ntensor([[0.7545],\n        [0.9853],\n        [0.9262],\n        [1.1631],\n        [1.0886],\n        [1.2512]], grad_fn=&lt;AddmmBackward0&gt;)\n정답:\ntensor([[1.0000],\n        [2.0000],\n        [1.5000],\n        [2.5000],\n        [2.0000],\n        [3.0000]])\n\n\n처음 두 예측값은 약 0.7545, 0.9853이고 정답은 1.0, 2.0이다. 아직 학습하지 않았으므로 차이가 있다. 이 차이를 숫자로 나타내는 손실을 계산한다."
+  },
+  {
+    "objectID": "labs/lab03.html#예측-오차를-손실로-바꾸기",
+    "href": "labs/lab03.html#예측-오차를-손실로-바꾸기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "4. 예측 오차를 손실로 바꾸기",
+    "text": "4. 예측 오차를 손실로 바꾸기\n\n4.1 예측과 정답의 차이\n먼저 각 데이터에서 예측값과 정답의 차이를 구한다.\n\nerror = pred - y\nprint(error)\n\ntensor([[-0.2455],\n        [-1.0147],\n        [-0.5738],\n        [-1.3369],\n        [-0.9114],\n        [-1.7488]], grad_fn=&lt;SubBackward0&gt;)\n\n\n첫 데이터의 오차는 약 -0.2455다. 예측값이 정답보다 그만큼 작다.\n\n\n4.2 오차를 제곱하고 평균\n양수와 음수 오차가 서로 상쇄되지 않도록 제곱한다.\n\nsquared_error = error ** 2\nprint(squared_error)\n\ntensor([[0.0602],\n        [1.0296],\n        [0.3292],\n        [1.7873],\n        [0.8307],\n        [3.0584]], grad_fn=&lt;PowBackward0&gt;)\n\n\n첫 데이터의 제곱오차는 약 0.0602다. 여섯 제곱오차의 평균을 내면 모델의 전체 손실이 된다.\n\nmanual_loss = squared_error.mean()\nprint(manual_loss.item())\n\n1.1825798749923706\n\n\n결과는 약 1.1826이다. 이것이 이론에서 배운 평균제곱오차(MSE)다.\n\\[J=\\frac{1}{N}\\sum_{i=1}^{N}(\\hat{y}_i-y_i)^2\\]\n여기서 \\(N\\)은 데이터 수, \\(\\hat{y}_i\\)는 모델의 예측값, \\(y_i\\)는 정답이다.\n\n\n4.3 같은 손실을 nn.MSELoss로 계산\nnn.MSELoss()로 손실을 계산할 객체를 만들고 criterion이라는 이름을 붙인다. 이후 criterion(예측값, 정답)으로 호출한다.\n\ncriterion = nn.MSELoss()\nloss = criterion(pred, y)\nprint(loss.item())\n\n1.1825798749923706\n\n\n직접 계산한 값과 같은 약 1.1826이 나온다. 이후 학습에서는 이 부품을 사용한다. 예측값과 정답은 모두 (6, 1)로, 각 행끼리 비교된다.\n\n\n4.4 직접 해보기 ③ — 손실값 예상\n다음 두 경우의 손실을 예상한 뒤 criterion으로 확인한다.\n\n예측값이 정답과 완전히 같은 경우: 예측값으로 y를 전달한다.\n모든 예측값이 정답보다 1씩 큰 경우: 예측값으로 y + 1을 전달한다.\n\n\n# print(criterion(예측값, y).item()) 형태로 두 경우를 확인한다."
+  },
+  {
+    "objectID": "labs/lab03.html#손실의-기울기로-가중치-갱신하기",
+    "href": "labs/lab03.html#손실의-기울기로-가중치-갱신하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "5. 손실의 기울기로 가중치 갱신하기",
+    "text": "5. 손실의 기울기로 가중치 갱신하기\n\n5.1 무엇에 대해 미분하는가\n앞에서는 \\(x\\)가 바뀔 때 함수값이 어떻게 변하는지 구했다. 이제는 모델의 가중치가 바뀔 때 손실이 어떻게 변하는지 구한다. 입력 X와 정답 y는 학습 데이터로 두고, 모델의 가중치와 편향을 조절한다.\nnn.Linear가 만든 가중치와 편향은 기울기를 계산하도록 설정되어 있다. backward()는 모델의 예측에서 손실까지 이어진 계산을 따라 이 값들의 기울기를 구한다.\n마지막 층의 가중치는 output_layer.weight에 있다. 네 은닉 출력을 받아 예측값 하나를 만들므로 가중치도 네 개다.\n\nprint(\"갱신 전 출력층 가중치:\")\nprint(output_layer.weight)\n\n갱신 전 출력층 가중치:\nParameter containing:\ntensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)\n\n\n약 0.3694, 0.0677, 0.2411, -0.0706이다. 아래에서 기울기를 계산한 뒤 이 값들이 어떻게 바뀌는지 확인한다.\n\n\n5.2 갱신 도구 준비\ntorch.optim은 가중치 갱신 도구를 모은 모듈이다. 여기서는 SGD로 기울기의 반대 방향으로 이동한다.\n\noptimizer = torch.optim.SGD(model.parameters(), lr=0.05)\n\n\nmodel.parameters(): 갱신할 모델의 가중치와 편향을 전달한다.\nlr=0.05: 한 번의 이동 크기를 조절하는 학습률이다.\n\noptimizer에는 기울기를 지우는 zero_grad()와 가중치를 갱신하는 step()이 있다. 먼저 기울기를 구해 보자.\n\n\n5.3 현재 가중치의 기울기 계산\n파이토치는 기울기를 계산할 때 기존 값에 누적한다. zero_grad()로 이전 기울기를 지운 뒤, 현재 모델로 예측과 손실을 계산한다.\n\noptimizer.zero_grad()\npred = model(X)\nloss = criterion(pred, y)\nloss.backward()\n\nprint(\"출력층 가중치의 기울기:\")\nprint(output_layer.weight.grad)\n\n출력층 가중치의 기울기:\ntensor([[-3.0287, -0.4991, -1.2800, -0.8480]])\n\n\n기울기는 약 -3.0287, -0.4991, -1.2800, -0.8480이다. 각 값은 같은 순서의 가중치에 대한 편미분값이다.\n이 예제에서는 네 기울기가 모두 음수이므로, 손실을 줄이려면 해당 가중치를 조금 늘리는 방향으로 이동한다. 아직 가중치는 갱신하지 않았다. 다음 셀에서 5.1절의 값이 그대로인지 확인한다.\n\nprint(output_layer.weight)\n\nParameter containing:\ntensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)\n\n\n\n\n5.4 가중치 갱신\noptimizer.step()은 저장된 기울기와 학습률로 가중치와 편향을 갱신한다.\n\\[w_{\\text{새}}=w-\\eta\\frac{\\partial J}{\\partial w}\\]\n첫 번째 출력층 가중치는 다음과 같이 바뀐다.\n\\[0.3694-0.05\\times(-3.0287)\\approx0.5208\\]\n\noptimizer.step()\n\nprint(\"갱신 후 출력층 가중치:\")\nprint(output_layer.weight)\n\n갱신 후 출력층 가중치:\nParameter containing:\ntensor([[ 0.5208,  0.0927,  0.3051, -0.0282]], requires_grad=True)\n\n\n약 0.5208, 0.0927, 0.3051, -0.0282로 바뀐다. 여기서는 출력층을 확인했지만, model.parameters()로 전달한 은닉층과 출력층의 가중치·편향이 모두 갱신된다.\n\n\n5.5 새 가중치로 예측과 손실 확인\n가중치를 바꾼 효과를 보려면 새 가중치로 다시 예측해야 한다.\n\npred_after = model(X)\nloss_after = criterion(pred_after, y)\n\nprint(\"갱신 후 예측값:\")\nprint(pred_after)\nprint(\"갱신 전 손실:\", loss.item())\nprint(\"갱신 후 손실:\", loss_after.item())\n\n갱신 후 예측값:\ntensor([[1.0171],\n        [1.3936],\n        [1.2715],\n        [1.6413],\n        [1.5224],\n        [1.8179]], grad_fn=&lt;AddmmBackward0&gt;)\n갱신 전 손실: 1.1825798749923706\n갱신 후 손실: 0.4638649523258209\n\n\n손실이 약 1.1826 → 0.4639로 줄었다. 첫 두 예측값도 약 1.0171, 1.3936으로 바뀌었다. 각 정답과 비교한다.\n방금 실행한 과정을 다음 순서로 짚어 본다.\n\n\n\n단계\n코드\n확인한 것\n\n\n\n\n이전 기울기 초기화\noptimizer.zero_grad()\n새 계산을 준비\n\n\n예측\npred = model(X)\n현재 가중치의 출력\n\n\n손실 계산\nloss = criterion(pred, y)\n정답과의 차이\n\n\n기울기 계산\nloss.backward()\n각 가중치를 바꿀 방향\n\n\n갱신\noptimizer.step()\n실제 가중치 변화"
+  },
+  {
+    "objectID": "labs/lab03.html#한-번의-학습을-반복문으로-연결하기",
+    "href": "labs/lab03.html#한-번의-학습을-반복문으로-연결하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "6. 한 번의 학습을 반복문으로 연결하기",
+    "text": "6. 한 번의 학습을 반복문으로 연결하기\n\n6.1 같은 다섯 줄을 반복\n한 번 갱신한 모델을 이어서 학습시킨다. 매번 새 가중치로 예측과 손실을 다시 계산하고, 그 위치의 기울기를 구한다.\n전체 학습 데이터를 한 번 사용하는 단위를 에폭(epoch)이라고 한다. 여기서는 매번 전체 X, y를 사용하므로 반복 한 번이 한 에폭이다. loss_history에는 각 갱신 직전의 손실을 저장하고, append()로 값을 추가한다.\n\nloss_history = []\n\nfor epoch in range(200):\n    optimizer.zero_grad()\n    pred = model(X)\n    loss = criterion(pred, y)\n    loss.backward()\n    optimizer.step()\n\n    loss_history.append(loss.item())\n\nprint(\"반복 시작 손실:\", loss_history[0])\nprint(\"반복 종료 후 손실:\", criterion(model(X), y).item())\n\n반복 시작 손실: 0.4638649523258209\n반복 종료 후 손실: 0.00068812002427876\n\n\n손실이 약 0.4639 → 0.00069로 줄어든다. 아래에서는 그 과정을 그림으로 확인한다.\n\n\n6.2 손실 그래프 확인 — 제공 코드\nmatplotlib.pyplot은 그래프를 그리는 모듈이다. 다음 코드는 그대로 실행한다. 가로축은 학습 횟수, 세로축은 손실이다.\n\nimport matplotlib.pyplot as plt\n\nplt.plot(range(1, 201), loss_history)\nplt.xlabel(\"Epoch\")\nplt.ylabel(\"Loss\")\nplt.grid(alpha=0.3)\nplt.show()\n\n\n\n\n\n\n\n\n\n\n6.3 학습한 모델로 예측\n학습이 끝난 뒤 결과를 확인할 때는 추가 기울기 계산이 필요하지 않다. with torch.no_grad(): 안에서는 미분을 위한 계산 기록 없이 예측한다.\n\nwith torch.no_grad():\n    final_pred = model(X)\n\nprint(\"학습 후 예측값:\")\nprint(final_pred)\nprint(\"정답:\")\nprint(y)\n\n학습 후 예측값:\ntensor([[1.0125],\n        [1.9828],\n        [1.5120],\n        [2.4511],\n        [2.0188],\n        [3.0281]])\n정답:\ntensor([[1.0000],\n        [2.0000],\n        [1.5000],\n        [2.5000],\n        [2.0000],\n        [3.0000]])\n\n\n첫 두 예측값은 약 1.0125, 1.9828로 정답 1.0, 2.0에 가까워졌다. 나머지 행도 비교한다.\n이번에는 학습에 사용한 데이터로 결과를 확인했다. 다음 실습에서는 데이터를 나누어 새로운 데이터에 대한 성능을 평가한다."
+  },
+  {
+    "objectID": "labs/lab03.html#직접-해보기-④-학습-코드-완성하기",
+    "href": "labs/lab03.html#직접-해보기-④-학습-코드-완성하기",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "7. 직접 해보기 ④ — 학습 코드 완성하기",
+    "text": "7. 직접 해보기 ④ — 학습 코드 완성하기\n이번에는 같은 구조의 모델을 새로 만들고 직접 학습시킨다. 아래 준비 셀은 그대로 실행한다.\n\ntorch.manual_seed(42)\nmodel = nn.Sequential(\n    nn.Linear(2, 4),\n    nn.ReLU(),\n    nn.Linear(4, 1),\n)\ncriterion = nn.MSELoss()\noptimizer = torch.optim.SGD(model.parameters(), lr=0.05)\n\nprint(\"새 모델의 손실:\", criterion(model(X), y).item())\n\n새 모델의 손실: 1.1825798749923706\n\n\n초기 손실은 다시 약 1.1826이다. 다음 반복문에서 주석을 학습 코드 다섯 줄로 바꾼다. 먼저 작성한 뒤 6.1절과 비교한다.\n\nfor epoch in range(200):\n    # ① 이전 기울기 지우기\n    # ② model에 X를 넣어 pred 계산\n    # ③ pred와 y로 loss 계산\n    # ④ 기울기 계산\n    # ⑤ 가중치 갱신\n    pass  # 다섯 줄을 작성한 뒤 삭제\n\nprint(\"학습 후 손실:\", criterion(model(X), y).item())\n\n작성 후 다음을 확인한다.\n\n손실이 약 0.00069까지 줄었는가?\n기울기를 계산하는 줄과 가중치를 바꾸는 줄은 각각 무엇인가?\n은닉층을 6개로 바꾸려면 두 Linear의 숫자를 어떻게 바꿔야 하는가?\n\n마지막으로 준비 셀의 은닉층을 6개로 바꾸고, 준비 셀과 작성한 반복문을 차례로 실행한다. 층의 크기를 바꾸어도 같은 학습 코드를 사용할 수 있는지 확인한다."
+  },
+  {
+    "objectID": "labs/lab03.html#마무리",
+    "href": "labs/lab03.html#마무리",
+    "title": "실습 3: 자동미분에서 신경망 학습까지",
+    "section": "마무리",
+    "text": "마무리\n1차식과 2차식에서는 backward()로 입력에 대한 함수값의 기울기를 구했다. 신경망에서는 같은 방식으로 가중치에 대한 손실의 기울기를 구하고, optimizer.step()으로 모델을 갱신했다.\n다음 실습 4에서는 이 학습 코드에 데이터 전처리·분할·미니배치·평가를 연결한다."
   }
 ]
