@@ -183,7 +183,12 @@ window.Quarto = {
    
   <ul>
   <li><a href="#이번-실습의-흐름" id="toc-이번-실습의-흐름" class="nav-link active" data-scroll-target="#이번-실습의-흐름">이번 실습의 흐름</a></li>
-  <li><a href="#차식으로-자동미분-사용법-확인" id="toc-차식으로-자동미분-사용법-확인" class="nav-link" data-scroll-target="#차식으로-자동미분-사용법-확인">1. 1차식으로 자동미분 사용법 확인</a></li>
+  <li><a href="#파이토치는-어떻게-미분하는가" id="toc-파이토치는-어떻게-미분하는가" class="nav-link" data-scroll-target="#파이토치는-어떻게-미분하는가">1. 파이토치는 어떻게 미분하는가</a>
+  <ul class="collapse">
+  <li><a href="#계산-과정을-기록하는-자동미분" id="toc-계산-과정을-기록하는-자동미분" class="nav-link" data-scroll-target="#계산-과정을-기록하는-자동미분">1.1 계산 과정을 기록하는 자동미분</a></li>
+  <li><a href="#backward는-무엇을-하는가" id="toc-backward는-무엇을-하는가" class="nav-link" data-scroll-target="#backward는-무엇을-하는가">1.2 <code>backward()</code>는 무엇을 하는가</a></li>
+  <li><a href="#기록한-계산과-기울기를-코드로-확인" id="toc-기록한-계산과-기울기를-코드로-확인" class="nav-link" data-scroll-target="#기록한-계산과-기울기를-코드로-확인">1.3 기록한 계산과 기울기를 코드로 확인</a></li>
+  </ul></li>
   <li><a href="#차식에서는-위치에-따라-기울기가-달라진다" id="toc-차식에서는-위치에-따라-기울기가-달라진다" class="nav-link" data-scroll-target="#차식에서는-위치에-따라-기울기가-달라진다">2. 2차식에서는 위치에 따라 기울기가 달라진다</a>
   <ul class="collapse">
   <li><a href="#함수값-계산" id="toc-함수값-계산" class="nav-link" data-scroll-target="#함수값-계산">2.1 함수값 계산</a></li>
@@ -260,35 +265,80 @@ window.Quarto = {
 </div>
 <section id="이번-실습의-흐름" class="level2">
 <h2 class="anchored" data-anchor-id="이번-실습의-흐름">이번 실습의 흐름</h2>
-<p><strong>1차식 → 한 변수의 2차식 → 두 변수의 편미분 → 신경망의 예측과 손실 → 기울기 계산 → 가중치 갱신 → 반복 학습</strong> 순서로 진행한다.</p>
+<p><strong>자동미분의 원리 → 1차식 → 한 변수의 2차식 → 두 변수의 편미분 → 신경망의 예측과 손실 → 기울기 계산 → 가중치 갱신 → 반복 학습</strong> 순서로 진행한다.</p>
 <p>각 셀을 실행하고 출력값을 확인한 뒤 다음 셀로 넘어간다. 간단한 식에서 자동미분을 익히고, 두 변수가 함께 들어 있는 식에서 기울기 벡터를 확인한다. 이어 같은 자동미분으로 신경망을 학습시킨다. 중간의 직접 해보기는 먼저 작성한 뒤 노트북 끝의 해설과 비교한다.</p>
 <p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch03.html">Ch03 손실함수와 경사하강법</a>. Colab 기본 CPU 런타임을 사용한다. 입력값을 바꾸어 다시 확인할 때는 해당 예제의 텐서를 만드는 셀부터 차례로 실행한다.</p>
 </section>
-<section id="차식으로-자동미분-사용법-확인" class="level2">
-<h2 class="anchored" data-anchor-id="차식으로-자동미분-사용법-확인">1. 1차식으로 자동미분 사용법 확인</h2>
-<p><span class="math inline">\(f(x)=2x+1\)</span>에서 <span class="math inline">\(x=3\)</span>일 때 함수값과 기울기를 구해 보자. <code>requires_grad=True</code>는 <strong>이 텐서에 대한 기울기를 계산하도록 설정</strong>한다.</p>
-<div id="bf37694b" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">3.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="파이토치는-어떻게-미분하는가" class="level2">
+<h2 class="anchored" data-anchor-id="파이토치는-어떻게-미분하는가">1. 파이토치는 어떻게 미분하는가</h2>
+<section id="계산-과정을-기록하는-자동미분" class="level3">
+<h3 class="anchored" data-anchor-id="계산-과정을-기록하는-자동미분">1.1 계산 과정을 기록하는 자동미분</h3>
+<p>신경망을 학습시키려면 손실이 각 가중치에 따라 어떻게 변하는지 알아야 한다. 파이토치는 <strong>텐서로 계산한 과정을 기록하고, 그 기록을 이용해 기울기를 구하는 자동미분(autograd)</strong> 기능을 제공한다.</p>
+<p>예를 들어 <span class="math inline">\(f(x)=2x+1\)</span>을 계산한다고 하자. <span class="math inline">\(x=3\)</span>이면 다음 순서로 함수값 7을 얻는다.</p>
+<pre class="text"><code>x = 3 ── 2를 곱한다 ──→ 6 ── 1을 더한다 ──→ value = 7</code></pre>
+<p>파이토치는 미분에 필요한 연산과 값의 연결을 <strong>계산 그래프</strong>로 기록한다. 여기에 각 연산의 미분 규칙을 적용하면, 처음 입력한 <span class="math inline">\(x\)</span>가 출력 <code>value</code>에 미치는 영향을 구할 수 있다.</p>
+</section>
+<section id="backward는-무엇을-하는가" class="level3">
+<h3 class="anchored" data-anchor-id="backward는-무엇을-하는가">1.2 <code>backward()</code>는 무엇을 하는가</h3>
+<p><strong><code>value.backward()</code>는 출력 <code>value</code>에서 출발해 계산 그래프를 거슬러 가며, 그 출력을 만드는 데 사용한 변수의 기울기를 계산하는 메서드다.</strong> 계산을 진행한 방향의 반대로 돌아가므로 <code>backward</code>라고 한다. 이처럼 기울기를 뒤로 전달하는 과정을 <strong>역전파</strong>라고 한다.</p>
+<p>위 예제에서는 마지막 덧셈부터 살펴보며, 각 단계의 입력에 대한 변화율을 구한다. 1을 더하는 연산의 변화율은 1이고, 앞의 2를 곱하는 연산의 변화율은 2다. 두 변화율을 연결하면 <span class="math inline">\(x\)</span>에 대한 출력의 기울기는 <span class="math inline">\(1\times2=2\)</span>다. 이렇게 연산별 변화율을 곱해 연결하는 것이 <strong>연쇄법칙</strong>이다.</p>
+<pre class="text"><code>value에서 출발 → 덧셈의 변화율 1 → 곱셈의 변화율 2 → x의 기울기 2</code></pre>
+<p>코드에서는 다음 세 가지를 연결해서 사용한다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>코드</th>
+<th>역할</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>requires_grad=True</code></td>
+<td>기울기를 구할 텐서를 지정하여 관련 계산을 기록하게 한다.</td>
+</tr>
+<tr class="even">
+<td><code>value.backward()</code></td>
+<td>기록한 계산을 거슬러 각 미분 대상에 대한 출력의 기울기를 구한다.</td>
+</tr>
+<tr class="odd">
+<td><code>x.grad</code></td>
+<td>미분 대상으로 준비한 <code>x</code>에 저장된 기울기를 확인한다.</td>
+</tr>
+</tbody>
+</table>
+<p>신경망의 <code>loss.backward()</code>도 같은 방식으로 손실에서 출발해 각 가중치의 기울기를 구한다.</p>
+<p><strong><code>backward()</code>는 기울기를 계산한다. 변수의 값을 바꾸지는 않는다.</strong> 뒤에서 사용할 <code>optimizer.step()</code>이 그 기울기로 가중치를 갱신한다.</p>
+</section>
+<section id="기록한-계산과-기울기를-코드로-확인" class="level3">
+<h3 class="anchored" data-anchor-id="기록한-계산과-기울기를-코드로-확인">1.3 기록한 계산과 기울기를 코드로 확인</h3>
+<p>먼저 미분할 텐서를 만든다.</p>
+<div id="824490bb" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">3.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>먼저 함수값을 계산한다. <code>.item()</code>은 값 하나인 텐서를 파이썬 숫자로 꺼낸다.</p>
-<div id="af896366" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> x <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이 텐서로 함수값을 계산하면 미분에 필요한 과정도 기록된다. <code>.item()</code>은 값 하나인 텐서를 파이썬 숫자로 꺼낸다.</p>
+<div id="f5363176" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> x <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>7.0</code></pre>
 </div>
 </div>
-<p>함수값은 <strong>7</strong>이다. 이제 <code>value.backward()</code>로 미분하고, 결과가 저장된 <strong><code>x.grad</code></strong>를 확인한다.</p>
-<div id="9eeb60da" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>출력은 <strong>7</strong>이다. 이제 이 출력에 <code>backward()</code>를 호출하고, 입력 텐서의 <code>.grad</code>를 확인한다.</p>
+<div id="df21e3df" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>2.0</code></pre>
 </div>
 </div>
-<p>기울기는 <strong>2</strong>다. 함수값과 기울기는 서로 다른 값이다. 이 1차식은 어느 위치에서도 기울기가 2로 같다. 다음에는 위치에 따라 기울기가 달라지는 식을 살펴본다.</p>
+<p>기울기는 <strong>2</strong>다. <code>value</code>는 함수값 7, <code>x.grad</code>는 <span class="math inline">\(x\)</span>에 대한 기울기 2를 담고 있다. 같은 절차를 2차식과 두 변수의 함수에도 적용해 보자.</p>
+</section>
 </section>
 <section id="차식에서는-위치에-따라-기울기가-달라진다" class="level2">
 <h2 class="anchored" data-anchor-id="차식에서는-위치에-따라-기울기가-달라진다">2. 2차식에서는 위치에 따라 기울기가 달라진다</h2>
@@ -297,10 +347,10 @@ window.Quarto = {
 <p>이번에는 다음 함수를 사용한다.</p>
 <p><span class="math display">\[f(x)=x^2\]</span></p>
 <p>새 텐서로 <span class="math inline">\(x=3\)</span>을 준비하고, <code>** 2</code>로 제곱을 계산한다.</p>
-<div id="673251b9" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">3.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a95a3bcb" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(<span class="fl">3.0</span>, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>9.0</code></pre>
 </div>
@@ -309,9 +359,9 @@ window.Quarto = {
 </section>
 <section id="기울기-계산" class="level3">
 <h3 class="anchored" data-anchor-id="기울기-계산">2.2 기울기 계산</h3>
-<div id="404f325c" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eeff7e73" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>6.0</code></pre>
 </div>
@@ -321,13 +371,13 @@ window.Quarto = {
 <section id="직접-해보기-①-다른-위치에서-확인" class="level3">
 <h3 class="anchored" data-anchor-id="직접-해보기-①-다른-위치에서-확인">2.3 직접 해보기 ① — 다른 위치에서 확인</h3>
 <p>아래 셀을 완성하고 <code>start</code>를 <strong>-3.0, 0.0, 3.0</strong>으로 바꾸어 실행한다. 각 위치의 함수값과 기울기를 먼저 예상한다.</p>
-<div id="b1f38779" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="op">-</span><span class="fl">3.0</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(start, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ① value에 x의 제곱 계산</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ② 기울기 계산</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ 함수값과 기울기 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="55a0e2f9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="op">-</span><span class="fl">3.0</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(start, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ① value에 x의 제곱 계산</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ② 기울기 계산</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ 함수값과 기울기 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -366,9 +416,9 @@ window.Quarto = {
 <p>다음과 같이 두 변수로 함수값 하나를 계산한다고 하자.</p>
 <p><span class="math display">\[f(x_1,x_2)=x_1^2+x_1x_2+2x_2^2\]</span></p>
 <p>가운데 항 <span class="math inline">\(x_1x_2\)</span>에는 두 변수가 함께 들어 있다. 현재 위치를 <span class="math inline">\((2,-1)\)</span>로 정하고 두 값을 하나의 텐서에 담는다. <strong><code>x[0]</code>은 <span class="math inline">\(x_1\)</span>, <code>x[1]</code>은 <span class="math inline">\(x_2\)</span></strong>다.</p>
-<div id="f105c268" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9e955375" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="op">-</span><span class="fl">1.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([ 2., -1.], requires_grad=True)</code></pre>
 </div>
@@ -377,9 +427,9 @@ window.Quarto = {
 <section id="함수값-계산-1" class="level3">
 <h3 class="anchored" data-anchor-id="함수값-계산-1">3.2 함수값 계산</h3>
 <p>식을 그대로 코드로 옮긴다.</p>
-<div id="1e52ce07" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x[<span class="dv">0</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> x[<span class="dv">0</span>] <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f23255e0" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x[<span class="dv">0</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> x[<span class="dv">0</span>] <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>4.0</code></pre>
 </div>
@@ -392,9 +442,9 @@ window.Quarto = {
 <p><span class="math display">\[\frac{\partial f}{\partial x_1}=2x_1+x_2,\qquad
 \frac{\partial f}{\partial x_2}=x_1+4x_2\]</span></p>
 <p><span class="math inline">\((2,-1)\)</span>에서의 편미분값은 각각 <strong>3, -2</strong>다. 이제 코드로 확인한다.</p>
-<div id="dbcaea21" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2a9f97e1" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([ 3., -2.])</code></pre>
 </div>
@@ -426,12 +476,12 @@ window.Quarto = {
 <section id="직접-해보기-②-두-변수의-값-바꾸기" class="level3">
 <h3 class="anchored" data-anchor-id="직접-해보기-②-두-변수의-값-바꾸기">3.4 직접 해보기 ② — 두 변수의 값 바꾸기</h3>
 <p>아래 셀을 완성해 <span class="math inline">\((1,2)\)</span>에서 함수값과 기울기 벡터를 구한다. 먼저 위 식으로 예상값을 계산한 뒤 실행 결과와 비교한다.</p>
-<div id="e9843f79" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ① value에 x[0] ** 2 + x[0] * x[1] + 2 * x[1] ** 2 계산</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ② value.backward()로 두 변수의 기울기 계산</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ value.item()과 x.grad 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="059eeded" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ① value에 x[0] ** 2 + x[0] * x[1] + 2 * x[1] ** 2 계산</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ② value.backward()로 두 변수의 기울기 계산</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ value.item()과 x.grad 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>다음으로 위치를 <span class="math inline">\((-2,1)\)</span>로 바꾸어 확인한다. 각 위치에서 두 변수를 늘릴지 줄일지도 기록한다.</p>
 <table class="caption-top table">
@@ -466,23 +516,23 @@ window.Quarto = {
 <section id="학습할-데이터" class="level3">
 <h3 class="anchored" data-anchor-id="학습할-데이터">4.1 학습할 데이터</h3>
 <p>두 입력 변수로 숫자 하나를 예측하는 작은 회귀 문제를 가정하자. 입력과 정답은 아래에 준비되어 있다. 각 입력 행과 같은 순서의 정답 행이 한 쌍이다.</p>
-<div id="9281299f" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor([[<span class="fl">0.</span>, <span class="fl">0.</span>],</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">0.</span>, <span class="fl">1.</span>],</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.</span>, <span class="fl">0.</span>],</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.</span>, <span class="fl">1.</span>],</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.</span>, <span class="fl">0.</span>],</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">0.</span>, <span class="fl">2.</span>]])</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor([[<span class="fl">1.0</span>],</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.0</span>],</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.5</span>],</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.5</span>],</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.0</span>],</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">3.0</span>]])</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"입력:"</span>, X.shape)</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>, y.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fd6ab2d1" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.tensor([[<span class="fl">0.</span>, <span class="fl">0.</span>],</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">0.</span>, <span class="fl">1.</span>],</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.</span>, <span class="fl">0.</span>],</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.</span>, <span class="fl">1.</span>],</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.</span>, <span class="fl">0.</span>],</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">0.</span>, <span class="fl">2.</span>]])</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> torch.tensor([[<span class="fl">1.0</span>],</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.0</span>],</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">1.5</span>],</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.5</span>],</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.0</span>],</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">3.0</span>]])</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"입력:"</span>, X.shape)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>, y.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>입력: torch.Size([6, 2])
 정답: torch.Size([6, 1])</code></pre>
@@ -495,19 +545,19 @@ window.Quarto = {
 <p>실습 2처럼 <code>torch.nn</code>의 층을 <code>nn.Sequential</code>로 연결한다. <code>nn.Linear(입력 개수, 출력 개수)</code>의 두 숫자를 다음 구조에 맞춘다.</p>
 <pre class="text"><code>입력 2개 → Linear(2, 4) → ReLU → Linear(4, 1) → 예측값 1개</code></pre>
 <p>입력 변수는 2개이고 예측할 값은 하나다. 은닉층의 뉴런 수는 4개로 정한다. 마지막 층의 가중치를 나중에 확인할 수 있도록 <code>output_layer</code>라는 이름을 붙인다.</p>
-<div id="ef3da8f6" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)  <span class="co"># 같은 초기 가중치로 결과 비교</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">4</span>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>output_layer <span class="op">=</span> nn.Linear(<span class="dv">4</span>, <span class="dv">1</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    hidden_layer,</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    output_layer,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="6f3b3b51" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)  <span class="co"># 같은 초기 가중치로 결과 비교</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>hidden_layer <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">4</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>output_layer <span class="op">=</span> nn.Linear(<span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    hidden_layer,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    output_layer,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sequential(
   (0): Linear(in_features=2, out_features=4, bias=True)
@@ -521,12 +571,12 @@ window.Quarto = {
 <section id="현재-모델로-예측" class="level3">
 <h3 class="anchored" data-anchor-id="현재-모델로-예측">4.3 현재 모델로 예측</h3>
 <p><code>model(X)</code>는 현재 가중치로 여섯 입력의 예측값을 계산한다.</p>
-<div id="0effb632" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(X)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"예측값:"</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pred)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="718ceb6b" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(X)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"예측값:"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pred)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>예측값:
 tensor([[0.7545],
@@ -552,9 +602,9 @@ tensor([[1.0000],
 <section id="예측과-정답의-차이" class="level3">
 <h3 class="anchored" data-anchor-id="예측과-정답의-차이">5.1 예측과 정답의 차이</h3>
 <p>먼저 각 데이터에서 예측값과 정답의 차이를 구한다.</p>
-<div id="c74ce717" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>error <span class="op">=</span> pred <span class="op">-</span> y</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(error)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="91686dfa" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>error <span class="op">=</span> pred <span class="op">-</span> y</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(error)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([[-0.2455],
         [-1.0147],
@@ -569,9 +619,9 @@ tensor([[1.0000],
 <section id="오차를-제곱하고-평균" class="level3">
 <h3 class="anchored" data-anchor-id="오차를-제곱하고-평균">5.2 오차를 제곱하고 평균</h3>
 <p>양수와 음수 오차가 서로 상쇄되지 않도록 제곱한다.</p>
-<div id="8cf23b61" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>squared_error <span class="op">=</span> error <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(squared_error)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e75a7259" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>squared_error <span class="op">=</span> error <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(squared_error)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([[0.0602],
         [1.0296],
@@ -582,9 +632,9 @@ tensor([[1.0000],
 </div>
 </div>
 <p>첫 데이터의 제곱오차는 약 <strong>0.0602</strong>다. 여섯 제곱오차의 평균을 내면 모델의 전체 손실이 된다.</p>
-<div id="46f7471b" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>manual_loss <span class="op">=</span> squared_error.mean()</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(manual_loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="79bf8418" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>manual_loss <span class="op">=</span> squared_error.mean()</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(manual_loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1.1825798749923706</code></pre>
 </div>
@@ -596,10 +646,10 @@ tensor([[1.0000],
 <section id="같은-손실을-nn.mseloss로-계산" class="level3">
 <h3 class="anchored" data-anchor-id="같은-손실을-nn.mseloss로-계산">5.3 같은 손실을 <code>nn.MSELoss</code>로 계산</h3>
 <p><code>nn.MSELoss()</code>로 손실을 계산할 객체를 만들고 <code>criterion</code>이라는 이름을 붙인다. 이후 <strong><code>criterion(예측값, 정답)</code></strong>으로 호출한다.</p>
-<div id="ee70768e" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, y)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9bf8708e" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, y)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1.1825798749923706</code></pre>
 </div>
@@ -613,8 +663,8 @@ tensor([[1.0000],
 <li>예측값이 정답과 완전히 같은 경우: 예측값으로 <code>y</code>를 전달한다.</li>
 <li>모든 예측값이 정답보다 1씩 큰 경우: 예측값으로 <code>y + 1</code>을 전달한다.</li>
 </ol>
-<div id="02149c6b" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print(criterion(예측값, y).item()) 형태로 두 경우를 확인한다.</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="49ea214f" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># print(criterion(예측값, y).item()) 형태로 두 경우를 확인한다.</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -625,9 +675,9 @@ tensor([[1.0000],
 <p>앞에서는 <span class="math inline">\(x\)</span>가 바뀔 때 함수값이 어떻게 변하는지 구했다. 이제는 <strong>모델의 가중치가 바뀔 때 손실이 어떻게 변하는지</strong> 구한다. 입력 <code>X</code>와 정답 <code>y</code>는 학습 데이터로 두고, 모델의 가중치와 편향을 조절한다.</p>
 <p><code>nn.Linear</code>가 만든 가중치와 편향은 기울기를 계산하도록 설정되어 있다. <code>backward()</code>는 모델의 예측에서 손실까지 이어진 계산을 따라 이 값들의 기울기를 구한다.</p>
 <p>마지막 층의 가중치는 <code>output_layer.weight</code>에 있다. 네 은닉 출력을 받아 예측값 하나를 만들므로 가중치도 네 개다.</p>
-<div id="d63ef7a6" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 전 출력층 가중치:"</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="049e24df" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 전 출력층 가중치:"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>갱신 전 출력층 가중치:
 Parameter containing:
@@ -639,8 +689,8 @@ tensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)</code></pre>
 <section id="갱신-도구-준비" class="level3">
 <h3 class="anchored" data-anchor-id="갱신-도구-준비">6.2 갱신 도구 준비</h3>
 <p><code>torch.optim</code>은 가중치 갱신 도구를 모은 모듈이다. 여기서는 <code>SGD</code>로 기울기의 반대 방향으로 이동한다.</p>
-<div id="1a031831" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.05</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="d3eadd3e" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.05</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><code>model.parameters()</code>: 갱신할 모델의 가중치와 편향을 전달한다.</li>
@@ -651,14 +701,14 @@ tensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)</code></pre>
 <section id="현재-가중치의-기울기-계산" class="level3">
 <h3 class="anchored" data-anchor-id="현재-가중치의-기울기-계산">6.3 현재 가중치의 기울기 계산</h3>
 <p>파이토치는 기울기를 계산할 때 기존 값에 누적한다. <code>zero_grad()</code>로 이전 기울기를 지운 뒤, 현재 모델로 예측과 손실을 계산한다.</p>
-<div id="2da99baf" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(X)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, y)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>loss.backward()</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"출력층 가중치의 기울기:"</span>)</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="fa2538f8" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(X)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, y)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>loss.backward()</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"출력층 가중치의 기울기:"</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>출력층 가중치의 기울기:
 tensor([[-3.0287, -0.4991, -1.2800, -0.8480]])</code></pre>
@@ -666,8 +716,8 @@ tensor([[-3.0287, -0.4991, -1.2800, -0.8480]])</code></pre>
 </div>
 <p>기울기는 약 <strong>-3.0287, -0.4991, -1.2800, -0.8480</strong>이다. 각 값은 같은 순서의 가중치에 대한 편미분값이다.</p>
 <p>이 예제에서는 네 기울기가 모두 음수이므로, 손실을 줄이려면 해당 가중치를 조금 늘리는 방향으로 이동한다. <strong>아직 가중치는 갱신하지 않았다.</strong> 다음 셀에서 6.1절의 값이 그대로인지 확인한다.</p>
-<div id="8338b038" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="864c6edb" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Parameter containing:
 tensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)</code></pre>
@@ -680,11 +730,11 @@ tensor([[ 0.3694,  0.0677,  0.2411, -0.0706]], requires_grad=True)</code></pre>
 <p><span class="math display">\[w_{\text{새}}=w-\eta\frac{\partial J}{\partial w}\]</span></p>
 <p>첫 번째 출력층 가중치는 다음과 같이 바뀐다.</p>
 <p><span class="math display">\[0.3694-0.05\times(-3.0287)\approx0.5208\]</span></p>
-<div id="98844fc1" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>optimizer.step()</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 출력층 가중치:"</span>)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="425023d3" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>optimizer.step()</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 출력층 가중치:"</span>)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(output_layer.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>갱신 후 출력층 가중치:
 Parameter containing:
@@ -696,14 +746,14 @@ tensor([[ 0.5208,  0.0927,  0.3051, -0.0282]], requires_grad=True)</code></pre>
 <section id="새-가중치로-예측과-손실-확인" class="level3">
 <h3 class="anchored" data-anchor-id="새-가중치로-예측과-손실-확인">6.5 새 가중치로 예측과 손실 확인</h3>
 <p>가중치를 바꾼 효과를 보려면 새 가중치로 다시 예측해야 한다.</p>
-<div id="4cafefeb" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>pred_after <span class="op">=</span> model(X)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>loss_after <span class="op">=</span> criterion(pred_after, y)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 예측값:"</span>)</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pred_after)</span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 전 손실:"</span>, loss.item())</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 손실:"</span>, loss_after.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8f610887" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>pred_after <span class="op">=</span> model(X)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>loss_after <span class="op">=</span> criterion(pred_after, y)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 예측값:"</span>)</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pred_after)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 전 손실:"</span>, loss.item())</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"갱신 후 손실:"</span>, loss_after.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>갱신 후 예측값:
 tensor([[1.0171],
@@ -762,20 +812,20 @@ tensor([[1.0171],
 <h3 class="anchored" data-anchor-id="같은-다섯-줄을-반복">7.1 같은 다섯 줄을 반복</h3>
 <p>한 번 갱신한 모델을 이어서 학습시킨다. 매번 <strong>새 가중치로 예측과 손실을 다시 계산</strong>하고, 그 위치의 기울기를 구한다.</p>
 <p>전체 학습 데이터를 한 번 사용하는 단위를 <strong>에폭(epoch)</strong>이라고 한다. 여기서는 매번 전체 <code>X</code>, <code>y</code>를 사용하므로 반복 한 번이 한 에폭이다. <code>loss_history</code>에는 각 갱신 직전의 손실을 저장하고, <code>append()</code>로 값을 추가한다.</p>
-<div id="c66be774" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>loss_history <span class="op">=</span> []</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> model(X)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(pred, y)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>    loss_history.append(loss.item())</span>
-<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"반복 시작 손실:"</span>, loss_history[<span class="dv">0</span>])</span>
-<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"반복 종료 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="508734c3" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>loss_history <span class="op">=</span> []</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> model(X)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(pred, y)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>    loss_history.append(loss.item())</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"반복 시작 손실:"</span>, loss_history[<span class="dv">0</span>])</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"반복 종료 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>반복 시작 손실: 0.4638649523258209
 반복 종료 후 손실: 0.00068812002427876</code></pre>
@@ -787,13 +837,13 @@ tensor([[1.0171],
 <h3 class="anchored" data-anchor-id="손실-그래프-확인-제공-코드">7.2 손실 그래프 확인 — 제공 코드</h3>
 <p><code>matplotlib.pyplot</code>은 그래프를 그리는 모듈이다. 다음 코드는 그대로 실행한다. 가로축은 학습 횟수, 세로축은 손실이다.</p>
 <div id="cell-lab03-network-loss" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">201</span>), loss_history)</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Epoch"</span>)</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>plt.plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">201</span>), loss_history)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Epoch"</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Loss"</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -806,14 +856,14 @@ tensor([[1.0171],
 <section id="학습한-모델로-예측" class="level3">
 <h3 class="anchored" data-anchor-id="학습한-모델로-예측">7.3 학습한 모델로 예측</h3>
 <p>학습이 끝난 뒤 결과를 확인할 때는 추가 기울기 계산이 필요하지 않다. <code>with torch.no_grad():</code> 안에서는 미분을 위한 계산 기록 없이 예측한다.</p>
-<div id="15dcd4d8" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    final_pred <span class="op">=</span> model(X)</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 예측값:"</span>)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(final_pred)</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>)</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3d565b52" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    final_pred <span class="op">=</span> model(X)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 예측값:"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(final_pred)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"정답:"</span>)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>학습 후 예측값:
 tensor([[1.0125],
@@ -838,32 +888,32 @@ tensor([[1.0000],
 <section id="직접-해보기-④-학습-코드-완성하기" class="level2">
 <h2 class="anchored" data-anchor-id="직접-해보기-④-학습-코드-완성하기">8. 직접 해보기 ④ — 학습 코드 완성하기</h2>
 <p>이번에는 같은 구조의 모델을 새로 만들고 직접 학습시킨다. 아래 준비 셀은 그대로 실행한다.</p>
-<div id="ba8e5fe7" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">4</span>),</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">4</span>, <span class="dv">1</span>),</span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.05</span>)</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"새 모델의 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="986200de" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">2</span>, <span class="dv">4</span>),</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">4</span>, <span class="dv">1</span>),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.05</span>)</span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"새 모델의 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>새 모델의 손실: 1.1825798749923706</code></pre>
 </div>
 </div>
 <p>초기 손실은 다시 약 <strong>1.1826</strong>이다. 다음 반복문에서 주석을 학습 코드 다섯 줄로 바꾼다. 먼저 작성한 뒤 7.1절과 비교한다.</p>
-<div id="00410f63" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ① 이전 기울기 지우기</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ② model에 X를 넣어 pred 계산</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ③ pred와 y로 loss 계산</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ④ 기울기 계산</span></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ⑤ 가중치 갱신</span></span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span>  <span class="co"># 다섯 줄을 작성한 뒤 삭제</span></span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="be605bae" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ① 이전 기울기 지우기</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ② model에 X를 넣어 pred 계산</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ③ pred와 y로 loss 계산</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ④ 기울기 계산</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ⑤ 가중치 갱신</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">pass</span>  <span class="co"># 다섯 줄을 작성한 뒤 삭제</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>작성 후 다음을 확인한다.</p>
 <ol type="1">
@@ -892,12 +942,12 @@ tensor([[1.0000],
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="op">-</span><span class="fl">3.0</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(start, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>start <span class="op">=</span> <span class="op">-</span><span class="fl">3.0</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor(start, requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -940,11 +990,11 @@ tensor([[1.0000],
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x[<span class="dv">0</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> x[<span class="dv">0</span>] <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">**</span> <span class="dv">2</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">1.0</span>, <span class="fl">2.0</span>], requires_grad<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>value <span class="op">=</span> x[<span class="dv">0</span>] <span class="op">**</span> <span class="dv">2</span> <span class="op">+</span> x[<span class="dv">0</span>] <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> x[<span class="dv">1</span>] <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>value.backward()</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(value.item())</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.grad)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 25%">
@@ -991,8 +1041,8 @@ tensor([[1.0000],
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(criterion(y, y).item())</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(criterion(y <span class="op">+</span> <span class="dv">1</span>, y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(criterion(y, y).item())</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(criterion(y <span class="op">+</span> <span class="dv">1</span>, y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>첫 경우는 모든 오차가 0이므로 손실도 0이다. 두 번째는 모든 제곱오차가 1이므로 평균인 손실도 1이다.</p>
 </div>
 </div>
@@ -1009,14 +1059,14 @@ tensor([[1.0000],
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> model(X)</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(pred, y)</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> model(X)</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(pred, y)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"학습 후 손실:"</span>, criterion(model(X), y).item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>기울기는 <code>loss.backward()</code>에서 구하고, 가중치는 <code>optimizer.step()</code>에서 바꾼다.</p>
 <p>은닉층이 6개라면 <code>nn.Linear(2, 6)</code>과 <code>nn.Linear(6, 1)</code>을 연결한다. 모델과 <code>optimizer</code>를 만드는 준비 셀을 다시 실행하고, 같은 반복문으로 학습시킨다.</p>
 </div>
