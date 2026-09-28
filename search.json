@@ -1125,5 +1125,89 @@
     "title": "실습 4: 진짜 표 하나를 끝까지",
     "section": "직접 해보기 해설 — 먼저 작성한 뒤 확인",
     "text": "직접 해보기 해설 — 먼저 작성한 뒤 확인\n\n\n\n\n\n\n① 나누는 비율 바꾸기\n\n\n\n\n\ntr, rest = train_test_split(auto, test_size=0.2, random_state=42)\nva, te = train_test_split(rest, test_size=0.5, random_state=42)\nprint(len(tr), len(va), len(te))\n\n\n\n비율\n훈련\n검증\n테스트\n\n\n\n\n80 / 10 / 10\n313\n39\n40\n\n\n\n392대의 20%인 79대가 rest로 가고, 반으로 나뉘어 검증 39대와 테스트 40대가 된다.\n\n\n\n\n\n\n\n\n\n② 순서를 바꾸면\n\n\n\n\n\nwrong_mu = auto[num_cols].mean()\nprint(((train_df[num_cols] - wrong_mu) / sd).mean().round(4))\n여섯 열의 평균이 0이 아니라 소수점 둘째 자리 정도의 값이 나온다. 전체 평균에는 검증·테스트 데이터가 섞여 있기 때문이다.\n\n\n\n\n\n\n\n\n\n③ 배치 크기 바꾸기\n\n\n\n\n\nprint(len(DataLoader(TensorDataset(X_tr, y_tr), batch_size=64)))\nprint(len(DataLoader(TensorDataset(X_tr, y_tr), batch_size=274)))\n\n\n\n배치 크기\n에폭당 이터레이션\n마지막 배치 크기\n\n\n\n\n64\n5\n18\n\n\n274\n1\n274\n\n\n\n274를 64로 나누면 4가 되고 18이 남으므로 5배치다. 배치 크기가 데이터 수와 같으면 한 에폭이 한 이터레이션이다.\n\n\n\n\n\n\n\n\n\n④ 모델 크기 바꾸기\n\n\n\n\n\ntorch.manual_seed(42)\nsmall = nn.Sequential(nn.Linear(9, 8), nn.ReLU(), nn.Linear(8, 1))\nbig = nn.Sequential(nn.Linear(9, 128), nn.ReLU(),\n                    nn.Linear(128, 64), nn.ReLU(), nn.Linear(64, 1))\n\nfor name, m in [('small', small), ('big', big)]:\n    n_params = sum(p.numel() for p in m.parameters())\n    best_epoch, best_val = train_with_best(m)\n    print(name, n_params, best_epoch, round(best_val, 2))\n작은 모델은 파라미터 89개, 큰 모델은 9,601개다. 큰 모델은 훈련 데이터를 빨리 외우므로 최적 에폭이 일찍 오고, 그 뒤 검증 손실이 오른다. 작은 모델은 최적 에폭이 늦고 최적 검증 손실도 대체로 더 높다. 실행 결과는 초기 가중치와 배치 순서에 따라 조금씩 다르다."
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html",
+    "href": "assignments/hw01/hw01.html",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "",
+    "text": "Open In Colab"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#과제-안내",
+    "href": "assignments/hw01/hw01.html#과제-안내",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "과제 안내",
+    "text": "과제 안내\n실습 4에서 자동차 표 하나로 나누기 → 훈련 통계로 변환 → 미니배치 → 학습 → 러닝커브 → 최적 지점 복원 → 테스트 평가를 따라갔다. 이번에는 다른 표로 같은 사이클을 직접 완성한다. 코드의 뼈대는 주어져 있고, 핵심 부분 여덟 곳이 ____로 비어 있다.\n데이터: 미국 의료보험 가입자 1,338명의 나이, 성별, 체질량지수(BMI), 자녀 수, 흡연 여부, 거주 지역과 연간 의료비(charges, 달러). 여섯 변수로 의료비를 예측한다.\n대응 이론과 실습: Ch04 학습의 실전, 실습 4. 실습 4의 코드를 옆에 열어 두고 진행한다.\n\n제출 규칙\n\n아래 첫 셀의 STUDENT_ID와 NAME을 본인 것으로 바꾼다.\n____를 모두 채운 뒤 런타임 다시 시작 후 전체 실행으로 위에서부터 끝까지 오류 없이 실행한다.\n변수 이름과 함수 이름을 바꾸지 않는다. 채점은 아래 표의 이름으로 값을 읽어 자동으로 이루어진다.\n마지막 “제출 전 확인” 셀이 통과를 출력하는지 확인한다.\n출력이 포함된 노트북을 hw01_학번.ipynb로 내려받아(파일 → 다운로드 → .ipynb) 제출한다.\n\n\n\n\n\n\n\n\n이름\n무엇인가\n\n\n\n\ntrain_df, val_df, test_df\n나눈 세 표\n\n\nmu, sd\n훈련 세트의 숫자형 열 평균과 표준편차\n\n\nprep, train_p, val_p, test_p\n전처리 함수와 그 결과\n\n\nX_tr, y_tr, X_va, y_va, X_te, y_te\n텐서\n\n\ntrain_loader, val_loader, test_loader\n데이터 로더\n\n\ntrain_one_epoch, evaluate\n학습 함수, 평가 함수\n\n\nmodel, criterion, optimizer\n모델, 손실, 갱신 도구\n\n\nhistory, best_val, best_epoch, best_state\n러닝커브 기록과 최적 지점\n\n\ntest_rmse, baseline_rmse\n테스트 RMSE와 기준선 RMSE\n\n\n\n채점 기준은 실습 4에서 배운 절차를 그대로 지켰는가이다. 값이 맞더라도 절차가 틀리면(예: 전체 표로 평균을 구함) 해당 항목은 점수를 받지 못한다.\n\nSTUDENT_ID = \"20240000\"   # 본인 학번으로 바꾼다\nNAME = \"홍길동\"            # 본인 이름으로 바꾼다"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#표-읽기-제공-코드",
+    "href": "assignments/hw01/hw01.html#표-읽기-제공-코드",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "1. 표 읽기 — 제공 코드",
+    "text": "1. 표 읽기 — 제공 코드\n\nimport pandas as pd\nimport numpy as np\nimport torch\nimport torch.nn as nn\nimport copy\n\nURL = 'https://raw.githubusercontent.com/stedy/Machine-Learning-with-R-datasets/master/insurance.csv'\ninsurance = pd.read_csv(URL)\nprint(insurance.shape)\ninsurance.head()\n\n\nprint(insurance.dtypes)\nfor c in ['sex', 'smoker', 'region']:\n    print(c, sorted(insurance[c].unique()))\n\n숫자형 열은 age, bmi, children이고 범주형 열은 sex, smoker, region이다. 종속변수는 charges다. 범주형 열의 값은 아래 CATS에 고정해 둔다.\n\nnum_cols = ['age', 'bmi', 'children']\nCATS = {\n    'sex': ['female', 'male'],\n    'smoker': ['no', 'yes'],\n    'region': ['northeast', 'northwest', 'southeast', 'southwest'],\n}"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#훈련검증테스트로-나누기-채워-넣기-①",
+    "href": "assignments/hw01/hw01.html#훈련검증테스트로-나누기-채워-넣기-①",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "2. 훈련·검증·테스트로 나누기 — 채워 넣기 ①",
+    "text": "2. 훈련·검증·테스트로 나누기 — 채워 넣기 ①\ntrain_test_split을 두 번 써서 70 / 15 / 15로 나눈다. 두 번 모두 random_state=42를 쓴다.\n\nfrom sklearn.model_selection import train_test_split\n\ntrain_df, rest_df = train_test_split(insurance, test_size=____, random_state=42)\nval_df, test_df = train_test_split(rest_df, test_size=____, random_state=42)\n\nprint(len(train_df), len(val_df), len(test_df))"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#훈련-통계로-표준화하고-원-핫으로-바꾸기",
+    "href": "assignments/hw01/hw01.html#훈련-통계로-표준화하고-원-핫으로-바꾸기",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "3. 훈련 통계로 표준화하고 원-핫으로 바꾸기",
+    "text": "3. 훈련 통계로 표준화하고 원-핫으로 바꾸기\n\n3.1 평균과 표준편차 — 채워 넣기 ②\n숫자형 열의 평균과 표준편차를 구한다. 어느 세트에서 구해야 하는지가 이 문제의 전부다. 표준편차는 분모를 \\(n\\)으로 둔다.\n\nmu = ____[num_cols].mean()\nsd = ____[num_cols].std(ddof=____)\n\nprint(pd.DataFrame({'평균': mu, '표준편차': sd}).round(3))\n\n\n\n3.2 전처리 함수 — 채워 넣기 ③\n숫자형 열을 표준화하고, 범주형 열 세 개를 CATS의 범주로 고정한 뒤 원-핫으로 바꾼다. 세 세트에 같은 함수를 적용한다.\n\ndef prep(df):\n    out = df.copy()\n    out[num_cols] = (out[num_cols] - ____) / ____\n    for col, cats in CATS.items():\n        out[col] = pd.Categorical(out[col], categories=____)\n    return pd.get_dummies(out, columns=____)\n\ntrain_p, val_p, test_p = prep(train_df), prep(val_df), prep(test_df)\nprint(train_p.shape, val_p.shape, test_p.shape)\nprint(train_p[num_cols].mean().round(4))\n\n세 세트의 열 개수가 같고, 훈련 세트의 숫자형 열 평균이 0인지 확인한다."
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#텐서와-미니배치",
+    "href": "assignments/hw01/hw01.html#텐서와-미니배치",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "4. 텐서와 미니배치",
+    "text": "4. 텐서와 미니배치\n\n4.1 텐서 — 제공 코드\n\nfeat = [c for c in train_p.columns if c != 'charges']\n\ndef to_tensor(df):\n    X = torch.tensor(df[feat].to_numpy(dtype='float32'))\n    y = torch.tensor(df['charges'].to_numpy(dtype='float32')).unsqueeze(1)\n    return X, y\n\nX_tr, y_tr = to_tensor(train_p)\nX_va, y_va = to_tensor(val_p)\nX_te, y_te = to_tensor(test_p)\nprint(X_tr.shape, X_va.shape, X_te.shape)\n\n\n\n4.2 데이터 로더 — 채워 넣기 ④\n훈련 로더는 배치 32, 매 에폭 순서를 섞는다. 검증과 테스트 로더는 배치 64이고 섞지 않는다.\n\nfrom torch.utils.data import TensorDataset, DataLoader\n\ntrain_loader = DataLoader(TensorDataset(X_tr, y_tr), batch_size=____, shuffle=____)\nval_loader = DataLoader(TensorDataset(X_va, y_va), batch_size=64)\ntest_loader = DataLoader(TensorDataset(X_te, y_te), batch_size=64)\n\nprint(len(train_loader))"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#학습-함수와-평가-함수",
+    "href": "assignments/hw01/hw01.html#학습-함수와-평가-함수",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "5. 학습 함수와 평가 함수",
+    "text": "5. 학습 함수와 평가 함수\n\n5.1 한 에폭의 학습 — 채워 넣기 ⑤\n배치마다 실습 3의 다섯 줄을 실행한다. 함수의 이름과 인자, 반환값은 그대로 둔다.\n\ndef train_one_epoch(model, loader, criterion, optimizer):\n    model.train()\n    total = 0.0\n    for xb, yb in loader:\n        ____            # 이전 기울기 지우기\n        pred = ____     # 예측\n        loss = ____     # 손실\n        ____            # 기울기 계산\n        ____            # 가중치 갱신\n        total += loss.item() * len(yb)\n    return total / len(loader.dataset)\n\n\n\n5.2 평가 — 채워 넣기 ⑥\n가중치를 바꾸지 않고 손실만 계산한다. 평가 모드로 두고, 기울기 계산을 끈다.\n\ndef evaluate(model, loader, criterion):\n    model.____()\n    total = 0.0\n    with torch.____():\n        for xb, yb in loader:\n            total += criterion(model(xb), yb).item() * len(yb)\n    return total / len(loader.dataset)"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#모델과-학습-제공-코드와-채워-넣기-⑦",
+    "href": "assignments/hw01/hw01.html#모델과-학습-제공-코드와-채워-넣기-⑦",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "6. 모델과 학습 — 제공 코드와 채워 넣기 ⑦",
+    "text": "6. 모델과 학습 — 제공 코드와 채워 넣기 ⑦\n모델, 손실, 갱신 도구는 주어진 대로 쓴다.\n\ntorch.manual_seed(42)\nmodel = nn.Sequential(\n    nn.Linear(len(feat), 64), nn.ReLU(),\n    nn.Linear(64, 32), nn.ReLU(),\n    nn.Linear(32, 1),\n)\ncriterion = nn.MSELoss()\noptimizer = torch.optim.Adam(model.parameters(), lr=0.01)\n\nprint(evaluate(model, val_loader, criterion))\n\n200 에폭을 돌며 훈련 손실과 검증 손실을 기록하고, 검증 손실이 가장 낮았던 순간의 가중치를 복사해 둔다.\n\nhistory = {'train': [], 'val': []}\nbest_val, best_state, best_epoch = float('inf'), None, 0\n\nfor epoch in range(200):\n    tr = train_one_epoch(model, train_loader, criterion, optimizer)\n    va = evaluate(model, val_loader, criterion)\n    history['train'].append(tr)\n    history['val'].append(va)\n    if ____:\n        best_val = ____\n        best_state = ____\n        best_epoch = ____\n\nprint(\"최적 에폭:\", best_epoch, \" 최적 검증 RMSE:\", round(best_val ** 0.5, 1))\nprint(\"마지막 검증 RMSE:\", round(history['val'][-1] ** 0.5, 1))\n\n\n러닝커브 — 제공 코드\n\nimport matplotlib.pyplot as plt\n\nplt.plot(history['train'], label='train')\nplt.plot(history['val'], label='validation')\nplt.axvline(best_epoch, color='green', linestyle='--', label=f'best epoch {best_epoch}')\nplt.yscale('log')\nplt.xlabel('Epoch')\nplt.ylabel('MSE')\nplt.legend()\nplt.grid(alpha=0.3)\nplt.show()"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#최적-지점-복원과-테스트-평가-채워-넣기-⑧",
+    "href": "assignments/hw01/hw01.html#최적-지점-복원과-테스트-평가-채워-넣기-⑧",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "7. 최적 지점 복원과 테스트 평가 — 채워 넣기 ⑧",
+    "text": "7. 최적 지점 복원과 테스트 평가 — 채워 넣기 ⑧\n보관한 가중치를 모델에 되돌린 뒤, 테스트 세트로 한 번 평가한다. RMSE는 MSE의 제곱근이다.\n\nmodel.____(best_state)\n\ntest_mse = evaluate(____, ____, criterion)\ntest_rmse = ____\nbaseline_rmse = (((y_te - y_tr.mean()) ** 2).mean() ** 0.5).item()\n\nprint(\"테스트 RMSE :\", round(test_rmse, 1))\nprint(\"기준선 RMSE :\", round(baseline_rmse, 1))\n\n기준선은 훈련 세트의 평균 의료비로만 예측했을 때의 RMSE다. 모델의 RMSE가 기준선보다 얼마나 작은지 본다."
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#참고-비교-제공-코드",
+    "href": "assignments/hw01/hw01.html#참고-비교-제공-코드",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "8. 참고 비교 — 제공 코드",
+    "text": "8. 참고 비교 — 제공 코드\n같은 전처리 결과로 그래디언트 부스팅 모델을 학습시켜 테스트 RMSE를 비교한다. 그대로 실행한다.\n\nfrom sklearn.ensemble import GradientBoostingRegressor\n\ngb = GradientBoostingRegressor(random_state=42).fit(train_p[feat], train_p['charges'])\ngb_rmse = float(np.sqrt(((gb.predict(test_p[feat]) - test_p['charges']) ** 2).mean()))\nprint(\"부스팅 테스트 RMSE:\", round(gb_rmse, 1))"
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#해석-두-문장씩",
+    "href": "assignments/hw01/hw01.html#해석-두-문장씩",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "9. 해석 — 두 문장씩",
+    "text": "9. 해석 — 두 문장씩\n아래 셀의 답: 뒤에 본인의 답을 쓴다.\n\nQ1 = \"답: \"   # 러닝커브에서 최적 에폭 이후 검증 손실은 어떻게 움직였고, 그것이 왜 조기 종료의 근거가 되는가?\nQ2 = \"답: \"   # 신경망과 부스팅의 테스트 RMSE를 비교하고, 이 데이터에서 어느 쪽을 쓰겠는지 근거와 함께 쓴다."
+  },
+  {
+    "objectID": "assignments/hw01/hw01.html#제출-전-확인-제공-코드",
+    "href": "assignments/hw01/hw01.html#제출-전-확인-제공-코드",
+    "title": "과제 1: 의료비 예측, 한 사이클을 끝까지",
+    "section": "제출 전 확인 — 제공 코드",
+    "text": "제출 전 확인 — 제공 코드\n아래 셀이 통과를 출력해야 한다. 오류가 나면 해당 항목을 다시 확인한다.\n\nassert STUDENT_ID != \"20240000\" and NAME != \"홍길동\", \"학번과 이름을 바꾸세요\"\nassert len(train_df) + len(val_df) + len(test_df) == len(insurance), \"세 세트의 합이 전체와 다릅니다\"\nassert list(train_p.columns) == list(val_p.columns) == list(test_p.columns), \"세 세트의 열이 다릅니다\"\nassert X_tr.shape[1] == len(feat) and y_tr.shape[1] == 1, \"텐서 모양을 확인하세요\"\nassert len(history['train']) == 200, \"200 에폭을 기록해야 합니다\"\nassert best_state is not None and isinstance(test_rmse, float), \"최적 지점과 테스트 RMSE를 확인하세요\"\nassert not Q1.endswith(\"답: \") and not Q2.endswith(\"답: \"), \"해석을 작성하세요\"\nprint(\"통과\")"
   }
 ]
