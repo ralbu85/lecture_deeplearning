@@ -189,52 +189,70 @@ window.Quarto = {
   <li><a href="#표-읽기" id="toc-표-읽기" class="nav-link" data-scroll-target="#표-읽기">1. 표 읽기</a>
   <ul class="collapse">
   <li><a href="#자동차-표" id="toc-자동차-표" class="nav-link" data-scroll-target="#자동차-표">1.1 자동차 표</a></li>
-  <li><a href="#열의-종류-확인" id="toc-열의-종류-확인" class="nav-link" data-scroll-target="#열의-종류-확인">1.2 열의 종류 확인</a></li>
+  <li><a href="#열의-종류" id="toc-열의-종류" class="nav-link" data-scroll-target="#열의-종류">1.2 열의 종류</a></li>
   </ul></li>
-  <li><a href="#훈련검증테스트로-나누기" id="toc-훈련검증테스트로-나누기" class="nav-link" data-scroll-target="#훈련검증테스트로-나누기">2. 훈련·검증·테스트로 나누기</a>
+  <li><a href="#세-세트로-나누기" id="toc-세-세트로-나누기" class="nav-link" data-scroll-target="#세-세트로-나누기">2. 세 세트로 나누기</a>
   <ul class="collapse">
-  <li><a href="#왜-셋으로-나누는가" id="toc-왜-셋으로-나누는가" class="nav-link" data-scroll-target="#왜-셋으로-나누는가">2.1 왜 셋으로 나누는가</a></li>
-  <li><a href="#train_test_split-두-번" id="toc-train_test_split-두-번" class="nav-link" data-scroll-target="#train_test_split-두-번">2.2 <code>train_test_split</code> 두 번</a></li>
+  <li><a href="#첫-번째-나누기" id="toc-첫-번째-나누기" class="nav-link" data-scroll-target="#첫-번째-나누기">2.1 첫 번째 나누기</a></li>
+  <li><a href="#두-번째-나누기" id="toc-두-번째-나누기" class="nav-link" data-scroll-target="#두-번째-나누기">2.2 두 번째 나누기</a></li>
   <li><a href="#직접-해보기-①-나누는-비율-바꾸기" id="toc-직접-해보기-①-나누는-비율-바꾸기" class="nav-link" data-scroll-target="#직접-해보기-①-나누는-비율-바꾸기">2.3 직접 해보기 ① — 나누는 비율 바꾸기</a></li>
   </ul></li>
-  <li><a href="#훈련-통계로-표준화하고-원-핫으로-바꾸기" id="toc-훈련-통계로-표준화하고-원-핫으로-바꾸기" class="nav-link" data-scroll-target="#훈련-통계로-표준화하고-원-핫으로-바꾸기">3. 훈련 통계로 표준화하고 원-핫으로 바꾸기</a>
+  <li><a href="#표준화-열-하나부터" id="toc-표준화-열-하나부터" class="nav-link" data-scroll-target="#표준화-열-하나부터">3. 표준화 — 열 하나부터</a>
   <ul class="collapse">
-  <li><a href="#평균과-표준편차는-훈련-세트에서만" id="toc-평균과-표준편차는-훈련-세트에서만" class="nav-link" data-scroll-target="#평균과-표준편차는-훈련-세트에서만">3.1 평균과 표준편차는 훈련 세트에서만</a></li>
-  <li><a href="#원-핫-인코딩" id="toc-원-핫-인코딩" class="nav-link" data-scroll-target="#원-핫-인코딩">3.2 원-핫 인코딩</a></li>
-  <li><a href="#함수-하나로-세-세트에-똑같이" id="toc-함수-하나로-세-세트에-똑같이" class="nav-link" data-scroll-target="#함수-하나로-세-세트에-똑같이">3.3 함수 하나로 세 세트에 똑같이</a></li>
-  <li><a href="#직접-해보기-②-순서를-바꾸면" id="toc-직접-해보기-②-순서를-바꾸면" class="nav-link" data-scroll-target="#직접-해보기-②-순서를-바꾸면">3.4 직접 해보기 ② — 순서를 바꾸면</a></li>
+  <li><a href="#훈련-세트에서-평균과-표준편차" id="toc-훈련-세트에서-평균과-표준편차" class="nav-link" data-scroll-target="#훈련-세트에서-평균과-표준편차">3.1 훈련 세트에서 평균과 표준편차</a></li>
+  <li><a href="#훈련-세트의-열을-표준화" id="toc-훈련-세트의-열을-표준화" class="nav-link" data-scroll-target="#훈련-세트의-열을-표준화">3.2 훈련 세트의 열을 표준화</a></li>
+  <li><a href="#검증-세트의-열에-같은-값을-적용" id="toc-검증-세트의-열에-같은-값을-적용" class="nav-link" data-scroll-target="#검증-세트의-열에-같은-값을-적용">3.3 검증 세트의 열에 같은 값을 적용</a></li>
+  <li><a href="#여섯-열을-한꺼번에" id="toc-여섯-열을-한꺼번에" class="nav-link" data-scroll-target="#여섯-열을-한꺼번에">3.4 여섯 열을 한꺼번에</a></li>
+  <li><a href="#직접-해보기-②-순서를-바꾸면" id="toc-직접-해보기-②-순서를-바꾸면" class="nav-link" data-scroll-target="#직접-해보기-②-순서를-바꾸면">3.5 직접 해보기 ② — 순서를 바꾸면</a></li>
   </ul></li>
-  <li><a href="#텐서와-미니배치" id="toc-텐서와-미니배치" class="nav-link" data-scroll-target="#텐서와-미니배치">4. 텐서와 미니배치</a>
+  <li><a href="#원-핫-열-하나부터" id="toc-원-핫-열-하나부터" class="nav-link" data-scroll-target="#원-핫-열-하나부터">4. 원-핫 — 열 하나부터</a>
   <ul class="collapse">
-  <li><a href="#표를-텐서로" id="toc-표를-텐서로" class="nav-link" data-scroll-target="#표를-텐서로">4.1 표를 텐서로</a></li>
-  <li><a href="#dataloader로-나누어-꺼내기" id="toc-dataloader로-나누어-꺼내기" class="nav-link" data-scroll-target="#dataloader로-나누어-꺼내기">4.2 <code>DataLoader</code>로 나누어 꺼내기</a></li>
-  <li><a href="#한-배치-꺼내-보기" id="toc-한-배치-꺼내-보기" class="nav-link" data-scroll-target="#한-배치-꺼내-보기">4.3 한 배치 꺼내 보기</a></li>
-  <li><a href="#직접-해보기-③-배치-크기-바꾸기" id="toc-직접-해보기-③-배치-크기-바꾸기" class="nav-link" data-scroll-target="#직접-해보기-③-배치-크기-바꾸기">4.4 직접 해보기 ③ — 배치 크기 바꾸기</a></li>
+  <li><a href="#get_dummies" id="toc-get_dummies" class="nav-link" data-scroll-target="#get_dummies">4.1 <code>get_dummies</code></a></li>
+  <li><a href="#범주가-빠지면-열이-빠진다" id="toc-범주가-빠지면-열이-빠진다" class="nav-link" data-scroll-target="#범주가-빠지면-열이-빠진다">4.2 범주가 빠지면 열이 빠진다</a></li>
+  <li><a href="#pd.categorical로-범주를-고정" id="toc-pd.categorical로-범주를-고정" class="nav-link" data-scroll-target="#pd.categorical로-범주를-고정">4.3 <code>pd.Categorical</code>로 범주를 고정</a></li>
   </ul></li>
-  <li><a href="#학습-함수와-평가-함수" id="toc-학습-함수와-평가-함수" class="nav-link" data-scroll-target="#학습-함수와-평가-함수">5. 학습 함수와 평가 함수</a>
+  <li><a href="#전처리-함수로-조립" id="toc-전처리-함수로-조립" class="nav-link" data-scroll-target="#전처리-함수로-조립">5. 전처리 함수로 조립</a></li>
+  <li><a href="#텐서와-배치" id="toc-텐서와-배치" class="nav-link" data-scroll-target="#텐서와-배치">6. 텐서와 배치</a>
   <ul class="collapse">
-  <li><a href="#한-에폭의-학습" id="toc-한-에폭의-학습" class="nav-link" data-scroll-target="#한-에폭의-학습">5.1 한 에폭의 학습</a></li>
-  <li><a href="#평가는-기울기-없이" id="toc-평가는-기울기-없이" class="nav-link" data-scroll-target="#평가는-기울기-없이">5.2 평가는 기울기 없이</a></li>
-  <li><a href="#모델과-도구-준비" id="toc-모델과-도구-준비" class="nav-link" data-scroll-target="#모델과-도구-준비">5.3 모델과 도구 준비</a></li>
+  <li><a href="#훈련-세트를-텐서로" id="toc-훈련-세트를-텐서로" class="nav-link" data-scroll-target="#훈련-세트를-텐서로">6.1 훈련 세트를 텐서로</a></li>
+  <li><a href="#dataloader" id="toc-dataloader" class="nav-link" data-scroll-target="#dataloader">6.2 <code>DataLoader</code></a></li>
+  <li><a href="#배치-하나-꺼내기" id="toc-배치-하나-꺼내기" class="nav-link" data-scroll-target="#배치-하나-꺼내기">6.3 배치 하나 꺼내기</a></li>
+  <li><a href="#직접-해보기-③-배치-크기-바꾸기" id="toc-직접-해보기-③-배치-크기-바꾸기" class="nav-link" data-scroll-target="#직접-해보기-③-배치-크기-바꾸기">6.4 직접 해보기 ③ — 배치 크기 바꾸기</a></li>
   </ul></li>
-  <li><a href="#학습하며-러닝커브-기록하기" id="toc-학습하며-러닝커브-기록하기" class="nav-link" data-scroll-target="#학습하며-러닝커브-기록하기">6. 학습하며 러닝커브 기록하기</a>
+  <li><a href="#배치-하나로-학습-다섯-줄" id="toc-배치-하나로-학습-다섯-줄" class="nav-link" data-scroll-target="#배치-하나로-학습-다섯-줄">7. 배치 하나로 학습 다섯 줄</a>
   <ul class="collapse">
-  <li><a href="#에폭마다-훈련-손실과-검증-손실" id="toc-에폭마다-훈련-손실과-검증-손실" class="nav-link" data-scroll-target="#에폭마다-훈련-손실과-검증-손실">6.1 에폭마다 훈련 손실과 검증 손실</a></li>
-  <li><a href="#러닝커브-그리기-제공-코드" id="toc-러닝커브-그리기-제공-코드" class="nav-link" data-scroll-target="#러닝커브-그리기-제공-코드">6.2 러닝커브 그리기 — 제공 코드</a></li>
-  <li><a href="#러닝커브-읽기" id="toc-러닝커브-읽기" class="nav-link" data-scroll-target="#러닝커브-읽기">6.3 러닝커브 읽기</a></li>
+  <li><a href="#모델-준비" id="toc-모델-준비" class="nav-link" data-scroll-target="#모델-준비">7.1 모델 준비</a></li>
+  <li><a href="#배치-하나에-다섯-줄" id="toc-배치-하나에-다섯-줄" class="nav-link" data-scroll-target="#배치-하나에-다섯-줄">7.2 배치 하나에 다섯 줄</a></li>
+  <li><a href="#다음-배치" id="toc-다음-배치" class="nav-link" data-scroll-target="#다음-배치">7.3 다음 배치</a></li>
+  <li><a href="#모든-배치를-돌면-한-에폭" id="toc-모든-배치를-돌면-한-에폭" class="nav-link" data-scroll-target="#모든-배치를-돌면-한-에폭">7.4 모든 배치를 돌면 한 에폭</a></li>
+  <li><a href="#학습-함수로-조립" id="toc-학습-함수로-조립" class="nav-link" data-scroll-target="#학습-함수로-조립">7.5 학습 함수로 조립</a></li>
   </ul></li>
-  <li><a href="#최적-지점-저장과-조기-종료" id="toc-최적-지점-저장과-조기-종료" class="nav-link" data-scroll-target="#최적-지점-저장과-조기-종료">7. 최적 지점 저장과 조기 종료</a>
+  <li><a href="#검증-손실-재기" id="toc-검증-손실-재기" class="nav-link" data-scroll-target="#검증-손실-재기">8. 검증 손실 재기</a>
   <ul class="collapse">
-  <li><a href="#가장-좋았던-가중치를-복사해-두기" id="toc-가장-좋았던-가중치를-복사해-두기" class="nav-link" data-scroll-target="#가장-좋았던-가중치를-복사해-두기">7.1 가장 좋았던 가중치를 복사해 두기</a></li>
-  <li><a href="#최적-지점으로-되돌리기" id="toc-최적-지점으로-되돌리기" class="nav-link" data-scroll-target="#최적-지점으로-되돌리기">7.2 최적 지점으로 되돌리기</a></li>
+  <li><a href="#검증-세트-전체로-한-번" id="toc-검증-세트-전체로-한-번" class="nav-link" data-scroll-target="#검증-세트-전체로-한-번">8.1 검증 세트 전체로 한 번</a></li>
+  <li><a href="#배치로-나눠-재도-같다" id="toc-배치로-나눠-재도-같다" class="nav-link" data-scroll-target="#배치로-나눠-재도-같다">8.2 배치로 나눠 재도 같다</a></li>
+  <li><a href="#평가-함수로-조립" id="toc-평가-함수로-조립" class="nav-link" data-scroll-target="#평가-함수로-조립">8.3 평가 함수로 조립</a></li>
   </ul></li>
-  <li><a href="#테스트-세트로-최종-평가" id="toc-테스트-세트로-최종-평가" class="nav-link" data-scroll-target="#테스트-세트로-최종-평가">8. 테스트 세트로 최종 평가</a>
+  <li><a href="#에폭-반복과-러닝커브" id="toc-에폭-반복과-러닝커브" class="nav-link" data-scroll-target="#에폭-반복과-러닝커브">9. 에폭 반복과 러닝커브</a>
   <ul class="collapse">
-  <li><a href="#한-번만-본다" id="toc-한-번만-본다" class="nav-link" data-scroll-target="#한-번만-본다">8.1 한 번만 본다</a></li>
-  <li><a href="#기준선과-비교" id="toc-기준선과-비교" class="nav-link" data-scroll-target="#기준선과-비교">8.2 기준선과 비교</a></li>
-  <li><a href="#예측과-실제를-함께-보기-제공-코드" id="toc-예측과-실제를-함께-보기-제공-코드" class="nav-link" data-scroll-target="#예측과-실제를-함께-보기-제공-코드">8.3 예측과 실제를 함께 보기 — 제공 코드</a></li>
+  <li><a href="#에폭" id="toc-에폭" class="nav-link" data-scroll-target="#에폭">9.1 200 에폭</a></li>
+  <li><a href="#러닝커브-제공-코드" id="toc-러닝커브-제공-코드" class="nav-link" data-scroll-target="#러닝커브-제공-코드">9.2 러닝커브 — 제공 코드</a></li>
   </ul></li>
-  <li><a href="#직접-해보기-④-모델-크기-바꾸기" id="toc-직접-해보기-④-모델-크기-바꾸기" class="nav-link" data-scroll-target="#직접-해보기-④-모델-크기-바꾸기">9. 직접 해보기 ④ — 모델 크기 바꾸기</a></li>
+  <li><a href="#가중치-복사와-복원" id="toc-가중치-복사와-복원" class="nav-link" data-scroll-target="#가중치-복사와-복원">10. 가중치 복사와 복원</a>
+  <ul class="collapse">
+  <li><a href="#state_dict" id="toc-state_dict" class="nav-link" data-scroll-target="#state_dict">10.1 <code>state_dict</code></a></li>
+  <li><a href="#복사해-두면-학습해도-그대로" id="toc-복사해-두면-학습해도-그대로" class="nav-link" data-scroll-target="#복사해-두면-학습해도-그대로">10.2 복사해 두면 학습해도 그대로</a></li>
+  <li><a href="#되돌리기" id="toc-되돌리기" class="nav-link" data-scroll-target="#되돌리기">10.3 되돌리기</a></li>
+  <li><a href="#조립-최적-지점을-기억하며-학습" id="toc-조립-최적-지점을-기억하며-학습" class="nav-link" data-scroll-target="#조립-최적-지점을-기억하며-학습">10.4 조립 — 최적 지점을 기억하며 학습</a></li>
+  <li><a href="#최적-지점으로-복원" id="toc-최적-지점으로-복원" class="nav-link" data-scroll-target="#최적-지점으로-복원">10.5 최적 지점으로 복원</a></li>
+  </ul></li>
+  <li><a href="#테스트-세트로-최종-평가" id="toc-테스트-세트로-최종-평가" class="nav-link" data-scroll-target="#테스트-세트로-최종-평가">11. 테스트 세트로 최종 평가</a>
+  <ul class="collapse">
+  <li><a href="#한-번만-본다" id="toc-한-번만-본다" class="nav-link" data-scroll-target="#한-번만-본다">11.1 한 번만 본다</a></li>
+  <li><a href="#기준선" id="toc-기준선" class="nav-link" data-scroll-target="#기준선">11.2 기준선</a></li>
+  <li><a href="#예측과-실제를-함께-보기-제공-코드" id="toc-예측과-실제를-함께-보기-제공-코드" class="nav-link" data-scroll-target="#예측과-실제를-함께-보기-제공-코드">11.3 예측과 실제를 함께 보기 — 제공 코드</a></li>
+  </ul></li>
+  <li><a href="#직접-해보기-④-모델-크기-바꾸기" id="toc-직접-해보기-④-모델-크기-바꾸기" class="nav-link" data-scroll-target="#직접-해보기-④-모델-크기-바꾸기">12. 직접 해보기 ④ — 모델 크기 바꾸기</a></li>
   <li><a href="#마무리" id="toc-마무리" class="nav-link" data-scroll-target="#마무리">마무리</a></li>
   <li><a href="#직접-해보기-해설-먼저-작성한-뒤-확인" id="toc-직접-해보기-해설-먼저-작성한-뒤-확인" class="nav-link" data-scroll-target="#직접-해보기-해설-먼저-작성한-뒤-확인">직접 해보기 해설 — 먼저 작성한 뒤 확인</a></li>
   </ul>
@@ -270,16 +288,16 @@ window.Quarto = {
 </div>
 <section id="이번-실습의-흐름" class="level2">
 <h2 class="anchored" data-anchor-id="이번-실습의-흐름">이번 실습의 흐름</h2>
-<p><strong>표 읽기 → 훈련·검증·테스트로 나누기 → 훈련 통계로 표준화·원-핫 → 텐서와 미니배치 → 학습 함수와 평가 함수 → 러닝커브 → 최적 지점 저장 → 테스트 세트 평가</strong> 순서로 진행한다.</p>
-<p>실습 3에서는 학습에 쓴 데이터로 결과를 확인했다. 이번에는 자동차 표 하나로 <strong>새로운 데이터에 대한 성능</strong>을 재는 절차를 끝까지 따라간다. 각 셀을 실행하고 출력값을 확인한 뒤 다음 셀로 넘어간다. 중간의 직접 해보기는 먼저 작성한 뒤 노트북 끝의 해설과 비교한다.</p>
-<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch04.html">Ch04 학습의 실전: 학습률, 배치, 러닝커브</a>. Colab 기본 CPU 런타임을 사용한다. 데이터는 코드에서 내려받는다.</p>
+<p><strong>표 읽기 → 세 세트로 나누기 → 열 하나를 표준화 → 열 하나를 원-핫 → 전처리 함수로 조립 → 텐서와 배치 → 배치 하나로 학습 다섯 줄 → 한 에폭 → 학습 함수로 조립 → 검증 손실 한 번 → 평가 함수로 조립 → 에폭 반복과 러닝커브 → 가중치 복사와 복원 → 테스트 평가</strong> 순서로 진행한다.</p>
+<p>실습 3에서는 학습에 쓴 데이터로 결과를 확인했다. 이번에는 자동차 표 하나로 <strong>새로운 데이터에 대한 성능</strong>을 재는 절차를 끝까지 따라간다. 각 절에서 핵심 코드를 한 줄씩 실행해 값을 확인하고, 그다음에 그 줄들을 함수로 조립한다. 중간의 직접 해보기는 먼저 작성한 뒤 노트북 끝의 해설과 비교한다.</p>
+<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch04.html">Ch04 학습의 실전</a>. Colab 기본 CPU 런타임을 사용한다. 데이터는 코드에서 내려받는다.</p>
 </section>
 <section id="표-읽기" class="level2">
 <h2 class="anchored" data-anchor-id="표-읽기">1. 표 읽기</h2>
 <section id="자동차-표" class="level3">
 <h3 class="anchored" data-anchor-id="자동차-표">1.1 자동차 표</h3>
-<p>자동차 392대의 연비(<code>mpg</code>)와 일곱 가지 특성이 담긴 표다. <code>pandas</code>로 읽는다.</p>
-<div id="4f3ce8d9" class="cell" data-execution_count="1">
+<p>자동차 392대의 연비(<code>mpg</code>)와 일곱 가지 특성이 담긴 표다.</p>
+<div id="7fcfd77a" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>URL <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/ralbu85/Lecture_DeepLearning_2022/main/auto.csv'</span></span>
@@ -369,13 +387,12 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>행이 자동차 한 대, 열이 변수다. 예측할 종속변수는 마지막 열 <code>mpg</code>이고 나머지 일곱 열이 독립변수다.</p>
+<p><code>(392, 8)</code>이다. 행이 자동차 한 대, 열이 변수다. 예측할 종속변수는 마지막 열 <code>mpg</code>이고 나머지 일곱 열이 독립변수다.</p>
 </section>
-<section id="열의-종류-확인" class="level3">
-<h3 class="anchored" data-anchor-id="열의-종류-확인">1.2 열의 종류 확인</h3>
-<div id="78fbba49" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto.dtypes)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto[<span class="st">'origin'</span>].value_counts())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="열의-종류" class="level3">
+<h3 class="anchored" data-anchor-id="열의-종류">1.2 열의 종류</h3>
+<div id="8dc6e9b8" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto.dtypes)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cylinders         int64
 displacement    float64
@@ -385,21 +402,53 @@ acceleration    float64
 model_year        int64
 origin            int64
 mpg             float64
-dtype: object
-origin
+dtype: object</code></pre>
+</div>
+</div>
+<p>모두 숫자로 적혀 있다. 그런데 <code>origin</code>의 1, 2, 3은 미국·유럽·일본이라는 <strong>이름</strong>이다.</p>
+<div id="01af8cf6" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto[<span class="st">'origin'</span>].value_counts())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>origin
 1    245
 3     79
 2     68
 Name: count, dtype: int64</code></pre>
 </div>
 </div>
-<p><code>origin</code>은 1, 2, 3으로 적혀 있지만 <strong>미국·유럽·일본이라는 이름</strong>이다. 숫자 크기에 의미가 없으므로 그대로 넣으면 안 되고, 뒤에서 원-핫으로 바꾼다. 나머지 열은 크기에 의미가 있는 숫자형 변수다.</p>
+<p>미국 차가 245대, 일본 79대, 유럽 68대다. 이 열은 크기가 아니라 종류이므로 4절에서 원-핫으로 바꾼다. 나머지 여섯 열은 크기에 의미가 있는 숫자형 변수다.</p>
+<div id="95822dc7" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> [<span class="st">'cylinders'</span>, <span class="st">'displacement'</span>, <span class="st">'horsepower'</span>, <span class="st">'weight'</span>, <span class="st">'acceleration'</span>, <span class="st">'model_year'</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
-<section id="훈련검증테스트로-나누기" class="level2">
-<h2 class="anchored" data-anchor-id="훈련검증테스트로-나누기">2. 훈련·검증·테스트로 나누기</h2>
-<section id="왜-셋으로-나누는가" class="level3">
-<h3 class="anchored" data-anchor-id="왜-셋으로-나누는가">2.1 왜 셋으로 나누는가</h3>
+<section id="세-세트로-나누기" class="level2">
+<h2 class="anchored" data-anchor-id="세-세트로-나누기">2. 세 세트로 나누기</h2>
+<section id="첫-번째-나누기" class="level3">
+<h3 class="anchored" data-anchor-id="첫-번째-나누기">2.1 첫 번째 나누기</h3>
+<p><code>train_test_split</code>은 표를 무작위로 두 조각으로 나눈다. <code>test_size=0.3</code>이면 30%를 떼어 낸다. <code>random_state=42</code>를 주면 매번 같은 조각이 나온다.</p>
+<div id="0859dd93" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>train_df, rest_df <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(rest_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>274 118</code></pre>
+</div>
+</div>
+<p><strong>274</strong>대와 <strong>118</strong>대다. 274대가 훈련 세트다.</p>
+</section>
+<section id="두-번째-나누기" class="level3">
+<h3 class="anchored" data-anchor-id="두-번째-나누기">2.2 두 번째 나누기</h3>
+<p>남은 118대를 반으로 나눠 검증 세트와 테스트 세트를 만든다.</p>
+<div id="c1cfc7fd" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>val_df, test_df <span class="op">=</span> train_test_split(rest_df, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(val_df), <span class="bu">len</span>(test_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>274 59 59</code></pre>
+</div>
+</div>
+<p><strong>274, 59, 59</strong>대다. 세 세트의 역할은 다음과 같다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -416,7 +465,7 @@ Name: count, dtype: int64</code></pre>
 </tr>
 <tr class="even">
 <td>검증</td>
-<td>언제 멈출지, 어떤 모델이 나은지 고른다</td>
+<td>언제 멈출지 고른다</td>
 <td>매 에폭, 보기만 한다</td>
 </tr>
 <tr class="odd">
@@ -426,31 +475,14 @@ Name: count, dtype: int64</code></pre>
 </tr>
 </tbody>
 </table>
-<p>검증 세트를 보고 무언가를 골랐다면 그 세트도 학습에 쓴 셈이다. 그래서 보고용 테스트 세트를 따로 남긴다.</p>
-</section>
-<section id="train_test_split-두-번" class="level3">
-<h3 class="anchored" data-anchor-id="train_test_split-두-번">2.2 <code>train_test_split</code> 두 번</h3>
-<p><code>sklearn</code>의 <code>train_test_split</code>은 표를 무작위로 두 조각으로 나눈다. 두 번 써서 세 조각을 만든다. <code>random_state</code>를 고정하면 매번 같은 조각이 나온다.</p>
-<div id="e3787c35" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>train_df, rest_df <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>val_df, test_df <span class="op">=</span> train_test_split(rest_df, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(val_df), <span class="bu">len</span>(test_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>274 59 59</code></pre>
-</div>
-</div>
-<p><strong>274, 59, 59</strong>대로 나뉜다. 전체의 70%가 훈련, 나머지 30%를 반씩 검증과 테스트에 쓴다.</p>
 </section>
 <section id="직접-해보기-①-나누는-비율-바꾸기" class="level3">
 <h3 class="anchored" data-anchor-id="직접-해보기-①-나누는-비율-바꾸기">2.3 직접 해보기 ① — 나누는 비율 바꾸기</h3>
 <p>훈련 80%, 검증 10%, 테스트 10%가 되도록 아래 셀을 완성한다. 먼저 세 세트의 크기를 예상한다.</p>
-<div id="9f800869" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① auto를 test_size=0.2로 나누어 tr, rest 만들기</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② rest를 반으로 나누어 va, te 만들기</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ 세 세트의 크기 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="68542bc3" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① auto를 test_size=0.2로 나누어 tr, rest 만들기</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② rest를 반으로 나누어 va, te 만들기</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ 세 세트의 크기 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -479,63 +511,67 @@ Name: count, dtype: int64</code></pre>
 <p>이후 셀은 2.2절의 70 / 15 / 15 분할을 사용한다.</p>
 </section>
 </section>
-<section id="훈련-통계로-표준화하고-원-핫으로-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="훈련-통계로-표준화하고-원-핫으로-바꾸기">3. 훈련 통계로 표준화하고 원-핫으로 바꾸기</h2>
-<section id="평균과-표준편차는-훈련-세트에서만" class="level3">
-<h3 class="anchored" data-anchor-id="평균과-표준편차는-훈련-세트에서만">3.1 평균과 표준편차는 훈련 세트에서만</h3>
-<p>숫자형 열은 단위가 제각각이다. 무게는 수천, 가속은 십 단위다. 실습 3처럼 학습이 되게 하려면 열마다 <strong>평균 0, 표준편차 1</strong>로 맞춘다.</p>
-<p>이때 평균과 표준편차는 <strong>훈련 세트에서만</strong> 구한다. 전체 표로 구하면 테스트 데이터의 정보가 훈련에 새어 들어가, 성능이 실제보다 좋게 나온다.</p>
-<div id="3056dfc8" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> [<span class="st">'cylinders'</span>, <span class="st">'displacement'</span>, <span class="st">'horsepower'</span>, <span class="st">'weight'</span>, <span class="st">'acceleration'</span>, <span class="st">'model_year'</span>]</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> train_df[num_cols].mean()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> train_df[num_cols].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.DataFrame({<span class="st">'평균'</span>: mu, <span class="st">'표준편차'</span>: sd}).<span class="bu">round</span>(<span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="표준화-열-하나부터" class="level2">
+<h2 class="anchored" data-anchor-id="표준화-열-하나부터">3. 표준화 — 열 하나부터</h2>
+<section id="훈련-세트에서-평균과-표준편차" class="level3">
+<h3 class="anchored" data-anchor-id="훈련-세트에서-평균과-표준편차">3.1 훈련 세트에서 평균과 표준편차</h3>
+<p><code>weight</code> 열은 수천, <code>acceleration</code> 열은 십 단위다. 열마다 평균 0, 표준편차 1로 맞춘다. 평균과 표준편차는 <strong>훈련 세트에서</strong> 구한다. 먼저 <code>weight</code> 열 하나로 해 본다.</p>
+<div id="31068a13" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>w_mean <span class="op">=</span> train_df[<span class="st">'weight'</span>].mean()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>w_std <span class="op">=</span> train_df[<span class="st">'weight'</span>].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_mean, w_std)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                   평균    표준편차
-cylinders        5.50    1.71
-displacement   196.74  103.81
-horsepower     104.88   38.06
-weight        2986.49  837.45
-acceleration    15.52    2.85
-model_year      76.14    3.61</code></pre>
+<pre><code>2986.485401459854 837.4454518494796</code></pre>
 </div>
 </div>
-<p><code>ddof=0</code>은 표준편차의 분모를 <span class="math inline">\(n\)</span>으로 두는 옵션이다. 이론의 정의와 같다.</p>
+<p>훈련 세트 274대의 무게 평균은 약 <strong>2986</strong>, 표준편차는 약 <strong>837</strong>이다. <code>ddof=0</code>은 표준편차의 분모를 <span class="math inline">\(n\)</span>으로 두는 옵션이다.</p>
 </section>
-<section id="원-핫-인코딩" class="level3">
-<h3 class="anchored" data-anchor-id="원-핫-인코딩">3.2 원-핫 인코딩</h3>
-<p>범주형 열 <code>origin</code>은 값 하나를 <strong>열 세 개</strong>로 바꾼다. 미국이면 <code>origin_1</code>만 1, 나머지는 0이다.</p>
-<div id="0ed1f440" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sample <span class="op">=</span> train_df[[<span class="st">'origin'</span>]].head(<span class="dv">4</span>).copy()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sample[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(sample[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(sample, columns<span class="op">=</span>[<span class="st">'origin'</span>]).astype(<span class="bu">int</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="훈련-세트의-열을-표준화" class="level3">
+<h3 class="anchored" data-anchor-id="훈련-세트의-열을-표준화">3.2 훈련 세트의 열을 표준화</h3>
+<p>각 값에서 평균을 빼고 표준편차로 나눈다.</p>
+<div id="e5a8f44c" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>w_train <span class="op">=</span> (train_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_train.mean(), w_train.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     origin_1  origin_2  origin_3
-109         0         0         1
-17          1         0         0
-318         0         0         1
-24          1         0         0</code></pre>
+<pre><code>-6.969283220274705e-17 0.9999999999999999</code></pre>
 </div>
 </div>
-<p><code>pd.Categorical</code>로 범주를 <code>[1, 2, 3]</code>으로 <strong>고정</strong>한다. 어느 세트에 우연히 유럽 차가 없어도 <code>origin_2</code> 열이 만들어져 세 세트의 열 개수가 같아진다.</p>
+<p>평균 <strong>0</strong>, 표준편차 <strong>1</strong>이 된다. 자기 평균을 빼고 자기 표준편차로 나눴으니 당연하다.</p>
 </section>
-<section id="함수-하나로-세-세트에-똑같이" class="level3">
-<h3 class="anchored" data-anchor-id="함수-하나로-세-세트에-똑같이">3.3 함수 하나로 세 세트에 똑같이</h3>
-<p>표준화와 원-핫을 함수 하나에 넣고 세 세트에 <strong>같은 함수</strong>를 적용한다. 함수 안의 <code>mu</code>, <code>sd</code>는 훈련 세트의 값이다.</p>
-<div id="e1336459" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prep(df):</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> df.copy()</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    out[num_cols] <span class="op">=</span> (out[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(out[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.get_dummies(out, columns<span class="op">=</span>[<span class="st">'origin'</span>])</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>train_p, val_p, test_p <span class="op">=</span> prep(train_df), prep(val_df), prep(test_df)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape, val_p.shape, test_p.shape)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p[num_cols].mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="검증-세트의-열에-같은-값을-적용" class="level3">
+<h3 class="anchored" data-anchor-id="검증-세트의-열에-같은-값을-적용">3.3 검증 세트의 열에 같은 값을 적용</h3>
+<p>검증 세트는 검증 세트의 평균이 아니라 <strong>훈련 세트의 평균과 표준편차</strong>로 변환한다.</p>
+<div id="fc0e5e02" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>w_val <span class="op">=</span> (val_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_val.mean(), w_val.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>(274, 10) (59, 10) (59, 10)
-cylinders       0.0
+<pre><code>-0.08372189489963786 0.9789892659943903</code></pre>
+</div>
+</div>
+<p>평균 약 <strong>-0.08</strong>, 표준편차 약 <strong>0.98</strong>이다. 0과 1이 아니다. 훈련 세트의 값을 썼기 때문이다. 검증과 테스트 세트는 항상 이렇게 변환한다. 모델이 배운 것은 훈련 세트의 눈금이므로, 새 데이터도 그 눈금으로 재야 한다.</p>
+</section>
+<section id="여섯-열을-한꺼번에" class="level3">
+<h3 class="anchored" data-anchor-id="여섯-열을-한꺼번에">3.4 여섯 열을 한꺼번에</h3>
+<p>같은 계산을 숫자형 여섯 열에 한 번에 한다. <code>mu</code>와 <code>sd</code>는 열마다 값이 하나씩 있는 벡터다.</p>
+<div id="61cd6f51" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> train_df[num_cols].mean()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> train_df[num_cols].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mu.<span class="bu">round</span>(<span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cylinders          5.50
+displacement     196.74
+horsepower       104.88
+weight          2986.49
+acceleration      15.52
+model_year        76.14
+dtype: float64</code></pre>
+</div>
+</div>
+<div id="163be4c5" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>train_num <span class="op">=</span> (train_df[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_num.mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cylinders       0.0
 displacement    0.0
 horsepower      0.0
 weight         -0.0
@@ -544,78 +580,231 @@ model_year     -0.0
 dtype: float64</code></pre>
 </div>
 </div>
-<p>세 세트의 열이 <strong>10개</strong>로 같다. 훈련 세트의 숫자형 열 평균은 정확히 <strong>0</strong>이다. 검증과 테스트 세트는 훈련의 평균을 뺐으므로 0이 아니어도 된다.</p>
+<p>여섯 열의 평균이 모두 <strong>0</strong>이다.</p>
 </section>
 <section id="직접-해보기-②-순서를-바꾸면" class="level3">
-<h3 class="anchored" data-anchor-id="직접-해보기-②-순서를-바꾸면">3.4 직접 해보기 ② — 순서를 바꾸면</h3>
-<p>전체 표 <code>auto</code>로 평균을 구한 뒤 훈련 세트를 표준화하면 훈련 세트의 평균이 0이 되지 않는다. 아래 셀을 완성해 확인한다.</p>
-<div id="0612a84c" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① wrong_mu에 auto[num_cols]의 평균 저장</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② (train_df[num_cols] - wrong_mu) / sd 의 열 평균을 소수 4자리로 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="직접-해보기-②-순서를-바꾸면">3.5 직접 해보기 ② — 순서를 바꾸면</h3>
+<p>평균을 훈련 세트가 아니라 전체 표 <code>auto</code>에서 구한 뒤 훈련 세트를 표준화하면, 훈련 세트의 평균이 0이 되지 않는다. 아래 셀을 완성해 확인한다.</p>
+<div id="b90790b1" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① wrong_mu에 auto[num_cols]의 평균 저장</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② (train_df[num_cols] - wrong_mu) / sd 의 열 평균을 소수 4자리로 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>차이는 작아 보이지만, 테스트 데이터를 미리 들여다봤다는 사실은 변하지 않는다.</p>
 </section>
 </section>
-<section id="텐서와-미니배치" class="level2">
-<h2 class="anchored" data-anchor-id="텐서와-미니배치">4. 텐서와 미니배치</h2>
-<section id="표를-텐서로" class="level3">
-<h3 class="anchored" data-anchor-id="표를-텐서로">4.1 표를 텐서로</h3>
-<p>독립변수 열을 <code>X</code>, <code>mpg</code> 열을 <code>y</code>로 나누어 텐서로 만든다. 실습 3과 같이 <code>X</code>는 <code>(데이터 수, 변수 수)</code>, <code>y</code>는 <code>(데이터 수, 1)</code>이다.</p>
-<div id="3eeda488" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>feat <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> train_p.columns <span class="cf">if</span> c <span class="op">!=</span> <span class="st">'mpg'</span>]</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_tensor(df):</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.tensor(df[feat].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.tensor(df[<span class="st">'mpg'</span>].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>)).unsqueeze(<span class="dv">1</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>X_tr, y_tr <span class="op">=</span> to_tensor(train_p)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>X_va, y_va <span class="op">=</span> to_tensor(val_p)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>X_te, y_te <span class="op">=</span> to_tensor(test_p)</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_tr.shape, y_tr.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="원-핫-열-하나부터" class="level2">
+<h2 class="anchored" data-anchor-id="원-핫-열-하나부터">4. 원-핫 — 열 하나부터</h2>
+<section id="get_dummies" class="level3">
+<h3 class="anchored" data-anchor-id="get_dummies">4.1 <code>get_dummies</code></h3>
+<p><code>origin</code> 열의 값 하나를 열 세 개로 바꾼다. 미국(1)이면 <code>origin_1</code>만 1이고 나머지는 0이다.</p>
+<div id="613a3a53" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(train_df[<span class="st">'origin'</span>], prefix<span class="op">=</span><span class="st">'origin'</span>).head())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     origin_1  origin_2  origin_3
+109     False     False      True
+17       True     False     False
+318     False     False      True
+24       True     False     False
+126      True     False     False</code></pre>
+</div>
+</div>
+<p>행마다 1이 하나씩만 있다. 이 열들은 <code>True</code>/<code>False</code>로 표시되는데, 뒤에서 텐서로 바꿀 때 1과 0이 된다.</p>
+</section>
+<section id="범주가-빠지면-열이-빠진다" class="level3">
+<h3 class="anchored" data-anchor-id="범주가-빠지면-열이-빠진다">4.2 범주가 빠지면 열이 빠진다</h3>
+<p>작은 예로 확인한다. 값이 1과 3뿐인 열을 원-핫으로 바꾸면 열이 두 개만 나온다.</p>
+<div id="dec7cda7" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> pd.Series([<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>], name<span class="op">=</span><span class="st">'origin'</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(small, prefix<span class="op">=</span><span class="st">'origin'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   origin_1  origin_3
+0      True     False
+1     False      True
+2      True     False</code></pre>
+</div>
+</div>
+<p><code>origin_2</code>가 없다. 검증이나 테스트 세트에 우연히 유럽 차가 없으면 이런 일이 생기고, 열 개수가 달라 모델에 넣을 수 없다.</p>
+</section>
+<section id="pd.categorical로-범주를-고정" class="level3">
+<h3 class="anchored" data-anchor-id="pd.categorical로-범주를-고정">4.3 <code>pd.Categorical</code>로 범주를 고정</h3>
+<p>범주를 <code>[1, 2, 3]</code>으로 미리 알려 주면 값이 없어도 열이 만들어진다.</p>
+<div id="623ddf48" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>small_fixed <span class="op">=</span> pd.Categorical(small, categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(small_fixed, prefix<span class="op">=</span><span class="st">'origin'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   origin_1  origin_2  origin_3
+0      True     False     False
+1     False     False      True
+2      True     False     False</code></pre>
+</div>
+</div>
+<p><code>origin_2</code> 열이 0으로 채워져 나온다. 세 세트 모두 이 방식으로 바꾼다.</p>
+</section>
+</section>
+<section id="전처리-함수로-조립" class="level2">
+<h2 class="anchored" data-anchor-id="전처리-함수로-조립">5. 전처리 함수로 조립</h2>
+<p>3.4절의 표준화와 4.3절의 원-핫을 한 함수에 넣는다. 함수 안의 <code>mu</code>, <code>sd</code>는 훈련 세트에서 구한 값이다.</p>
+<div id="aa3de1fb" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prep(df):</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> df.copy()</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    out[num_cols] <span class="op">=</span> (out[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(out[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.get_dummies(out, columns<span class="op">=</span>[<span class="st">'origin'</span>])</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>train_p <span class="op">=</span> prep(train_df)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>train_p.head(<span class="dv">3</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(274, 10)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">cylinders</th>
+<th data-quarto-table-cell-role="th">displacement</th>
+<th data-quarto-table-cell-role="th">horsepower</th>
+<th data-quarto-table-cell-role="th">weight</th>
+<th data-quarto-table-cell-role="th">acceleration</th>
+<th data-quarto-table-cell-role="th">model_year</th>
+<th data-quarto-table-cell-role="th">mpg</th>
+<th data-quarto-table-cell-role="th">origin_1</th>
+<th data-quarto-table-cell-role="th">origin_2</th>
+<th data-quarto-table-cell-role="th">origin_3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">109</td>
+<td>-0.873266</td>
+<td>-0.854863</td>
+<td>-0.285913</td>
+<td>-0.725403</td>
+<td>0.342749</td>
+<td>-0.868721</td>
+<td>22.0</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>0.293929</td>
+<td>0.031360</td>
+<td>-0.522352</td>
+<td>-0.477029</td>
+<td>0.167473</td>
+<td>-1.699056</td>
+<td>21.0</td>
+<td>True</td>
+<td>False</td>
+<td>False</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">318</td>
+<td>-0.873266</td>
+<td>-0.748902</td>
+<td>-0.338455</td>
+<td>-0.659727</td>
+<td>-0.183081</td>
+<td>1.068728</td>
+<td>37.0</td>
+<td>False</td>
+<td>False</td>
+<td>True</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>열이 <strong>10개</strong>다. 숫자형 6개, <code>mpg</code>, 원-핫 3개다. 같은 함수를 검증과 테스트 세트에 적용한다.</p>
+<div id="d758fa78" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>val_p <span class="op">=</span> prep(val_df)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>test_p <span class="op">=</span> prep(test_df)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(train_p.columns) <span class="op">==</span> <span class="bu">list</span>(val_p.columns) <span class="op">==</span> <span class="bu">list</span>(test_p.columns))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p><code>True</code>다. 세 세트의 열이 같다.</p>
+</section>
+<section id="텐서와-배치" class="level2">
+<h2 class="anchored" data-anchor-id="텐서와-배치">6. 텐서와 배치</h2>
+<section id="훈련-세트를-텐서로" class="level3">
+<h3 class="anchored" data-anchor-id="훈련-세트를-텐서로">6.1 훈련 세트를 텐서로</h3>
+<p>독립변수 아홉 열을 <code>X</code>, <code>mpg</code> 열을 <code>y</code>로 나눈다. 실습 3과 같이 <code>X</code>는 <code>(데이터 수, 변수 수)</code>, <code>y</code>는 <code>(데이터 수, 1)</code>이다.</p>
+<div id="7dbc8486" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>feat <span class="op">=</span> [c <span class="cf">for</span> c <span class="kw">in</span> train_p.columns <span class="cf">if</span> c <span class="op">!=</span> <span class="st">'mpg'</span>]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>X_tr <span class="op">=</span> torch.tensor(train_p[feat].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>y_tr <span class="op">=</span> torch.tensor(train_p[<span class="st">'mpg'</span>].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>)).unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_tr.shape, y_tr.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([274, 9]) torch.Size([274, 1])</code></pre>
 </div>
 </div>
-<p>훈련 입력은 <code>(274, 9)</code>이다. 숫자형 6개에 원-핫 3개를 더해 변수가 9개다.</p>
+<p><code>(274, 9)</code>와 <code>(274, 1)</code>이다. 검증과 테스트도 같은 두 줄이므로 함수로 만든다.</p>
+<div id="2b12d57f" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_tensor(df):</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.tensor(df[feat].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.tensor(df[<span class="st">'mpg'</span>].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>)).unsqueeze(<span class="dv">1</span>)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>X_va, y_va <span class="op">=</span> to_tensor(val_p)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>X_te, y_te <span class="op">=</span> to_tensor(test_p)</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_va.shape, X_te.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([59, 9]) torch.Size([59, 9])</code></pre>
+</div>
+</div>
 </section>
-<section id="dataloader로-나누어-꺼내기" class="level3">
-<h3 class="anchored" data-anchor-id="dataloader로-나누어-꺼내기">4.2 <code>DataLoader</code>로 나누어 꺼내기</h3>
-<p>실습 3에서는 매번 전체 <code>X</code>로 기울기를 구했다. 데이터가 크면 그럴 수 없으므로 <strong>배치</strong>로 나누어 꺼낸다. <code>TensorDataset</code>은 <code>X</code>와 <code>y</code>를 한 쌍으로 묶고, <code>DataLoader</code>는 그것을 <code>batch_size</code>씩 나눠 준다.</p>
-<div id="299b869e" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(TensorDataset(X_va, y_va), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_te, y_te), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="dataloader" class="level3">
+<h3 class="anchored" data-anchor-id="dataloader">6.2 <code>DataLoader</code></h3>
+<p>실습 3에서는 매번 274건 전체로 기울기를 구했다. 이번에는 <strong>32건씩</strong> 나누어 구한다. <code>TensorDataset</code>은 <code>X</code>와 <code>y</code>를 한 쌍으로 묶고, <code>DataLoader</code>는 그것을 <code>batch_size</code>씩 나눠 준다.</p>
+<div id="40e152c2" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>9</code></pre>
 </div>
 </div>
-<p>274대를 32씩 나누면 <strong>9배치</strong>다. 마지막 배치는 18대다. 한 배치가 한 <strong>이터레이션</strong>이고, 9배치를 다 돌면 한 <strong>에폭</strong>이다.</p>
-<p><code>shuffle=True</code>는 에폭마다 순서를 섞어 배치 구성을 바꾼다. 훈련 로더에만 붙인다. 검증과 테스트는 섞을 이유가 없다.</p>
+<p><strong>9</strong>다. 274건을 32씩 나누면 8배치에 18건이 남아 9배치다. 한 배치가 한 <strong>이터레이션</strong>이고, 9배치를 다 돌면 한 <strong>에폭</strong>이다. <code>shuffle=True</code>는 에폭마다 순서를 섞는다.</p>
 </section>
-<section id="한-배치-꺼내-보기" class="level3">
-<h3 class="anchored" data-anchor-id="한-배치-꺼내-보기">4.3 한 배치 꺼내 보기</h3>
-<div id="f2f07937" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xb.shape, yb.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="배치-하나-꺼내기" class="level3">
+<h3 class="anchored" data-anchor-id="배치-하나-꺼내기">6.3 배치 하나 꺼내기</h3>
+<div id="1e03c2f5" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xb.shape, yb.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([32, 9]) torch.Size([32, 1])</code></pre>
 </div>
 </div>
-<p><code>(32, 9)</code>과 <code>(32, 1)</code>이다. 학습 반복문은 이 크기의 조각을 받아 실습 3의 다섯 줄을 실행한다.</p>
+<p><code>(32, 9)</code>와 <code>(32, 1)</code>이다. 학습 반복문은 이 크기의 조각을 받는다.</p>
+<p>검증과 테스트 로더는 섞지 않는다.</p>
+<div id="5f61feed" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(TensorDataset(X_va, y_va), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_te, y_te), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(val_loader), <span class="bu">len</span>(test_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 1</code></pre>
+</div>
+</div>
 </section>
 <section id="직접-해보기-③-배치-크기-바꾸기" class="level3">
-<h3 class="anchored" data-anchor-id="직접-해보기-③-배치-크기-바꾸기">4.4 직접 해보기 ③ — 배치 크기 바꾸기</h3>
+<h3 class="anchored" data-anchor-id="직접-해보기-③-배치-크기-바꾸기">6.4 직접 해보기 ③ — 배치 크기 바꾸기</h3>
 <p>배치 크기를 바꾸면 에폭당 이터레이션 수가 바뀐다. 먼저 예상한 뒤 아래 셀로 확인한다.</p>
-<div id="84764193" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① batch_size=64인 DataLoader를 만들어 len() 출력</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② batch_size=274인 DataLoader를 만들어 len() 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bc7b0516" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ① batch_size=64인 DataLoader를 만들어 len() 출력</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ② batch_size=274인 DataLoader를 만들어 len() 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -643,109 +832,210 @@ dtype: float64</code></pre>
 </tr>
 </tbody>
 </table>
-<p>배치 크기가 전체 데이터 수와 같으면 실습 3의 방식으로 돌아간다.</p>
 </section>
 </section>
-<section id="학습-함수와-평가-함수" class="level2">
-<h2 class="anchored" data-anchor-id="학습-함수와-평가-함수">5. 학습 함수와 평가 함수</h2>
-<section id="한-에폭의-학습" class="level3">
-<h3 class="anchored" data-anchor-id="한-에폭의-학습">5.1 한 에폭의 학습</h3>
-<p>실습 3의 다섯 줄을 <strong>배치마다</strong> 실행하고, 배치 손실의 평균을 돌려주는 함수를 만든다. <code>model.train()</code>은 모델을 학습 모드로 둔다.</p>
-<div id="0cbaf109" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> model(xb)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(pred, yb)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> <span class="bu">len</span>(loader.dataset)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><code>loss.item() * len(yb)</code>는 배치 손실을 배치 크기만큼 되돌린 합이다. 마지막 배치가 작아도 데이터 한 건이 같은 무게를 갖도록 전체 건수로 나눈다.</p>
-</section>
-<section id="평가는-기울기-없이" class="level3">
-<h3 class="anchored" data-anchor-id="평가는-기울기-없이">5.2 평가는 기울기 없이</h3>
-<p>검증과 테스트에서는 가중치를 바꾸지 않는다. <code>model.eval()</code>로 평가 모드로 두고, <code>torch.no_grad()</code> 안에서 손실만 계산한다.</p>
-<div id="5d4cdf21" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> criterion(model(xb), yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> <span class="bu">len</span>(loader.dataset)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><code>train()</code>과 <code>eval()</code>은 드롭아웃처럼 학습과 평가에서 다르게 동작하는 층을 전환한다. 지금 모델에는 그런 층이 없지만 항상 붙이는 습관을 들인다.</p>
-</section>
-<section id="모델과-도구-준비" class="level3">
-<h3 class="anchored" data-anchor-id="모델과-도구-준비">5.3 모델과 도구 준비</h3>
-<p>입력 9개를 받아 숫자 하나를 내는 모델이다. 은닉층 두 개를 둔다. 손실은 실습 3과 같은 <code>MSELoss</code>이고, 갱신 도구는 학습률을 스스로 조절하는 <code>Adam</code>을 쓴다.</p>
-<div id="f525af50" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">9</span>, <span class="dv">32</span>),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">32</span>, <span class="dv">16</span>),</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">16</span>, <span class="dv">1</span>),</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, val_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="배치-하나로-학습-다섯-줄" class="level2">
+<h2 class="anchored" data-anchor-id="배치-하나로-학습-다섯-줄">7. 배치 하나로 학습 다섯 줄</h2>
+<section id="모델-준비" class="level3">
+<h3 class="anchored" data-anchor-id="모델-준비">7.1 모델 준비</h3>
+<p>입력 9개를 받아 숫자 하나를 낸다. 은닉층은 32개와 16개다. 손실은 실습 3과 같은 <code>MSELoss</code>이고, 갱신 도구는 <code>Adam</code>을 쓴다.</p>
+<div id="c6f34727" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">9</span>, <span class="dv">32</span>),</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">32</span>, <span class="dv">16</span>),</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    nn.ReLU(),</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">16</span>, <span class="dv">1</span>),</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.MSELoss()</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>613.0853881835938</code></pre>
+<pre><code>Sequential(
+  (0): Linear(in_features=9, out_features=32, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=32, out_features=16, bias=True)
+  (3): ReLU()
+  (4): Linear(in_features=16, out_features=1, bias=True)
+)</code></pre>
 </div>
 </div>
-<p>학습 전 검증 손실이다. 연비의 제곱 단위이므로 수백이 나온다.</p>
 </section>
-</section>
-<section id="학습하며-러닝커브-기록하기" class="level2">
-<h2 class="anchored" data-anchor-id="학습하며-러닝커브-기록하기">6. 학습하며 러닝커브 기록하기</h2>
-<section id="에폭마다-훈련-손실과-검증-손실" class="level3">
-<h3 class="anchored" data-anchor-id="에폭마다-훈련-손실과-검증-손실">6.1 에폭마다 훈련 손실과 검증 손실</h3>
-<p>에폭마다 훈련 함수와 평가 함수를 한 번씩 부르고 두 손실을 기록한다.</p>
-<div id="30dfa9ec" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> {<span class="st">'train'</span>: [], <span class="st">'val'</span>: []}</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    tr <span class="op">=</span> train_one_epoch(model, train_loader, criterion, optimizer)</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    history[<span class="st">'train'</span>].append(tr)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    history[<span class="st">'val'</span>].append(va)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"첫 에폭  훈련:"</span>, <span class="bu">round</span>(history[<span class="st">'train'</span>][<span class="dv">0</span>], <span class="dv">2</span>), <span class="st">" 검증:"</span>, <span class="bu">round</span>(history[<span class="st">'val'</span>][<span class="dv">0</span>], <span class="dv">2</span>))</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"마지막   훈련:"</span>, <span class="bu">round</span>(history[<span class="st">'train'</span>][<span class="op">-</span><span class="dv">1</span>], <span class="dv">2</span>), <span class="st">" 검증:"</span>, <span class="bu">round</span>(history[<span class="st">'val'</span>][<span class="op">-</span><span class="dv">1</span>], <span class="dv">2</span>))</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"최소 검증 손실:"</span>, <span class="bu">round</span>(<span class="bu">min</span>(history[<span class="st">'val'</span>]), <span class="dv">2</span>), <span class="st">" 에폭:"</span>, history[<span class="st">'val'</span>].index(<span class="bu">min</span>(history[<span class="st">'val'</span>])))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="배치-하나에-다섯-줄" class="level3">
+<h3 class="anchored" data-anchor-id="배치-하나에-다섯-줄">7.2 배치 하나에 다섯 줄</h3>
+<p>6.3절에서 꺼낸 배치 <code>xb</code>, <code>yb</code>에 실습 3의 다섯 줄을 그대로 적용한다.</p>
+<div id="6fd3cc93" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(xb)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, yb)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>loss.backward()</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>optimizer.step()</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>첫 에폭  훈련: 600.54  검증: 523.16
-마지막   훈련: 3.8  검증: 6.46
-최소 검증 손실: 4.81  에폭: 93</code></pre>
+<pre><code>675.3711547851562</code></pre>
 </div>
 </div>
-<p>마지막 에폭의 검증 손실이 최소 검증 손실보다 <strong>크다</strong>. 어느 에폭 이후로는 더 돌려도 새 데이터에 대한 성능이 좋아지지 않았다.</p>
+<p>약 <strong>713</strong>이다. 이 배치 32건의 손실이고, 연비의 제곱 단위이므로 수백이 나온다. 가중치는 이 배치의 기울기로 한 번 갱신되었다.</p>
 </section>
-<section id="러닝커브-그리기-제공-코드" class="level3">
-<h3 class="anchored" data-anchor-id="러닝커브-그리기-제공-코드">6.2 러닝커브 그리기 — 제공 코드</h3>
-<div id="cell-lab04-learning-curve" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>best_epoch <span class="op">=</span> history[<span class="st">'val'</span>].index(<span class="bu">min</span>(history[<span class="st">'val'</span>]))</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>plt.plot(history[<span class="st">'train'</span>], label<span class="op">=</span><span class="st">'train'</span>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>plt.plot(history[<span class="st">'val'</span>], label<span class="op">=</span><span class="st">'validation'</span>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>plt.axvline(best_epoch, color<span class="op">=</span><span class="st">'green'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="ss">f'best epoch </span><span class="sc">{</span>best_epoch<span class="sc">}</span><span class="ss">'</span>)</span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Epoch'</span>)</span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'MSE'</span>)</span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="다음-배치" class="level3">
+<h3 class="anchored" data-anchor-id="다음-배치">7.3 다음 배치</h3>
+<p>로더에서 다음 배치를 꺼내 같은 다섯 줄을 실행한다.</p>
+<div id="8ef30687" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(xb)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>loss <span class="op">=</span> criterion(pred, yb)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>loss.backward()</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>optimizer.step()</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>524.5750122070312</code></pre>
+</div>
+</div>
+<p>약 <strong>525</strong>다. 다른 32건이므로 손실값이 다르다. 배치마다 이렇게 한 번씩 갱신한다.</p>
+</section>
+<section id="모든-배치를-돌면-한-에폭" class="level3">
+<h3 class="anchored" data-anchor-id="모든-배치를-돌면-한-에폭">7.4 모든 배치를 돌면 한 에폭</h3>
+<p><code>for</code>로 로더의 배치를 차례로 꺼내 다섯 줄을 실행한다. 배치 손실은 32건의 평균이므로 배치 크기를 곱해 합으로 되돌려 모으고, 마지막에 전체 건수로 나누면 에폭의 평균 손실이 된다.</p>
+<div id="7eb4867c" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> xb, yb <span class="kw">in</span> train_loader:</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    optimizer.zero_grad()</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    pred <span class="op">=</span> model(xb)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> criterion(pred, yb)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>    loss.backward()</span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    optimizer.step()</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(total <span class="op">/</span> <span class="bu">len</span>(train_loader.dataset))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>578.3566765332744</code></pre>
+</div>
+</div>
+<p>약 <strong>581</strong>이다. 한 에폭의 평균 훈련 손실이고, <code>len(train_loader.dataset)</code>은 274다.</p>
+</section>
+<section id="학습-함수로-조립" class="level3">
+<h3 class="anchored" data-anchor-id="학습-함수로-조립">7.5 학습 함수로 조립</h3>
+<p>7.4절의 코드를 함수로 만든다. 앞에 <code>model.train()</code>을 붙인다. 모델을 학습 모드로 두는 줄이다.</p>
+<div id="75f4bc97" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> model(xb)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(pred, yb)</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> <span class="bu">len</span>(loader.dataset)</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_one_epoch(model, train_loader, criterion, optimizer))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>359.19477621482235</code></pre>
+</div>
+</div>
+<p>약 <strong>371</strong>이다. 한 에폭을 더 돌아 7.4절보다 손실이 줄었다.</p>
+</section>
+</section>
+<section id="검증-손실-재기" class="level2">
+<h2 class="anchored" data-anchor-id="검증-손실-재기">8. 검증 손실 재기</h2>
+<section id="검증-세트-전체로-한-번" class="level3">
+<h3 class="anchored" data-anchor-id="검증-세트-전체로-한-번">8.1 검증 세트 전체로 한 번</h3>
+<p>검증 세트로는 가중치를 바꾸지 않고 손실만 잰다. 실습 3의 7.3절처럼 <code>torch.no_grad()</code> 안에서 계산한다. <code>model.eval()</code>은 모델을 평가 모드로 바꾼다. 드롭아웃처럼 학습과 평가에서 다르게 동작하는 층을 전환하는 줄이다.</p>
+<div id="fe2fff29" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    val_loss <span class="op">=</span> criterion(model(X_va), y_va)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(val_loss.item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>152.299560546875</code></pre>
+</div>
+</div>
+<p>약 <strong>169.6</strong>이다. 검증 59건의 평균 손실이다.</p>
+</section>
+<section id="배치로-나눠-재도-같다" class="level3">
+<h3 class="anchored" data-anchor-id="배치로-나눠-재도-같다">8.2 배치로 나눠 재도 같다</h3>
+<p>로더로 배치마다 손실을 구해 합치면 같은 값이 나온다. 데이터가 커서 한 번에 못 넣을 때는 이렇게 한다.</p>
+<div id="06a7dcb9" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> val_loader:</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> criterion(model(xb), yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(total <span class="op">/</span> <span class="bu">len</span>(val_loader.dataset))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>152.299560546875</code></pre>
+</div>
+</div>
+<p>8.1절과 같은 값이다.</p>
+</section>
+<section id="평가-함수로-조립" class="level3">
+<h3 class="anchored" data-anchor-id="평가-함수로-조립">8.3 평가 함수로 조립</h3>
+<div id="f37ec1d5" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> criterion(model(xb), yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> <span class="bu">len</span>(loader.dataset)</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, val_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>152.299560546875</code></pre>
+</div>
+</div>
+<p>같은 값이다. 이제 학습 함수와 평가 함수가 갖춰졌다.</p>
+</section>
+</section>
+<section id="에폭-반복과-러닝커브" class="level2">
+<h2 class="anchored" data-anchor-id="에폭-반복과-러닝커브">9. 에폭 반복과 러닝커브</h2>
+<section id="에폭" class="level3">
+<h3 class="anchored" data-anchor-id="에폭">9.1 200 에폭</h3>
+<p>에폭마다 두 함수를 한 번씩 부르고 두 손실을 기록한다.</p>
+<div id="ce8da2cf" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> {<span class="st">'train'</span>: [], <span class="st">'val'</span>: []}</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    tr <span class="op">=</span> train_one_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>    history[<span class="st">'train'</span>].append(tr)</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>    history[<span class="st">'val'</span>].append(va)</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"첫 에폭   훈련:"</span>, <span class="bu">round</span>(history[<span class="st">'train'</span>][<span class="dv">0</span>], <span class="dv">1</span>), <span class="st">" 검증:"</span>, <span class="bu">round</span>(history[<span class="st">'val'</span>][<span class="dv">0</span>], <span class="dv">1</span>))</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"마지막    훈련:"</span>, <span class="bu">round</span>(history[<span class="st">'train'</span>][<span class="op">-</span><span class="dv">1</span>], <span class="dv">1</span>), <span class="st">" 검증:"</span>, <span class="bu">round</span>(history[<span class="st">'val'</span>][<span class="op">-</span><span class="dv">1</span>], <span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>첫 에폭   훈련: 75.9  검증: 80.0
+마지막    훈련: 4.1  검증: 6.8</code></pre>
+</div>
+</div>
+<p>훈련 손실은 약 <strong>82에서 4.3</strong>으로, 검증 손실은 약 <strong>75에서 6.8</strong>로 줄었다. 검증 손실이 가장 낮았던 에폭을 찾는다.</p>
+<div id="e9dfa95d" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>best_epoch <span class="op">=</span> history[<span class="st">'val'</span>].index(<span class="bu">min</span>(history[<span class="st">'val'</span>]))</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(best_epoch, <span class="bu">round</span>(<span class="bu">min</span>(history[<span class="st">'val'</span>]), <span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>39 5.1</code></pre>
+</div>
+</div>
+<p>최솟값은 약 <strong>5.4</strong>이고, 마지막 에폭의 검증 손실 6.8은 이보다 <strong>크다</strong>. 그 에폭 이후로는 더 돌려도 새 데이터에 대한 성능이 나아지지 않았다.</p>
+</section>
+<section id="러닝커브-제공-코드" class="level3">
+<h3 class="anchored" data-anchor-id="러닝커브-제공-코드">9.2 러닝커브 — 제공 코드</h3>
+<div id="cell-lab04-learning-curve" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>plt.plot(history[<span class="st">'train'</span>], label<span class="op">=</span><span class="st">'train'</span>)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>plt.plot(history[<span class="st">'val'</span>], label<span class="op">=</span><span class="st">'validation'</span>)</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>plt.axvline(best_epoch, color<span class="op">=</span><span class="st">'green'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="ss">f'best epoch </span><span class="sc">{</span>best_epoch<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>plt.yscale(<span class="st">'log'</span>)</span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'MSE'</span>)</span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -754,16 +1044,13 @@ dtype: float64</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="러닝커브-읽기" class="level3">
-<h3 class="anchored" data-anchor-id="러닝커브-읽기">6.3 러닝커브 읽기</h3>
+<p>훈련 손실은 계속 내려가고, 검증 손실은 초록 선 이후 다시 오른다. 이론에서 본 과적합의 모양이다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
 <th>훈련 손실</th>
 <th>검증 손실</th>
 <th>진단</th>
-<th>처방</th>
 </tr>
 </thead>
 <tbody>
@@ -771,111 +1058,149 @@ dtype: float64</code></pre>
 <td>높다</td>
 <td>높다</td>
 <td>과소적합</td>
-<td>모델을 키우거나 더 학습한다</td>
 </tr>
 <tr class="even">
 <td>낮다</td>
 <td>내려가다 올라간다</td>
 <td>과적합</td>
-<td>최적 지점에서 멈춘다</td>
 </tr>
 <tr class="odd">
 <td>낮다</td>
 <td>낮다</td>
 <td>적절</td>
-<td></td>
 </tr>
 </tbody>
 </table>
-<p>훈련 손실은 계속 내려가지만 검증 손실은 어느 지점부터 다시 오른다. 훈련 손실만 그리면 이 판단을 할 수 없다.</p>
 </section>
 </section>
-<section id="최적-지점-저장과-조기-종료" class="level2">
-<h2 class="anchored" data-anchor-id="최적-지점-저장과-조기-종료">7. 최적 지점 저장과 조기 종료</h2>
-<section id="가장-좋았던-가중치를-복사해-두기" class="level3">
-<h3 class="anchored" data-anchor-id="가장-좋았던-가중치를-복사해-두기">7.1 가장 좋았던 가중치를 복사해 두기</h3>
-<p>학습을 다시 하되, 이번에는 검증 손실이 가장 낮았던 순간의 가중치를 복사해 둔다. <code>model.state_dict()</code>는 모델의 모든 가중치와 편향을 담은 사전이다. <code>copy.deepcopy</code>로 그 순간의 값을 따로 보관한다.</p>
-<div id="e8ff0884" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">9</span>, <span class="dv">32</span>), nn.ReLU(),</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">32</span>, <span class="dv">16</span>), nn.ReLU(),</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">16</span>, <span class="dv">1</span>),</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>best_val, best_state, best_epoch <span class="op">=</span> <span class="bu">float</span>(<span class="st">'inf'</span>), <span class="va">None</span>, <span class="dv">0</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> va <span class="op">&lt;</span> best_val:</span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>        best_val, best_state, best_epoch <span class="op">=</span> va, copy.deepcopy(model.state_dict()), epoch</span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"최적 에폭:"</span>, best_epoch, <span class="st">" 검증 손실:"</span>, <span class="bu">round</span>(best_val, <span class="dv">2</span>))</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"마지막 검증 손실:"</span>, <span class="bu">round</span>(evaluate(model, val_loader, criterion), <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="가중치-복사와-복원" class="level2">
+<h2 class="anchored" data-anchor-id="가중치-복사와-복원">10. 가중치 복사와 복원</h2>
+<section id="state_dict" class="level3">
+<h3 class="anchored" data-anchor-id="state_dict">10.1 <code>state_dict</code></h3>
+<p>모델의 가중치와 편향은 <code>model.state_dict()</code>에 들어 있다. 이름과 텐서의 사전이다.</p>
+<div id="a5f39bf5" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> model.state_dict()</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(state.keys()))</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(state[<span class="st">'4.bias'</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>최적 에폭: 52  검증 손실: 5.05
-마지막 검증 손실: 9.54</code></pre>
+<pre><code>['0.weight', '0.bias', '2.weight', '2.bias', '4.weight', '4.bias']
+tensor([0.1994])</code></pre>
+</div>
+</div>
+<p>층 번호와 <code>weight</code>/<code>bias</code>로 이름이 붙어 있다. <code>4.bias</code>는 마지막 <code>Linear</code> 층의 편향 하나로, 약 <strong>0.1997</strong>이다.</p>
+</section>
+<section id="복사해-두면-학습해도-그대로" class="level3">
+<h3 class="anchored" data-anchor-id="복사해-두면-학습해도-그대로">10.2 복사해 두면 학습해도 그대로</h3>
+<p><code>copy.deepcopy</code>로 지금 값을 따로 복사한다. 그 뒤 한 에폭 더 학습하면 모델의 값은 바뀌지만 복사본은 그대로다.</p>
+<div id="063387b7" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>saved <span class="op">=</span> copy.deepcopy(model.state_dict())</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>train_one_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"복사본:"</span>, saved[<span class="st">'4.bias'</span>])</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"모델  :"</span>, model.state_dict()[<span class="st">'4.bias'</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>복사본: tensor([0.1994])
+모델  : tensor([0.1989])</code></pre>
+</div>
+</div>
+<p>복사본은 <strong>0.1997</strong> 그대로이고 모델은 <strong>0.2003</strong>으로 바뀌었다. <code>deepcopy</code>가 없으면 복사본도 모델을 따라 바뀐다.</p>
+</section>
+<section id="되돌리기" class="level3">
+<h3 class="anchored" data-anchor-id="되돌리기">10.3 되돌리기</h3>
+<p><code>load_state_dict</code>로 복사본을 모델에 다시 넣는다.</p>
+<div id="280404a3" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(saved)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.state_dict()[<span class="st">'4.bias'</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([0.1994])</code></pre>
+</div>
+</div>
+<p>복사본의 값으로 돌아왔다.</p>
+</section>
+<section id="조립-최적-지점을-기억하며-학습" class="level3">
+<h3 class="anchored" data-anchor-id="조립-최적-지점을-기억하며-학습">10.4 조립 — 최적 지점을 기억하며 학습</h3>
+<p>새 모델로 다시 학습하되, 검증 손실이 지금까지 가장 낮을 때마다 가중치를 복사해 둔다. 9.1절의 반복문에 <code>if</code> 세 줄이 더해진 것이다.</p>
+<div id="7739a7c3" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> nn.Sequential(</span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">9</span>, <span class="dv">32</span>), nn.ReLU(),</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">32</span>, <span class="dv">16</span>), nn.ReLU(),</span>
+<span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>    nn.Linear(<span class="dv">16</span>, <span class="dv">1</span>),</span>
+<span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb72-8"><a href="#cb72-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-9"><a href="#cb72-9" aria-hidden="true" tabindex="-1"></a>best_val, best_state, best_epoch <span class="op">=</span> <span class="bu">float</span>(<span class="st">'inf'</span>), <span class="va">None</span>, <span class="dv">0</span></span>
+<span id="cb72-10"><a href="#cb72-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb72-11"><a href="#cb72-11" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb72-12"><a href="#cb72-12" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
+<span id="cb72-13"><a href="#cb72-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> va <span class="op">&lt;</span> best_val:</span>
+<span id="cb72-14"><a href="#cb72-14" aria-hidden="true" tabindex="-1"></a>        best_val <span class="op">=</span> va</span>
+<span id="cb72-15"><a href="#cb72-15" aria-hidden="true" tabindex="-1"></a>        best_state <span class="op">=</span> copy.deepcopy(model.state_dict())</span>
+<span id="cb72-16"><a href="#cb72-16" aria-hidden="true" tabindex="-1"></a>        best_epoch <span class="op">=</span> epoch</span>
+<span id="cb72-17"><a href="#cb72-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb72-18"><a href="#cb72-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"최적 에폭:"</span>, best_epoch, <span class="st">" 그때 검증 손실:"</span>, <span class="bu">round</span>(best_val, <span class="dv">1</span>))</span>
+<span id="cb72-19"><a href="#cb72-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"마지막 검증 손실:"</span>, <span class="bu">round</span>(evaluate(model, val_loader, criterion), <span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>최적 에폭: 52  그때 검증 손실: 5.0
+마지막 검증 손실: 9.5</code></pre>
 </div>
 </div>
 </section>
-<section id="최적-지점으로-되돌리기" class="level3">
-<h3 class="anchored" data-anchor-id="최적-지점으로-되돌리기">7.2 최적 지점으로 되돌리기</h3>
-<p><code>load_state_dict</code>로 보관한 가중치를 모델에 다시 넣는다. 이것이 <strong>조기 종료</strong>다. 끝까지 돌리되 가장 좋았던 지점으로 되돌린다.</p>
-<div id="2260062e" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(best_state)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"되돌린 뒤 검증 손실:"</span>, <span class="bu">round</span>(evaluate(model, val_loader, criterion), <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="최적-지점으로-복원" class="level3">
+<h3 class="anchored" data-anchor-id="최적-지점으로-복원">10.5 최적 지점으로 복원</h3>
+<div id="5384807c" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(best_state)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">round</span>(evaluate(model, val_loader, criterion), <span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>되돌린 뒤 검증 손실: 5.05</code></pre>
+<pre><code>5.0</code></pre>
 </div>
 </div>
-<p>검증 손실이 최적 에폭의 값으로 돌아온다.</p>
+<p>최적 에폭의 값 <strong>5.0</strong>으로 돌아왔다. 되돌리기 전의 마지막 검증 손실은 9.5였다. 끝까지 돌리고 가장 좋았던 지점으로 되돌리는 것, 이것이 <strong>조기 종료</strong>다.</p>
 </section>
 </section>
 <section id="테스트-세트로-최종-평가" class="level2">
-<h2 class="anchored" data-anchor-id="테스트-세트로-최종-평가">8. 테스트 세트로 최종 평가</h2>
+<h2 class="anchored" data-anchor-id="테스트-세트로-최종-평가">11. 테스트 세트로 최종 평가</h2>
 <section id="한-번만-본다" class="level3">
-<h3 class="anchored" data-anchor-id="한-번만-본다">8.1 한 번만 본다</h3>
-<p>테스트 세트는 지금까지 한 번도 쓰지 않았다. 여기서 딱 한 번 평가한다.</p>
-<div id="d166214a" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>test_mse <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 MSE :"</span>, <span class="bu">round</span>(test_mse, <span class="dv">2</span>))</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 RMSE:"</span>, <span class="bu">round</span>(test_mse <span class="op">**</span> <span class="fl">0.5</span>, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="한-번만-본다">11.1 한 번만 본다</h3>
+<p>테스트 세트는 지금까지 쓰지 않았다. 복원한 모델로 여기서 한 번 평가한다.</p>
+<div id="7283ef25" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>test_mse <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">round</span>(test_mse, <span class="dv">1</span>), <span class="bu">round</span>(test_mse <span class="op">**</span> <span class="fl">0.5</span>, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>테스트 MSE : 6.3
-테스트 RMSE: 2.51</code></pre>
+<pre><code>6.3 2.51</code></pre>
 </div>
 </div>
-<p>RMSE는 손실에 제곱근을 씌운 값이라 연비와 같은 단위다. 예측이 평균적으로 그만큼 빗나간다.</p>
+<p>MSE 약 <strong>6.3</strong>, RMSE 약 <strong>2.5</strong>다. RMSE는 MSE에 제곱근을 씌워 연비와 같은 단위로 만든 것이다. 예측이 평균적으로 그만큼 빗나간다.</p>
 </section>
-<section id="기준선과-비교" class="level3">
-<h3 class="anchored" data-anchor-id="기준선과-비교">8.2 기준선과 비교</h3>
-<p>아무 모델 없이 훈련 세트의 평균 연비로만 예측하면 얼마나 틀리는지 구한다. 모델은 이 값보다 작아야 의미가 있다.</p>
-<div id="fc14a983" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>baseline <span class="op">=</span> ((y_te <span class="op">-</span> y_tr.mean()) <span class="op">**</span> <span class="dv">2</span>).mean().item()</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"기준선 RMSE:"</span>, <span class="bu">round</span>(baseline <span class="op">**</span> <span class="fl">0.5</span>, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="기준선" class="level3">
+<h3 class="anchored" data-anchor-id="기준선">11.2 기준선</h3>
+<p>모델 없이 훈련 세트의 평균 연비로만 예측하면 얼마나 틀리는지 구한다.</p>
+<div id="50e1cdd6" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>baseline_mse <span class="op">=</span> ((y_te <span class="op">-</span> y_tr.mean()) <span class="op">**</span> <span class="dv">2</span>).mean().item()</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">round</span>(baseline_mse <span class="op">**</span> <span class="fl">0.5</span>, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>기준선 RMSE: 7.12</code></pre>
+<pre><code>7.12</code></pre>
 </div>
 </div>
+<p>약 <strong>7.1</strong>이다. 모델의 RMSE 2.5는 기준선의 3분의 1 수준이다.</p>
 </section>
 <section id="예측과-실제를-함께-보기-제공-코드" class="level3">
-<h3 class="anchored" data-anchor-id="예측과-실제를-함께-보기-제공-코드">8.3 예측과 실제를 함께 보기 — 제공 코드</h3>
-<div id="cell-lab04-pred-vs-actual" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    pred_te <span class="op">=</span> model(X_te).squeeze(<span class="dv">1</span>)</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>true_te <span class="op">=</span> y_te.squeeze(<span class="dv">1</span>)</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>plt.scatter(true_te, pred_te, s<span class="op">=</span><span class="dv">18</span>)</span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>lim <span class="op">=</span> [true_te.<span class="bu">min</span>().item() <span class="op">-</span> <span class="dv">2</span>, true_te.<span class="bu">max</span>().item() <span class="op">+</span> <span class="dv">2</span>]</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>plt.plot(lim, lim, <span class="st">'r--'</span>)</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'actual mpg'</span>)</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'predicted mpg'</span>)</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h3 class="anchored" data-anchor-id="예측과-실제를-함께-보기-제공-코드">11.3 예측과 실제를 함께 보기 — 제공 코드</h3>
+<div id="cell-lab04-pred-vs-actual" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    pred_te <span class="op">=</span> model(X_te).squeeze(<span class="dv">1</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>true_te <span class="op">=</span> y_te.squeeze(<span class="dv">1</span>)</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>plt.scatter(true_te, pred_te, s<span class="op">=</span><span class="dv">18</span>)</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>lim <span class="op">=</span> [true_te.<span class="bu">min</span>().item() <span class="op">-</span> <span class="dv">2</span>, true_te.<span class="bu">max</span>().item() <span class="op">+</span> <span class="dv">2</span>]</span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>plt.plot(lim, lim, <span class="st">'r--'</span>)</span>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'actual mpg'</span>)</span>
+<span id="cb80-10"><a href="#cb80-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'predicted mpg'</span>)</span>
+<span id="cb80-11"><a href="#cb80-11" aria-hidden="true" tabindex="-1"></a>plt.grid(alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb80-12"><a href="#cb80-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -884,29 +1209,22 @@ dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>점이 붉은 대각선에 가까울수록 예측이 정확하다. 연비가 높은 쪽에서 점이 대각선 아래로 처지는지 확인한다.</p>
+<p>점이 붉은 대각선에 가까울수록 예측이 정확하다.</p>
 </section>
 </section>
 <section id="직접-해보기-④-모델-크기-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="직접-해보기-④-모델-크기-바꾸기">9. 직접 해보기 ④ — 모델 크기 바꾸기</h2>
-<p>은닉층이 8개뿐인 작은 모델과 128·64개인 큰 모델을 7.1절과 같은 방식으로 학습시켜 최적 에폭과 최적 검증 손실을 비교한다. 아래 준비 셀은 그대로 실행한다.</p>
-<div id="11978d85" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_with_best(model, epochs<span class="op">=</span><span class="dv">200</span>):</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    best_val, best_epoch <span class="op">=</span> <span class="bu">float</span>(<span class="st">'inf'</span>), <span class="dv">0</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(epochs):</span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>        train_one_epoch(model, train_loader, criterion, optimizer)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>        va <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> va <span class="op">&lt;</span> best_val:</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>            best_val, best_epoch <span class="op">=</span> va, epoch</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> best_epoch, best_val</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>다음 셀의 주석을 코드로 바꾼다.</p>
-<div id="b6fc13e0" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ① small: Linear(9, 8) → ReLU → Linear(8, 1)</span></span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ② big: Linear(9, 128) → ReLU → Linear(128, 64) → ReLU → Linear(64, 1)</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ 각 모델을 train_with_best로 학습시켜 (최적 에폭, 최적 검증 손실) 출력</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<h2 class="anchored" data-anchor-id="직접-해보기-④-모델-크기-바꾸기">12. 직접 해보기 ④ — 모델 크기 바꾸기</h2>
+<p>은닉층이 8개뿐인 작은 모델과 128·64개인 큰 모델을 10.4절과 같은 방식으로 학습시켜 최적 에폭과 최적 검증 손실을 비교한다. 아래 셀의 주석을 코드로 바꾼다. 10.4절의 반복문을 그대로 쓴다.</p>
+<div id="d7154d30" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> nn.Sequential(nn.Linear(<span class="dv">9</span>, <span class="dv">8</span>), nn.ReLU(), nn.Linear(<span class="dv">8</span>, <span class="dv">1</span>))</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co"># ① small의 optimizer 만들기</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ② 10.4절의 반복문으로 200 에폭 학습하며 best_val, best_epoch 기록</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ③ best_epoch, best_val 출력</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> nn.Sequential(nn.Linear(<span class="dv">9</span>, <span class="dv">128</span>), nn.ReLU(), nn.Linear(<span class="dv">128</span>, <span class="dv">64</span>), nn.ReLU(), nn.Linear(<span class="dv">64</span>, <span class="dv">1</span>))</span>
+<span id="cb81-9"><a href="#cb81-9" aria-hidden="true" tabindex="-1"></a><span class="co"># ④ big도 같은 방식으로</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -927,8 +1245,8 @@ dtype: float64</code></pre>
 <tr class="even">
 <td>기본 모델 (32, 16)</td>
 <td>865</td>
-<td>7.1절의 값</td>
-<td>7.1절의 값</td>
+<td>10.4절의 값</td>
+<td>10.4절의 값</td>
 </tr>
 <tr class="odd">
 <td>큰 모델 (128, 64)</td>
@@ -938,11 +1256,11 @@ dtype: float64</code></pre>
 </tr>
 </tbody>
 </table>
-<p>파라미터 수는 <code>sum(p.numel() for p in model.parameters())</code>로 센다. 큰 모델의 최적 에폭이 언제 오는지, 그 뒤 검증 손실이 어떻게 되는지 러닝커브로 확인한다.</p>
+<p>파라미터 수는 <code>sum(p.numel() for p in model.parameters())</code>로 센다.</p>
 </section>
 <section id="마무리" class="level2">
 <h2 class="anchored" data-anchor-id="마무리">마무리</h2>
-<p>표 하나를 <strong>나누고, 훈련 통계로 변환하고, 배치로 학습하고, 검증 손실로 멈출 지점을 고르고, 테스트 세트로 한 번 보고</strong>했다. 모든 통계량은 훈련 세트에서만 구하고 검증·테스트에는 그 값을 그대로 적용한다. 학습 다섯 줄은 실습 3과 같고, 그 앞뒤에 <code>DataLoader</code>와 <code>train()</code>/<code>eval()</code>, <code>state_dict</code>가 붙었다.</p>
+<p>표 하나를 <strong>나누고, 훈련 세트의 평균·표준편차로 변환하고, 배치로 학습하고, 검증 손실로 멈출 지점을 고르고, 테스트 세트로 한 번 평가</strong>했다. 학습 다섯 줄은 실습 3과 같다. 그 다섯 줄을 배치마다 돌리면 <code>train_one_epoch</code>, <code>no_grad</code> 안에서 손실만 모으면 <code>evaluate</code>, 검증 손실이 낮을 때 <code>state_dict</code>를 복사해 두면 조기 종료다.</p>
 <p>다음 <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab05.html">실습 5</a>에서는 입력이 표에서 <strong>이미지</strong>로 바뀐다. <code>(n, p)</code>였던 입력이 <code>(n, C, H, W)</code>가 될 뿐, 학습 코드는 같다.</p>
 </section>
 <section id="직접-해보기-해설-먼저-작성한-뒤-확인" class="level2">
@@ -959,9 +1277,9 @@ dtype: float64</code></pre>
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>tr, rest <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>va, te <span class="op">=</span> train_test_split(rest, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr), <span class="bu">len</span>(va), <span class="bu">len</span>(te))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>tr, rest <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>va, te <span class="op">=</span> train_test_split(rest, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr), <span class="bu">len</span>(va), <span class="bu">len</span>(te))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -996,9 +1314,9 @@ dtype: float64</code></pre>
 </div>
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>wrong_mu <span class="op">=</span> auto[num_cols].mean()</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(((train_df[num_cols] <span class="op">-</span> wrong_mu) <span class="op">/</span> sd).mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>여섯 열의 평균이 0이 아니라 소수점 둘째 자리 정도의 값이 나온다. 전체 평균에는 검증·테스트 데이터가 섞여 있기 때문이다.</p>
+<div class="sourceCode" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>wrong_mu <span class="op">=</span> auto[num_cols].mean()</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(((train_df[num_cols] <span class="op">-</span> wrong_mu) <span class="op">/</span> sd).mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>여섯 열의 평균이 0이 아니다. 전체 평균에는 검증·테스트 데이터가 섞여 있기 때문이다.</p>
 </div>
 </div>
 </div>
@@ -1014,8 +1332,8 @@ dtype: float64</code></pre>
 </div>
 <div id="callout-3" class="callout-3-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">64</span>)))</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">274</span>)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">64</span>)))</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(TensorDataset(X_tr, y_tr), batch_size<span class="op">=</span><span class="dv">274</span>)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -1053,16 +1371,17 @@ dtype: float64</code></pre>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> nn.Sequential(nn.Linear(<span class="dv">9</span>, <span class="dv">8</span>), nn.ReLU(), nn.Linear(<span class="dv">8</span>, <span class="dv">1</span>))</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>big <span class="op">=</span> nn.Sequential(nn.Linear(<span class="dv">9</span>, <span class="dv">128</span>), nn.ReLU(),</span>
-<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>                    nn.Linear(<span class="dv">128</span>, <span class="dv">64</span>), nn.ReLU(), nn.Linear(<span class="dv">64</span>, <span class="dv">1</span>))</span>
-<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, m <span class="kw">in</span> [(<span class="st">'small'</span>, small), (<span class="st">'big'</span>, big)]:</span>
-<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    n_params <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> m.parameters())</span>
-<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    best_epoch, best_val <span class="op">=</span> train_with_best(m)</span>
-<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, n_params, best_epoch, <span class="bu">round</span>(best_val, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>작은 모델은 파라미터 89개, 큰 모델은 9,601개다. 큰 모델은 훈련 데이터를 빨리 외우므로 최적 에폭이 일찍 오고, 그 뒤 검증 손실이 오른다. 작은 모델은 최적 에폭이 늦고 최적 검증 손실도 대체로 더 높다. 실행 결과는 초기 가중치와 배치 순서에 따라 조금씩 다르다.</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, m <span class="kw">in</span> [(<span class="st">'small'</span>, small), (<span class="st">'big'</span>, big)]:</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>    opt <span class="op">=</span> torch.optim.Adam(m.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>    best_val, best_epoch <span class="op">=</span> <span class="bu">float</span>(<span class="st">'inf'</span>), <span class="dv">0</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">200</span>):</span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>        train_one_epoch(m, train_loader, criterion, opt)</span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>        va <span class="op">=</span> evaluate(m, val_loader, criterion)</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> va <span class="op">&lt;</span> best_val:</span>
+<span id="cb85-8"><a href="#cb85-8" aria-hidden="true" tabindex="-1"></a>            best_val, best_epoch <span class="op">=</span> va, epoch</span>
+<span id="cb85-9"><a href="#cb85-9" aria-hidden="true" tabindex="-1"></a>    n_params <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> m.parameters())</span>
+<span id="cb85-10"><a href="#cb85-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, n_params, best_epoch, <span class="bu">round</span>(best_val, <span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>작은 모델은 파라미터 89개, 큰 모델은 9,601개다. 큰 모델은 최적 에폭이 일찍 오고 그 뒤 검증 손실이 오른다. 작은 모델은 최적 에폭이 늦고 최적 검증 손실도 더 높다.</p>
 </div>
 </div>
 </div>
