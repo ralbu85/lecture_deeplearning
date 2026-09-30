@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <blockquote class="blockquote">
 <p><strong>교수자 메모 (실습본에는 없음).</strong> 60분 운영: 준비 셀 3분 → 1·2절 다섯 줄과 한 에폭 12분 → 3절 평가 함수 8분 → 4절 200 에폭과 러닝커브 10분 → 5절 복사·복원과 조립 12분 → 6절 테스트 5분 → 📝 과제 10분. ✅ 숫자는 각 절의 체크포인트 참조. 테스트 RMSE 약 2.5, 기준선 약 7.1.</p>
 </blockquote>
-<div id="587e8a26" class="cell" data-execution_count="1">
+<div id="7af27be3" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 4-1에서 만든 세 세트·전처리·텐서·로더를 다시 만들고, 모델과 손실·갱신 도구를 준비합니다.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -272,7 +272,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="배치-하나에-다섯-줄" class="level2">
 <h2 class="anchored" data-anchor-id="배치-하나에-다섯-줄">1. 배치 하나에 다섯 줄</h2>
 <p>준비 셀에서 꺼낸 첫 배치 <code>xb</code>, <code>yb</code>에 실습 3의 다섯 줄을 그대로 적용합니다.</p>
-<div id="74d1c467" class="cell" data-execution_count="2">
+<div id="acfbe80d" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> model(xb)</span>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — 약 <strong>529</strong>입니다. 이 배치 32건의 손실이고, 연비의 제곱 단위이므로 수백이 나옵니다. 가중치는 이 배치의 기울기로 한 번 갱신되었습니다.</p>
 <p>로더에서 다음 배치를 꺼내 같은 다섯 줄을 실행합니다.</p>
-<div id="78e4ca74" class="cell" data-execution_count="3">
+<div id="9ffdd0b6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>optimizer.zero_grad()</span>
@@ -305,7 +305,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="모든-배치를-돌면-한-에폭" class="level2">
 <h2 class="anchored" data-anchor-id="모든-배치를-돌면-한-에폭">2. 모든 배치를 돌면 한 에폭</h2>
 <p><code>for</code>로 로더의 배치를 차례로 꺼내 다섯 줄을 실행합니다. 배치 손실은 그 배치의 평균이므로 배치 크기 <code>len(yb)</code>를 곱해 합으로 되돌려 <code>total</code>에 모으고, 건수는 <code>n</code>에 모읍니다. 마지막에 <code>total / n</code>이 에폭의 평균 손실입니다.</p>
-<div id="27cbbe5e" class="cell" data-execution_count="4">
+<div id="1bd12e2f" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">0</span></span>
@@ -325,7 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — <code>n</code>은 274로 훈련 세트 전체이고, 두 번째 값 약 <strong>579</strong>이 한 에폭의 평균 훈련 손실입니다.</p>
 <p>이 코드를 함수로 조립합니다. 앞에 <code>model.train()</code>을 붙입니다. 모델을 학습 모드로 두는 줄입니다. 빈칸을 채웁니다.</p>
-<div id="833bce38" class="cell" data-execution_count="5">
+<div id="a9cfb903" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def train_one_epoch(model, loader, criterion, optimizer):</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.train()</span></span>
@@ -367,7 +367,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="검증-손실은-가중치를-바꾸지-않고-잰다" class="level2">
 <h2 class="anchored" data-anchor-id="검증-손실은-가중치를-바꾸지-않고-잰다">3. 검증 손실은 가중치를 바꾸지 않고 잰다</h2>
 <p>검증 세트로는 손실만 잽니다. 실습 3의 7.3절처럼 <code>torch.no_grad()</code> 안에서 계산합니다. <code>model.eval()</code>은 모델을 평가 모드로 바꿉니다. 드롭아웃처럼 학습과 평가에서 다르게 동작하는 층을 전환하는 줄입니다.</p>
-<div id="c0744509" class="cell" data-execution_count="6">
+<div id="c9c4f5f7" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
@@ -379,7 +379,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — 약 <strong>154.5</strong>입니다. 검증 59건의 평균 손실입니다.</p>
 <p>로더로 배치마다 손실을 구해 합치면 같은 값이 나옵니다. 데이터가 커서 한 번에 못 넣을 때는 이렇게 합니다.</p>
-<div id="5dc25d30" class="cell" data-execution_count="7">
+<div id="f7efbde6" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>total <span class="op">=</span> <span class="fl">0.0</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">0</span></span>
@@ -394,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>✅ <strong>체크포인트</strong> — 바로 위와 같은 값이면 맞습니다.</p>
 <p>이 코드를 함수로 조립합니다. 빈칸을 채웁니다.</p>
-<div id="4392a1e2" class="cell" data-execution_count="8">
+<div id="6d2d3c9f" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def evaluate(model, loader, criterion):</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.___()</span></span>
@@ -428,7 +428,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="에폭을-돌며-두-손실을-기록한다" class="level2">
 <h2 class="anchored" data-anchor-id="에폭을-돌며-두-손실을-기록한다">4. 200 에폭을 돌며 두 손실을 기록한다</h2>
 <p>에폭마다 두 함수를 한 번씩 부르고, 실습 3의 <code>loss_history</code>처럼 두 손실을 리스트에 기록합니다.</p>
-<div id="8a20ae14" class="cell" data-execution_count="9">
+<div id="fd1bcb48" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>train_history <span class="op">=</span> []</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>val_history <span class="op">=</span> []</span>
@@ -448,7 +448,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — 훈련 손실은 약 <strong>75에서 4.0</strong>로, 검증 손실은 약 <strong>84에서 6.0</strong>로 줄었습니다.</p>
 <p>검증 손실이 가장 낮았던 에폭을 찾습니다. <code>min</code>은 리스트의 최솟값, <code>.index</code>는 그 값이 몇 번째에 있는지 돌려줍니다.</p>
-<div id="a91eccf6" class="cell" data-execution_count="10">
+<div id="d9d99842" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>best_epoch <span class="op">=</span> val_history.index(<span class="bu">min</span>(val_history))</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(best_epoch, <span class="bu">min</span>(val_history))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -511,7 +511,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="가장-좋았던-가중치로-되돌린다" class="level2">
 <h2 class="anchored" data-anchor-id="가장-좋았던-가중치로-되돌린다">5. 가장 좋았던 가중치로 되돌린다</h2>
 <p>모델의 가중치와 편향은 <code>model.state_dict()</code>에 들어 있습니다. 이름과 텐서의 사전입니다.</p>
-<div id="b4844ba1" class="cell" data-execution_count="12">
+<div id="1191b870" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> model.state_dict()</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(state.keys()))</span>
@@ -523,7 +523,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — 층 번호와 <code>weight</code>/<code>bias</code>로 이름이 붙어 있습니다. <code>4.bias</code>는 마지막 <code>Linear</code> 층의 편향 하나로, 약 <strong>0.2089</strong>입니다.</p>
 <p><code>copy.deepcopy</code>로 지금 값을 따로 복사합니다. 그 뒤 다섯 에폭 더 학습하면 모델의 값은 바뀌지만 복사본은 그대로입니다.</p>
-<div id="9d89f328" class="cell" data-execution_count="13">
+<div id="3b1b682a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>saved <span class="op">=</span> copy.deepcopy(model.state_dict())</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
@@ -538,7 +538,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>✅ <strong>체크포인트</strong> — 복사본은 <strong>0.2089</strong> 그대로이고 모델은 <strong>0.2085</strong>로 바뀌었으면 맞습니다. <code>deepcopy</code>가 없으면 복사본도 모델을 따라 바뀝니다.</p>
 <p><code>load_state_dict</code>로 복사본을 모델에 다시 넣습니다.</p>
-<div id="7538b037" class="cell" data-execution_count="14">
+<div id="f9fba04e" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(saved)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model.state_dict()[<span class="st">'4.bias'</span>].item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -548,7 +548,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>✅ <strong>체크포인트</strong> — 복사본의 값 0.2089로 돌아왔으면 맞습니다.</p>
 <p>이제 조립합니다. 새 모델로 다시 학습하되, 검증 손실이 지금까지 가장 낮을 때마다 가중치를 복사해 둡니다. 학습 전의 검증 손실과 가중치를 출발점으로 두고, 4절의 반복문에 <code>if</code> 세 줄을 더합니다. 빈칸을 채웁니다.</p>
-<div id="e6dc0708" class="cell" data-execution_count="15">
+<div id="9dbc8a6c" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* torch.manual_seed(42)</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#* model = nn.Sequential(</span></span>
@@ -599,7 +599,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — 최적 에폭 93, 그때 검증 손실 약 <strong>4.8</strong>, 마지막 검증 손실 약 6.5입니다. 가장 좋았던 가중치는 <code>best_state</code>에 있습니다.</p>
 <p>되돌립니다.</p>
-<div id="8ad503f7" class="cell" data-execution_count="16">
+<div id="cfb1b44a" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>model.load_state_dict(best_state)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, val_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -613,7 +613,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="테스트-세트는-여기서-한-번" class="level2">
 <h2 class="anchored" data-anchor-id="테스트-세트는-여기서-한-번">6. 테스트 세트는 여기서 한 번</h2>
 <p>테스트 세트는 지금까지 쓰지 않았습니다. 복원한 모델로 여기서 한 번 평가합니다. RMSE는 MSE에 제곱근을 씌워 연비와 같은 단위로 만든 것입니다.</p>
-<div id="fd75f38d" class="cell" data-execution_count="17">
+<div id="4a1cecb4" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>test_mse <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_mse, test_mse <span class="op">**</span> <span class="fl">0.5</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -623,7 +623,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>💬 <strong>결과 해설</strong> — MSE 약 <strong>6.4</strong>, RMSE 약 <strong>2.5</strong>입니다. 새 자동차의 연비를 평균 2.5 mpg 정도 틀립니다.</p>
 <p>이 숫자가 좋은 것인지 보려면 기준선이 필요합니다. 모델 없이 훈련 세트의 평균 연비로만 예측하면 얼마나 틀리는지 구합니다.</p>
-<div id="f1e27983" class="cell" data-execution_count="18">
+<div id="6d105e5b" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>baseline_mse <span class="op">=</span> ((y_te <span class="op">-</span> y_tr.mean()) <span class="op">**</span> <span class="dv">2</span>).mean().item()</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(baseline_mse <span class="op">**</span> <span class="fl">0.5</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -660,7 +660,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="과제-1-작은-모델은-언제-최적-에폭이-오나" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-작은-모델은-언제-최적-에폭이-오나">📝 과제 1 · 작은 모델은 언제 최적 에폭이 오나</h3>
 <p>은닉층이 8개뿐인 모델을 5절과 같은 방식으로 학습시켜 최적 에폭과 최적 검증 손실을 출력합니다.</p>
-<div id="8f540a52" class="cell" data-execution_count="20">
+<div id="75e859de" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 5절 조립 셀을 그대로 쓰되 model을 nn.Linear(9, 8), nn.ReLU(), nn.Linear(8, 1) 세 층으로 바꿉니다. optimizer도 새 모델로 다시 만듭니다. 복사·복원은 필요 없으니 best_state 줄은 빼도 됩니다.</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
@@ -689,7 +689,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="과제-2-큰-모델은-어떤가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-큰-모델은-어떤가">📝 과제 2 · 큰 모델은 어떤가</h3>
 <p>은닉층이 128개와 64개인 모델로 같은 실험을 합니다. 기본 모델(32, 16)과 비교해 최적 에폭이 언제 오는지 봅니다.</p>
-<div id="468be557" class="cell" data-execution_count="21">
+<div id="a832a992" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 과제 1과 같되 층을 nn.Linear(9, 128), nn.ReLU(), nn.Linear(128, 64), nn.ReLU(), nn.Linear(64, 1)로 바꿉니다.</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
@@ -791,7 +791,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p><strong>다음:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab05.html">실습 5</a>에서는 입력이 표에서 <strong>이미지</strong>로 바뀝니다. <code>(n, p)</code>였던 입력이 <code>(n, C, H, W)</code>가 될 뿐, 학습 코드는 같습니다.</p>
+<p><strong>다음:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab05_1.html">실습 5-1</a>에서는 입력이 표에서 <strong>이미지</strong>로 바뀝니다. <code>(n, p)</code>였던 입력이 <code>(n, C, H, W)</code>가 될 뿐, 학습 코드는 같습니다.</p>
 
 
 </section>

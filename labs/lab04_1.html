@@ -193,7 +193,7 @@ window.Quarto = {
   <li><a href="#전처리를-함수-하나로-조립하기" id="toc-전처리를-함수-하나로-조립하기" class="nav-link" data-scroll-target="#전처리를-함수-하나로-조립하기">5. 전처리를 함수 하나로 조립하기</a></li>
   <li><a href="#표를-텐서로" id="toc-표를-텐서로" class="nav-link" data-scroll-target="#표를-텐서로">6. 표를 텐서로</a></li>
   <li><a href="#배치로-꺼내면-어떻게-나오나" id="toc-배치로-꺼내면-어떻게-나오나" class="nav-link" data-scroll-target="#배치로-꺼내면-어떻게-나오나">7. 배치로 꺼내면 어떻게 나오나</a></li>
-  <li><a href="#실습-과제-13분" id="toc-실습-과제-13분" class="nav-link" data-scroll-target="#실습-과제-13분">8. 실습 과제 (13분)</a>
+  <li><a href="#실습-과제-15분" id="toc-실습-과제-15분" class="nav-link" data-scroll-target="#실습-과제-15분">8. 실습 과제 (15분)</a>
   <ul class="collapse">
   <li><a href="#과제-1-80-10-10으로-나누면-몇-대씩인가" id="toc-과제-1-80-10-10으로-나누면-몇-대씩인가" class="nav-link" data-scroll-target="#과제-1-80-10-10으로-나누면-몇-대씩인가">📝 과제 1 · 80 / 10 / 10으로 나누면 몇 대씩인가</a></li>
   <li><a href="#과제-2-평균을-전체-표에서-구하면-무엇이-달라지나" id="toc-과제-2-평균을-전체-표에서-구하면-무엇이-달라지나" class="nav-link" data-scroll-target="#과제-2-평균을-전체-표에서-구하면-무엇이-달라지나">📝 과제 2 · 평균을 전체 표에서 구하면 무엇이 달라지나</a></li>
@@ -279,9 +279,9 @@ window.Quarto = {
 </table>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>교수자 메모 (실습본에는 없음).</strong> 60분 운영: 준비·질문 5분 → 1·2절 표와 나누기 10분 → 3절 표준화 12분 → 4·5절 원-핫과 조립 10분 → 6·7절 텐서와 로더 순회 10분 → 📝 과제 13분. ✅ 숫자: 392×8 · 274/59/59 · weight 평균 2986.5, 표준편차 837.4 · 검증 weight 평균 -0.08 · 열 10개 · X_tr (274, 9) · 9배치, 마지막 18건.</p>
+<p><strong>교수자 메모 (실습본에는 없음).</strong> 60분 운영: 준비·질문 5분 → 1·2절 표와 나누기 10분 → 3절 표준화 12분 → 4·5절 원-핫과 조립 6분 → 6·7절 텐서와 로더 순회 12분 → 📝 과제 15분. ✅ 숫자: 392×8 · 274/59/59 · weight 평균 2986.5, 표준편차 837.4 · 검증 weight 평균 -0.08 · 열 10개 · X_tr (274, 9) · 9배치, 마지막 18건.</p>
 </blockquote>
-<div id="51de4ff5" class="cell" data-execution_count="1">
+<div id="196ba25f" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 표를 내려받아 auto로 읽습니다.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -299,7 +299,7 @@ window.Quarto = {
 <section id="표에는-무엇이-들어-있나" class="level2">
 <h2 class="anchored" data-anchor-id="표에는-무엇이-들어-있나">1. 표에는 무엇이 들어 있나</h2>
 <p>표를 받으면 크기와 앞부분부터 봅니다. <code>.shape</code>는 (행 수, 열 수), <code>.head()</code>는 앞의 다섯 행입니다.</p>
-<div id="c1660ce3" class="cell" data-execution_count="2">
+<div id="54712cb4" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto.shape)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>auto.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -388,7 +388,7 @@ window.Quarto = {
 </div>
 <p>💬 <strong>결과 해설</strong> — 392행 × 8열입니다. <strong>한 행 = 자동차 한 대</strong>이고, 예측할 종속변수는 마지막 열 <code>mpg</code>(연비), 나머지 일곱 열이 독립변수입니다.</p>
 <p>모든 열이 숫자입니다. 그런데 <code>origin</code>의 1, 2, 3은 크기가 아니라 미국·유럽·일본이라는 <strong>이름</strong>입니다. <code>.value_counts()</code>는 값마다 몇 번 나오는지 셉니다.</p>
-<div id="656a8bda" class="cell" data-execution_count="3">
+<div id="d02f79ff" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>auto[<span class="st">'origin'</span>].value_counts()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -400,7 +400,7 @@ Name: count, dtype: int64</code></pre>
 </div>
 </div>
 <p>💬 <strong>결과 해설</strong> — 미국(1) 245대, 일본(3) 79대, 유럽(2) 68대입니다. - 이 열은 4절에서 원-핫으로 바꿉니다. 그대로 넣으면 모델이 “일본은 미국의 3배”로 읽습니다. - 나머지 여섯 열은 크기에 의미가 있는 숫자형 변수입니다. 이름을 리스트에 담아 둡니다.</p>
-<div id="cfb90cd0" class="cell" data-execution_count="4">
+<div id="5814376c" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 숫자형 여섯 열의 이름</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> [<span class="st">'cylinders'</span>, <span class="st">'displacement'</span>, <span class="st">'horsepower'</span>, <span class="st">'weight'</span>, <span class="st">'acceleration'</span>, <span class="st">'model_year'</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -436,7 +436,7 @@ Name: count, dtype: int64</code></pre>
 </tbody>
 </table>
 <p><code>train_test_split</code>은 표를 무작위로 두 조각으로 나눕니다. <code>test_size=0.3</code>이면 30%를 떼어 내고, <code>random_state=42</code>를 주면 실행할 때마다 같은 조각이 나옵니다.</p>
-<div id="b7c6adad" class="cell" data-execution_count="5">
+<div id="cec159d7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -447,7 +447,7 @@ Name: count, dtype: int64</code></pre>
 </div>
 </div>
 <p>💬 <strong>결과 해설</strong> — 274대와 118대입니다. 274대가 훈련 세트입니다. 남은 118대를 반으로 나눠 검증과 테스트를 만듭니다.</p>
-<div id="0a9de801" class="cell" data-execution_count="6">
+<div id="2f92cf1e" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>val_df, test_df <span class="op">=</span> train_test_split(rest_df, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(val_df), <span class="bu">len</span>(test_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -461,7 +461,7 @@ Name: count, dtype: int64</code></pre>
 <section id="훈련-세트의-눈금으로-표준화하기" class="level2">
 <h2 class="anchored" data-anchor-id="훈련-세트의-눈금으로-표준화하기">3. 훈련 세트의 눈금으로 표준화하기</h2>
 <p><code>weight</code> 열은 수천, <code>acceleration</code> 열은 십 단위입니다. 열마다 평균 0, 표준편차 1로 맞추면 학습이 안정됩니다. 이때 평균과 표준편차는 <strong>훈련 세트에서</strong> 구합니다. 먼저 <code>weight</code> 열 하나로 해 봅니다. <code>.std(ddof=0)</code>은 분모를 <span class="math inline">\(n\)</span>으로 두는 표준편차입니다.</p>
-<div id="5236889b" class="cell" data-execution_count="7">
+<div id="7b4a6724" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>w_mean <span class="op">=</span> train_df[<span class="st">'weight'</span>].mean()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>w_std <span class="op">=</span> train_df[<span class="st">'weight'</span>].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
@@ -472,7 +472,7 @@ Name: count, dtype: int64</code></pre>
 </div>
 <p>💬 <strong>결과 해설</strong> — 훈련 세트 274대의 무게 평균은 약 <strong>2986</strong>, 표준편차는 약 <strong>837</strong>입니다.</p>
 <p>각 값에서 평균을 빼고 표준편차로 나눕니다.</p>
-<div id="16f3dfcf" class="cell" data-execution_count="8">
+<div id="24c2c0d0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>w_train <span class="op">=</span> (train_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_train.mean(), w_train.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -482,7 +482,7 @@ Name: count, dtype: int64</code></pre>
 </div>
 <p>✅ <strong>체크포인트</strong> — 평균은 0(<code>e-17</code>처럼 아주 작은 수), 표준편차는 1이면 맞습니다. 자기 평균을 빼고 자기 표준편차로 나눴으니 당연합니다.</p>
 <p>검증 세트는 검증 세트의 평균이 아니라 <strong>훈련 세트의 평균과 표준편차</strong>로 변환합니다.</p>
-<div id="197f3106" class="cell" data-execution_count="9">
+<div id="6a88c4b2" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w_val <span class="op">=</span> (val_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_val.mean(), w_val.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -492,7 +492,7 @@ Name: count, dtype: int64</code></pre>
 </div>
 <p>💬 <strong>결과 해설</strong> — 평균 약 <strong>-0.08</strong>, 표준편차 약 <strong>0.98</strong>입니다. 0과 1이 아닙니다. - 훈련 세트의 값을 썼기 때문입니다. 모델이 배우는 것은 훈련 세트의 눈금이므로, 새 데이터도 그 눈금으로 잽니다. - 검증과 테스트 세트는 항상 이렇게 변환합니다.</p>
 <p>같은 계산을 숫자형 여섯 열에 한 번에 합니다. <code>mu</code>와 <code>sd</code>는 열마다 값이 하나씩 있는 벡터이고, <code>.round(2)</code>는 소수 둘째 자리로 반올림해 보여 줍니다.</p>
-<div id="5ecf6dac" class="cell" data-execution_count="10">
+<div id="81d1cf6b" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> train_df[num_cols].mean()</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> train_df[num_cols].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
@@ -507,7 +507,7 @@ model_year        76.14
 dtype: float64</code></pre>
 </div>
 </div>
-<div id="c6037d67" class="cell" data-execution_count="11">
+<div id="57d28971" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>train_num <span class="op">=</span> (train_df[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_num.mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -526,38 +526,12 @@ dtype: float64</code></pre>
 </section>
 <section id="이름인-열은-원-핫으로" class="level2">
 <h2 class="anchored" data-anchor-id="이름인-열은-원-핫으로">4. 이름인 열은 원-핫으로</h2>
-<p><code>origin</code> 값 하나를 열 여러 개로 바꿉니다. 미국(1)이면 <code>origin_1</code>만 1이고 나머지는 0입니다. 훈련 세트의 앞 다섯 대로 해 봅니다. <code>train_df[['origin']]</code>처럼 대괄호를 두 번 쓰면 열 하나짜리 표가 됩니다.</p>
-<div id="024386e4" class="cell" data-execution_count="12">
+<p><code>origin</code>은 범주형 열입니다. <code>pd.Categorical</code>로 범주를 <code>[1, 2, 3]</code>으로 정해 두고 <code>get_dummies</code>로 열 세 개로 바꿉니다. 미국(1)이면 <code>origin_1</code>만 1입니다. 범주를 미리 정해 두는 것은 세 세트의 열 개수를 같게 하기 위해서입니다. 훈련 세트 앞 다섯 대로 해 봅니다.</p>
+<div id="3f1b39f3" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>five <span class="op">=</span> train_df[[<span class="st">'origin'</span>]].head()</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(five)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     origin
-109       3
-17        1
-318       3
-24        1
-126       1</code></pre>
-</div>
-</div>
-<div id="2e389842" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(five, columns<span class="op">=</span>[<span class="st">'origin'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     origin_1  origin_3
-109     False      True
-17       True     False
-318     False      True
-24       True     False
-126      True     False</code></pre>
-</div>
-</div>
-<p>💬 <strong>결과 해설</strong> — 행마다 <code>True</code>가 하나씩만 있습니다. 텐서로 바꿀 때 1과 0이 됩니다. - 그런데 열이 <code>origin_1</code>, <code>origin_3</code> <strong>두 개뿐</strong>입니다. 이 다섯 대에 유럽(2) 차가 없어서 <code>origin_2</code> 열이 만들어지지 않았습니다. - 검증이나 테스트 세트에 어떤 범주가 없으면 같은 일이 생기고, 열 개수가 달라 모델에 넣을 수 없습니다.</p>
-<p><code>pd.Categorical</code>로 범주를 <code>[1, 2, 3]</code>으로 미리 알려 주면 값이 없어도 열이 만들어집니다.</p>
-<div id="4a243ae4" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>five[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(five[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(five, columns<span class="op">=</span>[<span class="st">'origin'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>five[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(five[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pd.get_dummies(five, columns<span class="op">=</span>[<span class="st">'origin'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     origin_1  origin_2  origin_3
 109     False     False      True
@@ -567,36 +541,36 @@ dtype: float64</code></pre>
 126      True     False     False</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>origin_2</code> 열이 모두 <code>False</code>로 채워져 세 열이 나오면 맞습니다.</p>
+<p>✅ <strong>체크포인트</strong> — 열이 <code>origin_1</code>, <code>origin_2</code>, <code>origin_3</code> 세 개이고 행마다 <code>True</code>가 하나씩이면 맞습니다. <code>True</code>/<code>False</code>는 텐서로 바꿀 때 1과 0이 됩니다.</p>
 <hr>
 </section>
 <section id="전처리를-함수-하나로-조립하기" class="level2">
 <h2 class="anchored" data-anchor-id="전처리를-함수-하나로-조립하기">5. 전처리를 함수 하나로 조립하기</h2>
 <p>3절의 표준화와 4절의 원-핫을 한 함수에 넣어 세 세트에 똑같이 적용합니다. <code>df.copy()</code>는 원본 표를 바꾸지 않으려고 복사본을 만드는 것입니다. 함수 안의 <code>mu</code>, <code>sd</code>는 훈련 세트에서 구한 값입니다. 빈칸을 채웁니다.</p>
-<div id="d45fb1bb" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def prep(df):</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out = df.copy()</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out[num_cols] = (out[num_cols] - ___) / ___</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out['origin'] = pd.Categorical(out['origin'], categories=___)</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return pd.get_dummies(out, columns=___)</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#*</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">#* train_p = prep(train_df)</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">#* print(train_p.shape)</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="co">#* train_p.head(3)</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prep(df):</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> df.copy()</span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    out[num_cols] <span class="op">=</span> (out[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(out[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.get_dummies(out, columns<span class="op">=</span>[<span class="st">'origin'</span>])</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>train_p <span class="op">=</span> prep(train_df)</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape)</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>train_p.head(<span class="dv">3</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="35d2a3d3" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def prep(df):</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out = df.copy()</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out[num_cols] = (out[num_cols] - ___) / ___</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out['origin'] = pd.Categorical(out['origin'], categories=___)</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return pd.get_dummies(out, columns=___)</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#*</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#* train_p = prep(train_df)</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#* print(train_p.shape)</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#* train_p.head(3)</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prep(df):</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> df.copy()</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    out[num_cols] <span class="op">=</span> (out[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    out[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(out[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.get_dummies(out, columns<span class="op">=</span>[<span class="st">'origin'</span>])</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>train_p <span class="op">=</span> prep(train_df)</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape)</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>train_p.head(<span class="dv">3</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(274, 10)</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="15">
+<div class="cell-output cell-output-display" data-execution_count="13">
 <div>
 
 
@@ -663,11 +637,11 @@ dtype: float64</code></pre>
 </div>
 </div>
 <p>💬 <strong>결과 해설</strong> — 열이 <strong>10개</strong>입니다. 숫자형 6개, <code>mpg</code>, 원-핫 3개입니다. 같은 함수를 검증과 테스트 세트에 적용합니다.</p>
-<div id="7a0dc1ea" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>val_p <span class="op">=</span> prep(val_df)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>test_p <span class="op">=</span> prep(test_df)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape, val_p.shape, test_p.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="f9f0e951" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>val_p <span class="op">=</span> prep(val_df)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>test_p <span class="op">=</span> prep(test_df)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_p.shape, val_p.shape, test_p.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(274, 10) (59, 10) (59, 10)</code></pre>
 </div>
@@ -678,27 +652,27 @@ dtype: float64</code></pre>
 <section id="표를-텐서로" class="level2">
 <h2 class="anchored" data-anchor-id="표를-텐서로">6. 표를 텐서로</h2>
 <p><code>mpg</code>를 뺀 아홉 열이 <code>X</code>, <code>mpg</code>가 <code>y</code>입니다. <code>drop(columns='mpg')</code>는 그 열을 뺀 표를 돌려주고, <code>to_numpy(dtype='float32')</code>는 표를 실수 배열로 바꿉니다. 그 배열을 <code>torch.tensor</code>에 넣습니다. 실습 3과 같이 <code>X</code>는 <code>(데이터 수, 변수 수)</code>, <code>y</code>는 <code>(데이터 수, 1)</code>입니다.</p>
-<div id="69663175" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>X_tr <span class="op">=</span> torch.tensor(train_p.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>y_tr <span class="op">=</span> torch.tensor(train_p[[<span class="st">'mpg'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_tr.shape, y_tr.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="54f1c4bc" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>X_tr <span class="op">=</span> torch.tensor(train_p.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>y_tr <span class="op">=</span> torch.tensor(train_p[[<span class="st">'mpg'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_tr.shape, y_tr.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([274, 9]) torch.Size([274, 1])</code></pre>
 </div>
 </div>
 <p>💬 <strong>결과 해설</strong> — <code>(274, 9)</code>와 <code>(274, 1)</code>입니다. <code>y</code>에 <code>[['mpg']]</code>로 대괄호를 두 번 쓴 것은 열 하나짜리 표를 만들어 <code>(274, 1)</code>을 얻기 위해서입니다.</p>
 <p>검증과 테스트도 같은 두 줄이므로 함수로 만듭니다.</p>
-<div id="422c0d79" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_tensor(df):</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.tensor(df.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.tensor(df[[<span class="st">'mpg'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>X_va, y_va <span class="op">=</span> to_tensor(val_p)</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>X_te, y_te <span class="op">=</span> to_tensor(test_p)</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_va.shape, X_te.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ce64a52e" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_tensor(df):</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.tensor(df.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> torch.tensor(df[[<span class="st">'mpg'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X, y</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>X_va, y_va <span class="op">=</span> to_tensor(val_p)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>X_te, y_te <span class="op">=</span> to_tensor(test_p)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_va.shape, X_te.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([59, 9]) torch.Size([59, 9])</code></pre>
 </div>
@@ -709,13 +683,13 @@ dtype: float64</code></pre>
 <section id="배치로-꺼내면-어떻게-나오나" class="level2">
 <h2 class="anchored" data-anchor-id="배치로-꺼내면-어떻게-나오나">7. 배치로 꺼내면 어떻게 나오나</h2>
 <p>실습 3에서는 매번 274건 전체로 기울기를 구했습니다. 이번에는 <strong>32건씩</strong> 나누어 구합니다. 먼저 <code>TensorDataset</code>으로 <code>X</code>의 한 행과 <code>y</code>의 한 행을 짝지어 담습니다. 길이는 데이터 수이고, 번호로 한 쌍을 꺼낼 수 있습니다.</p>
-<div id="e72b75e1" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>train_ds <span class="op">=</span> TensorDataset(X_tr, y_tr)</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_ds))</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_ds[<span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="3d1090ff" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>train_ds <span class="op">=</span> TensorDataset(X_tr, y_tr)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_ds))</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_ds[<span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>274
 (tensor([-0.8733, -0.8549, -0.2859, -0.7254,  0.3427, -0.8687,  0.0000,  0.0000,
@@ -724,21 +698,21 @@ dtype: float64</code></pre>
 </div>
 <p>💬 <strong>결과 해설</strong> — 길이는 274이고, <code>train_ds[0]</code>은 첫 자동차의 입력 9개와 연비 하나의 쌍입니다.</p>
 <p><code>DataLoader</code>는 데이터셋을 <code>batch_size</code>씩 잘라 줍니다. <code>shuffle=True</code>는 한 바퀴 돌 때마다 순서를 섞습니다. 그 앞의 <code>torch.manual_seed(42)</code>는 섞는 순서를 고정해 실행할 때마다 같은 결과가 나오게 합니다.</p>
-<div id="4cc449c2" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0f3576b6" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>9</code></pre>
 </div>
 </div>
 <p>✅ <strong>체크포인트</strong> — 9가 나오면 맞습니다. 274건을 32씩 나누면 8배치에 18건이 남아 9배치입니다.</p>
 <p><code>for</code>로 로더를 한 바퀴 돌며 배치마다 모양을 찍어 봅니다.</p>
-<div id="d9fa4377" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> xb, yb <span class="kw">in</span> train_loader:</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(xb.shape, yb.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="375b1cc2" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> xb, yb <span class="kw">in</span> train_loader:</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(xb.shape, yb.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>torch.Size([32, 9]) torch.Size([32, 1])
 torch.Size([32, 9]) torch.Size([32, 1])
@@ -753,30 +727,30 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 </div>
 <p>💬 <strong>결과 해설</strong> — <code>(32, 9)</code>와 <code>(32, 1)</code>이 여덟 번 나오고, 마지막은 남은 <strong>18건</strong>입니다. - 이 한 바퀴가 한 <strong>에폭</strong>, 배치 하나가 한 <strong>이터레이션</strong>입니다. - 4-2의 학습 반복문은 이 <code>for</code> 안에 실습 3의 다섯 줄을 넣은 것입니다.</p>
 <p><code>iter(train_loader)</code>로 새 바퀴를 시작하고 <code>next</code>로 첫 배치를 꺼냅니다. 첫 배치의 연비 세 개를 봅니다.</p>
-<div id="c3394c12" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0d58d830" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([13., 26., 25.])</code></pre>
 </div>
 </div>
 <p>한 번 더 꺼냅니다.</p>
-<div id="5be22932" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e3f0e048" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>tensor([16., 23., 24.])</code></pre>
 </div>
 </div>
 <p>💬 <strong>결과 해설</strong> — 다른 자동차가 나옵니다. <code>shuffle=True</code>라서 바퀴마다 배치의 구성이 달라집니다.</p>
 <p>검증과 테스트 로더는 섞지 않습니다. 평가는 순서와 무관합니다.</p>
-<div id="74764a9b" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 검증·테스트 로더</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(TensorDataset(X_va, y_va), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_te, y_te), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(val_loader), <span class="bu">len</span>(test_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="69afa6ab" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 검증·테스트 로더</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(TensorDataset(X_va, y_va), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_te, y_te), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(val_loader), <span class="bu">len</span>(test_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>1 1</code></pre>
 </div>
@@ -784,17 +758,17 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <p>💬 59건은 64보다 작으므로 각각 1배치입니다.</p>
 <hr>
 </section>
-<section id="실습-과제-13분" class="level2">
-<h2 class="anchored" data-anchor-id="실습-과제-13분">8. 실습 과제 (13분)</h2>
+<section id="실습-과제-15분" class="level2">
+<h2 class="anchored" data-anchor-id="실습-과제-15분">8. 실습 과제 (15분)</h2>
 <section id="과제-1-80-10-10으로-나누면-몇-대씩인가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-80-10-10으로-나누면-몇-대씩인가">📝 과제 1 · 80 / 10 / 10으로 나누면 몇 대씩인가</h3>
 <p>훈련 80%, 검증 10%, 테스트 10%가 되도록 나누고 세 세트의 크기를 출력합니다. 먼저 크기를 예상해 봅니다.</p>
-<div id="1695f2ea" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 2절의 두 줄에서 첫 번째 test_size만 0.2로 바꿉니다. 두 번째는 그대로 0.5입니다. random_state=42를 유지합니다.</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>tr, rest <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>va, te <span class="op">=</span> train_test_split(rest, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr), <span class="bu">len</span>(va), <span class="bu">len</span>(te))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="835146ab" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 2절의 두 줄에서 첫 번째 test_size만 0.2로 바꿉니다. 두 번째는 그대로 0.5입니다. random_state=42를 유지합니다.</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>tr, rest <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>va, te <span class="op">=</span> train_test_split(rest, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr), <span class="bu">len</span>(va), <span class="bu">len</span>(te))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>313 39 40</code></pre>
 </div>
@@ -808,11 +782,11 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <section id="과제-2-평균을-전체-표에서-구하면-무엇이-달라지나" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-평균을-전체-표에서-구하면-무엇이-달라지나">📝 과제 2 · 평균을 전체 표에서 구하면 무엇이 달라지나</h3>
 <p>평균을 훈련 세트가 아니라 전체 표 <code>auto</code>에서 구한 뒤 훈련 세트를 표준화하면, 훈련 세트의 평균이 0이 되지 않습니다. 확인합니다.</p>
-<div id="9748d07e" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 3절에서 mu를 만든 줄의 train_df를 auto로 바꿔 wrong_mu를 만듭니다. 그다음 (train_df[num_cols] - wrong_mu) / sd 의 열 평균을 .round(4)로 봅니다.</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>wrong_mu <span class="op">=</span> auto[num_cols].mean()</span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(((train_df[num_cols] <span class="op">-</span> wrong_mu) <span class="op">/</span> sd).mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8a4aa0df" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 3절에서 mu를 만든 줄의 train_df를 auto로 바꿔 wrong_mu를 만듭니다. 그다음 (train_df[num_cols] - wrong_mu) / sd 의 열 평균을 .round(4)로 봅니다.</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>wrong_mu <span class="op">=</span> auto[num_cols].mean()</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(((train_df[num_cols] <span class="op">-</span> wrong_mu) <span class="op">/</span> sd).mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cylinders       0.0142
 displacement    0.0225
@@ -832,11 +806,11 @@ dtype: float64</code></pre>
 <section id="과제-3-배치-크기를-바꾸면-이터레이션-수는" class="level3">
 <h3 class="anchored" data-anchor-id="과제-3-배치-크기를-바꾸면-이터레이션-수는">📝 과제 3 · 배치 크기를 바꾸면 이터레이션 수는</h3>
 <p>배치 크기 64와 274로 로더를 만들어 <code>len()</code>을 출력합니다. 먼저 예상해 봅니다.</p>
-<div id="ac04ca89" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 7절에서 train_loader를 만든 줄을 두 번 더 쓰되 batch_size만 64, 274로 바꾸고, 각각 len()을 print 합니다.</span></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">64</span>)))</span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">274</span>)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="a97b0fd3" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 7절에서 train_loader를 만든 줄을 두 번 더 쓰되 batch_size만 64, 274로 바꾸고, 각각 len()을 print 합니다.</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">64</span>)))</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">274</span>)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5
 1</code></pre>
