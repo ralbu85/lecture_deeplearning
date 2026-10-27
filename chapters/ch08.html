@@ -727,53 +727,7 @@ HW2 예고 — 내가 찍은 사진 분류
 <p>지금까지 배운 CNN은 주로 <strong>이미지 분류(Image Classification)</strong> — 이미지 전체에 하나의 레이블을 부여하는 작업에 초점을 맞추었다. 하지만 컴퓨터 비전에는 분류를 넘어선 다양한 응용이 있다.</p>
 <section id="객체-탐지-object-detection" class="level3">
 <h3 class="anchored" data-anchor-id="객체-탐지-object-detection">객체 탐지 (Object Detection)</h3>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-정의: 객체 탐지 (Object Detection)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>이미지에서 <strong>여러 객체의 위치와 종류를 동시에</strong> 파악하는 작업.</p>
-<ul>
-<li><strong>출력</strong>: 각 객체에 대해 클래스 레이블 + <strong>바운딩 박스(Bounding Box)</strong> <span class="math inline">\((x, y, w, h)\)</span></li>
-<li>분류: “이 이미지에 택시가 있다” → 탐지: “이 이미지의 (120, 80) 위치에 택시가 있다”</li>
-</ul>
-</div>
-</div>
-<p>객체 탐지는 <strong>하나의 이미지에 여러 객체</strong>가 있을 때 각각을 구분한다.</p>
-<blockquote class="blockquote">
-<p>객체 탐지는 9주차에 사전 학습된 YOLO 모델로 <strong>직접</strong> 다루며, <strong>팀 프로젝트의 과업</strong>이기도 하다. 탐지 성능을 재는 지표(IoU 등)도 그때 손계산으로 배운다. 여기서는 개념만 잡아두면 된다.</p>
-</blockquote>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">비교</th>
-<th style="text-align: center;">이미지 분류</th>
-<th style="text-align: center;">객체 탐지</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><strong>출력</strong></td>
-<td style="text-align: center;">클래스 1개</td>
-<td style="text-align: center;">클래스 + 위치 (여러 개)</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>예시</strong></td>
-<td style="text-align: center;">“택시”</td>
-<td style="text-align: center;">“택시: (120,80,200,150), 사람: (300,50,80,200)”</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>활용</strong></td>
-<td style="text-align: center;">이미지 검색, 태깅</td>
-<td style="text-align: center;">자율주행, CCTV 분석</td>
-</tr>
-</tbody>
-</table>
+<p>7장에서 봤다. 이미지 안의 물체마다 클래스와 박스 <span class="math inline">\((x_c, y_c, w, h)\)</span>, 신뢰도를 함께 내고, 출력 개수는 이미지마다 다르다. IoU·NMS 계산과 라벨링, 사전학습 YOLO의 파인튜닝은 심화 자료 <a href="../chapters/ch09.html">9장</a>에 있다.</p>
 </section>
 <section id="시맨틱-분할-semantic-segmentation" class="level3">
 <h3 class="anchored" data-anchor-id="시맨틱-분할-semantic-segmentation">시맨틱 분할 (Semantic Segmentation)</h3>
@@ -824,7 +778,7 @@ HW2 예고 — 내가 찍은 사진 분류
 </section>
 <section id="cv-응용의-비교" class="level3">
 <h3 class="anchored" data-anchor-id="cv-응용의-비교">CV 응용의 비교</h3>
-<div id="a09c62ca" class="cell" data-execution_count="1">
+<div id="b3e39e8a" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <table class="dataframe table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
