@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>실습 9주차: 객체탐지 — IoU와 NMS를 직접 구현하기 – 딥러닝</title>
+<title>실습 9: 객체탐지 — IoU와 NMS를 직접 구현하기 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -228,7 +228,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">실습 9주차: 객체탐지 — IoU와 NMS를 직접 구현하기</h1>
+<h1 class="title">실습 9: 객체탐지 — IoU와 NMS를 직접 구현하기</h1>
 </div>
 
 
@@ -319,7 +319,7 @@ window.Quarto = {
 <hr>
 <section id="바운딩-박스-표기법" class="level1">
 <h1>1. 바운딩 박스 표기법</h1>
-<div id="0f22997a" class="cell" data-execution_count="1">
+<div id="a24a8f16" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -331,7 +331,7 @@ window.Quarto = {
 </div>
 <section id="두-가지-표기법" class="level2">
 <h2 class="anchored" data-anchor-id="두-가지-표기법">1-1. 두 가지 표기법</h2>
-<div id="d6f27a4c" class="cell" data-execution_count="2">
+<div id="f44cadc0" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>box_xyxy <span class="op">=</span> torch.tensor([[<span class="fl">160.</span>, <span class="fl">120.</span>, <span class="fl">480.</span>, <span class="fl">360.</span>]])     <span class="co"># (x1, y1, x2, y2)</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>box_cxcywh <span class="op">=</span> box_convert(box_xyxy, in_fmt<span class="op">=</span><span class="st">'xyxy'</span>, out_fmt<span class="op">=</span><span class="st">'cxcywh'</span>)</span>
@@ -353,7 +353,7 @@ xywh   (왼쪽위+크기)   : [160. 120. 320. 240.]
 <section id="yolo-라벨-이미지-크기로-나눈다" class="level2">
 <h2 class="anchored" data-anchor-id="yolo-라벨-이미지-크기로-나눈다">1-2. YOLO 라벨 — 이미지 크기로 나눈다</h2>
 <p>Ch09의 수치 예시를 그대로 확인한다. <span class="math inline">\(640 \times 480\)</span> 이미지의 박스 <span class="math inline">\((160, 120, 480, 360)\)</span>.</p>
-<div id="d81e4765" class="cell" data-execution_count="3">
+<div id="5b69592f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>W, H <span class="op">=</span> <span class="dv">640</span>, <span class="dv">480</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>cx, cy, w, h <span class="op">=</span> box_cxcywh[<span class="dv">0</span>].tolist()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>label <span class="op">=</span> [<span class="dv">0</span>, cx <span class="op">/</span> W, cy <span class="op">/</span> H, w <span class="op">/</span> W, h <span class="op">/</span> H]</span>
@@ -381,7 +381,7 @@ xywh   (왼쪽위+크기)   : [160. 120. 320. 240.]
 <p>이미지 크기가 달라도 라벨이 그대로 쓰이게 하려는 것이다. <span class="math inline">\(640 \times 480\)</span> 에서 만든 라벨을 <span class="math inline">\(1280 \times 960\)</span> 으로 리사이즈해도 <strong>0.5는 여전히 0.5</strong>다.</p>
 </div>
 </div>
-<div id="8f5b7614" class="cell" data-execution_count="4">
+<div id="4babaf64" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> yolo_to_xyxy(label, W, H):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    _, cx, cy, w, h <span class="op">=</span> label</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    cx, cy, w, h <span class="op">=</span> cx<span class="op">*</span>W, cy<span class="op">*</span>H, w<span class="op">*</span>W, h<span class="op">*</span>H</span>
@@ -402,7 +402,7 @@ xywh   (왼쪽위+크기)   : [160. 120. 320. 240.]
 <section id="직접-구현" class="level2">
 <h2 class="anchored" data-anchor-id="직접-구현">2-1. 직접 구현</h2>
 <p><span class="math display">\[\text{IoU} = \frac{\text{교집합 넓이}}{\text{합집합 넓이}}\]</span></p>
-<div id="0b44698b" class="cell" data-execution_count="5">
+<div id="2d7271a3" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> iou(a, b):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""a, b: (x1, y1, x2, y2)"""</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    ax1, ay1, ax2, ay2 <span class="op">=</span> a</span>
@@ -424,7 +424,7 @@ xywh   (왼쪽위+크기)   : [160. 120. 320. 240.]
 <section id="ch09의-손계산-재현" class="level2">
 <h2 class="anchored" data-anchor-id="ch09의-손계산-재현">2-2. Ch09의 손계산 재현</h2>
 <p>박스 A <span class="math inline">\((2, 2, 6, 5)\)</span>, 박스 B <span class="math inline">\((4, 3, 8, 6)\)</span>.</p>
-<div id="d919fdae" class="cell" data-execution_count="6">
+<div id="66d9a5d0" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> (<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">6.</span>, <span class="fl">5.</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> (<span class="fl">4.</span>, <span class="fl">3.</span>, <span class="fl">8.</span>, <span class="fl">6.</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -454,7 +454,7 @@ xywh   (왼쪽위+크기)   : [160. 120. 320. 240.]
 </section>
 <section id="box_iou-와-대조" class="level2">
 <h2 class="anchored" data-anchor-id="box_iou-와-대조">2-3. <code>box_iou</code> 와 대조</h2>
-<div id="9b90b46d" class="cell" data-execution_count="7">
+<div id="8ebbfb15" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>tA <span class="op">=</span> torch.tensor([A])<span class="op">;</span> tB <span class="op">=</span> torch.tensor([B])</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접 구현 :'</span>, <span class="bu">round</span>(iou(A, B), <span class="dv">6</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'box_iou   :'</span>, <span class="bu">round</span>(box_iou(tA, tB).item(), <span class="dv">6</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -464,7 +464,7 @@ box_iou   : 0.2</code></pre>
 </div>
 </div>
 <p><code>box_iou</code> 는 <strong>모든 쌍</strong>을 한 번에 계산한다.</p>
-<div id="ad298ca9" class="cell" data-execution_count="8">
+<div id="cbe91fde" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>boxes1 <span class="op">=</span> torch.tensor([[<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">6.</span>, <span class="fl">5.</span>], [<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">4.</span>, <span class="fl">4.</span>]])</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>boxes2 <span class="op">=</span> torch.tensor([[<span class="fl">4.</span>, <span class="fl">3.</span>, <span class="fl">8.</span>, <span class="fl">6.</span>], [<span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">3.</span>, <span class="fl">3.</span>], [<span class="fl">20.</span>, <span class="fl">20.</span>, <span class="fl">24.</span>, <span class="fl">24.</span>]])</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> box_iou(boxes1, boxes2)</span>
@@ -490,14 +490,14 @@ box_iou   : 0.2</code></pre>
 <p>박스 A <code>(0, 0, 10, 10)</code> 안에 박스 B <code>(2, 2, 4, 4)</code> 가 완전히 들어 있다. IoU를 <strong>먼저 손으로 계산한 뒤</strong> 확인하시오.</p>
 </div>
 </div>
-<div id="39c1dc8f" class="cell" data-execution_count="9">
+<div id="98542c57" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="va">None</span>        <span class="co"># ← 예상값 (교집합 / 합집합)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>got <span class="op">=</span> iou((<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">10.</span>, <span class="fl">10.</span>), (<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">4.</span>))</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">abs</span>(my_answer <span class="op">-</span> got) <span class="op">&lt;</span> <span class="fl">1e-6</span>, <span class="ss">f'다릅니다. 실제 </span><span class="sc">{</span>got<span class="sc">:.4f}</span><span class="ss">'</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>, <span class="bu">round</span>(got, <span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="1554f6a6" class="cell" data-execution_count="10">
+<div id="94df4e7a" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>inter <span class="op">=</span> (<span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span>) <span class="op">*</span> (<span class="dv">4</span> <span class="op">-</span> <span class="dv">2</span>)               <span class="co"># 4</span></span>
@@ -514,7 +514,7 @@ box_iou   : 0.2</code></pre>
 </section>
 <section id="iou의-감각-박스를-밀어-본다" class="level2">
 <h2 class="anchored" data-anchor-id="iou의-감각-박스를-밀어-본다">2-4. IoU의 감각 — 박스를 밀어 본다</h2>
-<div id="8ffb6d15" class="cell" data-execution_count="11">
+<div id="67bbc71c" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>base <span class="op">=</span> torch.tensor([[<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">4.</span>, <span class="fl">4.</span>]])</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>shifts <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">51</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>vals <span class="op">=</span> [box_iou(base, torch.tensor([[s, <span class="fl">0.</span>, s<span class="op">+</span><span class="fl">4.</span>, <span class="fl">4.</span>]])).item() <span class="cf">for</span> s <span class="kw">in</span> shifts]</span>
@@ -548,7 +548,7 @@ box_iou   : 0.2</code></pre>
 <section id="직접-구현-1" class="level2">
 <h2 class="anchored" data-anchor-id="직접-구현-1">3-1. 직접 구현</h2>
 <p>절차는 세 줄이다 — 신뢰도 최고를 채택하고, 그것과 많이 겹치는 것을 지우고, 반복한다.</p>
-<div id="6c2f8942" class="cell" data-execution_count="12">
+<div id="82d41f49" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nms_naive(boxes, scores, thr<span class="op">=</span><span class="fl">0.5</span>):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    order <span class="op">=</span> torch.argsort(scores, descending<span class="op">=</span><span class="va">True</span>).tolist()</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    keep <span class="op">=</span> []</span>
@@ -562,7 +562,7 @@ box_iou   : 0.2</code></pre>
 </section>
 <section id="ch09의-5박스-시나리오-재현" class="level2">
 <h2 class="anchored" data-anchor-id="ch09의-5박스-시나리오-재현">3-2. Ch09의 5박스 시나리오 재현</h2>
-<div id="de207788" class="cell" data-execution_count="13">
+<div id="37d40930" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>boxes <span class="op">=</span> torch.tensor([</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">100.</span>, <span class="fl">100.</span>, <span class="fl">200.</span>, <span class="fl">200.</span>],     <span class="co"># B1</span></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">102.</span>, <span class="fl">116.</span>, <span class="fl">202.</span>, <span class="fl">216.</span>],     <span class="co"># B2 — B1과 IoU 0.70</span></span>
@@ -586,7 +586,7 @@ B4  0.00  0.00  0.00  1.0  0.6
 B5  0.00  0.00  0.00  0.6  1.0</code></pre>
 </div>
 </div>
-<div id="eed06663" class="cell" data-execution_count="14">
+<div id="43b0a9c3" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>keep <span class="op">=</span> nms_naive(boxes, scores, thr<span class="op">=</span><span class="fl">0.5</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'직접 구현이 남긴 박스 :'</span>, [names[i] <span class="cf">for</span> i <span class="kw">in</span> keep])</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -608,7 +608,7 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 </div>
 </div>
 </div>
-<div id="8972ccfd" class="cell" data-execution_count="15">
+<div id="560534a1" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.4</span>))</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, idxs, title <span class="kw">in</span> [(axes[<span class="dv">0</span>], <span class="bu">range</span>(<span class="dv">5</span>), <span class="st">'before NMS (5 boxes)'</span>),</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                        (axes[<span class="dv">1</span>], keep, <span class="ss">f'after NMS (</span><span class="sc">{</span><span class="bu">len</span>(keep)<span class="sc">}</span><span class="ss"> boxes)'</span>)]:</span>
@@ -631,7 +631,7 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 </section>
 <section id="임계값을-바꾸면" class="level2">
 <h2 class="anchored" data-anchor-id="임계값을-바꾸면">3-3. 임계값을 바꾸면</h2>
-<div id="b3e1c7fb" class="cell" data-execution_count="16">
+<div id="609e5514" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> thr <span class="kw">in</span> [<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>]:</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    k <span class="op">=</span> nms(boxes, scores, thr).tolist()</span>
@@ -661,14 +661,14 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 <p><code>scores</code> 에서 B1과 B4의 값을 서로 바꿔(<code>0.90</code>, <code>0.95</code>) NMS를 다시 돌리시오. 남는 박스가 달라지는가? 왜 그런가?</p>
 </div>
 </div>
-<div id="63977735" class="cell" data-execution_count="17">
+<div id="c817f33d" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>scores2 <span class="op">=</span> <span class="va">None</span>          <span class="co"># ← B1=0.90, B4=0.95 로 바꾼 텐서</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>keep2 <span class="op">=</span> nms(boxes, scores2, <span class="fl">0.5</span>)</span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'원래  :'</span>, [names[i] <span class="cf">for</span> i <span class="kw">in</span> nms(boxes, scores, <span class="fl">0.5</span>).tolist()])</span>
 <span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'바꾼 뒤:'</span>, [names[i] <span class="cf">for</span> i <span class="kw">in</span> keep2.tolist()])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="f2dd64e1" class="cell" data-execution_count="18">
+<div id="176c6b75" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>scores2 <span class="op">=</span> torch.tensor([<span class="fl">0.90</span>, <span class="fl">0.85</span>, <span class="fl">0.60</span>, <span class="fl">0.95</span>, <span class="fl">0.75</span>])</span>
@@ -689,7 +689,7 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 <section id="사전학습-탐지기의-출력을-직접-본다" class="level1">
 <h1>4. 사전학습 탐지기의 출력을 직접 본다</h1>
 <p>분류기의 출력은 클래스 확률 <span class="math inline">\(K\)</span>개로 <strong>고정</strong>이지만, 탐지기의 출력은 <strong>가변 개수</strong>다.</p>
-<div id="ad149837" class="cell" data-execution_count="19">
+<div id="62b6e972" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, urllib.request</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> transforms</span>
@@ -708,7 +708,7 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 <pre><code>이미지 크기 : (1542, 2364)</code></pre>
 </div>
 </div>
-<div id="9cae97d2" class="cell" data-execution_count="20">
+<div id="452e388a" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> FasterRCNN_ResNet50_FPN_Weights.DEFAULT</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>detector <span class="op">=</span> fasterrcnn_resnet50_fpn(weights<span class="op">=</span>weights).<span class="bu">eval</span>()</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>CATEGORIES <span class="op">=</span> weights.meta[<span class="st">'categories'</span>]</span>
@@ -719,7 +719,7 @@ torchvision.ops.nms   : ['B1', 'B4']</code></pre>
 클래스 일부      : ['person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light']</code></pre>
 </div>
 </div>
-<div id="24e4e05c" class="cell" data-execution_count="21">
+<div id="02835f5c" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> transforms.functional.to_tensor(img)      <span class="co"># 탐지 모델은 0~1 텐서를 그대로 받는다</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'입력 shape :'</span>, <span class="bu">tuple</span>(x.shape))</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -757,7 +757,7 @@ scores : (52,)
 </div>
 <section id="신뢰도-임계값" class="level2">
 <h2 class="anchored" data-anchor-id="신뢰도-임계값">4-1. 신뢰도 임계값</h2>
-<div id="1b04b748" class="cell" data-execution_count="22">
+<div id="1175763d" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> [<span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>]:</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> out[<span class="st">'scores'</span>] <span class="op">&gt;</span> t</span>
@@ -779,7 +779,7 @@ scores : (52,)
 </section>
 <section id="박스를-그려-본다" class="level2">
 <h2 class="anchored" data-anchor-id="박스를-그려-본다">4-2. 박스를 그려 본다</h2>
-<div id="3a265ec9" class="cell" data-execution_count="23">
+<div id="e59ad39c" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw(img, out, thr, title, ax):</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    ax.imshow(img)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
@@ -810,7 +810,7 @@ scores : (52,)
 <section id="학습하지-않은-물체는-어떻게-되는가" class="level2">
 <h2 class="anchored" data-anchor-id="학습하지-않은-물체는-어떻게-되는가">4-3. 학습하지 않은 물체는 어떻게 되는가</h2>
 <p>이 탐지기는 COCO의 <strong>80개 클래스</strong>만 배웠다. 그 목록에 없는 물체를 보여 주면?</p>
-<div id="576896cc" class="cell" data-execution_count="24">
+<div id="274d45e0" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>img2 <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">'../data/pottery.jpg'</span>).convert(<span class="st">'RGB'</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    out2 <span class="op">=</span> detector([transforms.functional.to_tensor(img2)])[<span class="dv">0</span>]</span>
@@ -858,7 +858,7 @@ scores : (52,)
 <section id="정밀도와-재현율" class="level1">
 <h1>5. 정밀도와 재현율</h1>
 <p>탐지에서는 <strong>박스가 맞아야</strong> 맞은 것으로 친다. 기준은 IoU다.</p>
-<div id="102fa65b" class="cell" data-execution_count="25">
+<div id="af810f82" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> match(pred_boxes, gt_boxes, thr<span class="op">=</span><span class="fl">0.5</span>):</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""예측 박스를 정답 박스에 매칭 → TP, FP, FN"""</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    matched <span class="op">=</span> <span class="bu">set</span>()</span>
@@ -878,7 +878,7 @@ scores : (52,)
 <span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    fn <span class="op">=</span> <span class="bu">len</span>(gt_boxes) <span class="op">-</span> tp</span>
 <span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> tp, fp, fn</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3dcb1d78" class="cell" data-execution_count="26">
+<div id="d18246ca" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>gt <span class="op">=</span> [(<span class="fl">10.</span>, <span class="fl">10.</span>, <span class="fl">60.</span>, <span class="fl">60.</span>), (<span class="fl">100.</span>, <span class="fl">100.</span>, <span class="fl">160.</span>, <span class="fl">160.</span>), (<span class="fl">200.</span>, <span class="fl">30.</span>, <span class="fl">250.</span>, <span class="fl">90.</span>)]</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>pred <span class="op">=</span> [(<span class="fl">12.</span>, <span class="fl">12.</span>, <span class="fl">62.</span>, <span class="fl">62.</span>),        <span class="co"># 정답 1과 잘 맞음</span></span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>        (<span class="fl">105.</span>, <span class="fl">98.</span>, <span class="fl">165.</span>, <span class="fl">158.</span>),     <span class="co"># 정답 2와 잘 맞음</span></span>
@@ -913,7 +913,7 @@ scores : (52,)
 <p>정확도 하나로 정할 수 있는 문제가 아니다.</p>
 </div>
 </div>
-<div id="e871a655" class="cell" data-execution_count="27">
+<div id="93d89e60" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 임계값을 바꾸며 정밀도-재현율이 어떻게 움직이는지</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> thr <span class="kw">in</span> [<span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>]:</span>
@@ -939,7 +939,7 @@ scores : (52,)
 <section id="문제-만들기" class="level2">
 <h2 class="anchored" data-anchor-id="문제-만들기">5-5-1. 문제 만들기</h2>
 <p>FashionMNIST 물체 하나를 <strong>64×64 빈 화면의 임의 위치에 임의 크기로</strong> 붙인다. 그 물체를 감싸는 박스 좌표가 정답이다.</p>
-<div id="5d076c94" class="cell" data-execution_count="28">
+<div id="d31a9837" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> datasets, transforms</span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
@@ -977,7 +977,7 @@ scores : (52,)
 첫 박스 [21.0, 0.0, 56.0, 35.0]</code></pre>
 </div>
 </div>
-<div id="252c6dd6" class="cell" data-execution_count="29">
+<div id="fd751ce9" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="fl">2.6</span>))</span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, i <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">range</span>(<span class="dv">5</span>)):</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    axes[ax].imshow(X_tr[i, <span class="dv">0</span>], cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
@@ -997,7 +997,7 @@ scores : (52,)
 </section>
 <section id="모형-출력이-숫자-4개" class="level2">
 <h2 class="anchored" data-anchor-id="모형-출력이-숫자-4개">5-5-2. 모형 — 출력이 숫자 4개</h2>
-<div id="5c66570e" class="cell" data-execution_count="30">
+<div id="9059f486" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>locator <span class="op">=</span> nn.Sequential(</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    nn.Conv2d(<span class="dv">1</span>, <span class="dv">16</span>, <span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>), nn.ReLU(), nn.MaxPool2d(<span class="dv">2</span>),    <span class="co"># 64 → 32</span></span>
@@ -1030,7 +1030,7 @@ scores : (52,)
 </section>
 <section id="학습-손실은-좌표의-오차" class="level2">
 <h2 class="anchored" data-anchor-id="학습-손실은-좌표의-오차">5-5-3. 학습 — 손실은 좌표의 오차</h2>
-<div id="bc3ba556" class="cell" data-execution_count="31">
+<div id="265a7062" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(TensorDataset(X_tr, B_tr <span class="op">/</span> CANVAS), batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(locator.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.SmoothL1Loss()          <span class="co"># 큰 오차에 덜 휘둘리는 회귀 손실</span></span>
@@ -1068,13 +1068,13 @@ epoch  9  검증 평균 IoU 0.8199   IoU&gt;=0.5 비율 1.000
 epoch 10  검증 평균 IoU 0.8445   IoU&gt;=0.5 비율 1.000
 epoch 11  검증 평균 IoU 0.8595   IoU&gt;=0.5 비율 1.000
 
-학습 시간 23초</code></pre>
+학습 시간 16초</code></pre>
 </div>
 </div>
 </section>
 <section id="iou로-평가한다" class="level2">
 <h2 class="anchored" data-anchor-id="iou로-평가한다">5-5-4. IoU로 평가한다</h2>
-<div id="c9b9dd80" class="cell" data-execution_count="32">
+<div id="2d3dc528" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">5.8</span>, <span class="fl">3.4</span>))</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>plt.plot(hist, <span class="st">'o-'</span>, ms<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="fl">0.5</span>, color<span class="op">=</span><span class="st">'red'</span>, ls<span class="op">=</span><span class="st">'--'</span>, lw<span class="op">=</span><span class="dv">1</span>, label<span class="op">=</span><span class="st">'IoU = 0.5'</span>)</span>
@@ -1112,7 +1112,7 @@ IoU &gt;= 0.75     : 0.936</code></pre>
 </section>
 <section id="예측-박스를-그려-본다" class="level2">
 <h2 class="anchored" data-anchor-id="예측-박스를-그려-본다">5-5-5. 예측 박스를 그려 본다</h2>
-<div id="1154b71a" class="cell" data-execution_count="33">
+<div id="c04d5ba3" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">5</span>, figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">5</span>))</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> torch.argsort(v)                          <span class="co"># IoU가 낮은 것부터</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>picks <span class="op">=</span> <span class="bu">list</span>(order[<span class="op">-</span><span class="dv">5</span>:].tolist()) <span class="op">+</span> <span class="bu">list</span>(order[:<span class="dv">5</span>].tolist())</span>
@@ -1147,12 +1147,12 @@ IoU &gt;= 0.75     : 0.936</code></pre>
 <p><code>SmoothL1Loss</code> 대신 <code>nn.MSELoss()</code> 로 같은 학습을 돌려 평균 IoU를 비교하시오.</p>
 </div>
 </div>
-<div id="fe6b1e26" class="cell" data-execution_count="34">
+<div id="faf85d99" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>locator2 <span class="op">=</span> <span class="va">None</span>                    <span class="co"># ← 같은 구조로 새로 만드세요</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 위 5-5-3의 학습 루프를 criterion만 바꿔 돌리세요</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a85e63a9" class="cell" data-execution_count="35">
+<div id="aa879c1f" class="cell" data-execution_count="35">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
@@ -1241,7 +1241,7 @@ MSE      : 테스트 평균 IoU 0.8575</code></pre>
 <section id="스스로-확인해-보기" class="level2">
 <h2 class="anchored" data-anchor-id="스스로-확인해-보기">스스로 확인해 보기</h2>
 <p>아래 결과를 먼저 예상한 뒤 실행해서 대조한다.</p>
-<div id="d976831d" class="cell" data-execution_count="36">
+<div id="e3d31759" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> torch.tensor([[<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">10.</span>, <span class="fl">10.</span>],</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">5.</span>, <span class="fl">5.</span>, <span class="fl">15.</span>, <span class="fl">15.</span>],</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">0.</span>, <span class="fl">0.</span>, <span class="fl">10.</span>, <span class="fl">10.</span>],</span>
@@ -1271,7 +1271,7 @@ NMS thr=0.1 : [0, 3]
 </section>
 <section id="다음-실습" class="level2">
 <h2 class="anchored" data-anchor-id="다음-실습">다음 실습</h2>
-<p><a href="../labs/lab10.html">실습 10주차: 텍스트를 숫자로</a> — 이미지를 떠나 텍스트로 간다. 토큰화와 임베딩을 직접 만들어 본다.</p>
+<p><a href="../labs/lab10.html">실습 10: 텍스트를 숫자로</a> — 이미지를 떠나 텍스트로 간다. 토큰화와 임베딩을 직접 만들어 본다.</p>
 
 
 </section>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>실습 7주차: 전이학습 — 사진 몇백 장으로 학습시키기 – 딥러닝</title>
+<title>실습 7: 전이학습 — 사진 몇백 장으로 학습시키기 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -228,7 +228,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">실습 7주차: 전이학습 — 사진 몇백 장으로 학습시키기</h1>
+<h1 class="title">실습 7: 전이학습 — 사진 몇백 장으로 학습시키기</h1>
 </div>
 
 
@@ -348,7 +348,7 @@ window.Quarto = {
   val/
     ants/ ...
     bees/ ...</code></pre>
-<div id="e81e413c" class="cell" data-execution_count="1">
+<div id="8a029085" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, zipfile, urllib.request</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -372,7 +372,7 @@ window.Quarto = {
 <pre><code>['train', 'val']</code></pre>
 </div>
 </div>
-<div id="6e77fd0e" class="cell" data-execution_count="2">
+<div id="af0a9ac3" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> datasets.ImageFolder(ROOT <span class="op">+</span> <span class="st">'/train'</span>)      <span class="co"># transform 없이 먼저 살펴본다</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'클래스        :'</span>, raw.classes)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'클래스→번호   :'</span>, raw.class_to_idx)</span>
@@ -386,7 +386,7 @@ window.Quarto = {
 </div>
 </div>
 <p>폴더 이름이 <strong>알파벳 순으로 정렬되어</strong> 번호가 매겨진다. <code>ants</code> → 0, <code>bees</code> → 1.</p>
-<div id="4bb7a766" class="cell" data-execution_count="3">
+<div id="48443592" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">200</span>]:</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    img, lab <span class="op">=</span> raw[i]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">:3d}</span><span class="ss">  </span><span class="sc">{</span>img<span class="sc">.</span>size<span class="sc">}</span><span class="ss">  </span><span class="sc">{</span>raw<span class="sc">.</span>classes[lab]<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -411,7 +411,7 @@ window.Quarto = {
 <p><code>raw</code> 의 모든 사진 크기를 조사해 <strong>가장 작은 사진과 가장 큰 사진</strong>을 찾으시오. 프로젝트에서 직접 찍은 사진도 이렇게 먼저 확인한다.</p>
 </div>
 </div>
-<div id="7b500ebd" class="cell" data-execution_count="4">
+<div id="879814f2" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← [(w, h), ...] 리스트를 만드세요</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> sizes <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="kw">and</span> <span class="bu">len</span>(sizes) <span class="op">==</span> <span class="bu">len</span>(raw)</span>
@@ -419,7 +419,7 @@ window.Quarto = {
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가장 작은 :'</span>, sizes[<span class="bu">int</span>(np.argmin(areas))])</span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'가장 큰   :'</span>, sizes[<span class="bu">int</span>(np.argmax(areas))])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="c116eb47" class="cell" data-execution_count="5">
+<div id="4017b934" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> [raw[i][<span class="dv">0</span>].size <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(raw))]</span>
@@ -435,7 +435,7 @@ window.Quarto = {
 평균 가로x세로: 484 x 385</code></pre>
 </div>
 </div>
-<div id="b6f610bd" class="cell" data-execution_count="6">
+<div id="d9048bef" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">6</span>, figsize<span class="op">=</span>(<span class="dv">14</span>, <span class="fl">2.6</span>))</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax, i <span class="kw">in</span> <span class="bu">zip</span>(axes, [<span class="dv">0</span>, <span class="dv">40</span>, <span class="dv">80</span>, <span class="dv">130</span>, <span class="dv">180</span>, <span class="dv">230</span>]):</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    img, lab <span class="op">=</span> raw[i]</span>
@@ -454,7 +454,7 @@ window.Quarto = {
 <section id="전처리-사전학습-모델에-맞추기" class="level1">
 <h1>2. 전처리 — 사전학습 모델에 맞추기</h1>
 <p>Ch08의 <strong>반드시 맞춰야 할 두 가지</strong>를 코드로 옮긴다.</p>
-<div id="cbc87990" class="cell" data-execution_count="7">
+<div id="8ab1a545" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>IMAGENET_MEAN <span class="op">=</span> (<span class="fl">0.485</span>, <span class="fl">0.456</span>, <span class="fl">0.406</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>IMAGENET_STD  <span class="op">=</span> (<span class="fl">0.229</span>, <span class="fl">0.224</span>, <span class="fl">0.225</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -496,7 +496,7 @@ window.Quarto = {
 <section id="분할-훈련-검증-테스트" class="level1">
 <h1>3. 분할 — 훈련 / 검증 / 테스트</h1>
 <p>이 데이터셋은 <code>train</code> 과 <code>val</code> 두 폴더로 나뉘어 있다. <strong><code>train</code> 폴더를 다시 훈련/검증으로 나누고, <code>val</code> 폴더는 테스트로 남긴다.</strong></p>
-<div id="09a054f6" class="cell" data-execution_count="8">
+<div id="5ef0861d" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.array(raw.targets)</span>
@@ -533,7 +533,7 @@ window.Quarto = {
 <h1>4. 데이터 증강</h1>
 <section id="증강은-훈련-세트에만" class="level2">
 <h2 class="anchored" data-anchor-id="증강은-훈련-세트에만">4-1. 증강은 훈련 세트에만</h2>
-<div id="c259d3bc" class="cell" data-execution_count="9">
+<div id="df0aae5d" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tf_aug <span class="op">=</span> transforms.Compose([</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    transforms.RandomResizedCrop(<span class="dv">224</span>, scale<span class="op">=</span>(<span class="fl">0.7</span>, <span class="fl">1.0</span>)),</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    transforms.RandomHorizontalFlip(),</span>
@@ -559,7 +559,7 @@ window.Quarto = {
 </section>
 <section id="같은-사진에-증강을-여러-번-적용해-본다" class="level2">
 <h2 class="anchored" data-anchor-id="같은-사진에-증강을-여러-번-적용해-본다">4-2. 같은 사진에 증강을 여러 번 적용해 본다</h2>
-<div id="8e9f94bb" class="cell" data-execution_count="10">
+<div id="824d9dc1" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> unnorm(t):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> np.array(IMAGENET_MEAN)<span class="op">;</span> s <span class="op">=</span> np.array(IMAGENET_STD)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (t.permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>).numpy() <span class="op">*</span> s <span class="op">+</span> m).clip(<span class="dv">0</span>, <span class="dv">1</span>)</span>
@@ -583,7 +583,7 @@ window.Quarto = {
 </section>
 <section id="데이터로더" class="level2">
 <h2 class="anchored" data-anchor-id="데이터로더">4-3. 데이터로더</h2>
-<div id="18e037c6" class="cell" data-execution_count="11">
+<div id="46391983" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_loaders(aug<span class="op">=</span><span class="va">True</span>, batch_size<span class="op">=</span><span class="dv">32</span>):</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    tf_tr <span class="op">=</span> tf_aug <span class="cf">if</span> aug <span class="cf">else</span> tf_eval</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    ds_tr <span class="op">=</span> Subset(datasets.ImageFolder(ROOT <span class="op">+</span> <span class="st">'/train'</span>, transform<span class="op">=</span>tf_tr), tr_idx)</span>
@@ -603,7 +603,7 @@ window.Quarto = {
 </section>
 <section id="사전학습-모델-열어보기" class="level1">
 <h1>5. 사전학습 모델 열어보기</h1>
-<div id="b6b39589" class="cell" data-execution_count="12">
+<div id="64cc6b9f" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>resnet <span class="op">=</span> models.resnet18(weights<span class="op">=</span>models.ResNet18_Weights.IMAGENET1K_V1)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> n_params(m, only_trainable<span class="op">=</span><span class="va">False</span>):</span>
@@ -620,7 +620,7 @@ window.Quarto = {
 </div>
 </div>
 <p><code>fc</code> 바로 앞이 GAP이다. Ch07에서 본 그대로 — 마지막 특성 맵을 채널마다 평균 하나로 줄여 <strong>512개</strong>의 숫자로 만든 뒤, 그것을 1000개 클래스로 분류한다.</p>
-<div id="b19abc81" class="cell" data-execution_count="13">
+<div id="eb8c3c37" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> torch.zeros(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">224</span>, <span class="dv">224</span>)</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, layer <span class="kw">in</span> <span class="bu">list</span>(resnet.named_children()):</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    h <span class="op">=</span> layer(h) <span class="cf">if</span> name <span class="op">!=</span> <span class="st">'fc'</span> <span class="cf">else</span> layer(h.flatten(<span class="dv">1</span>))</span>
@@ -644,7 +644,7 @@ fc        → (1000,)</code></pre>
 <h1>6. 분류기 교체와 동결</h1>
 <section id="동결-requires_grad-false" class="level2">
 <h2 class="anchored" data-anchor-id="동결-requires_grad-false">6-1. 동결 = <code>requires_grad = False</code></h2>
-<div id="46512120" class="cell" data-execution_count="14">
+<div id="15c92185" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_frozen(n_classes<span class="op">=</span><span class="dv">2</span>):</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> models.resnet18(weights<span class="op">=</span>models.ResNet18_Weights.IMAGENET1K_V1)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> p <span class="kw">in</span> m.parameters():</span>
@@ -669,7 +669,7 @@ fc        → (1000,)</code></pre>
 </section>
 <section id="ch08의-손계산을-코드로-resnet-50-7클래스" class="level2">
 <h2 class="anchored" data-anchor-id="ch08의-손계산을-코드로-resnet-50-7클래스">6-2. Ch08의 손계산을 코드로 — ResNet-50, 7클래스</h2>
-<div id="d135136f" class="cell" data-execution_count="15">
+<div id="880f8d7e" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>r50 <span class="op">=</span> models.resnet50(weights<span class="op">=</span><span class="va">None</span>)          <span class="co"># 가중치는 필요 없다, 구조만 센다</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>total50 <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> r50.parameters())</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>head <span class="op">=</span> <span class="dv">2048</span> <span class="op">*</span> <span class="dv">7</span> <span class="op">+</span> <span class="dv">7</span></span>
@@ -696,7 +696,7 @@ fc        → (1000,)</code></pre>
 <p>프로젝트는 클래스가 <strong>3~5개</strong>다. ResNet-18을 동결하고 클래스 <strong>4개</strong>로 분류할 때 학습되는 파라미터 수를 <strong>먼저 계산한 뒤</strong> 확인하시오.</p>
 </div>
 </div>
-<div id="a1cf48fb" class="cell" data-execution_count="16">
+<div id="3ac93dec" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="va">None</span>        <span class="co"># ← 예상 파라미터 수</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>m4 <span class="op">=</span> build_frozen(n_classes<span class="op">=</span><span class="dv">4</span>)</span>
@@ -704,7 +704,7 @@ fc        → (1000,)</code></pre>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> my_answer <span class="op">==</span> real, <span class="ss">f'다릅니다. 실제 </span><span class="sc">{</span>real<span class="sc">}</span><span class="ss"> — 공식은 512 x 클래스수 + 클래스수'</span></span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>, real)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="a52b0511" class="cell" data-execution_count="17">
+<div id="4a108c31" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="dv">512</span> <span class="op">*</span> <span class="dv">4</span> <span class="op">+</span> <span class="dv">4</span></span>
@@ -719,7 +719,7 @@ fc        → (1000,)</code></pre>
 </section>
 <section id="층별로-얼마나-얼었는지-확인" class="level2">
 <h2 class="anchored" data-anchor-id="층별로-얼마나-얼었는지-확인">6-3. 층별로 얼마나 얼었는지 확인</h2>
-<div id="bfdb5617" class="cell" data-execution_count="18">
+<div id="1e02c9c1" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rows <span class="op">=</span> []</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, module <span class="kw">in</span> frozen.named_children():</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    tot <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> module.parameters())</span>
@@ -744,7 +744,7 @@ layer4 8,393,728     0
 <section id="세-가지-전략을-비교한다" class="level1">
 <h1>7. 세 가지 전략을 비교한다</h1>
 <p>같은 데이터, 같은 학습 루프, <strong>모델만 바꾼다.</strong></p>
-<div id="f30386f9" class="cell" data-execution_count="19">
+<div id="2e6ee098" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> copy, time</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(model, loader, criterion, optimizer<span class="op">=</span><span class="va">None</span>):</span>
@@ -786,7 +786,7 @@ layer4 8,393,728     0
 </div>
 <section id="처음부터-학습하는-작은-cnn" class="level2">
 <h2 class="anchored" data-anchor-id="처음부터-학습하는-작은-cnn">7-1. 처음부터 학습하는 작은 CNN</h2>
-<div id="a52ccb6b" class="cell" data-execution_count="20">
+<div id="23e6bab7" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SmallCNN(nn.Module):</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, n_classes<span class="op">=</span><span class="dv">2</span>):</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -809,17 +809,17 @@ layer4 8,393,728     0
 </section>
 <section id="동결-전이학습" class="level2">
 <h2 class="anchored" data-anchor-id="동결-전이학습">7-2. 동결 전이학습</h2>
-<div id="901c98c1" class="cell" data-execution_count="21">
+<div id="ce705706" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>m_frozen, h_frozen, b_frozen <span class="op">=</span> fit(build_frozen(), loaders_aug, lr<span class="op">=</span><span class="fl">1e-3</span>, tag<span class="op">=</span><span class="st">'동결 (ResNet-18)'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>동결 (ResNet-18)           best epoch  6  val acc 0.9508  (18s, 학습 파라미터 1,026)</code></pre>
+<pre><code>동결 (ResNet-18)           best epoch  6  val acc 0.9508  (19s, 학습 파라미터 1,026)</code></pre>
 </div>
 </div>
 </section>
 <section id="전체-미세조정-학습률을-작게" class="level2">
 <h2 class="anchored" data-anchor-id="전체-미세조정-학습률을-작게">7-3. 전체 미세조정 (학습률을 작게)</h2>
-<div id="725cec1e" class="cell" data-execution_count="22">
+<div id="9cc51d09" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_finetune(n_classes<span class="op">=</span><span class="dv">2</span>):</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    m <span class="op">=</span> models.resnet18(weights<span class="op">=</span>models.ResNet18_Weights.IMAGENET1K_V1)</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    m.fc <span class="op">=</span> nn.Linear(m.fc.in_features, n_classes)</span>
@@ -834,7 +834,7 @@ layer4 8,393,728     0
 </section>
 <section id="학습커브를-겹쳐-본다" class="level2">
 <h2 class="anchored" data-anchor-id="학습커브를-겹쳐-본다">7-4. 학습커브를 겹쳐 본다</h2>
-<div id="4655ea0f" class="cell" data-execution_count="23">
+<div id="351d8c32" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="fl">3.6</span>))</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, h <span class="kw">in</span> [(<span class="st">'scratch'</span>, h_scratch), (<span class="st">'frozen'</span>, h_frozen), (<span class="st">'finetune'</span>, h_ft)]:</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    axes[<span class="dv">0</span>].plot(h[<span class="st">'va'</span>], label<span class="op">=</span>name)</span>
@@ -851,7 +851,7 @@ layer4 8,393,728     0
 </div>
 </div>
 </div>
-<div id="7772a7f7" class="cell" data-execution_count="24">
+<div id="37d700bd" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> pd.DataFrame([</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    {<span class="st">'전략'</span>: <span class="st">'처음부터 (SmallCNN)'</span>, <span class="st">'학습 파라미터'</span>: <span class="ss">f'</span><span class="sc">{</span>n_params(SmallCNN(), <span class="va">True</span>)<span class="sc">:,}</span><span class="ss">'</span>,</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>     <span class="st">'최고 검증 정확도'</span>: <span class="bu">round</span>(<span class="bu">max</span>(h_scratch[<span class="st">'va_acc'</span>]), <span class="dv">4</span>)},</span>
@@ -886,7 +886,7 @@ layer4 8,393,728     0
 <h1>8. 특성 캐싱 — 동결이면 특성은 한 번만 뽑으면 된다</h1>
 <p>동결 전이학습에서는 특성 추출기가 <strong>전혀 변하지 않는다.</strong> 그런데도 매 에폭 같은 사진을 같은 ResNet에 통과시키고 있다. 낭비다.</p>
 <p><strong>특성을 한 번만 뽑아 저장</strong>해 두면, 그다음은 512차원 벡터로 하는 선형 분류일 뿐이다.</p>
-<div id="36e96bfc" class="cell" data-execution_count="25">
+<div id="155b9a19" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="at">@torch.no_grad</span>()</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_features(backbone, loader):</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    backbone.<span class="bu">eval</span>()</span>
@@ -910,11 +910,11 @@ layer4 8,393,728     0
 <span id="cb43-21"><a href="#cb43-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'특성 추출 </span><span class="sc">{</span>time<span class="sc">.</span>time()<span class="op">-</span>t0<span class="sc">:.1f}</span><span class="ss">초'</span>)</span>
 <span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'훈련 특성 :'</span>, <span class="bu">tuple</span>(Ftr.shape), <span class="st">'  검증 :'</span>, <span class="bu">tuple</span>(Fva.shape), <span class="st">'  테스트 :'</span>, <span class="bu">tuple</span>(Fte.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>특성 추출 2.9초
+<pre><code>특성 추출 3.2초
 훈련 특성 : (183, 512)   검증 : (61, 512)   테스트 : (153, 512)</code></pre>
 </div>
 </div>
-<div id="cee09720" class="cell" data-execution_count="26">
+<div id="524bf09b" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_head(Ftr, ytr, Fva, yva, epochs<span class="op">=</span><span class="dv">200</span>, lr<span class="op">=</span><span class="fl">1e-2</span>, seed<span class="op">=</span><span class="dv">42</span>):</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    torch.manual_seed(seed)</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    head <span class="op">=</span> nn.Linear(Ftr.shape[<span class="dv">1</span>], <span class="dv">2</span>)</span>
@@ -962,7 +962,7 @@ layer4 8,393,728     0
 <section id="조용히-망가지는-지점-정규화-통계를-빼먹으면" class="level1">
 <h1>9. 조용히 망가지는 지점 — 정규화 통계를 빼먹으면</h1>
 <p>캐싱 덕분에 이 실험을 몇 초 만에 할 수 있다. <strong>정규화만 빼고</strong> 특성을 다시 뽑는다.</p>
-<div id="dc5d578f" class="cell" data-execution_count="27">
+<div id="6b955674" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tf_nonorm <span class="op">=</span> transforms.Compose([</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    transforms.Resize((<span class="dv">224</span>, <span class="dv">224</span>)),</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),                 <span class="co"># Normalize 없음</span></span>
@@ -990,7 +990,7 @@ layer4 8,393,728     0
 <p>에러는 하나도 나지 않았다. 코드는 멀쩡히 돌았고 <strong>정확도만 달라졌다.</strong> 사전학습 모델을 쓸 때 그 모델이 요구하는 전처리를 문서에서 확인해야 하는 이유다.</p>
 <section id="미세조정-학습률-큰-값을-쓰면" class="level2">
 <h2 class="anchored" data-anchor-id="미세조정-학습률-큰-값을-쓰면">9-1. 미세조정 학습률 — 큰 값을 쓰면</h2>
-<div id="875c6556" class="cell" data-execution_count="28">
+<div id="76354718" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>_, h_ft_big, _ <span class="op">=</span> fit(build_finetune(), loaders_aug, lr<span class="op">=</span><span class="fl">1e-3</span>, epochs<span class="op">=</span><span class="dv">8</span>, tag<span class="op">=</span><span class="st">'미세조정 lr=1e-3'</span>)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1003,7 +1003,7 @@ layer4 8,393,728     0
 <span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'lr=1e-4 최고 검증 정확도 : </span><span class="sc">{</span><span class="bu">max</span>(h_ft[<span class="st">"va_acc"</span>])<span class="sc">:.4f}</span><span class="ss">'</span>)</span>
 <span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'lr=1e-3 최고 검증 정확도 : </span><span class="sc">{</span><span class="bu">max</span>(h_ft_big[<span class="st">"va_acc"</span>])<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>미세조정 lr=1e-3             best epoch  7  val acc 0.8361  (18s, 학습 파라미터 11,177,538)</code></pre>
+<pre><code>미세조정 lr=1e-3             best epoch  5  val acc 0.8197  (19s, 학습 파라미터 11,177,538)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1014,7 +1014,7 @@ layer4 8,393,728     0
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>lr=1e-4 최고 검증 정확도 : 0.9344
-lr=1e-3 최고 검증 정확도 : 0.8361</code></pre>
+lr=1e-3 최고 검증 정확도 : 0.8197</code></pre>
 </div>
 </div>
 <p>사전학습 가중치는 이미 좋은 자리에 있다. 큰 보폭은 그 자리를 흔들어 놓는다. 미세조정의 학습률은 처음부터 학습할 때의 <span class="math inline">\(1/10 \sim 1/100\)</span> 로 잡는다.</p>
@@ -1024,7 +1024,7 @@ lr=1e-3 최고 검증 정확도 : 0.8361</code></pre>
 <section id="보고-테스트-세트를-여기서-딱-한-번" class="level1">
 <h1>10. 보고 — 테스트 세트를 여기서 딱 한 번</h1>
 <p>검증 정확도가 가장 높았던 전략 하나를 고른 뒤, 그 모델로만 테스트한다.</p>
-<div id="abcfcb21" class="cell" data-execution_count="29">
+<div id="539a035b" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>best_name, best_model <span class="op">=</span> <span class="bu">max</span>(</span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">'동결'</span>, m_frozen), (<span class="st">'미세조정'</span>, m_ft), (<span class="st">'처음부터'</span>, m_scratch)],</span>
@@ -1042,7 +1042,7 @@ lr=1e-3 최고 검증 정확도 : 0.8361</code></pre>
 </div>
 <section id="클래스별로-나누어-보고한다" class="level2">
 <h2 class="anchored" data-anchor-id="클래스별로-나누어-보고한다">10-1. 클래스별로 나누어 보고한다</h2>
-<div id="23015c1a" class="cell" data-execution_count="30">
+<div id="02663b28" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>best_model.<span class="bu">eval</span>()</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>preds, trues <span class="op">=</span> [], []</span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
@@ -1082,7 +1082,7 @@ bees     83장 중  72장 정답  (0.867)</code></pre>
 </section>
 <section id="틀린-사진을-직접-본다" class="level2">
 <h2 class="anchored" data-anchor-id="틀린-사진을-직접-본다">10-2. 틀린 사진을 직접 본다</h2>
-<div id="bd538197" class="cell" data-execution_count="31">
+<div id="c6833eae" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>wrong <span class="op">=</span> np.where(preds <span class="op">!=</span> trues)[<span class="dv">0</span>][:<span class="dv">8</span>]</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">len</span>(wrong) <span class="op">==</span> <span class="dv">0</span>:</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'틀린 사진이 없다.'</span>)</span>
@@ -1115,14 +1115,14 @@ bees     83장 중  72장 정답  (0.867)</code></pre>
 <p>훈련 사진을 <strong>절반(약 91장)</strong> 으로 줄여 동결 전이학습을 다시 하고, 검증 정확도를 비교하시오. 특성 캐싱을 쓰면 몇 초면 끝난다. 데이터가 절반이면 성능은 얼마나 떨어지는가?</p>
 </div>
 </div>
-<div id="cf76451b" class="cell" data-execution_count="32">
+<div id="654ae9e6" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>half <span class="op">=</span> <span class="va">None</span>                <span class="co"># ← Ftr, ytr 의 앞 절반만 잘라내세요</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>_, acc_half, _ <span class="op">=</span> fit_head(...)</span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'전체 183장 : 검증 정확도'</span>, <span class="bu">round</span>(acc_cached, <span class="dv">4</span>))</span>
 <span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'절반  91장 : 검증 정확도'</span>, <span class="bu">round</span>(acc_half, <span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="bd10d195" class="cell" data-execution_count="33">
+<div id="2965b5bb" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> [<span class="dv">30</span>, <span class="dv">60</span>, <span class="dv">91</span>, <span class="dv">183</span>]:</span>
@@ -1232,7 +1232,7 @@ bees     83장 중  72장 정답  (0.867)</code></pre>
 <section id="스스로-확인해-보기" class="level2">
 <h2 class="anchored" data-anchor-id="스스로-확인해-보기">스스로 확인해 보기</h2>
 <p>아래 결과를 먼저 예상한 뒤 실행해서 대조한다.</p>
-<div id="ea544c0c" class="cell" data-execution_count="34">
+<div id="0e8e73b5" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> models.resnet18(weights<span class="op">=</span><span class="va">None</span>)</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'원래 fc :'</span>, m.fc)</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1263,7 +1263,8 @@ bees     83장 중  72장 정답  (0.867)</code></pre>
 </section>
 <section id="다음-실습" class="level2">
 <h2 class="anchored" data-anchor-id="다음-실습">다음 실습</h2>
-<p><a href="../labs/lab09.html">실습 9주차: 객체탐지 — IoU와 NMS</a> — “무엇인가”에서 “어디에 있는가”로 넘어간다. IoU와 NMS를 직접 구현한다.</p>
+<p><a href="../labs/lab10.html">실습 10: 텍스트를 숫자로 — 토큰화와 임베딩</a> — 이미지에서 텍스트로 넘어간다. 글자를 숫자로 바꾸는 방법만 새로 배우면, 학습 루프는 그대로다.</p>
+<p>객체탐지에 관심이 있다면 심화 자료 <a href="../labs/lab09.html">실습 9: 객체탐지 — IoU와 NMS</a>도 있다.</p>
 
 
 </section>

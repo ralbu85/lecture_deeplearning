@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>실습 5-1 · 사진 한 장은 어떤 숫자 배열인가 – 딥러닝</title>
+<title>실습 5-1 · 사진을 텐서로 만들고 콘볼루션을 손으로 계산하기 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -184,14 +184,15 @@ window.Quarto = {
   <ul>
   <li><a href="#이번-시간의-질문" id="toc-이번-시간의-질문" class="nav-link active" data-scroll-target="#이번-시간의-질문">🎯 이번 시간의 질문</a></li>
   <li><a href="#흑백-사진-한-장은-어떤-숫자인가" id="toc-흑백-사진-한-장은-어떤-숫자인가" class="nav-link" data-scroll-target="#흑백-사진-한-장은-어떤-숫자인가">1. 흑백 사진 한 장은 어떤 숫자인가</a></li>
-  <li><a href="#컬러-사진은-채널이-하나-더-있다" id="toc-컬러-사진은-채널이-하나-더-있다" class="nav-link" data-scroll-target="#컬러-사진은-채널이-하나-더-있다">2. 컬러 사진은 채널이 하나 더 있다</a></li>
+  <li><a href="#컬러-사진은-채널-축이-하나-더-있다" id="toc-컬러-사진은-채널-축이-하나-더-있다" class="nav-link" data-scroll-target="#컬러-사진은-채널-축이-하나-더-있다">2. 컬러 사진은 채널 축이 하나 더 있다</a></li>
   <li><a href="#신경망에-넣기-전-변환" id="toc-신경망에-넣기-전-변환" class="nav-link" data-scroll-target="#신경망에-넣기-전-변환">3. 신경망에 넣기 전 변환</a></li>
-  <li><a href="#배치로-꺼내면-n-c-h-w" id="toc-배치로-꺼내면-n-c-h-w" class="nav-link" data-scroll-target="#배치로-꺼내면-n-c-h-w">4. 배치로 꺼내면 <code>(N, C, H, W)</code></a></li>
-  <li><a href="#실습-과제-13분" id="toc-실습-과제-13분" class="nav-link" data-scroll-target="#실습-과제-13분">5. 실습 과제 (13분)</a>
+  <li><a href="#펼쳐서-넣으면-파라미터가-폭발한다" id="toc-펼쳐서-넣으면-파라미터가-폭발한다" class="nav-link" data-scroll-target="#펼쳐서-넣으면-파라미터가-폭발한다">4. 펼쳐서 넣으면 파라미터가 폭발한다</a></li>
+  <li><a href="#콘볼루션은-곱해서-더하며-한-칸씩-옮기는-것" id="toc-콘볼루션은-곱해서-더하며-한-칸씩-옮기는-것" class="nav-link" data-scroll-target="#콘볼루션은-곱해서-더하며-한-칸씩-옮기는-것">5. 콘볼루션은 곱해서 더하며 한 칸씩 옮기는 것</a></li>
+  <li><a href="#실습-과제-10분" id="toc-실습-과제-10분" class="nav-link" data-scroll-target="#실습-과제-10분">6. 실습 과제 (10분)</a>
   <ul class="collapse">
-  <li><a href="#과제-1-축-순서를-되돌려-그리기" id="toc-과제-1-축-순서를-되돌려-그리기" class="nav-link" data-scroll-target="#과제-1-축-순서를-되돌려-그리기">📝 과제 1 · 축 순서를 되돌려 그리기</a></li>
+  <li><a href="#과제-1-텐서를-그림으로-보기" id="toc-과제-1-텐서를-그림으로-보기" class="nav-link" data-scroll-target="#과제-1-텐서를-그림으로-보기">📝 과제 1 · 텐서를 그림으로 보기</a></li>
   <li><a href="#과제-2-224224-사진이면-파라미터는-몇-개인가" id="toc-과제-2-224224-사진이면-파라미터는-몇-개인가" class="nav-link" data-scroll-target="#과제-2-224224-사진이면-파라미터는-몇-개인가">📝 과제 2 · 224×224 사진이면 파라미터는 몇 개인가</a></li>
-  <li><a href="#과제-3-채널-평균으로-사진-고르기" id="toc-과제-3-채널-평균으로-사진-고르기" class="nav-link" data-scroll-target="#과제-3-채널-평균으로-사진-고르기">📝 과제 3 · 채널 평균으로 사진 고르기</a></li>
+  <li><a href="#과제-3-세로-에지-커널" id="toc-과제-3-세로-에지-커널" class="nav-link" data-scroll-target="#과제-3-세로-에지-커널">📝 과제 3 · 세로 에지 커널</a></li>
   <li><a href="#과제-4-생각해-보기" id="toc-과제-4-생각해-보기" class="nav-link" data-scroll-target="#과제-4-생각해-보기">📝 과제 4 · 생각해 보기</a></li>
   </ul></li>
   <li><a href="#정리" id="toc-정리" class="nav-link" data-scroll-target="#정리">✅ 정리</a></li>
@@ -203,7 +204,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">실습 5-1 · 사진 한 장은 어떤 숫자 배열인가</h1>
+<h1 class="title">실습 5-1 · 사진을 텐서로 만들고 콘볼루션을 손으로 계산하기</h1>
 </div>
 
 
@@ -226,17 +227,17 @@ window.Quarto = {
 <figcaption>Open In Colab</figcaption>
 </figure>
 </div>
-<p><strong>⏱ 60분</strong> · 5주차 실습 1/2 — 사진을 숫자 배열과 텐서로 다루기 → (5-2) 콘볼루션을 코드로 만들고 작은 CNN을 학습시키기</p>
+<p><strong>⏱ 60분</strong> · 5주차 실습 1/2 — 사진을 <code>(N, C, H, W)</code> 텐서로 만들고 콘볼루션을 직접 계산하기 → (5-2) 콘볼루션 층으로 옷 사진을 분류하기</p>
 <section id="이번-시간의-질문" class="level2">
 <h2 class="anchored" data-anchor-id="이번-시간의-질문">🎯 이번 시간의 질문</h2>
 <p>지난 네 번의 실습에서 입력은 <code>(데이터 수, 변수 수)</code> 모양의 표였습니다. 오늘부터 입력은 <strong>사진</strong>입니다.</p>
 <blockquote class="blockquote">
-<p><strong>사진 한 장은 어떤 숫자 배열이고, 신경망에 넣으려면 어떤 모양으로 바꿔야 할까요?</strong></p>
+<p><strong>사진 한 장은 어떤 숫자 배열이고, 콘볼루션은 그 배열에 정확히 어떤 계산을 할까요?</strong></p>
 </blockquote>
-<p>이 질문에 답하려면 사진을 열어 픽셀 값을 보고, 컬러의 채널을 분해하고, PyTorch가 요구하는 축 순서로 바꾸고, 표처럼 표준화해서 배치로 꺼내야 합니다. 마지막에 이론 5장의 파라미터 폭발을 코드로 확인합니다.</p>
+<p>앞 절반은 사진을 열어 픽셀 값을 보고, PyTorch가 요구하는 모양으로 바꿔 배치로 꺼냅니다. 뒤 절반은 이론 6장에서 손으로 계산한 콘볼루션을 코드로 한 칸씩 따라가 <code>F.conv2d</code>와 같은 값이 나오는지 확인합니다.</p>
 <p><strong>데이터:</strong> FashionMNIST(28×28 흑백 옷 사진 7만 장), CIFAR-10(32×32 컬러 사진 6만 장). 코드에서 내려받습니다.</p>
-<p><strong>이번 시간에 반복할 패턴:</strong> <code>np.array(img)</code>로 배열 만들기 · <code>.shape</code>와 슬라이싱으로 픽셀 보기 · <code>permute</code>로 축 순서 바꾸기 · <code>ToTensor</code>·<code>Normalize</code>·<code>Compose</code> · <code>DataLoader</code>에서 <code>(N, C, H, W)</code> 배치 꺼내기.</p>
-<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch05.html">Ch05 컴퓨터 비전과 이미지 데이터</a></p>
+<p><strong>이번 시간에 반복할 패턴:</strong> <code>np.array(img)</code>로 배열 만들기 · <code>ToTensor</code>로 <code>(C, H, W)</code>와 0~1 · <code>DataLoader</code>에서 <code>(N, C, H, W)</code> 배치 꺼내기 · 조각과 커널을 곱해서 더하기 → 이중 for문 → 함수로 조립 → <code>F.conv2d</code>.</p>
+<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch05.html">Ch05 컴퓨터 비전과 이미지 데이터</a> · <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch06.html">Ch06 콘볼루션 연산</a></p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -273,21 +274,27 @@ window.Quarto = {
 </table>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>교수자 메모 (실습본에는 없음).</strong> 60분 운영: 준비·질문 5분 → 1절 흑백 한 장 10분 → 2절 컬러와 채널·축 순서 12분 → 3절 변환 파이프라인 12분 → 4절 배치와 파라미터 폭발 8분 → 📝 과제 13분. ✅ 숫자: (28, 28) uint8 0~255 · Ankle boot · CIFAR (32, 32, 3) frog · 채널 평균 141.2/105.1/64.0 · 첫 픽셀 정규화 -0.5373 · 배치 (64, 3, 32, 32) · 펼친 길이 3,072 · Linear 파라미터 393,344.</p>
+<p><strong>교수자 메모 (실습본에는 없음).</strong> 60분 운영: 준비·질문 4분 → 1절 흑백 한 장 6분 → 2절 컬러와 채널 5분 → 3절 ToTensor와 배치 8분 → 4절 파라미터 폭발 5분 → 5절 콘볼루션 손 계산 20분 → 📝 과제 12분. ✅ 숫자: (28, 28) uint8 0~255 · Ankle boot · CIFAR (32, 32, 3) frog · ToTensor 첫 픽셀 [59 62 63] → 0.2314/0.2431/0.2471 · 배치 (64, 3, 32, 32) · Linear(3072→256) 786,688 · 2채널 예제 첫 칸 5, 둘째 칸 6, 전체 [[5, 6], [2, 5]] (6장과 같이 편향 0) · 과제 224×224 → 38,535,424 · 세로 에지 [[30, 30, 0] × 3]. 표준화(<code>Normalize</code>)는 여기서 다루지 않고 실습 6에서 CIFAR-10 훈련 통계로 처음 나온다.</p>
 </blockquote>
-<div id="4b4984ea" class="cell" data-execution_count="1">
+<div id="231259f0" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 두 데이터셋을 내려받습니다(처음 한 번은 1~2분).</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> datasets, transforms</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(linewidth<span class="op">=</span><span class="dv">140</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> datasets, transforms</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>fmnist <span class="op">=</span> datasets.FashionMNIST(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>cifar <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"준비 완료!"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>np.set_printoptions(linewidth<span class="op">=</span><span class="dv">140</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># CIFAR-10 원본 서버(토론토 대학)가 느려서 수업용 미러에서 받는다. 파일은 같다.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>datasets.CIFAR10.url <span class="op">=</span> <span class="st">'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/cifar-10-python.tar.gz'</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>fmnist <span class="op">=</span> datasets.FashionMNIST(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>cifar <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"준비 완료!"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Files already downloaded and verified
 준비 완료!</code></pre>
@@ -299,7 +306,7 @@ window.Quarto = {
 <section id="흑백-사진-한-장은-어떤-숫자인가" class="level2">
 <h2 class="anchored" data-anchor-id="흑백-사진-한-장은-어떤-숫자인가">1. 흑백 사진 한 장은 어떤 숫자인가</h2>
 <p><code>fmnist</code>는 사진과 정답의 쌍을 6만 개 담고 있습니다. 길이와 클래스 이름부터 봅니다.</p>
-<div id="834267bc" class="cell" data-execution_count="2">
+<div id="c112ac75" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(fmnist))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fmnist.classes)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -310,7 +317,7 @@ window.Quarto = {
 </div>
 <p>💬 <strong>결과 해설</strong> — 60,000장이고 클래스는 티셔츠부터 앵클부츠까지 <strong>10가지</strong>입니다. 각 사진에 클래스 번호가 정답으로 붙어 있습니다.</p>
 <p><code>fmnist[0]</code>은 사진 한 장과 정답 번호의 쌍입니다. 사진은 PIL 이미지이고, <code>np.array</code>로 숫자 배열이 됩니다.</p>
-<div id="7687496a" class="cell" data-execution_count="3">
+<div id="4b2e8f73" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>img, label <span class="op">=</span> fmnist[<span class="dv">0</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array(img)</span>
@@ -324,33 +331,19 @@ window.Quarto = {
 0 255</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 정답은 9번 <code>Ankle boot</code>입니다. 배열은 <code>(28, 28)</code>이고 값은 <strong>0부터 255까지의 정수</strong>(<code>uint8</code>)입니다. - 이론에서 본 대로 흑백 사진 한 장은 <code>(높이, 너비)</code> 행렬이고 칸 하나가 픽셀 하나입니다. - 0이 검정, 255가 흰색입니다.</p>
-<p>가운데 부분의 숫자를 그대로 출력합니다. <code>a[10:18, 8:20]</code>은 10~17행, 8~19열입니다.</p>
-<div id="984793d8" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a[<span class="dv">10</span>:<span class="dv">18</span>, <span class="dv">8</span>:<span class="dv">20</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[[  0   0   0   0   0 193 228 218 213 198 180 212]
- [  0   1   3   0  12 219 220 212 218 192 169 227]
- [  0   0   6   0  99 244 222 220 218 203 198 221]
- [  0   4   0   0  55 236 228 230 228 240 232 213]
- [  0   0   0   0 237 226 217 223 222 219 222 221]
- [  0  62 145 204 228 207 213 221 218 208 211 218]
- [189 228 220 222 217 226 200 205 211 230 224 234]
- [204 214 208 209 200 159 245 193 206 223 255 255]]</code></pre>
-</div>
-</div>
-<p>💬 <strong>결과 해설</strong> — 값이 큰 칸(200대)이 밝고 0인 칸이 검습니다. 같은 부분을 그림으로 봅니다.</p>
-<div id="cell-lab05-pixels" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 전체와 잘라 낸 부분</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.2</span>))</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(a, cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(fmnist.classes[label])</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(a[<span class="dv">10</span>:<span class="dv">18</span>, <span class="dv">8</span>:<span class="dv">20</span>], cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'a[10:18, 8:20]'</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>✅ <strong>체크포인트</strong> — <code>9 Ankle boot</code>, <code>(28, 28) uint8</code>, <code>0 255</code>면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 이론 5장에서 본 대로 흑백 사진 한 장은 <code>(높이, 너비)</code> 행렬이고 칸 하나가 픽셀 하나입니다. 값은 <strong>0부터 255까지의 정수</strong>이고 0이 검정, 255가 흰색입니다.</p>
+<div id="cell-lab05-pixels" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 사진과 가운데 4×6칸의 숫자</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.2</span>))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(a, cmap<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(fmnist.classes[label])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(a[<span class="dv">12</span>:<span class="dv">16</span>, <span class="dv">8</span>:<span class="dv">14</span>], cmap<span class="op">=</span><span class="st">'gray'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">255</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'a[12:16, 8:14]'</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a[<span class="dv">12</span>:<span class="dv">16</span>, <span class="dv">8</span>:<span class="dv">14</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -358,49 +351,46 @@ window.Quarto = {
 </figure>
 </div>
 </div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[  0   0   6   0  99 244]
+ [  0   4   0   0  55 236]
+ [  0   0   0   0 237 226]
+ [  0  62 145 204 228 207]]</code></pre>
 </div>
-<p>💬 오른쪽이 방금 출력한 숫자 96개입니다. 숫자와 밝기가 일대일로 대응합니다.</p>
+</div>
+<p>💬 오른쪽 그림의 밝은 칸이 200대, 검은 칸이 0입니다. 숫자와 밝기가 일대일로 대응합니다.</p>
 <hr>
 </section>
-<section id="컬러-사진은-채널이-하나-더-있다" class="level2">
-<h2 class="anchored" data-anchor-id="컬러-사진은-채널이-하나-더-있다">2. 컬러 사진은 채널이 하나 더 있다</h2>
+<section id="컬러-사진은-채널-축이-하나-더-있다" class="level2">
+<h2 class="anchored" data-anchor-id="컬러-사진은-채널-축이-하나-더-있다">2. 컬러 사진은 채널 축이 하나 더 있다</h2>
 <p>CIFAR-10은 32×32 컬러 사진입니다. 한 장을 배열로 만들면 축이 하나 더 있습니다.</p>
-<div id="e4ce8771" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>img_c, label_c <span class="op">=</span> cifar[<span class="dv">0</span>]</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.array(img_c)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cifar.classes[label_c])</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr.shape, arr.dtype)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="08693b13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>img_c, label_c <span class="op">=</span> cifar[<span class="dv">0</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.array(img_c)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cifar.classes[label_c])</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr.shape, arr.dtype)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr[:, :, <span class="dv">0</span>].shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>frog
-(32, 32, 3) uint8</code></pre>
+(32, 32, 3) uint8
+(32, 32)</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 개구리(<code>frog</code>) 사진이고 배열은 <code>(32, 32, 3)</code>입니다. 마지막 축 3이 <strong>R, G, B 채널</strong>입니다. 컬러 사진 한 장은 같은 크기의 흑백 행렬 세 장을 겹친 것입니다.</p>
-<p>마지막 축에서 0번을 고르면 빨강 채널 한 장이 나옵니다. <code>axis=(0, 1)</code>은 높이와 너비 축을 없애고 <strong>채널마다 평균 하나</strong>를 남깁니다. 실습 1의 축 규칙 그대로입니다.</p>
-<div id="28ac7227" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>red <span class="op">=</span> arr[:, :, <span class="dv">0</span>]</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(red.shape)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr.mean(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>)).<span class="bu">round</span>(<span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(32, 32)
-[141.2 105.1  64. ]</code></pre>
-</div>
-</div>
-<p>✅ <strong>체크포인트</strong> — <code>(32, 32)</code>와 <code>[141.2 105.1  64. ]</code>이면 맞습니다. 빨강 채널의 평균이 가장 높고 파랑이 가장 낮은 사진입니다.</p>
-<div id="cell-lab05-channels" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 원본과 채널 세 장</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">3</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(arr)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'RGB'</span>)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, name <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'R'</span>, <span class="st">'G'</span>, <span class="st">'B'</span>]):</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    axes[i <span class="op">+</span> <span class="dv">1</span>].imshow(arr[:, :, i], cmap<span class="op">=</span><span class="st">'gray'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">255</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    axes[i <span class="op">+</span> <span class="dv">1</span>].set_title(name)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>✅ <strong>체크포인트</strong> — <code>frog</code>, <code>(32, 32, 3) uint8</code>, <code>(32, 32)</code>면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 마지막 축 3이 <strong>R, G, B 채널</strong>입니다. <code>arr[:, :, 0]</code>은 빨강 채널 한 장이고 흑백 사진과 같은 <code>(32, 32)</code>입니다. 컬러 사진 한 장은 같은 크기의 흑백 행렬 세 장을 겹친 것입니다.</p>
+<div id="cell-lab05-channels" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 원본과 채널 세 장</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">3</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(arr)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'RGB'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, name <span class="kw">in</span> <span class="bu">enumerate</span>([<span class="st">'R'</span>, <span class="st">'G'</span>, <span class="st">'B'</span>]):</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    axes[i <span class="op">+</span> <span class="dv">1</span>].imshow(arr[:, :, i], cmap<span class="op">=</span><span class="st">'gray'</span>, vmin<span class="op">=</span><span class="dv">0</span>, vmax<span class="op">=</span><span class="dv">255</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    axes[i <span class="op">+</span> <span class="dv">1</span>].set_title(name)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> axes:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">'off'</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -409,134 +399,189 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>PIL과 matplotlib은 <code>(높이, 너비, 채널)</code>로 다루지만, PyTorch는 <strong>채널을 앞에</strong> 두는 <code>(채널, 높이, 너비)</code>를 씁니다. <code>permute</code>로 축의 순서를 바꿉니다. <code>permute(2, 0, 1)</code>은 “원래 2번 축을 0번으로, 0번을 1번으로, 1번을 2번으로” 옮깁니다.</p>
-<div id="2a9dade7" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>t_hwc <span class="op">=</span> torch.tensor(arr)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>t_chw <span class="op">=</span> t_hwc.permute(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(t_hwc.shape), <span class="st">'-&gt;'</span>, <span class="bu">tuple</span>(t_chw.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(32, 32, 3) -&gt; (3, 32, 32)</code></pre>
-</div>
-</div>
-<p>✅ <strong>체크포인트</strong> — <code>(32, 32, 3) -&gt; (3, 32, 32)</code>이면 맞습니다. 값은 그대로이고 축의 자리만 바뀝니다.</p>
 <hr>
 </section>
 <section id="신경망에-넣기-전-변환" class="level2">
 <h2 class="anchored" data-anchor-id="신경망에-넣기-전-변환">3. 신경망에 넣기 전 변환</h2>
-<p><code>transforms.ToTensor()</code>는 PIL 이미지를 텐서로 바꾸면서 두 가지를 한꺼번에 합니다. 축을 <code>(C, H, W)</code>로 옮기고, 값을 255로 나누어 <strong>0~1 사이의 실수</strong>로 만듭니다.</p>
-<div id="b23cff06" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>to_tensor <span class="op">=</span> transforms.ToTensor()</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> to_tensor(img_c)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(x.shape), x.dtype)</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.<span class="bu">min</span>().item(), x.<span class="bu">max</span>().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>PIL과 matplotlib은 <code>(높이, 너비, 채널)</code>로 다루지만, PyTorch는 <strong>채널을 앞에</strong> 두는 <code>(채널, 높이, 너비)</code>를 씁니다. <code>transforms.ToTensor()</code>는 PIL 이미지를 텐서로 바꾸면서 두 가지를 한꺼번에 합니다. 축을 <code>(C, H, W)</code>로 옮기고, 값을 255로 나누어 <strong>0~1 사이의 실수</strong>로 만듭니다. 픽셀의 최솟값 0과 최댓값 255는 어떤 사진이든 같으므로, 255로 나누는 것이 곧 <strong>min-max 스케일링</strong>입니다.</p>
+<div id="7f6016f4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>to_tensor <span class="op">=</span> transforms.ToTensor()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> to_tensor(img_c)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(x.shape), x.dtype)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x.<span class="bu">min</span>().item(), x.<span class="bu">max</span>().item())</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(arr[<span class="dv">0</span>, <span class="dv">0</span>], x[:, <span class="dv">0</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(3, 32, 32) torch.float32
-0.0 1.0</code></pre>
+0.0 1.0
+[59 62 63] tensor([0.2314, 0.2431, 0.2471])</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — <code>(3, 32, 32)</code>, <code>float32</code>, 값은 0.0~1.0입니다. 직접 계산해 같은지 대조합니다. <code>np.allclose</code>는 두 배열의 값이 거의 같으면 <code>True</code>입니다.</p>
-<div id="79193e73" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>manual <span class="op">=</span> arr.transpose(<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="op">/</span> <span class="fl">255.0</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(np.allclose(x.numpy(), manual))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>True</code></pre>
-</div>
-</div>
-<p>✅ <strong>체크포인트</strong> — <code>True</code>면 맞습니다. <code>transpose(2, 0, 1)</code>은 numpy의 <code>permute</code>입니다.</p>
-<p>실습 4에서 표의 열마다 표준화했듯이, 이미지는 <strong>채널마다</strong> 표준화합니다. <code>Normalize(mean, std)</code>는 채널별로 <span class="math inline">\((x-\mu)/\sigma\)</span>를 계산합니다.</p>
-<div id="18968887" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>normalize <span class="op">=</span> transforms.Normalize(mean<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>), std<span class="op">=</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>))</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>xn <span class="op">=</span> normalize(x)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xn.<span class="bu">min</span>().item(), xn.<span class="bu">max</span>().item())</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((x[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>].item() <span class="op">-</span> <span class="fl">0.5</span>) <span class="op">/</span> <span class="fl">0.5</span>, xn[<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>].item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>-1.0 1.0
--0.5372548997402191 -0.5372549295425415</code></pre>
-</div>
-</div>
-<p>💬 <strong>결과 해설</strong> — 0~1이던 값이 <strong>-1~1</strong>로 옮겨졌습니다. 첫 픽셀을 손으로 계산한 값과 <code>Normalize</code>의 값이 -0.5373으로 같습니다.</p>
-<p>변환 여러 개를 순서대로 적용하는 파이프라인은 <code>Compose</code>입니다. <code>Normalize</code>는 텐서를 받으므로 <code>ToTensor</code> 뒤에 와야 합니다.</p>
-<div id="1559b613" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* pipeline = transforms.Compose([</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     transforms.___(),                                   # PIL → 텐서, ÷255</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#* ])</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#* out = pipeline(img_c)</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#* print(tuple(out.shape), out.min().item(), out.max().item())</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>pipeline <span class="op">=</span> transforms.Compose([</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize((<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>), (<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>)),</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>])</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> pipeline(img_c)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(out.shape), out.<span class="bu">min</span>().item(), out.<span class="bu">max</span>().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(3, 32, 32) -1.0 1.0</code></pre>
-</div>
-</div>
-<p>✅ <strong>체크포인트</strong> — <code>(3, 32, 32) -1.0 1.0</code>이면 맞습니다. 이 파이프라인을 데이터셋에 <code>transform</code>으로 넘기면 사진을 꺼낼 때마다 자동으로 적용됩니다.</p>
-<hr>
-</section>
-<section id="배치로-꺼내면-n-c-h-w" class="level2">
-<h2 class="anchored" data-anchor-id="배치로-꺼내면-n-c-h-w">4. 배치로 꺼내면 <code>(N, C, H, W)</code></h2>
-<p>실습 4의 <code>DataLoader</code>를 그대로 씁니다. 파이프라인을 붙인 데이터셋에서 64장을 꺼냅니다.</p>
-<div id="f8992e29" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> DataLoader</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>cifar_t <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">False</span>, transform<span class="op">=</span>pipeline)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> DataLoader(cifar_t, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(loader))</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), <span class="bu">tuple</span>(yb.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>✅ <strong>체크포인트</strong> — <code>(3, 32, 32) torch.float32</code>, <code>0.0 1.0</code>이면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 마지막 줄이 왼쪽 위 픽셀 하나입니다. 배열에서는 <code>[59 62 63]</code>이던 R, G, B가 텐서에서는 <code>0.2314, 0.2431, 0.2471</code>입니다. 59/255 = 0.2314로, 같은 픽셀이 축 순서와 눈금만 바뀌어 들어 있습니다.</p>
+<p><code>ToTensor()</code>를 데이터셋에 <code>transform</code>으로 넘기면 사진을 꺼낼 때마다 자동으로 적용됩니다. 실습 4의 <code>DataLoader</code>를 그대로 써서 64장을 꺼냅니다.</p>
+<div id="a5223f9c" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cifar_t <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">False</span>, transform<span class="op">=</span>transforms.ToTensor())</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> DataLoader(cifar_t, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(loader))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), <span class="bu">tuple</span>(yb.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(64, 3, 32, 32) (64,)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(64, 3, 32, 32) (64,)</code>이면 맞습니다. 앞으로 나오는 모든 이미지 텐서는 이 네 축 <strong><code>(N, C, H, W)</code></strong>를 갖습니다. N은 배치 크기, C는 채널, H와 W는 높이와 너비입니다.</p>
-<p>이론 5장의 방식대로 사진 한 장을 한 줄로 펼쳐 <code>nn.Linear</code>에 넣어 봅니다. <code>flatten(start_dim=1)</code>은 N축은 두고 나머지를 한 줄로 잇습니다. 파라미터 수는 실습 2의 규칙 <span class="math inline">\(n_{\text{in}} \times n_{\text{out}} + n_{\text{out}}\)</span>입니다.</p>
-<div id="cc6edc35" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>flat <span class="op">=</span> xb.flatten(start_dim<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">32</span>, <span class="dv">128</span>)</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(flat.shape))</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fc.weight.shape, fc.bias.shape)</span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">128</span> <span class="op">+</span> <span class="dv">128</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>(64, 3072)
-torch.Size([128, 3072]) torch.Size([128])
-393344</code></pre>
-</div>
-</div>
-<p>💬 <strong>결과 해설</strong> — 펼친 길이는 <strong>3,072</strong>이고, 은닉 노드 128개에 연결하면 가중치 <code>(128, 3072)</code>에 편향 128개, 합쳐서 <strong>393,344</strong>개입니다. - 32×32짜리 작은 사진 한 장을 층 하나에 넣는 데 40만 개입니다. - 사진이 커지면 어떻게 되는지는 과제 2에서 봅니다. 이것이 이론 5장의 <strong>파라미터 폭발</strong>이고, 5-2의 콘볼루션이 푸는 문제입니다.</p>
+<p>✅ <strong>체크포인트</strong> — <code>(64, 3, 32, 32) (64,)</code>이면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 앞으로 나오는 모든 이미지 텐서는 이 네 축 <strong><code>(N, C, H, W)</code></strong>를 갖습니다. N은 배치 크기, C는 채널, H와 W는 높이와 너비입니다. 실습 4의 <code>(32, 9)</code>에서 N은 그대로이고, 변수 축 하나가 <code>(C, H, W)</code> 세 축으로 바뀌었습니다.</p>
 <hr>
 </section>
-<section id="실습-과제-13분" class="level2">
-<h2 class="anchored" data-anchor-id="실습-과제-13분">5. 실습 과제 (13분)</h2>
-<section id="과제-1-축-순서를-되돌려-그리기" class="level3">
-<h3 class="anchored" data-anchor-id="과제-1-축-순서를-되돌려-그리기">📝 과제 1 · 축 순서를 되돌려 그리기</h3>
-<p><code>(3, 32, 32)</code>인 <code>t_chw</code>를 다시 <code>(32, 32, 3)</code>으로 되돌려 원본 <code>arr</code>과 같은지 확인하고, <code>plt.imshow</code>로 그립니다.</p>
-<div id="3216bc7c" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 2절의 permute(2, 0, 1)이 (H, W, C)→(C, H, W)였습니다. 되돌리려면 "원래 1번 축을 0번으로, 2번을 1번으로, 0번을 2번으로" 옮기는 permute를 씁니다. 같은지는 np.array_equal(back.numpy(), arr)로 봅니다.</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>back <span class="op">=</span> t_chw.permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(back.shape, np.array_equal(back.numpy(), arr))</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(back)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="펼쳐서-넣으면-파라미터가-폭발한다" class="level2">
+<h2 class="anchored" data-anchor-id="펼쳐서-넣으면-파라미터가-폭발한다">4. 펼쳐서 넣으면 파라미터가 폭발한다</h2>
+<p>이론 5장의 방식대로 사진 한 장을 한 줄로 펼쳐 <code>nn.Linear</code>에 넣어 봅니다. <code>flatten(start_dim=1)</code>은 N축은 두고 나머지를 한 줄로 잇습니다. 은닉 노드는 5장과 같이 256개이고, 파라미터 수는 실습 2의 규칙 <span class="math inline">\(n_{\text{in}} \times n_{\text{out}} + n_{\text{out}}\)</span>입니다.</p>
+<div id="9f0a95a9" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>flat <span class="op">=</span> xb.flatten(start_dim<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">32</span>, <span class="dv">256</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(flat.shape))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fc.weight.shape, fc.bias.shape)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">256</span> <span class="op">+</span> <span class="dv">256</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>torch.Size([32, 32, 3]) True</code></pre>
+<pre><code>(64, 3072)
+torch.Size([256, 3072]) torch.Size([256])
+786688</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — 펼친 길이 <code>3072</code>, 가중치 <code>(256, 3072)</code>, 파라미터 <strong>786,688</strong>개면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 32×32짜리 작은 사진을 층 하나에 넣는 데 79만 개입니다. 5장의 224×224 사진이면 몇 개가 되는지는 과제 2에서 셉니다. 이것이 <strong>파라미터 폭발</strong>이고, 5절의 콘볼루션이 푸는 문제입니다.</p>
+<hr>
+</section>
+<section id="콘볼루션은-곱해서-더하며-한-칸씩-옮기는-것" class="level2">
+<h2 class="anchored" data-anchor-id="콘볼루션은-곱해서-더하며-한-칸씩-옮기는-것">5. 콘볼루션은 곱해서 더하며 한 칸씩 옮기는 것</h2>
+<p>이론 6장에서 손으로 계산한 2채널 예제를 그대로 가져옵니다. 채널 2개의 3×3 입력과 채널 2개의 2×2 커널입니다. 6장과 같이 편향은 0입니다.</p>
+<div id="2a6e49c4" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> torch.tensor([[[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>]],</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                   [[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>]]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>k2 <span class="op">=</span> torch.tensor([[[<span class="dv">1</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>]],</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                   [[<span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">0</span>]]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(x2.shape, k2.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([2, 3, 3]) torch.Size([2, 2, 2])</code></pre>
+</div>
+</div>
+<p>💬 <strong>결과 해설</strong> — 입력은 <code>(2, 3, 3)</code>, 커널은 <code>(2, 2, 2)</code>입니다. 첫 축이 채널이고, 커널의 채널 수는 입력의 채널 수와 같습니다.</p>
+<p>커널을 왼쪽 위에 놓습니다. 겹치는 입력 조각은 모든 채널의 0~1행, 0~1열입니다. 조각과 커널을 <strong>같은 자리끼리 곱한 뒤</strong> 모두 더하면 특성 맵의 첫 칸입니다.</p>
+<div id="0b86accd" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>patch <span class="op">=</span> x2[:, <span class="dv">0</span>:<span class="dv">2</span>, <span class="dv">0</span>:<span class="dv">2</span>]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(patch <span class="op">*</span> k2)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((patch <span class="op">*</span> k2).<span class="bu">sum</span>())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[[1., 0.],
+         [0., 1.]],
+
+        [[0., 1.],
+         [2., 0.]]])
+tensor(5.)</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — 합이 <strong>5</strong>면 맞습니다. 6장 인터랙티브의 첫 스텝과 같은 값입니다.</p>
+<p>💬 <strong>결과 해설</strong> — 채널 1에서 <span class="math inline">\(1 \cdot 1 + 2 \cdot 0 + 0 \cdot 0 + 1 \cdot 1 = 2\)</span>, 채널 2에서 <span class="math inline">\(0 \cdot 0 + 1 \cdot 1 + 2 \cdot 1 + 0 \cdot 0 = 3\)</span>, 둘을 더해 5입니다. 채널별 결과는 따로 쌓이지 않고 <strong>더해져서 한 칸</strong>이 됩니다.</p>
+<p>커널을 오른쪽으로 한 칸 옮깁니다. 열만 <code>1:3</code>으로 바뀝니다.</p>
+<div id="34b17293" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((x2[:, <span class="dv">0</span>:<span class="dv">2</span>, <span class="dv">1</span>:<span class="dv">3</span>] <span class="op">*</span> k2).<span class="bu">sum</span>())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor(6.)</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — <strong>6</strong>이면 맞습니다. 특성 맵의 첫 행 둘째 칸입니다.</p>
+<p>행 번호 <code>i</code>와 열 번호 <code>j</code>를 바꾸며 같은 계산을 네 번 하면 특성 맵 2×2가 완성됩니다. 이중 for문으로 조립합니다. 조각은 <code>x2[:, i:i+2, j:j+2]</code>입니다.</p>
+<div id="f4bb9c66" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> torch.zeros(<span class="dv">2</span>, <span class="dv">2</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>):</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        patch <span class="op">=</span> x2[:, i:i <span class="op">+</span> <span class="dv">2</span>, j:j <span class="op">+</span> <span class="dv">2</span>]</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>        out[i, j] <span class="op">=</span> (patch <span class="op">*</span> k2).<span class="bu">sum</span>()</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[5., 6.],
+        [2., 5.]])</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — <code>[[5, 6], [2, 5]]</code>면 맞습니다. 6장 보드의 마지막 스텝과 같습니다.</p>
+<p>입력과 커널의 크기가 달라도 쓸 수 있게 함수로 조립합니다. 출력의 한 변은 <code>H - KH + 1</code>입니다. 3×3에 2×2 커널이면 2입니다. 빈칸을 채웁니다.</p>
+<div id="d646217d" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def conv2d_naive(x, k):</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     """x: (C, H, W), k: (C, KH, KW) -&gt; (OH, OW). stride 1, padding 0, 편향 0"""</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     C, H, W = x.shape</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#*     _, KH, KW = k.shape</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out = torch.zeros(H - KH + 1, W - KW + 1)</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co">#*     for i in range(H - KH + 1):</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co">#*         for j in range(W - KW + 1):</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="co">#*             patch = x[:, i:i + KH, j:j + KW]</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co">#*             out[i, j] = (___ * ___).sum()        # 조각과 커널을 곱해서 더한다</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return out</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co">#*</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a><span class="co">#* print(conv2d_naive(x2, k2))</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> conv2d_naive(x, k):</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""x: (C, H, W), k: (C, KH, KW) -&gt; (OH, OW). stride 1, padding 0, 편향 0"""</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    C, H, W <span class="op">=</span> x.shape</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    _, KH, KW <span class="op">=</span> k.shape</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> torch.zeros(H <span class="op">-</span> KH <span class="op">+</span> <span class="dv">1</span>, W <span class="op">-</span> KW <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(H <span class="op">-</span> KH <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(W <span class="op">-</span> KW <span class="op">+</span> <span class="dv">1</span>):</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>            patch <span class="op">=</span> x[:, i:i <span class="op">+</span> KH, j:j <span class="op">+</span> KW]</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>            out[i, j] <span class="op">=</span> (patch <span class="op">*</span> k).<span class="bu">sum</span>()</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(conv2d_naive(x2, k2))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[5., 6.],
+        [2., 5.]])</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — 위와 같은 <code>[[5, 6], [2, 5]]</code>면 맞습니다.</p>
+<p>PyTorch의 콘볼루션 <code>F.conv2d</code>는 배치 단위로 계산하므로 입력은 <code>(N, C, H, W)</code>, 커널은 <code>(커널 수, 입력 채널 수, KH, KW)</code>여야 합니다. <code>unsqueeze(0)</code>은 맨 앞에 길이 1인 축을 하나 더합니다. 사진 한 장을 배치 하나로, 커널 한 개를 커널 묶음으로 만드는 것입니다.</p>
+<div id="d0fda0c8" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x2.unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>kt <span class="op">=</span> k2.unsqueeze(<span class="dv">0</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> F.conv2d(xt, kt)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xt.shape), <span class="bu">tuple</span>(kt.shape), <span class="st">'-&gt;'</span>, <span class="bu">tuple</span>(y.shape))</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y[<span class="dv">0</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(1, 2, 3, 3) (1, 2, 2, 2) -&gt; (1, 1, 2, 2)
+tensor([[5., 6.],
+        [2., 5.]])</code></pre>
+</div>
+</div>
+<p>✅ <strong>체크포인트</strong> — <code>(1, 2, 3, 3) (1, 2, 2, 2) -&gt; (1, 1, 2, 2)</code>이고 값이 <code>[[5, 6], [2, 5]]</code>면 맞습니다.</p>
+<p>💬 <strong>결과 해설</strong> — 직접 만든 함수와 값이 같습니다. - 커널의 두 번째 축은 <strong>입력 채널 수와 같아야</strong> 합니다. 콘볼루션에서 나는 모양 오류의 대부분이 이 축입니다. - 커널의 첫 축이 커널의 개수이고 그대로 출력 채널 수가 됩니다. 커널이 8개면 특성 맵도 8장입니다. 5-2에서 그렇게 씁니다.</p>
+<hr>
+</section>
+<section id="실습-과제-10분" class="level2">
+<h2 class="anchored" data-anchor-id="실습-과제-10분">6. 실습 과제 (10분)</h2>
+<section id="과제-1-텐서를-그림으로-보기" class="level3">
+<h3 class="anchored" data-anchor-id="과제-1-텐서를-그림으로-보기">📝 과제 1 · 텐서를 그림으로 보기</h3>
+<p>3절의 <code>x</code>는 <code>(3, 32, 32)</code>입니다. <code>plt.imshow</code>는 <code>(높이, 너비, 채널)</code>만 받으므로 축을 되돌려야 그릴 수 있습니다. <code>permute</code>로 축 순서를 바꿔 모양을 확인하고 그립니다.</p>
+<div id="583dbcb9" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: x.permute(1, 2, 0)은 "원래 1번 축을 0번으로, 2번을 1번으로, 0번을 2번으로" 옮깁니다. 모양을 tuple(...shape)로 출력한 뒤 plt.imshow에 넣습니다.</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>back <span class="op">=</span> x.permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(back.shape))</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>plt.imshow(back)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(32, 32, 3)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -546,24 +591,24 @@ torch.Size([128, 3072]) torch.Size([128])
 </div>
 </div>
 </div>
-<p>✏️ <strong>나의 답:</strong> <code>permute(___, ___, ___)</code></p>
+<p>✏️ <strong>나의 답:</strong> 되돌린 모양 <code>(___, ___, ___)</code></p>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>예시 답:</strong> <code>permute(1, 2, 0)</code>. <code>(32, 32, 3)</code>이 되고 원본과 값이 같아 <code>True</code>입니다. <code>plt.imshow</code>는 <code>(H, W, C)</code>만 받으므로 텐서를 그릴 때는 항상 이렇게 되돌립니다.</p>
+<p><strong>예시 답:</strong> <code>(32, 32, 3)</code>. 텐서를 그릴 때는 항상 <code>permute(1, 2, 0)</code>으로 되돌립니다. 실습 6·7에서 사진을 그릴 때 그대로 쓰입니다.</p>
 </blockquote>
 </section>
 <section id="과제-2-224224-사진이면-파라미터는-몇-개인가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-224224-사진이면-파라미터는-몇-개인가">📝 과제 2 · 224×224 사진이면 파라미터는 몇 개인가</h3>
-<p>224×224 컬러 사진을 같은 은닉 노드 128개에 연결할 때의 파라미터 수를 먼저 손으로 계산한 뒤 코드로 확인합니다.</p>
-<div id="26df1229" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 4절 마지막 셀에서 32를 224로 바꿉니다. nn.Linear(3 * 224 * 224, 128)의 weight.shape와 공식 3*224*224*128 + 128을 함께 출력합니다.</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>fc224 <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span>, <span class="dv">128</span>)</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fc224.weight.shape)</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">128</span> <span class="op">+</span> <span class="dv">128</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이론 5장의 224×224 컬러 사진을 같은 은닉 노드 256개에 연결할 때의 파라미터 수를 먼저 손으로 계산한 뒤 코드로 확인합니다.</p>
+<div id="f64ef9bc" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 4절 셀에서 32를 224로 바꿉니다. nn.Linear(3 * 224 * 224, 256)의 weight.shape와 공식 3*224*224*256 + 256을 함께 출력합니다.</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>fc224 <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span>, <span class="dv">256</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fc224.weight.shape)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">256</span> <span class="op">+</span> <span class="dv">256</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>torch.Size([128, 150528])
-19267712</code></pre>
+<pre><code>torch.Size([256, 150528])
+38535424</code></pre>
 </div>
 </div>
 <table class="caption-top table">
@@ -578,7 +623,7 @@ torch.Size([128, 3072]) torch.Size([128])
 <tr class="odd">
 <td>32×32×3</td>
 <td>3,072</td>
-<td>393,344</td>
+<td>786,688</td>
 </tr>
 <tr class="even">
 <td>224×224×3</td>
@@ -589,35 +634,40 @@ torch.Size([128, 3072]) torch.Size([128])
 </table>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>예시 답:</strong> 펼친 길이 150,528, 파라미터 19,267,712개. 층 하나에 1,900만 개가 넘습니다.</p>
+<p><strong>예시 답:</strong> 펼친 길이 150,528, 파라미터 38,535,424개. 5장 “손으로 따라 계산하기”의 첫 연결 ①과 같은 수입니다.</p>
 </blockquote>
 </section>
-<section id="과제-3-채널-평균으로-사진-고르기" class="level3">
-<h3 class="anchored" data-anchor-id="과제-3-채널-평균으로-사진-고르기">📝 과제 3 · 채널 평균으로 사진 고르기</h3>
-<p><code>cifar[1]</code>의 사진을 배열로 만들어 클래스 이름과 채널별 평균을 출력합니다. <code>cifar[0]</code>(개구리)과 비교해 어느 채널이 높은지 봅니다.</p>
-<div id="95f1b155" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 2절의 세 줄에서 cifar[0]을 cifar[1]로 바꿉니다. 평균은 .mean(axis=(0, 1)).round(1)입니다.</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>img_1, label_1 <span class="op">=</span> cifar[<span class="dv">1</span>]</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>arr_1 <span class="op">=</span> np.array(img_1)</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cifar.classes[label_1], arr_1.mean(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>)).<span class="bu">round</span>(<span class="dv">1</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="과제-3-세로-에지-커널" class="level3">
+<h3 class="anchored" data-anchor-id="과제-3-세로-에지-커널">📝 과제 3 · 세로 에지 커널</h3>
+<p>왼쪽 두 열이 10, 나머지가 0인 5×5 흑백 이미지에 이론 6장의 세로 에지 커널 <code>[[1, 0, -1], [1, 0, -1], [1, 0, -1]]</code>을 5절의 함수로 적용합니다. 출력 크기와 값이 큰 위치를 먼저 예상합니다.</p>
+<div id="6a755759" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 이미지는 torch.zeros(1, 5, 5)를 만든 뒤 img_e[0, :, :2] = 10으로 왼쪽 두 열을 채웁니다. 커널은 5절의 k2처럼 (1, 3, 3) 모양의 torch.tensor입니다. conv2d_naive(img_e, k_e)를 출력합니다.</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>img_e <span class="op">=</span> torch.zeros(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>img_e[<span class="dv">0</span>, :, :<span class="dv">2</span>] <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>k_e <span class="op">=</span> torch.tensor([[[<span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>],</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>],</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="dv">1</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span>]]], dtype<span class="op">=</span>torch.float32)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(conv2d_naive(img_e, k_e))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>truck [130.2 130.4 130.5]</code></pre>
+<pre><code>tensor([[30., 30.,  0.],
+        [30., 30.,  0.],
+        [30., 30.,  0.]])</code></pre>
 </div>
 </div>
-<p>✏️ <strong>나의 답:</strong> 클래스 <strong><em>, 채널 평균 </em></strong></p>
+<p>✏️ <strong>나의 답:</strong> 출력 크기 <strong><em>, 값이 큰 열 </em></strong></p>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>예시 답:</strong> <code>truck</code>, 채널 평균 약 <code>[130.2 130.4 130.5]</code>. 세 채널이 거의 같아 회색에 가까운 사진입니다. 개구리 사진(141.2/105.1/64.0)은 빨강이 높고 파랑이 낮았습니다.</p>
+<p><strong>예시 답:</strong> 출력은 3×3이고 첫 두 열이 30, 셋째 열은 0입니다. 커널의 왼쪽 열(+1)이 밝은 칸 10에, 오른쪽 열(−1)이 어두운 칸 0에 걸치는 위치에서 값이 나옵니다. 커널 전체가 어두운 칸에 놓이는 셋째 열은 0입니다. 값이 큰 곳이 밝음에서 어두움으로 바뀌는 경계입니다.</p>
 </blockquote>
 </section>
 <section id="과제-4-생각해-보기" class="level3">
 <h3 class="anchored" data-anchor-id="과제-4-생각해-보기">📝 과제 4 · 생각해 보기</h3>
-<p><code>Normalize</code>의 평균과 표준편차를 훈련 사진들로 구한다면, 실습 4의 어떤 규칙을 지켜야 할까요? 한두 문장으로 적습니다.</p>
+<p>실습 4에서는 표준화의 평균과 표준편차를 <strong>훈련 세트에서</strong> 구했습니다. <code>ToTensor</code>가 255로 나눌 때는 왜 훈련 세트에서 값을 구하지 않아도 될까요? 한두 문장으로 적습니다.</p>
 <p>✏️ <strong>나의 답:</strong></p>
 <!-- 교수용 -->
 <blockquote class="blockquote">
-<p><strong>예시 답:</strong> 표의 표준화와 같이 평균·표준편차는 훈련 세트에서만 구하고, 검증·테스트 사진에도 그 값을 그대로 적용합니다. 테스트 사진을 섞어 구하면 테스트 정보가 새어 들어갑니다.</p>
+<p><strong>예시 답:</strong> 픽셀의 최솟값 0과 최댓값 255는 데이터에서 구한 통계가 아니라 이미지 형식이 정한 상수입니다. 어떤 사진에나 같으므로 훈련·검증·테스트에 같은 255를 쓰면 되고, 테스트 정보가 새어 들어갈 일도 없습니다. 평균·표준편차처럼 데이터에서 구하는 값은 실습 6에서 훈련 세트로 구합니다.</p>
 </blockquote>
 <hr>
 </section>
@@ -645,24 +695,28 @@ torch.Size([128, 3072]) torch.Size([128])
 <td><code>(32, 32, 3)</code>. 마지막 축이 R, G, B. <code>arr[:, :, 0]</code>이 빨강 채널</td>
 </tr>
 <tr class="odd">
-<td>축 순서</td>
-<td>보여 줄 때 <code>(H, W, C)</code>, PyTorch에 넣을 때 <code>(C, H, W)</code>. <code>permute(2, 0, 1)</code></td>
+<td>변환</td>
+<td><code>ToTensor</code>: <code>(H, W, C)</code> → <code>(C, H, W)</code>, ÷255로 0~1(min-max). 데이터셋에 <code>transform=</code>으로 넘김</td>
 </tr>
 <tr class="even">
-<td>변환</td>
-<td><code>ToTensor</code>(CHW + ÷255) → <code>Normalize</code>(채널별 표준화), <code>Compose</code>로 묶음</td>
-</tr>
-<tr class="odd">
 <td>배치</td>
 <td><code>DataLoader</code>에서 <code>(N, C, H, W)</code>. <code>(64, 3, 32, 32)</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>파라미터 폭발</td>
-<td>펼치면 3,072 → Linear(→128) 393,344개. 224×224면 1,900만 개</td>
+<td>펼치면 3,072 → Linear(→256) 786,688개. 224×224면 38,535,424개</td>
+</tr>
+<tr class="even">
+<td>콘볼루션</td>
+<td>조각 <code>x[:, i:i+KH, j:j+KW]</code>와 커널을 곱해서 더해 한 칸. 채널별 결과는 더해져 한 장. <code>[[5, 6], [2, 5]]</code></td>
+</tr>
+<tr class="odd">
+<td><code>F.conv2d</code></td>
+<td>입력 <code>(N, C, H, W)</code>, 커널 <code>(커널 수, C, KH, KW)</code>. 두 번째 축이 입력 채널과 같아야 함</td>
 </tr>
 </tbody>
 </table>
-<p><strong>다음:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab05_2.html">실습 5-2</a>에서 콘볼루션을 이중 for문으로 직접 만들어 <code>F.conv2d</code>와 대조하고, 파라미터 235개짜리 CNN으로 옷 사진을 분류합니다.</p>
+<p><strong>다음:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab05_2.html">실습 5-2</a>에서 출력 크기 공식과 파라미터 수를 검산하고, 콘볼루션 층 하나로 옷 사진 열 종류를 분류합니다.</p>
 
 
 </section>

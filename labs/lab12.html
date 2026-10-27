@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>실습 12주차: Transformer 블록과 언어모델 – 딥러닝</title>
+<title>실습 12: Transformer 블록과 언어모델 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -238,7 +238,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">실습 12주차: Transformer 블록과 언어모델</h1>
+<h1 class="title">실습 12: Transformer 블록과 언어모델</h1>
 </div>
 
 
@@ -342,7 +342,7 @@ window.Quarto = {
 <section id="어텐션은-정말-순서를-모르는가" class="level1">
 <h1>1. 어텐션은 정말 순서를 모르는가</h1>
 <p>11주차에서 만든 어텐션을 그대로 가져온다.</p>
-<div id="40b599c4" class="cell" data-execution_count="1">
+<div id="afd93386" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -363,7 +363,7 @@ window.Quarto = {
 </div>
 <section id="토큰-순서를-바꿔-본다" class="level2">
 <h2 class="anchored" data-anchor-id="토큰-순서를-바꿔-본다">1-1. 토큰 순서를 바꿔 본다</h2>
-<div id="5d448b5b" class="cell" data-execution_count="2">
+<div id="c3574ce5" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>d_model <span class="op">=</span> <span class="dv">4</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> torch.randn(<span class="dv">1</span>, <span class="dv">3</span>, d_model)                 <span class="co"># 토큰 3개</span></span>
@@ -409,7 +409,7 @@ window.Quarto = {
 <h1>2. 위치 임베딩</h1>
 <section id="자리-번호에도-벡터를-준다" class="level2">
 <h2 class="anchored" data-anchor-id="자리-번호에도-벡터를-준다">2-1. 자리 번호에도 벡터를 준다</h2>
-<div id="c1f31072" class="cell" data-execution_count="3">
+<div id="4ae74b97" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>max_len <span class="op">=</span> <span class="dv">16</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pos_emb <span class="op">=</span> nn.Embedding(max_len, d_model)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -423,7 +423,7 @@ window.Quarto = {
 파라미터  : 64 = max_len x d = 64</code></pre>
 </div>
 </div>
-<div id="4d9c4841" class="cell" data-execution_count="4">
+<div id="d5bfb918" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> self_attn_pos(X):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    T <span class="op">=</span> X.shape[<span class="dv">1</span>]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> X <span class="op">+</span> pos_emb(torch.arange(T))           <span class="co"># 토큰 임베딩 + 위치 임베딩</span></span>
@@ -454,14 +454,14 @@ window.Quarto = {
 <p>GPT-2 small은 최대 길이 1,024, <span class="math inline">\(d=768\)</span> 이다. 위치 임베딩의 파라미터 수는? <strong>먼저 계산한 뒤</strong> 확인하시오.</p>
 </div>
 </div>
-<div id="aaccf11b" class="cell" data-execution_count="5">
+<div id="d920ecfa" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← 예상값</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>real <span class="op">=</span> <span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> nn.Embedding(<span class="dv">1024</span>, <span class="dv">768</span>).parameters())</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> my_answer <span class="op">==</span> real, <span class="ss">f'다릅니다. 실제 </span><span class="sc">{</span>real<span class="sc">:,}</span><span class="ss">'</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>, <span class="ss">f'</span><span class="sc">{</span>real<span class="sc">:,}</span><span class="ss">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="7cbc38fd" class="cell" data-execution_count="6">
+<div id="381366fe" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="dv">1024</span> <span class="op">*</span> <span class="dv">768</span></span>
@@ -496,7 +496,7 @@ window.Quarto = {
 <section id="ch12의-손계산-재현" class="level2">
 <h2 class="anchored" data-anchor-id="ch12의-손계산-재현">3-1. Ch12의 손계산 재현</h2>
 <p><span class="math inline">\(x = (2, 4, 4, 6)\)</span>, <span class="math inline">\(\gamma = 1\)</span>, <span class="math inline">\(\beta = 0\)</span>.</p>
-<div id="f57feb29" class="cell" data-execution_count="7">
+<div id="f9e46fa9" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.tensor([<span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">4.</span>, <span class="fl">6.</span>])</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> x.mean()</span>
@@ -535,7 +535,7 @@ window.Quarto = {
 </section>
 <section id="nn.layernorm-과-대조" class="level2">
 <h2 class="anchored" data-anchor-id="nn.layernorm-과-대조">3-2. <code>nn.LayerNorm</code> 과 대조</h2>
-<div id="0eb2f070" class="cell" data-execution_count="8">
+<div id="212709ac" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ln <span class="op">=</span> nn.LayerNorm(<span class="dv">4</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'γ (weight):'</span>, ln.weight.detach().numpy())</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'β (bias)  :'</span>, ln.bias.detach().numpy())</span>
@@ -554,7 +554,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 </section>
 <section id="어느-축으로-평균을-내는가" class="level2">
 <h2 class="anchored" data-anchor-id="어느-축으로-평균을-내는가">3-3. 어느 축으로 평균을 내는가</h2>
-<div id="e9d65121" class="cell" data-execution_count="9">
+<div id="b05a4069" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">8</span>)          <span class="co"># (B, T, d)</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ln8 <span class="op">=</span> nn.LayerNorm(<span class="dv">8</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> ln8(h)</span>
@@ -585,7 +585,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 <p><span class="math display">\[\text{출력} = x + \text{sublayer}(x)\]</span></p>
 <section id="층을-쌓고-기울기를-재-본다" class="level2">
 <h2 class="anchored" data-anchor-id="층을-쌓고-기울기를-재-본다">4-1. 20층을 쌓고 기울기를 재 본다</h2>
-<div id="fe7ec3a3" class="cell" data-execution_count="10">
+<div id="94c48fd1" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>d, L <span class="op">=</span> <span class="dv">32</span>, <span class="dv">20</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Sub(nn.Module):</span>
@@ -621,7 +621,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 </section>
 <section id="순서-pre-ln" class="level2">
 <h2 class="anchored" data-anchor-id="순서-pre-ln">4-2. 순서 — Pre-LN</h2>
-<div id="9159b68a" class="cell" data-execution_count="11">
+<div id="aa884c26" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PreLN(nn.Module):</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""x + sublayer(LayerNorm(x))"""</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d, sublayer):</span>
@@ -644,7 +644,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 </section>
 <section id="ffn-토큰마다-따로-가공" class="level1">
 <h1>5. FFN — 토큰마다 따로 가공</h1>
-<div id="bc8f13ea" class="cell" data-execution_count="12">
+<div id="348e9818" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FFN(nn.Module):</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d, mult<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -662,7 +662,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 공식 8d²+5d: 4,722,432</code></pre>
 </div>
 </div>
-<div id="0cb3f566" class="cell" data-execution_count="13">
+<div id="de88bb25" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">16</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>f16 <span class="op">=</span> FFN(<span class="dv">16</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'입력:'</span>, <span class="bu">tuple</span>(z.shape), <span class="st">'→ 출력:'</span>, <span class="bu">tuple</span>(f16(z).shape))</span>
@@ -688,7 +688,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 <p><span class="math inline">\(d = 512\)</span>, 확장 배수 4일 때 FFN의 파라미터 수를 <strong>공식 <span class="math inline">\(8d^2 + 5d\)</span> 로 계산</strong>하고, <code>FFN(512)</code> 의 실제 값과 맞는지 확인하시오.</p>
 </div>
 </div>
-<div id="6e1c783b" class="cell" data-execution_count="14">
+<div id="a8590d22" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>d_test <span class="op">=</span> <span class="dv">512</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>my_answer <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← 8d² + 5d</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -696,7 +696,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> my_answer <span class="op">==</span> real, <span class="ss">f'다릅니다. 실제 </span><span class="sc">{</span>real<span class="sc">:,}</span><span class="ss">'</span></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'통과'</span>, <span class="ss">f'</span><span class="sc">{</span>real<span class="sc">:,}</span><span class="ss">'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="8463eff9" class="cell" data-execution_count="15">
+<div id="9c18b690" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>정답 코드 보기</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>d_test <span class="op">=</span> <span class="dv">512</span></span>
@@ -715,7 +715,7 @@ nn.LayerNorm: [-1.4142  0.      0.      1.4142]</code></pre>
 </section>
 <section id="블록-조립" class="level1">
 <h1>6. 블록 조립</h1>
-<div id="3bdd48fd" class="cell" data-execution_count="16">
+<div id="4f8465ca" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Block(nn.Module):</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, d, n_head<span class="op">=</span><span class="dv">4</span>, mult<span class="op">=</span><span class="dv">4</span>):</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -753,7 +753,7 @@ Multi-Head Attention   4d² + 4d     2362368  2362368
 </div>
 </div>
 <p>Ch12에서 손으로 센 <strong>7,087,872개</strong>와 같다.</p>
-<div id="6c2ed822" class="cell" data-execution_count="17">
+<div id="f13030f6" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.randn(<span class="dv">2</span>, <span class="dv">6</span>, d_)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'입력:'</span>, <span class="bu">tuple</span>(x.shape), <span class="st">'→ 출력:'</span>, <span class="bu">tuple</span>(blk(x).shape), <span class="st">' ← 모양 보존'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -765,7 +765,7 @@ Multi-Head Attention   4d² + 4d     2362368  2362368
 </section>
 <section id="블록을-쌓아-언어모델-만들기" class="level1">
 <h1>7. 블록을 쌓아 언어모델 만들기</h1>
-<div id="86088877" class="cell" data-execution_count="18">
+<div id="d0b347ba" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MiniGPT(nn.Module):</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, V, d<span class="op">=</span><span class="dv">128</span>, n_layer<span class="op">=</span><span class="dv">4</span>, n_head<span class="op">=</span><span class="dv">4</span>, max_len<span class="op">=</span><span class="dv">64</span>):</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
@@ -807,7 +807,7 @@ Multi-Head Attention   4d² + 4d     2362368  2362368
 </div>
 <section id="gpt-2-small의-크기를-공식으로-맞춘다" class="level2">
 <h2 class="anchored" data-anchor-id="gpt-2-small의-크기를-공식으로-맞춘다">7-1. GPT-2 small의 크기를 공식으로 맞춘다</h2>
-<div id="6d26ea2e" class="cell" data-execution_count="19">
+<div id="74e72ccc" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>d, n_layer, V, L <span class="op">=</span> <span class="dv">768</span>, <span class="dv">12</span>, <span class="dv">50257</span>, <span class="dv">1024</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>blocks  <span class="op">=</span> n_layer <span class="op">*</span> (<span class="dv">12</span><span class="op">*</span>d<span class="op">*</span>d <span class="op">+</span> <span class="dv">13</span><span class="op">*</span>d)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>tok_emb <span class="op">=</span> V <span class="op">*</span> d</span>
@@ -846,7 +846,7 @@ Multi-Head Attention   4d² + 4d     2362368  2362368
 <h1>8. 실제 GPT-2를 열어 본다</h1>
 <section id="모델-불러오기" class="level2">
 <h2 class="anchored" data-anchor-id="모델-불러오기">8-1. 모델 불러오기</h2>
-<div id="80f4af32" class="cell" data-execution_count="20">
+<div id="c461e95c" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer, AutoModelForCausalLM</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">'gpt2'</span>)</span>
@@ -888,7 +888,7 @@ head 수    : 12
 </section>
 <section id="안을-들여다본다" class="level2">
 <h2 class="anchored" data-anchor-id="안을-들여다본다">8-2. 안을 들여다본다</h2>
-<div id="ba0ea066" class="cell" data-execution_count="21">
+<div id="711a1039" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gpt2.transformer.h[<span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>GPT2Block(
@@ -909,7 +909,7 @@ head 수    : 12
 )</code></pre>
 </div>
 </div>
-<div id="216624f3" class="cell" data-execution_count="22">
+<div id="134fb3e3" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>b0 <span class="op">=</span> gpt2.transformer.h[<span class="dv">0</span>]</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'블록 0 파라미터  :'</span>, <span class="ss">f'</span><span class="sc">{</span><span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> b0.parameters())<span class="sc">:,}</span><span class="ss">'</span>)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'공식 12d²+13d    :'</span>, <span class="ss">f'</span><span class="sc">{</span><span class="dv">12</span><span class="op">*</span><span class="dv">768</span><span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">13</span><span class="op">*</span><span class="dv">768</span><span class="sc">:,}</span><span class="ss">'</span>)</span>
@@ -930,7 +930,7 @@ head 수    : 12
 </section>
 <section id="다음-토큰-확률" class="level2">
 <h2 class="anchored" data-anchor-id="다음-토큰-확률">8-3. 다음 토큰 확률</h2>
-<div id="2c28c472" class="cell" data-execution_count="23">
+<div id="706da74c" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>prompt <span class="op">=</span> <span class="st">"The capital of France is"</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> tok(prompt, return_tensors<span class="op">=</span><span class="st">'pt'</span>)[<span class="st">'input_ids'</span>]</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'토큰:'</span>, tok.convert_ids_to_tokens(ids[<span class="dv">0</span>]))</span>
@@ -971,7 +971,7 @@ ids shape: (1, 5)
 <h1>9. Temperature</h1>
 <section id="ch12의-손계산-재현-1" class="level2">
 <h2 class="anchored" data-anchor-id="ch12의-손계산-재현-1">9-1. Ch12의 손계산 재현</h2>
-<div id="ce098bb7" class="cell" data-execution_count="24">
+<div id="b905a1b7" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>tokens5 <span class="op">=</span> [<span class="st">'갔다'</span>, <span class="st">'왔다'</span>, <span class="st">'있다'</span>, <span class="st">'먹었다'</span>, <span class="st">'고양이'</span>]</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.tensor([<span class="fl">2.0</span>, <span class="fl">1.0</span>, <span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="op">-</span><span class="fl">1.5</span>])</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -992,7 +992,7 @@ ids shape: (1, 5)
 </div>
 </div>
 <p>로짓은 하나도 바뀌지 않았는데 “갔다”의 확률이 83.8% → 58.7% → 39.4%로 달라진다. Temperature는 모델의 <strong>판단</strong>을 바꾸는 것이 아니라 <strong>판단의 확신 정도를 표현하는 방식</strong>을 바꾼다.</p>
-<div id="a0438483" class="cell" data-execution_count="25">
+<div id="c50c017e" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="fl">6.5</span>, <span class="fl">3.4</span>))</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> <span class="fl">0.25</span></span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>xs <span class="op">=</span> np.arange(<span class="bu">len</span>(tokens5))</span>
@@ -1011,7 +1011,7 @@ ids shape: (1, 5)
 </section>
 <section id="실제-gpt-2에-적용" class="level2">
 <h2 class="anchored" data-anchor-id="실제-gpt-2에-적용">9-2. 실제 GPT-2에 적용</h2>
-<div id="8cf00237" class="cell" data-execution_count="26">
+<div id="9a106a39" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T <span class="kw">in</span> [<span class="fl">0.3</span>, <span class="fl">1.0</span>, <span class="fl">2.0</span>]:</span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (last <span class="op">/</span> T).softmax(dim<span class="op">=-</span><span class="dv">1</span>)</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> p.topk(<span class="dv">5</span>)</span>
@@ -1027,7 +1027,7 @@ T = 2.0  'the' 0.5%  'now' 0.4%  'a' 0.4%  'France' 0.3%  'Paris' 0.3%</code></p
 </section>
 <section id="생성해-보기" class="level2">
 <h2 class="anchored" data-anchor-id="생성해-보기">9-3. 생성해 보기</h2>
-<div id="170c1341" class="cell" data-execution_count="27">
+<div id="10f07081" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">0</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> T <span class="kw">in</span> [<span class="fl">0.3</span>, <span class="fl">1.0</span>, <span class="fl">1.5</span>]:</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>    g <span class="op">=</span> gpt2.generate(ids, max_new_tokens<span class="op">=</span><span class="dv">20</span>, do_sample<span class="op">=</span><span class="va">True</span>, temperature<span class="op">=</span>T,</span>
@@ -1053,7 +1053,7 @@ T=1.5: The capital of France is Zaragoza within walking distance on Independence
 <p>자기가 고른 영어 문장을 넣어 다음 토큰 후보 5개와 확률을 확인하고, temperature를 바꿔 생성 결과가 어떻게 달라지는지 보시오.</p>
 </div>
 </div>
-<div id="ff347a92" class="cell" data-execution_count="28">
+<div id="352162e5" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>my_prompt <span class="op">=</span> <span class="va">None</span>            <span class="co"># ← 영어 문장을 적으세요 (GPT-2는 영어 전용)</span></span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>my_ids <span class="op">=</span> tok(my_prompt, return_tensors<span class="op">=</span><span class="st">'pt'</span>)[<span class="st">'input_ids'</span>]</span>
@@ -1063,7 +1063,7 @@ T=1.5: The capital of France is Zaragoza within walking distance on Independence
 <span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p_, i_ <span class="kw">in</span> <span class="bu">zip</span>(top.values.tolist(), top.indices.tolist()):</span>
 <span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>tok<span class="sc">.</span>decode([i_])<span class="sc">!r:14s}</span><span class="ss"> </span><span class="sc">{</span>p_<span class="op">*</span><span class="dv">100</span><span class="sc">:5.2f}</span><span class="ss">%'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="2a6faf20" class="cell" data-execution_count="29">
+<div id="cd15651e" class="cell" data-execution_count="29">
 <details class="code-fold">
 <summary>예시 보기</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>my_prompt <span class="op">=</span> <span class="st">'Deep learning models are'</span></span>
@@ -1101,7 +1101,7 @@ T=1.2: Deep learning models are increasingly turning national sovereignty effort
 <h1>10. HuggingFace 사용법 정리</h1>
 <section id="pipeline-가장-짧은-길" class="level2">
 <h2 class="anchored" data-anchor-id="pipeline-가장-짧은-길">10-1. <code>pipeline</code> — 가장 짧은 길</h2>
-<div id="9ff3905a" class="cell" data-execution_count="30">
+<div id="bedf3714" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>gen <span class="op">=</span> pipeline(<span class="st">'text-generation'</span>, model<span class="op">=</span><span class="st">'gpt2'</span>, tokenizer<span class="op">=</span>tok, device<span class="op">=-</span><span class="dv">1</span>)</span>
@@ -1113,7 +1113,7 @@ T=1.2: Deep learning models are increasingly turning national sovereignty effort
 </section>
 <section id="토크나이저와-모델은-반드시-짝을-맞춘다" class="level2">
 <h2 class="anchored" data-anchor-id="토크나이저와-모델은-반드시-짝을-맞춘다">10-2. 토크나이저와 모델은 반드시 짝을 맞춘다</h2>
-<div id="066f252e" class="cell" data-execution_count="31">
+<div id="6d1dfcec" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>wrong_tok <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">'klue/bert-base'</span>)</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'gpt2 토크나이저의 어휘 크기      :'</span>, tok.vocab_size)</span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'klue/bert-base 토크나이저의 어휘 :'</span>, wrong_tok.vocab_size)</span>
@@ -1178,7 +1178,7 @@ gpt2 모델이 기대하는 어휘 크기   : 50257
 </tr>
 </tbody>
 </table>
-<div id="c643bc57" class="cell" data-execution_count="32">
+<div id="104d069a" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'모델 이름 :'</span>, gpt2.config._name_or_path)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'아키텍처  :'</span>, gpt2.config.architectures)</span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'작업 종류 : text-generation (다음 토큰 예측)'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1261,7 +1261,7 @@ gpt2 모델이 기대하는 어휘 크기   : 50257
 <section id="스스로-확인해-보기" class="level2">
 <h2 class="anchored" data-anchor-id="스스로-확인해-보기">스스로 확인해 보기</h2>
 <p>아래 결과를 먼저 예상한 뒤 실행해서 대조한다.</p>
-<div id="760f86b3" class="cell" data-execution_count="33">
+<div id="f0f686a5" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> d_, n_layer_, name <span class="kw">in</span> [(<span class="dv">768</span>, <span class="dv">12</span>, <span class="st">'GPT-2 small'</span>), (<span class="dv">1024</span>, <span class="dv">24</span>, <span class="st">'GPT-2 medium'</span>),</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                           (<span class="dv">1600</span>, <span class="dv">48</span>, <span class="st">'GPT-2 XL'</span>)]:</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>    blocks_ <span class="op">=</span> n_layer_ <span class="op">*</span> (<span class="dv">12</span><span class="op">*</span>d_<span class="op">*</span>d_ <span class="op">+</span> <span class="dv">13</span><span class="op">*</span>d_)</span>
@@ -1289,7 +1289,7 @@ GPT-2 XL       d= 1600 L=48  블록 1,475,558,400  임베딩  82,049,600  합계
 </section>
 <section id="다음-주" class="level2">
 <h2 class="anchored" data-anchor-id="다음-주">다음 주</h2>
-<p>13주차는 <strong>프로젝트 워크숍</strong>이다. 새 실습은 없다. 1차·2차 수집 결과를 3단계로 비교하고 발표를 준비한다.</p>
+<p>13주차는 새 실습이 없다. 1차·2차 수집 결과를 3단계로 비교하고 발표를 준비한다.</p>
 
 
 </section>
