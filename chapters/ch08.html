@@ -489,7 +489,7 @@ window.Quarto = {
 </section>
 <section id="손으로-따라-계산하기-동결하면-몇-개를-학습하나" class="level3">
 <h3 class="anchored" data-anchor-id="손으로-따라-계산하기-동결하면-몇-개를-학습하나">✍️ 손으로 따라 계산하기 — 동결하면 몇 개를 학습하나</h3>
-<p><strong>설정</strong>: ResNet-50(전체 약 <span class="math inline">\(25{,}000{,}000\)</span> 파라미터)의 특성 추출기를 동결하고, 분류기를 <strong>7개 클래스</strong>용으로 새로 붙인다. GAP 뒤의 특성 벡터 길이는 <span class="math inline">\(2{,}048\)</span> 이다.</p>
+<p><strong>설정</strong>: ResNet-50(전체 약 <span class="math inline">\(25{,}000{,}000\)</span> 파라미터)의 특성 추출기를 동결하고, 분류기를 <strong>7개 클래스</strong>용으로 새로 붙인다. GAP(전역 평균 풀링: 마지막 특성 맵의 채널마다 평균 하나를 남기는 풀링) 뒤의 특성 벡터 길이는 <span class="math inline">\(2{,}048\)</span> 이다.</p>
 <p><strong>단계 1 — 새 분류기의 모양을 정한다.</strong> 입력 <span class="math inline">\(2{,}048\)</span> → 출력 <span class="math inline">\(7\)</span> 인 FC 한 층.</p>
 <p><strong>단계 2 — 파라미터를 센다.</strong> Ch02의 공식 그대로 <span class="math inline">\(n_{l-1} \times n_l + n_l\)</span>:</p>
 <p><span class="math display">\[2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\]</span></p>
@@ -778,7 +778,7 @@ HW2 예고 — 내가 찍은 사진 분류
 </section>
 <section id="cv-응용의-비교" class="level3">
 <h3 class="anchored" data-anchor-id="cv-응용의-비교">CV 응용의 비교</h3>
-<div id="b3e39e8a" class="cell" data-execution_count="1">
+<div id="2a1b836e" class="cell" data-execution_count="1">
 <div class="cell-output cell-output-display" data-execution_count="1">
 <table class="dataframe table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
