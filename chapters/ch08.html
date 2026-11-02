@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>CNN 학습 전략과 컴퓨터 비전 응용 – 딥러닝</title>
+<title>CNN의 정확도 높이기 – 딥러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,7 +23,7 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -66,9 +66,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "검색"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 
@@ -151,37 +148,19 @@ window.Quarto = {
     <h2 id="toc-title">목차</h2>
    
   <ul>
-  <li><a href="#뉴럴-네트워크의-학습-전략" id="toc-뉴럴-네트워크의-학습-전략" class="nav-link active" data-scroll-target="#뉴럴-네트워크의-학습-전략">뉴럴 네트워크의 학습 전략</a>
-  <ul class="collapse">
-  <li><a href="#성능-진단-흐름" id="toc-성능-진단-흐름" class="nav-link" data-scroll-target="#성능-진단-흐름">성능 진단 흐름</a></li>
-  </ul></li>
+  <li><a href="#뉴럴-네트워크의-학습-전략" id="toc-뉴럴-네트워크의-학습-전략" class="nav-link active" data-scroll-target="#뉴럴-네트워크의-학습-전략">뉴럴 네트워크의 학습 전략</a></li>
   <li><a href="#데이터-증강-data-augmentation" id="toc-데이터-증강-data-augmentation" class="nav-link" data-scroll-target="#데이터-증강-data-augmentation">데이터 증강 (Data Augmentation)</a>
   <ul class="collapse">
-  <li><a href="#기본-아이디어" id="toc-기본-아이디어" class="nav-link" data-scroll-target="#기본-아이디어">기본 아이디어</a></li>
-  <li><a href="#증강-방법" id="toc-증강-방법" class="nav-link" data-scroll-target="#증강-방법">증강 방법</a></li>
-  <li><a href="#증강의-두-가지-금지선" id="toc-증강의-두-가지-금지선" class="nav-link" data-scroll-target="#증강의-두-가지-금지선">증강의 두 가지 금지선</a></li>
+  <li><a href="#데이터-증강-방식" id="toc-데이터-증강-방식" class="nav-link" data-scroll-target="#데이터-증강-방식">데이터 증강 방식</a></li>
   </ul></li>
   <li><a href="#데이터-합성-data-synthesis" id="toc-데이터-합성-data-synthesis" class="nav-link" data-scroll-target="#데이터-합성-data-synthesis">데이터 합성 (Data Synthesis)</a></li>
-  <li><a href="#전이-학습-transfer-learning" id="toc-전이-학습-transfer-learning" class="nav-link" data-scroll-target="#전이-학습-transfer-learning">전이 학습 (Transfer Learning)</a>
+  <li><a href="#사전-학습된-모델-활용-using-pretrained-model" id="toc-사전-학습된-모델-활용-using-pretrained-model" class="nav-link" data-scroll-target="#사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</a>
   <ul class="collapse">
-  <li><a href="#사전-학습된-모델-활용" id="toc-사전-학습된-모델-활용" class="nav-link" data-scroll-target="#사전-학습된-모델-활용">사전 학습된 모델 활용</a></li>
-  <li><a href="#전이-학습-절차" id="toc-전이-학습-절차" class="nav-link" data-scroll-target="#전이-학습-절차">전이 학습 절차</a></li>
-  <li><a href="#동결이냐-전체-미세-조정이냐" id="toc-동결이냐-전체-미세-조정이냐" class="nav-link" data-scroll-target="#동결이냐-전체-미세-조정이냐">동결이냐, 전체 미세 조정이냐</a></li>
-  <li><a href="#손으로-따라-계산하기-동결하면-몇-개를-학습하나" id="toc-손으로-따라-계산하기-동결하면-몇-개를-학습하나" class="nav-link" data-scroll-target="#손으로-따라-계산하기-동결하면-몇-개를-학습하나">✍️ 손으로 따라 계산하기 — 동결하면 몇 개를 학습하나</a></li>
-  <li><a href="#직접-해보기-전이-학습-시나리오-판단" id="toc-직접-해보기-전이-학습-시나리오-판단" class="nav-link" data-scroll-target="#직접-해보기-전이-학습-시나리오-판단">✍️ 직접 해보기 — 전이 학습 시나리오 판단</a></li>
-  <li><a href="#왜-전이-학습이-작동하는가" id="toc-왜-전이-학습이-작동하는가" class="nav-link" data-scroll-target="#왜-전이-학습이-작동하는가">왜 전이 학습이 작동하는가?</a></li>
-  <li><a href="#사전-학습-모델에-맞춰야-하는-것-조용히-망가지는-지점" id="toc-사전-학습-모델에-맞춰야-하는-것-조용히-망가지는-지점" class="nav-link" data-scroll-target="#사전-학습-모델에-맞춰야-하는-것-조용히-망가지는-지점">사전 학습 모델에 맞춰야 하는 것 — 조용히 망가지는 지점</a></li>
-  <li><a href="#미세-조정의-학습률은-작게" id="toc-미세-조정의-학습률은-작게" class="nav-link" data-scroll-target="#미세-조정의-학습률은-작게">미세 조정의 학습률은 <strong>작게</strong></a></li>
-  <li><a href="#성능은-무엇으로-보고할-것인가" id="toc-성능은-무엇으로-보고할-것인가" class="nav-link" data-scroll-target="#성능은-무엇으로-보고할-것인가">성능은 무엇으로 보고할 것인가</a></li>
+  <li><a href="#학습하는-파라미터-수" id="toc-학습하는-파라미터-수" class="nav-link" data-scroll-target="#학습하는-파라미터-수">학습하는 파라미터 수</a></li>
+  <li><a href="#연습-동결하면-몇-개를-학습하나" id="toc-연습-동결하면-몇-개를-학습하나" class="nav-link" data-scroll-target="#연습-동결하면-몇-개를-학습하나">연습 — 동결하면 몇 개를 학습하나</a></li>
   </ul></li>
-  <li><a href="#이미지-분류를-넘어서" id="toc-이미지-분류를-넘어서" class="nav-link" data-scroll-target="#이미지-분류를-넘어서">이미지 분류를 넘어서</a>
-  <ul class="collapse">
-  <li><a href="#객체-탐지-object-detection" id="toc-객체-탐지-object-detection" class="nav-link" data-scroll-target="#객체-탐지-object-detection">객체 탐지 (Object Detection)</a></li>
-  <li><a href="#시맨틱-분할-semantic-segmentation" id="toc-시맨틱-분할-semantic-segmentation" class="nav-link" data-scroll-target="#시맨틱-분할-semantic-segmentation">시맨틱 분할 (Semantic Segmentation)</a></li>
-  <li><a href="#cv-응용의-비교" id="toc-cv-응용의-비교" class="nav-link" data-scroll-target="#cv-응용의-비교">CV 응용의 비교</a></li>
-  <li><a href="#의료-영상에서의-시맨틱-분할" id="toc-의료-영상에서의-시맨틱-분할" class="nav-link" data-scroll-target="#의료-영상에서의-시맨틱-분할">의료 영상에서의 시맨틱 분할</a></li>
-  </ul></li>
-  <li><a href="#정리" id="toc-정리" class="nav-link" data-scroll-target="#정리">정리</a></li>
+  <li><a href="#왜-작동하는가" id="toc-왜-작동하는가" class="nav-link" data-scroll-target="#왜-작동하는가">왜 작동하는가?</a></li>
+  <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
   </ul>
 </nav>
     </div>
@@ -190,7 +169,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">CNN 학습 전략과 컴퓨터 비전 응용</h1>
+<h1 class="title">CNN의 정확도 높이기</h1>
 </div>
 
 
@@ -218,671 +197,309 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>CNN의 <strong>학습 전략 흐름</strong>(학습 데이터 성능 → 테스트 데이터 성능)을 이해한다</li>
-<li><strong>데이터 증강(Data Augmentation)</strong>과 <strong>데이터 합성(Data Synthesis)</strong>의 차이를 설명할 수 있다</li>
-<li><strong>전이 학습(Transfer Learning)</strong>의 원리와 활용 방법을 이해하고, <strong>동결 시 학습 파라미터 수를 직접 계산</strong>할 수 있다</li>
-<li>사전 학습 모델을 쓸 때 맞춰야 할 <strong>입력 규격과 학습률</strong>을 설명할 수 있다</li>
-<li>이미지 분류를 넘어선 CV 응용 — <strong>객체 탐지</strong>와 <strong>시맨틱 분할</strong>의 개념을 설명할 수 있다</li>
+<li>학습 데이터와 테스트 데이터의 성능을 보고 다음에 할 일을 정할 수 있다</li>
+<li>데이터 증강의 방식(위치 변경, 회전, 색 바꾸기)과 데이터 합성의 차이를 설명할 수 있다</li>
+<li>사전 학습 모델을 가져와 마지막 분류기를 교체하고 다시 학습하는 절차를 설명할 수 있다</li>
+<li>동결했을 때 학습하는 파라미터 수를 <strong>직접 계산</strong>할 수 있다</li>
+<li>사전 학습 모델이 적은 데이터로도 작동하는 이유를 설명할 수 있다</li>
 </ul>
 </div>
 </div>
 <hr>
 <section id="뉴럴-네트워크의-학습-전략" class="level2">
 <h2 class="anchored" data-anchor-id="뉴럴-네트워크의-학습-전략">뉴럴 네트워크의 학습 전략</h2>
-<section id="성능-진단-흐름" class="level3">
-<h3 class="anchored" data-anchor-id="성능-진단-흐름">성능 진단 흐름</h3>
-<p>Ch07에서 다양한 CNN 아키텍처를 배웠다. 어떤 아키텍처를 선택하더라도, 학습 후에는 <strong>두 가지 질문</strong>으로 성능을 진단한다.</p>
+<p>앞 장에서 CNN을 쌓는 방법을 배웠다. 학습을 마친 CNN은 두 가지 성능을 차례로 확인한다.</p>
 <svg viewbox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:1.5em auto;">
-<defs> <marker id="ah7" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker> <marker id="ah7w" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#fff"></path></marker> </defs> <!-- Q1 --> <rect x="20" y="60" width="180" height="70" rx="10" fill="#1F3F7A" opacity="0.12" stroke="#1F3F7A" stroke-width="1.5"></rect> <text x="110" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">학습 데이터에 대한</text> <text x="110" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="200" y1="95" x2="260" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="230" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Q2 --> <rect x="265" y="60" width="180" height="70" rx="10" fill="#8C1515" opacity="0.1" stroke="#8C1515" stroke-width="1.5"></rect> <text x="355" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">테스트 데이터에 대한</text> <text x="355" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="445" y1="95" x2="510" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="478" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Done --> <rect x="515" y="70" width="100" height="50" rx="8" fill="#2E7D32" opacity="0.15" stroke="#2E7D32" stroke-width="1.5"></rect> <text x="565" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">완료!</text> <!-- No from Q1 --> <line x1="110" y1="130" x2="110" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="125" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="30" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="110" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 큰 규모의</text> <text x="110" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">아키텍처</text> <!-- Loop back --> <path d="M 30,205 Q 5,205 5,95 Q 5,60 20,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path> <!-- No from Q2 --> <line x1="355" y1="130" x2="355" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="370" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="275" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="355" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 많은 데이터</text> <text x="355" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">(증강/합성/전이학습)</text> <!-- Loop back --> <path d="M 275,205 Q 250,205 250,95 Q 250,60 265,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path>
+<defs> <marker id="ah7" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker> <marker id="ah7w" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#fff"></path></marker> </defs> <!-- Q1 --> <rect x="20" y="60" width="180" height="70" rx="10" fill="#1F3F7A" opacity="0.12" stroke="#1F3F7A" stroke-width="1.5"></rect> <text x="110" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">학습 데이터에 대한</text> <text x="110" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="200" y1="95" x2="260" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="230" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Q2 --> <rect x="265" y="60" width="180" height="70" rx="10" fill="#8C1515" opacity="0.1" stroke="#8C1515" stroke-width="1.5"></rect> <text x="355" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">테스트 데이터에 대한</text> <text x="355" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="445" y1="95" x2="510" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="478" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Done --> <rect x="515" y="70" width="100" height="50" rx="8" fill="#2E7D32" opacity="0.15" stroke="#2E7D32" stroke-width="1.5"></rect> <text x="565" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">완료!</text> <!-- No from Q1 --> <line x1="110" y1="130" x2="110" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="125" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="30" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="110" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 큰 규모의</text> <text x="110" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">아키텍처</text> <!-- Loop back --> <path d="M 30,205 Q 5,205 5,95 Q 5,60 20,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path> <!-- No from Q2 --> <line x1="355" y1="130" x2="355" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="370" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="275" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="355" y="209" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 많은 데이터</text> <!-- Loop back --> <path d="M 275,205 Q 250,205 250,95 Q 250,60 265,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path>
 </svg>
-<ul>
-<li><strong>학습 데이터 성능이 낮다</strong> → 모델 용량이 부족 = <strong>과소적합</strong> → <strong>더 큰/깊은 아키텍처</strong> 사용</li>
-<li><strong>학습은 좋지만 테스트 성능이 낮다</strong> → <strong>과적합</strong> → <strong>더 많은 데이터</strong> 확보</li>
-</ul>
-<p>이 진단은 Ch04에서 배운 것과 정확히 같은 것이다 — 두 번째 상황이 바로 <strong>러닝커브에서 훈련·검증 손실의 간격이 벌어지는</strong> 그 지점이다. Ch04에서는 조기 종료·모형 축소 같은 대응을 배웠고, 이 장에서는 가장 확실한 대응이었던 <strong>“데이터 늘리기”의 구체적인 방법 세 가지</strong>를 배운다.</p>
-<p>테스트 성능을 높이기 위해 <strong>데이터를 늘리는 세 가지 방법</strong>을 살펴보자.</p>
+<p>학습 데이터에 대한 성능이 낮으면 모델이 학습 데이터조차 설명하지 못하는 것이다. 더 큰 규모의 아키텍처를 쓴다. 7장에서 본 대로 층을 깊게 쌓을수록 정확도가 올라간다.</p>
+<p>학습 데이터에 대한 성능은 좋은데 테스트 데이터에 대한 성능이 낮으면 과적합이다. 4장의 러닝커브에서 훈련 손실과 검증 손실의 간격이 벌어지는 상황이다. 이때는 더 많은 데이터가 필요하다.</p>
+<p>데이터를 새로 모으려면 시간과 비용이 든다. 이 장은 가진 데이터를 변형해 늘리는 방법과, 다른 사람이 많은 데이터로 학습해 둔 모델을 가져오는 방법을 다룬다.</p>
 <hr>
-</section>
 </section>
 <section id="데이터-증강-data-augmentation" class="level2">
 <h2 class="anchored" data-anchor-id="데이터-증강-data-augmentation">데이터 증강 (Data Augmentation)</h2>
-<section id="기본-아이디어" class="level3">
-<h3 class="anchored" data-anchor-id="기본-아이디어">기본 아이디어</h3>
-<p>CNN은 이미지에서 특성을 뽑아내는 방법이다. 같은 이미지에 <strong>변형을 가하면</strong> 모델 입장에서는 <strong>다른 데이터</strong>처럼 보인다. 변형된 이미지도 원래 이미지의 핵심 특성을 보존하므로, 데이터를 늘리는 효과가 있다.</p>
+<p>CNN은 이미지에서 특성을 뽑아내는 방법이다. 고양이 사진을 좌우로 뒤집거나 조금 돌려도 고양이의 특성은 그대로 남는다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-정의: 데이터 증강 (Data Augmentation)
+데이터 증강 (Data Augmentation)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>기존 학습 이미지에 <strong>다양한 변형</strong>을 적용하여 데이터 수를 인위적으로 늘리는 기법. 이미지의 특성을 포함한 데이터가 많아지므로 모델의 <strong>일반화 성능</strong>이 향상된다.</p>
+<p>같은 이미지에 변형을 가하여 새로운 데이터를 만드는 방법. 이미지의 특성을 담은 데이터가 많아지므로 정확도가 높아질 수 있다.</p>
 </div>
 </div>
-</section>
-<section id="증강-방법" class="level3">
-<h3 class="anchored" data-anchor-id="증강-방법">증강 방법</h3>
+<section id="데이터-증강-방식" class="level3">
+<h3 class="anchored" data-anchor-id="데이터-증강-방식">데이터 증강 방식</h3>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 29%">
-<col style="width: 35%">
-<col style="width: 35%">
-</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;">변환 유형</th>
-<th>설명</th>
-<th>예시</th>
+<th>방식</th>
+<th>변형</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>이동(Shift)</strong></td>
-<td>이미지를 좌/우/상/하로 이동</td>
-<td>새가 프레임 왼쪽/오른쪽에 위치</td>
+<td>위치 변경</td>
+<td>이미지를 좌우로 옮기거나 좌우를 뒤집는다</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>반전(Flip)</strong></td>
-<td>좌우 또는 상하 반전</td>
-<td>거울에 비친 것처럼</td>
+<td>회전</td>
+<td>이미지를 일정 각도만큼 돌린다</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><strong>회전(Rotation)</strong></td>
-<td>일정 각도로 회전</td>
-<td>10°, 20° 기울어진 이미지</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>색상 변환</strong></td>
-<td>밝기, 대비, 채도 등 조정</td>
-<td>어두운 조명, 밝은 조명 시뮬레이션</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>잘라내기(Crop)</strong></td>
-<td>이미지의 일부 영역만 사용</td>
-<td>확대 효과</td>
+<td>색 바꾸기</td>
+<td>밝기, 대비, 채도를 바꾼다</td>
 </tr>
 </tbody>
 </table>
-<blockquote class="blockquote">
-<p>원본 1장으로 수십 장의 변형 이미지를 만들 수 있으므로, 적은 데이터로도 효과적인 학습이 가능해진다.</p>
-</blockquote>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p><strong>폴더에 변형 이미지를 저장하는 것이 아니다.</strong> 실제 구현에서는 학습 중 <strong>매 에폭마다 그때그때 무작위 변형</strong>을 적용한다(on-the-fly). 저장된 파일 수는 그대로 50장이지만, 모델은 매 에폭 조금씩 다른 50장을 보게 된다.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="증강의-두-가지-금지선" class="level3">
-<h3 class="anchored" data-anchor-id="증강의-두-가지-금지선">증강의 두 가지 금지선</h3>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-① 증강은 <strong>훈련 데이터에만</strong> 적용한다
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>검증·테스트 데이터에 증강을 걸면 <strong>평가가 오염된다.</strong> 측정하려는 것은 “실제로 들어올 사진에서의 성능”인데, 변형된 사진으로 재면 그 수치는 의미가 없다.</p>
-<p>Ch04의 <strong>데이터 누수</strong>와 같은 이야기다 — 평가용 데이터는 손대지 않는다.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-② <strong>레이블이 바뀌는 변형</strong>은 하면 안 된다
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>증강의 전제는 “변형해도 <strong>정답은 그대로</strong>”이다. 이 전제가 깨지면 모델에게 거짓을 가르치는 셈이다.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>위험한 경우</th>
-<th>무슨 일이 일어나는가</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>숫자 <strong>6</strong>을 180° 회전</td>
-<td><strong>9</strong>가 된다 → 6이라는 레이블이 거짓이 됨</td>
-</tr>
-<tr class="even">
-<td>도로 <strong>표지판</strong>을 좌우 반전</td>
-<td>좌회전 표지가 우회전이 됨</td>
-</tr>
-<tr class="odd">
-<td><strong>문자·간판</strong> 이미지를 좌우 반전</td>
-<td>글자가 뒤집혀 읽을 수 없게 됨</td>
-</tr>
-<tr class="even">
-<td><strong>색</strong>으로 구분하는 대상의 색상 변환</td>
-<td>빨간 소화기가 파랗게 되면 클래스가 무너짐</td>
-</tr>
-</tbody>
-</table>
-<p><strong>증강을 고를 때의 기준은 하나다</strong> — “실제 세상에서 이런 사진이 찍힐 수 있는가?” 고양이는 거꾸로 뒤집힌 채 찍히는 일이 드물지만, 좌우 반전된 고양이는 흔하다. 그래서 고양이 분류에서 좌우 반전은 쓰고, 상하 반전은 잘 쓰지 않는다.</p>
-</div>
-</div>
-<p>눈치챘겠지만, 증강이 흉내 내는 것이 바로 <strong>Ch05의 촬영 난관들</strong>(시점, 크기, 조명, 배경)이다. 다만 증강은 진짜 다양성의 <strong>보조 수단이지 대체재가 아니다</strong> — 같은 각도에서 찍은 사진 200장을 아무리 회전시켜도 새로운 시점은 생기지 않는다. 팀 프로젝트에서 촬영을 다양하게 해야 하는 이유가 여기서도 확인된다.</p>
+<p><img src="../assets/img/ch08_augment.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
+<p>네 장 모두 고양이다. 모델은 네 장을 서로 다른 데이터로 받는다.</p>
+<p>증강한 이미지는 파일로 저장해 두지 않는다. 학습 중에 이미지를 꺼낼 때마다 무작위로 변형한다. 그래서 에폭마다 모델이 보는 이미지가 조금씩 다르다.</p>
+<p>증강은 학습 데이터에만 적용한다. 검증 데이터와 테스트 데이터는 실제로 들어올 이미지와 같은 상태로 두어야 성능을 제대로 잴 수 있다.</p>
+<p>변형한 뒤에도 정답은 그대로여야 한다. 숫자 6을 180° 돌리면 9가 된다. 이런 변형은 쓰지 않는다.</p>
 <hr>
 </section>
 </section>
 <section id="데이터-합성-data-synthesis" class="level2">
 <h2 class="anchored" data-anchor-id="데이터-합성-data-synthesis">데이터 합성 (Data Synthesis)</h2>
-<p>데이터 증강이 기존 데이터에 <strong>노이즈나 변형을 가하는</strong> 것이라면, 데이터 합성은 <strong>새롭게 합성된 이미지를 만들어</strong> 데이터를 생성하는 것이다.</p>
-<p>예를 들어, OCR(광학 문자 인식) 학습에서:</p>
-<ul>
-<li><strong>실제 데이터</strong>: 다양한 간판, 표지 사진에서 촬영한 글자 이미지</li>
-<li><strong>합성 데이터</strong>: 다양한 폰트, 배경, 노이즈를 조합하여 <strong>컴퓨터로 생성</strong>한 글자 이미지</li>
-</ul>
-<p>합성 데이터는 실제 데이터를 보완하여 학습 데이터의 <strong>다양성</strong>을 크게 확장할 수 있다.</p>
+<p>데이터 증강이 기존 이미지를 변형하는 것이라면, 데이터 합성은 새로 합성한 이미지로 데이터를 만드는 것이다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+데이터 합성 (Data Synthesis)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더하는 방법.</p>
+</div>
+</div>
+<p>사진 속 글자를 읽는 OCR 모델이 예다. 간판과 표지판을 찍은 실제 글자 이미지에 더해, 여러 글꼴과 배경과 잡음을 조합해 컴퓨터로 만든 글자 이미지로도 학습한다.</p>
 <hr>
 </section>
-<section id="전이-학습-transfer-learning" class="level2">
-<h2 class="anchored" data-anchor-id="전이-학습-transfer-learning">전이 학습 (Transfer Learning)</h2>
-<section id="사전-학습된-모델-활용" class="level3">
-<h3 class="anchored" data-anchor-id="사전-학습된-모델-활용">사전 학습된 모델 활용</h3>
-<p>대규모 데이터셋(예: ImageNet 100만 장)으로 학습된 모델은 <strong>이미지의 일반적인 특성</strong>(에지, 코너, 기본 형태 등)을 이미 잘 파악하고 있다.</p>
+<section id="사전-학습된-모델-활용-using-pretrained-model" class="level2">
+<h2 class="anchored" data-anchor-id="사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</h2>
+<p>데이터를 늘리는 또 하나의 방법은 다른 사람이 대량의 데이터로 학습해 둔 모델을 가져오는 것이다. ImageNet은 사진 약 128만 장을 1,000가지 클래스로 나눈 데이터셋이다. 이 데이터로 학습한 CNN이 가중치까지 공개되어 있다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-정의: 전이 학습 (Transfer Learning)
+사전 학습 모델 (Pretrained Model)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>대규모 데이터로 <strong>사전 학습(Pretrained)</strong>된 모델의 가중치를 가져와, 내 데이터에 맞게 <strong>마지막 분류기만 교체</strong>한 뒤 <strong>미세 조정(Fine-tuning)</strong>하는 학습 방법.</p>
+<p>대량의 데이터로 미리 학습시켜 가중치까지 공개한 모델. 7장의 ResNet도 ImageNet으로 학습한 가중치가 공개되어 있다.</p>
 </div>
 </div>
-</section>
-<section id="전이-학습-절차" class="level3">
-<h3 class="anchored" data-anchor-id="전이-학습-절차">전이 학습 절차</h3>
-<svg viewbox="0 0 680 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:680px;display:block;margin:1.5em auto;">
-<defs> <marker id="aht" markerwidth="7" markerheight="5" refx="7" refy="2.5" orient="auto"><path d="M0,0 L7,2.5 L0,5 Z" fill="#555"></path></marker> </defs> <!-- Step 1 --> <rect x="10" y="30" width="170" height="90" rx="8" fill="#1F3F7A" opacity="0.1" stroke="#1F3F7A" stroke-width="1.5"></rect> <text x="95" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">1. 사전 학습 모델</text> <text x="95" y="75" text-anchor="middle" font-size="10" fill="#555">ImageNet 등으로</text> <text x="95" y="90" text-anchor="middle" font-size="10" fill="#555">학습된 CNN 가져오기</text> <text x="95" y="108" text-anchor="middle" font-size="9" fill="#888">(ResNet, VGG 등)</text> <line x1="180" y1="75" x2="205" y2="75" stroke="#555" stroke-width="1.2" marker-end="url(#aht)"></line> <!-- Step 2 --> <rect x="210" y="30" width="170" height="90" rx="8" fill="#8C1515" opacity="0.08" stroke="#8C1515" stroke-width="1.5"></rect> <text x="295" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">2. 분류기 교체</text> <text x="295" y="75" text-anchor="middle" font-size="10" fill="#555">마지막 FC + Softmax를</text> <text x="295" y="90" text-anchor="middle" font-size="10" fill="#555">내 클래스 수에 맞게 교체</text> <text x="295" y="108" text-anchor="middle" font-size="9" fill="#888">(예: 1000 → 10)</text> <line x1="380" y1="75" x2="405" y2="75" stroke="#555" stroke-width="1.2" marker-end="url(#aht)"></line> <!-- Step 3 --> <rect x="410" y="30" width="170" height="90" rx="8" fill="#D4A017" opacity="0.12" stroke="#D4A017" stroke-width="1.5"></rect> <text x="495" y="55" text-anchor="middle" font-size="11" font-weight="700" fill="#9A7B00">3. 미세 조정</text> <text x="495" y="75" text-anchor="middle" font-size="10" fill="#555">내 (소량의) 데이터로</text> <text x="495" y="90" text-anchor="middle" font-size="10" fill="#555">재학습</text> <text x="495" y="108" text-anchor="middle" font-size="9" fill="#888">Option 1: 출력층만 학습</text> <!-- Options --> <text x="495" y="155" text-anchor="middle" font-size="10" fill="#555">Option 1: 마지막 층만 학습 (데이터 소량)</text> <text x="495" y="172" text-anchor="middle" font-size="10" fill="#555">Option 2: 전체 파라미터 재학습 (데이터 충분)</text>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+전이 학습 (Transfer Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>사전 학습 모델을 가져와 내 문제에 맞게 다시 학습시키는 방법.</p>
+<ol type="1">
+<li>사전에 학습된 대형 모델을 가져온다</li>
+<li>마지막 분류기 부분을 내가 원하는 분류기로 교체한다</li>
+<li>내가 가진 소량의 데이터로 마지막 부분을 다시 학습한다</li>
+</ol>
+</div>
+</div>
+<div style="text-align:center;margin:1em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 400" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
+<defs><marker id="ah8" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker></defs><rect width="720" height="400" fill="white"></rect><text x="30" y="35" text-anchor="start" font-size="13" font-weight="700" fill="#222">사전 학습</text><line x1="150" y1="79.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><circle cx="150" cy="79.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="105.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="131.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="580" cy="53.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="79.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="100.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="105.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="110.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="131.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="157.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="167" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">입력 이미지</text><text x="602" y="99" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">1,000개</text><text x="602" y="115" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">클래스</text><text x="360.0" y="177" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">ImageNet 사진 약 128만 장으로 모든 가중치를 학습</text><line x1="360.0" y1="189" x2="360.0" y2="217" stroke="#555" stroke-width="1.6" marker-end="url(#ah8)"></line><text x="370.0" y="208" text-anchor="start" font-size="10.5" font-weight="700" fill="#333">가중치를 그대로 가져와 마지막 층만 교체</text><text x="30" y="220" text-anchor="start" font-size="13" font-weight="700" fill="#222">미세 조정</text><text x="30" y="238" text-anchor="start" font-size="11" font-weight="400" fill="#555">(Option 1)</text><line x1="150" y1="264.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="480" y1="251.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="251.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><circle cx="150" cy="264.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="290.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="316.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="580" cy="277.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="303.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">내 이미지</text><text x="360.0" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#757575">동결: 학습하지 않는다</text><text x="602" y="284" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">내 클래스</text><text x="602" y="300" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">2개</text><text x="530" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6A1B9A">새 출력층만 학습</text>
 </svg>
-</section>
-<section id="동결이냐-전체-미세-조정이냐" class="level3">
-<h3 class="anchored" data-anchor-id="동결이냐-전체-미세-조정이냐">동결이냐, 전체 미세 조정이냐</h3>
+</div>
+<p>위는 ImageNet으로 학습한 모델이다. 출력층 노드는 1,000개이고 노드 하나가 클래스 하나다. 아래는 같은 모델에서 출력층만 내 클래스 수만큼의 노드로 바꾼 것이다. 나머지 층의 가중치는 위에서 그대로 가져온다. 새 출력층의 가중치는 처음부터 학습한다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-정의: 동결 (Freeze)
+동결 (Freeze)
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>사전 학습된 층의 파라미터를 학습 대상에서 <strong>제외(고정)</strong>하는 것. 동결된 층은 역전파에서 그래디언트를 받아도 갱신되지 않는다.</p>
+<p>층의 파라미터를 학습하지 않고 고정하는 것. 동결한 층의 가중치는 경사하강법으로 갱신되지 않는다.</p>
 </div>
 </div>
-<p>그림의 Option 1이 바로 특성 추출기 <strong>동결</strong>이다. 학습 파라미터 수를 직접 계산해 보자.</p>
-<p>예: ResNet-50(전체 약 2,500만 파라미터)을 가져와 분류기를 5개 클래스로 교체하는 경우. 마지막 층의 입력 특성은 2,048개이므로:</p>
+<p>다시 학습할 범위는 둘 중 하나로 정한다.</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 31%">
-<col style="width: 31%">
-<col style="width: 37%">
-</colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: center;">전략</th>
-<th style="text-align: center;">학습되는 파라미터</th>
-<th>계산</th>
+<th></th>
+<th>학습하는 파라미터</th>
+<th>나머지 층</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>Option 1</strong>: 특성 추출기 동결</td>
-<td style="text-align: center;"><strong>10,245개</strong></td>
-<td>새 분류기만: <span class="math inline">\(2{,}048 \times 5 + 5\)</span></td>
+<td><strong>Option 1</strong></td>
+<td>새 출력층만</td>
+<td>동결</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>Option 2</strong>: 전체 미세 조정</td>
-<td style="text-align: center;">약 2,500만 개</td>
-<td>모든 층</td>
+<td><strong>Option 2</strong></td>
+<td>모든 파라미터</td>
+<td>사전 학습 가중치에서 출발해 함께 갱신</td>
 </tr>
 </tbody>
 </table>
-<p>동결하면 학습 파라미터가 전체의 <strong>0.04%</strong>로 줄어든다. Ch04의 원리 그대로 — 학습할 파라미터가 적으면 <strong>적은 데이터로도 과적합 없이</strong> 학습할 수 있다.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>상황</th>
-<th>권장 전략</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>내 데이터 수백 장</td>
-<td>Option 1 (동결) — 과적합 위험 최소화</td>
-</tr>
-<tr class="even">
-<td>내 데이터 수만 장 이상, 사전학습 도메인과 다름</td>
-<td>Option 2 (전체 미세 조정)</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="손으로-따라-계산하기-동결하면-몇-개를-학습하나" class="level3">
-<h3 class="anchored" data-anchor-id="손으로-따라-계산하기-동결하면-몇-개를-학습하나">✍️ 손으로 따라 계산하기 — 동결하면 몇 개를 학습하나</h3>
-<p><strong>설정</strong>: ResNet-50(전체 약 <span class="math inline">\(25{,}000{,}000\)</span> 파라미터)의 특성 추출기를 동결하고, 분류기를 <strong>7개 클래스</strong>용으로 새로 붙인다. GAP(전역 평균 풀링: 마지막 특성 맵의 채널마다 평균 하나를 남기는 풀링) 뒤의 특성 벡터 길이는 <span class="math inline">\(2{,}048\)</span> 이다.</p>
-<p><strong>단계 1 — 새 분류기의 모양을 정한다.</strong> 입력 <span class="math inline">\(2{,}048\)</span> → 출력 <span class="math inline">\(7\)</span> 인 FC 한 층.</p>
-<p><strong>단계 2 — 파라미터를 센다.</strong> Ch02의 공식 그대로 <span class="math inline">\(n_{l-1} \times n_l + n_l\)</span>:</p>
-<p><span class="math display">\[2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\]</span></p>
-<p><strong>단계 3 — 동결된 부분은 몇 개인가.</strong></p>
-<p><span class="math display">\[25{,}000{,}000 - 0 = 25{,}000{,}000 \text{ 개가 그대로 고정}\]</span></p>
-<p>(동결 층은 역전파에서 그래디언트를 받아도 <strong>갱신되지 않는다.</strong>)</p>
-<p><strong>단계 4 — 비율을 확인한다.</strong></p>
-<p><span class="math display">\[\frac{14{,}343}{25{,}000{,}000 + 14{,}343} \approx 0.00057 = \mathbf{0.057\%}\]</span></p>
-<p>전체의 <strong>0.06%도 안 되는</strong> 파라미터만 학습한다. Ch04의 원리 그대로 — 학습할 파라미터가 적으면 <strong>적은 데이터로도 과적합 없이</strong> 학습할 수 있다.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-✍️ 직접 해보기 — 은닉층을 하나 더 넣는다면
+미세 조정 (Fine-tuning)
 </div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>동결한 ResNet-50 위에 <strong><span class="math inline">\(2{,}048 \to 128 \to 3\)</span></strong> 짜리 분류기(은닉층 1개)를 붙이면 학습되는 파라미터는 몇 개인가?</p>
-<details>
-<summary>
-정답 펼치기
-</summary>
-<p>FC1: <span class="math inline">\(2{,}048 \times 128 + 128 = 262{,}144 + 128 = 262{,}272\)</span></p>
-<p>FC2: <span class="math inline">\(128 \times 3 + 3 = 384 + 3 = 387\)</span></p>
-<p>합계: <span class="math inline">\(262{,}272 + 387 = \mathbf{262{,}659}\)</span> 개</p>
-<p>앞의 <span class="math inline">\(14{,}343\)</span> 보다 <strong>18배</strong> 늘었다. 데이터가 150장뿐이라면 이 은닉층이 오히려 과적합을 부를 수 있다 — 분류기도 작을수록 안전하다.</p>
-</details>
+<p>사전 학습된 가중치에서 출발해 내 데이터로 다시 학습하는 것. Option 1과 Option 2가 모두 미세 조정이다.</p>
 </div>
 </div>
-</div>
+<p>데이터가 적으면 Option 1을 쓴다. 학습할 파라미터가 적을수록 적은 데이터로도 과적합이 덜하다. 데이터가 충분하면 Option 2로 모든 층을 내 데이터에 맞춘다.</p>
+<section id="학습하는-파라미터-수" class="level3">
+<h3 class="anchored" data-anchor-id="학습하는-파라미터-수">학습하는 파라미터 수</h3>
+<p>ResNet-18의 마지막 층은 512개의 특성을 받아 1,000개 클래스의 점수를 낸다. 이 층을 클래스 2개의 출력층으로 바꾼다. 파라미터 수는 2장의 공식대로 입력 수 × 출력 수 + 출력 수다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>층</th>
+<th>계산</th>
+<th style="text-align: right;">파라미터</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>원래 출력층 (512 → 1,000)</td>
+<td>512 × 1,000 + 1,000</td>
+<td style="text-align: right;">513,000</td>
+</tr>
+<tr class="even">
+<td>새 출력층 (512 → 2)</td>
+<td>512 × 2 + 2</td>
+<td style="text-align: right;">1,026</td>
+</tr>
+</tbody>
+</table>
+<p>출력층을 바꾼 ResNet-18의 파라미터는 모두 약 1,100만 개다. Option 1은 이 가운데 새 출력층의 1,026개만 학습한다. Option 2는 약 1,100만 개를 모두 학습한다.</p>
 </section>
-<section id="직접-해보기-전이-학습-시나리오-판단" class="level3">
-<h3 class="anchored" data-anchor-id="직접-해보기-전이-학습-시나리오-판단">✍️ 직접 해보기 — 전이 학습 시나리오 판단</h3>
-<p>각 상황에서 <strong>동결(Option 1)</strong> 과 <strong>전체 미세 조정(Option 2)</strong> 중 무엇을 택할지 판단하라. 판단 기준은 두 가지다 — <strong>내 데이터가 얼마나 많은가</strong>, 그리고 <strong>사전학습 도메인과 얼마나 비슷한가</strong>.</p>
+<section id="연습-동결하면-몇-개를-학습하나" class="level3">
+<h3 class="anchored" data-anchor-id="연습-동결하면-몇-개를-학습하나">연습 — 동결하면 몇 개를 학습하나</h3>
+<p>ResNet-50의 마지막 층은 2,048개의 특성을 받는다. 나머지 층을 동결하고 출력층을 클래스 7개로 바꾸면 학습하는 파라미터는 몇 개인가?</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-시나리오 4개 — 먼저 스스로 판단한 뒤 펼쳐 보라
+✍️ 직접 해보기 — 풀이
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>A.</strong> 직접 찍은 소화기·소화전 사진 <strong>150장</strong>으로 2class 분류 <strong>B.</strong> 공장 X-ray 이미지 <strong>8만 장</strong>으로 내부 결함 분류 <strong>C.</strong> 캠퍼스 자전거 사진 <strong>400장</strong>으로 3class 분류 <strong>D.</strong> 위성 사진 <strong>3만 장</strong>으로 토지 이용 분류</p>
-<details>
-<summary>
-정답 펼치기
-</summary>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 19%">
-<col style="width: 23%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;"></th>
-<th style="text-align: center;">데이터</th>
-<th style="text-align: center;">도메인 유사도</th>
-<th style="text-align: center;">판단</th>
-<th>이유</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><strong>A</strong></td>
-<td style="text-align: center;">150장 (적음)</td>
-<td style="text-align: center;">높음 (일상 사물)</td>
-<td style="text-align: center;"><strong>Option 1 동결</strong></td>
-<td>데이터가 적어 미세 조정하면 과적합. ImageNet이 이미 잘 아는 대상</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>B</strong></td>
-<td style="text-align: center;">8만 장 (많음)</td>
-<td style="text-align: center;"><strong>낮음</strong> (X-ray는 일상 사진과 전혀 다름)</td>
-<td style="text-align: center;"><strong>Option 2 전체 미세 조정</strong></td>
-<td>데이터가 충분하고 도메인이 달라 앞쪽 층까지 다시 배워야 함</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>C</strong></td>
-<td style="text-align: center;">400장 (적음)</td>
-<td style="text-align: center;">높음</td>
-<td style="text-align: center;"><strong>Option 1 동결</strong></td>
-<td>A와 같은 이유</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>D</strong></td>
-<td style="text-align: center;">3만 장 (많음)</td>
-<td style="text-align: center;">중간 (사진이지만 시점이 특이)</td>
-<td style="text-align: center;"><strong>Option 2</strong>, 또는 뒤쪽 층만 부분 해제</td>
-<td>데이터가 충분하므로 조정 여지가 있음</td>
-</tr>
-</tbody>
-</table>
-<p><strong>규칙으로 정리하면:</strong></p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: center;"></th>
-<th style="text-align: center;">도메인 비슷</th>
-<th style="text-align: center;">도메인 다름</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><strong>데이터 적음</strong></td>
-<td style="text-align: center;">동결 (Option 1)</td>
-<td style="text-align: center;">동결 + 뒤쪽 층 일부만 해제</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>데이터 많음</strong></td>
-<td style="text-align: center;">뒤쪽 층 미세 조정</td>
-<td style="text-align: center;">전체 미세 조정 (Option 2)</td>
-</tr>
-</tbody>
-</table>
-</details>
+<p>새 출력층만 학습한다. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
 </div>
-</div>
-</div>
-</section>
-<section id="왜-전이-학습이-작동하는가" class="level3">
-<h3 class="anchored" data-anchor-id="왜-전이-학습이-작동하는가">왜 전이 학습이 작동하는가?</h3>
-<p>CNN의 앞쪽 층들은 <strong>이미지의 공통적인 패턴</strong>을 학습한다:</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: center;">층 위치</th>
-<th>학습하는 특성</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;"><strong>앞쪽 층</strong> (Low-level)</td>
-<td>에지(Edge), 밝기 변화</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;"><strong>중간 층</strong> (Mid-level)</td>
-<td>코너(Corner), 기본 형태</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;"><strong>뒤쪽 층</strong> (High-level)</td>
-<td>곡선, 복잡한 패턴</td>
-</tr>
-</tbody>
-</table>
-<p>이러한 저수준~중수준 특성은 <strong>이미지 종류에 관계없이 공통</strong>적으로 유용하다. 따라서 대규모 데이터로 학습된 특성 추출기를 <strong>재활용</strong>하고, 내 데이터에 특화된 <strong>분류기만 새로 학습</strong>하면 된다.</p>
-<blockquote class="blockquote">
-<p>전이 학습 덕분에 소량의 데이터(수백~수천 장)만으로도 높은 분류 정확도를 달성할 수 있다.</p>
-</blockquote>
-</section>
-<section id="사전-학습-모델에-맞춰야-하는-것-조용히-망가지는-지점" class="level3">
-<h3 class="anchored" data-anchor-id="사전-학습-모델에-맞춰야-하는-것-조용히-망가지는-지점">사전 학습 모델에 맞춰야 하는 것 — 조용히 망가지는 지점</h3>
-<p>전이 학습에서 <strong>에러는 안 나는데 성능만 나쁜</strong> 상황의 대부분은 여기서 생긴다. 남이 학습해 둔 모델을 쓰려면, 그 모델이 <strong>학습할 때 본 것과 같은 형태</strong>로 입력을 넣어야 한다.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-반드시 맞춰야 할 두 가지
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><strong>① 입력 크기</strong> — 사전 학습 모델은 대부분 <span class="math inline">\(224 \times 224\)</span> 로 학습되었다. Ch05에서 배운 리사이즈로 크기를 맞춘다.</p>
-<p><strong>② 정규화 통계</strong> — 이것이 놓치기 쉬운 쪽이다. Ch05에서 픽셀을 <span class="math inline">\(255\)</span> 로 나눠 <span class="math inline">\(0\sim1\)</span> 로 만들었지만, ImageNet 사전 학습 모델은 거기서 한 단계 더 나아가 <strong>채널별 평균을 빼고 표준편차로 나눈 값</strong>으로 학습되었다.</p>
-<p><span class="math display">\[x'' = \frac{x' - \mu_c}{\sigma_c}, \qquad
-\boldsymbol{\mu} = (0.485,\, 0.456,\, 0.406), \quad
-\boldsymbol{\sigma} = (0.229,\, 0.224,\, 0.225)\]</span></p>
-<p>(R, G, B 채널 각각의 값. ImageNet 100만 장에서 계산된 상수다.)</p>
-<p><strong>이 전처리를 빼먹어도 코드는 멀쩡히 돌아가고, 정확도만 떨어진다.</strong> 사전 학습 모델을 쓸 때는 그 모델이 요구하는 전처리를 <strong>문서에서 확인하고 그대로 따르는 것</strong>이 원칙이다.</p>
-</div>
-</div>
-<div class="callout callout-style-simple callout-note">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>Ch04에서 “표준화의 평균·표준편차는 <strong>훈련 데이터에서만</strong> 계산한다”고 했다. 전이 학습에서는 그 “훈련 데이터”가 <strong>ImageNet</strong>이므로, 내 사진으로 평균을 다시 구하는 것이 아니라 <strong>ImageNet의 값을 그대로 가져다 쓴다.</strong> 원리는 같다 — 모델이 학습한 좌표계에 입력을 맞추는 것이다.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="미세-조정의-학습률은-작게" class="level3">
-<h3 class="anchored" data-anchor-id="미세-조정의-학습률은-작게">미세 조정의 학습률은 <strong>작게</strong></h3>
-<p>Option 2(전체 미세 조정)를 택했다면 주의할 것이 하나 더 있다.</p>
-<p>사전 학습된 가중치는 이미 <strong>좋은 자리에 도달해 있다.</strong> 여기에 Ch04에서 배운 큰 학습률을 쓰면, 첫 몇 스텝 만에 그 좋은 가중치가 <strong>크게 흔들려 망가진다</strong> — 애써 가져온 것을 버리는 셈이다.</p>
-<p><span class="math display">\[\eta_{\text{미세 조정}} \;\approx\; \frac{1}{10} \sim \frac{1}{100} \times \eta_{\text{처음부터 학습}}\]</span></p>
-<blockquote class="blockquote">
-<p>Ch04의 학습률 실험을 떠올리자. 큰 보폭은 최솟값을 <strong>뛰어넘는다.</strong> 이미 최솟값 근처에 서 있는 전이 학습에서는 그 위험이 훨씬 크다.</p>
-</blockquote>
-</section>
-<section id="성능은-무엇으로-보고할-것인가" class="level3">
-<h3 class="anchored" data-anchor-id="성능은-무엇으로-보고할-것인가">성능은 무엇으로 보고할 것인가</h3>
-<p>Ch04에서 <strong>손실과 성능 지표는 다르다</strong>고 배웠다. 이미지 분류에서도 마찬가지다 — 학습은 교차 엔트로피로 하고, 보고는 <strong>정확도</strong>로 한다.</p>
-<div class="callout callout-style-simple callout-important">
-<div class="callout-body d-flex">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-body-container">
-<p>직접 촬영한 데이터는 <strong>클래스별 장수가 고르지 않기 쉽다.</strong> 소화기 120장, 소화전 30장으로 학습했다면, 전부 “소화기”라고만 답해도 정확도는 80%다.</p>
-<p>Ch04의 <strong>정확도의 함정</strong> 그대로다. 결과를 보고할 때는 <strong>클래스별 장수를 먼저 밝히고</strong>, 가능하면 클래스별로 몇 개씩 맞혔는지까지 함께 보여야 한다.</p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-HW2 예고 — 내가 찍은 사진 분류
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>이 절차가 그대로 과제다: 직접 촬영한 사진(클래스 2~3개 × 50장)으로, 사전 학습 모델의 분류기를 교체하고 <strong>동결 전략</strong>으로 학습한다. 50장이라는 적은 데이터로도 되는 이유를 방금 배웠다. 데이터 증강까지 적용해 성능 변화를 관찰해 보라 — 이 경험이 팀 프로젝트의 예행연습이다.</p>
 </div>
 </div>
 <hr>
 </section>
 </section>
-<section id="이미지-분류를-넘어서" class="level2">
-<h2 class="anchored" data-anchor-id="이미지-분류를-넘어서">이미지 분류를 넘어서</h2>
-<p>지금까지 배운 CNN은 주로 <strong>이미지 분류(Image Classification)</strong> — 이미지 전체에 하나의 레이블을 부여하는 작업에 초점을 맞추었다. 하지만 컴퓨터 비전에는 분류를 넘어선 다양한 응용이 있다.</p>
-<section id="객체-탐지-object-detection" class="level3">
-<h3 class="anchored" data-anchor-id="객체-탐지-object-detection">객체 탐지 (Object Detection)</h3>
-<p>7장에서 봤다. 이미지 안의 물체마다 클래스와 박스 <span class="math inline">\((x_c, y_c, w, h)\)</span>, 신뢰도를 함께 내고, 출력 개수는 이미지마다 다르다. IoU·NMS 계산과 라벨링, 사전학습 YOLO의 파인튜닝은 심화 자료 <a href="../chapters/ch09.html">9장</a>에 있다.</p>
-</section>
-<section id="시맨틱-분할-semantic-segmentation" class="level3">
-<h3 class="anchored" data-anchor-id="시맨틱-분할-semantic-segmentation">시맨틱 분할 (Semantic Segmentation)</h3>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-정의: 시맨틱 분할 (Semantic Segmentation)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>이미지의 <strong>모든 픽셀</strong>에 클래스 레이블을 부여하는 작업.</p>
-<ul>
-<li>입력: <span class="math inline">\(H \times W \times 3\)</span> 이미지</li>
-<li>출력: <span class="math inline">\(H \times W\)</span> 레이블 맵 (각 픽셀이 어떤 클래스에 속하는지)</li>
-</ul>
-</div>
-</div>
-<p>시맨틱 분할은 객체의 <strong>정확한 경계</strong>까지 파악한다.</p>
+<section id="왜-작동하는가" class="level2">
+<h2 class="anchored" data-anchor-id="왜-작동하는가">왜 작동하는가?</h2>
+<p>사전 학습 모델은 대량의 데이터를 학습하면서 이미지 전반을 분류하기 위한 공통된 패턴을 충분히 학습했다. CNN의 앞쪽 층은 단순한 패턴을 잡고, 뒤쪽 층으로 갈수록 그 패턴을 조합한 복잡한 패턴을 잡는다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th style="text-align: center;">비교</th>
-<th style="text-align: center;">객체 탐지</th>
-<th style="text-align: center;">시맨틱 분할</th>
+<th>위치</th>
+<th>잡아내는 패턴</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"><strong>출력 단위</strong></td>
-<td style="text-align: center;">바운딩 박스 (사각형)</td>
-<td style="text-align: center;">픽셀 단위</td>
+<td>앞쪽 층</td>
+<td>에지</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"><strong>정밀도</strong></td>
-<td style="text-align: center;">대략적 위치</td>
-<td style="text-align: center;">정확한 경계</td>
+<td>중간 층</td>
+<td>코너</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"><strong>활용</strong></td>
-<td style="text-align: center;">자율주행 차량 감지</td>
-<td style="text-align: center;">의료 영상에서 종양 경계 추출</td>
+<td>뒤쪽 층</td>
+<td>곡선, 기본 형태</td>
 </tr>
 </tbody>
 </table>
-</section>
-<section id="cv-응용의-비교" class="level3">
-<h3 class="anchored" data-anchor-id="cv-응용의-비교">CV 응용의 비교</h3>
-<div id="2a1b836e" class="cell" data-execution_count="1">
-<div class="cell-output cell-output-display" data-execution_count="1">
-<table class="dataframe table caption-top table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th">작업</th>
-<th data-quarto-table-cell-role="th">입출력</th>
-<th data-quarto-table-cell-role="th">예시</th>
-<th data-quarto-table-cell-role="th">주요 응용</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>이미지 분류</td>
-<td>이미지 → 클래스 1개</td>
-<td>이 사진은 '고양이'</td>
-<td>이미지 검색, 필터링</td>
-</tr>
-<tr class="even">
-<td>객체 탐지</td>
-<td>이미지 → 클래스 + 위치(여러 개)</td>
-<td>'고양이'(120,80), '개'(300,50)</td>
-<td>자율주행, CCTV</td>
-</tr>
-<tr class="odd">
-<td>시맨틱 분할</td>
-<td>이미지 → 픽셀별 클래스</td>
-<td>모든 픽셀에 레이블 부여</td>
-<td>의료 영상, 위성 사진</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-<section id="의료-영상에서의-시맨틱-분할" class="level3">
-<h3 class="anchored" data-anchor-id="의료-영상에서의-시맨틱-분할">의료 영상에서의 시맨틱 분할</h3>
-<p>시맨틱 분할은 <strong>의료 영상 분석(Biomedical Image Analysis)</strong>에서 특히 중요하다.</p>
-<ul>
-<li><strong>뇌종양 탐지</strong>: MRI 영상에서 종양 영역을 픽셀 단위로 분리</li>
-<li><strong>말라리아 감염</strong>: 현미경 이미지에서 감염된 세포를 분할</li>
-<li><strong>병변 경계 추출</strong>: CT/X-ray에서 정상 조직과 비정상 조직의 경계 표시</li>
-</ul>
-<p>이러한 의료 응용에서 <strong>정확한 경계 정보</strong>는 진단과 치료 계획 수립에 핵심적이다.</p>
+<p><img src="../assets/img/ch08_kernels.png" style="width:100%;max-width:760px;display:block;margin:1em auto;"></p>
+<p>그림은 ResNet-18 첫 콘볼루션 층의 커널 64개다. 커널 하나는 <span class="math inline">\(7 \times 7 \times 3\)</span>이다. 6장의 3차원 커널처럼 R, G, B 세 채널을 함께 본다. 왼쪽은 ImageNet으로 학습한 커널이고 오른쪽은 학습 전의 무작위 초깃값이다.</p>
+<p>학습한 커널은 여러 방향의 줄무늬와 색 덩어리 모양이다. 줄무늬 커널은 같은 방향의 에지에서 큰 값을 낸다. 6장의 에지 검출 커널과 같은 일을 하는 커널을 데이터에서 스스로 배운 것이다.</p>
+<p>이런 패턴은 고양이 사진에도, 개미 사진에도, 공장 부품 사진에도 쓰인다. 공통된 패턴은 이미 학습되어 있으므로 내 데이터로는 그 패턴을 내 클래스에 잇는 마지막 층만 학습하면 된다. 그래서 적은 데이터로도 작동한다.</p>
+<p>사전 학습 모델에는 학습할 때와 같은 형태의 입력을 넣는다. ImageNet으로 학습한 모델은 <span class="math inline">\(224 \times 224\)</span> 크기에, ImageNet 사진의 채널별 평균과 표준편차로 표준화한 입력을 받았다. 내 사진도 같은 크기로 바꾸고 같은 평균과 표준편차로 표준화한다.</p>
 <hr>
 </section>
-</section>
-<section id="정리" class="level2">
-<h2 class="anchored" data-anchor-id="정리">정리</h2>
-<p>이 챕터에서 학습한 내용을 요약하면:</p>
+<section id="핵심-요약" class="level2">
+<h2 class="anchored" data-anchor-id="핵심-요약">핵심 요약</h2>
 <table class="caption-top table">
 <colgroup>
-<col style="width: 50%">
-<col style="width: 50%">
+<col style="width: 35%">
+<col style="width: 64%">
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">개념</th>
-<th style="text-align: left;">핵심 내용</th>
+<th>개념</th>
+<th>핵심 내용</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">학습 전략</td>
-<td style="text-align: left;">학습 성능 진단 → 아키텍처 또는 데이터 조정</td>
+<td><strong>학습 전략</strong></td>
+<td>학습 데이터 성능이 낮으면 더 큰 아키텍처, 테스트 데이터 성능이 낮으면 더 많은 데이터</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">데이터 증강</td>
-<td style="text-align: left;">이동, 반전, 회전, 색상 변환 등으로 학습 데이터 확장</td>
+<td><strong>데이터 증강</strong></td>
+<td>위치 변경·회전·색 바꾸기. 학습 중 무작위로, 학습 데이터에만 적용</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">증강의 금지선</td>
-<td style="text-align: left;"><strong>훈련 데이터에만</strong> 적용 / <strong>레이블이 바뀌는 변형</strong>은 금지</td>
+<td><strong>데이터 합성</strong></td>
+<td>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더한다</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">데이터 합성</td>
-<td style="text-align: left;">컴퓨터로 새로운 합성 이미지를 생성</td>
+<td><strong>전이 학습</strong></td>
+<td>사전 학습 모델을 가져와 마지막 분류기를 교체하고 내 데이터로 다시 학습</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">전이 학습</td>
-<td style="text-align: left;">사전 학습 모델의 특성 추출기를 재활용, 분류기만 재학습</td>
+<td><strong>Option 1 (동결)</strong></td>
+<td>새 출력층만 학습. ResNet-18 → 클래스 2개면 <span class="math inline">\(512 \times 2 + 2 = 1{,}026\)</span>개</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">동결</td>
-<td style="text-align: left;">학습 파라미터가 전체의 0.1% 미만 → 적은 데이터로도 과적합 없이 학습</td>
+<td><strong>Option 2</strong></td>
+<td>모든 파라미터를 사전 학습 가중치에서 출발해 학습</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">입력 규격 맞추기</td>
-<td style="text-align: left;">크기 224×224 + <strong>사전학습 당시의 정규화 통계</strong> — 틀려도 에러가 안 난다</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">미세 조정 학습률</td>
-<td style="text-align: left;">처음부터 학습할 때의 1/10 ~ 1/100 — 좋은 가중치를 망가뜨리지 않기 위해</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">객체 탐지</td>
-<td style="text-align: left;">이미지에서 여러 객체의 클래스 + 위치(바운딩 박스)를 출력</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">시맨틱 분할</td>
-<td style="text-align: left;">모든 픽셀에 클래스를 부여, 의료 영상 등에 활용</td>
+<td><strong>왜 작동하는가</strong></td>
+<td>에지·코너 같은 공통된 패턴을 대량의 데이터로 이미 학습했다. 입력은 학습 때와 같은 형태로</td>
 </tr>
 </tbody>
 </table>
-<p><strong>딥러닝과 컴퓨터 비전 파트 정리</strong>: Ch05~Ch08에서 이미지 데이터(Ch05) → 콘볼루션 연산(Ch06) → CNN 구조와 아키텍처(Ch07) → 학습 전략과 응용(Ch08)까지, 이미지를 입력으로 받아 자동으로 특성을 추출하고 판단을 내리는 전체 과정을 학습했다.</p>
+<blockquote class="blockquote">
+<p><strong>다음 장 예고</strong>: 이미지 분류를 넘어선 컴퓨터 비전 분야, 객체탐지와 시맨틱 분할을 다룬다.</p>
+</blockquote>
 
 
 </section>
