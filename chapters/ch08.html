@@ -159,8 +159,13 @@ window.Quarto = {
   <li><a href="#데이터-합성-data-synthesis" id="toc-데이터-합성-data-synthesis" class="nav-link" data-scroll-target="#데이터-합성-data-synthesis">데이터 합성 (Data Synthesis)</a></li>
   <li><a href="#사전-학습된-모델-활용-using-pretrained-model" id="toc-사전-학습된-모델-활용-using-pretrained-model" class="nav-link" data-scroll-target="#사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</a>
   <ul class="collapse">
+  <li><a href="#두-단계로-학습" id="toc-두-단계로-학습" class="nav-link" data-scroll-target="#두-단계로-학습">두 단계로 학습</a></li>
+  <li><a href="#단계-사전-학습-pre-training" id="toc-단계-사전-학습-pre-training" class="nav-link" data-scroll-target="#단계-사전-학습-pre-training">1단계: 사전 학습 (Pre-training)</a></li>
+  <li><a href="#단계-미세-조정-fine-tuning" id="toc-단계-미세-조정-fine-tuning" class="nav-link" data-scroll-target="#단계-미세-조정-fine-tuning">2단계: 미세 조정 (Fine-tuning)</a></li>
+  <li><a href="#다시-학습하는-범위" id="toc-다시-학습하는-범위" class="nav-link" data-scroll-target="#다시-학습하는-범위">다시 학습하는 범위</a></li>
   <li><a href="#학습하는-파라미터-수" id="toc-학습하는-파라미터-수" class="nav-link" data-scroll-target="#학습하는-파라미터-수">학습하는 파라미터 수</a></li>
   <li><a href="#연습-동결하면-몇-개를-학습하나" id="toc-연습-동결하면-몇-개를-학습하나" class="nav-link" data-scroll-target="#연습-동결하면-몇-개를-학습하나">연습 — 동결하면 몇 개를 학습하나</a></li>
+  <li><a href="#전이-학습-transfer-learning" id="toc-전이-학습-transfer-learning" class="nav-link" data-scroll-target="#전이-학습-transfer-learning">전이 학습 (Transfer Learning)</a></li>
   </ul></li>
   <li><a href="#왜-작동하는가" id="toc-왜-작동하는가" class="nav-link" data-scroll-target="#왜-작동하는가">왜 작동하는가?</a>
   <ul class="collapse">
@@ -205,7 +210,7 @@ window.Quarto = {
 <ul>
 <li>학습 데이터와 테스트 데이터의 성능으로 다음 할 일 정하기</li>
 <li>데이터 증강의 방식(위치 변경·회전·색 바꾸기)과 데이터 합성 구분하기</li>
-<li>사전 학습 모델의 분류기를 교체하고 다시 학습하는 절차 설명하기</li>
+<li>사전 학습(대량의 데이터)과 미세 조정(내 소량의 데이터)의 두 단계 설명하기</li>
 <li>동결했을 때 학습하는 파라미터 수 <strong>직접 계산</strong>하기</li>
 <li>사전 학습 모델이 적은 데이터로도 작동하는 이유 설명하기</li>
 </ul>
@@ -309,50 +314,62 @@ window.Quarto = {
 </section>
 <section id="사전-학습된-모델-활용-using-pretrained-model" class="level2">
 <h2 class="anchored" data-anchor-id="사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</h2>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-사전 학습 모델 (Pretrained Model)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>대량의 데이터로 미리 학습시켜 가중치까지 공개한 모델.</p>
-</div>
-</div>
+<section id="두-단계로-학습" class="level3">
+<h3 class="anchored" data-anchor-id="두-단계로-학습">두 단계로 학습</h3>
 <ul>
-<li>예: ImageNet(사진 약 128만 장, 클래스 1,000개)으로 학습한 ResNet(7장)</li>
+<li>1단계 사전 학습: 대량의 데이터로 모델을 미리 학습</li>
+<li>2단계 미세 조정: 내가 가진 소량의 데이터로 1단계 모델을 이어서 학습</li>
 </ul>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-전이 학습 (Transfer Learning)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>사전 학습 모델을 가져와 내 문제에 맞게 다시 학습시키는 방법.</p>
-<ol type="1">
-<li>사전에 학습된 대형 모델을 가져옴</li>
-<li>마지막 분류기 부분을 내가 원하는 분류기로 교체</li>
-<li>내가 가진 소량의 데이터로 마지막 부분을 다시 학습</li>
-</ol>
-</div>
-</div>
 <div style="text-align:center;margin:1em 0;">
-<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 400" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
-<defs><marker id="ah8" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker></defs><rect width="720" height="400" fill="white"></rect><text x="30" y="35" text-anchor="start" font-size="13" font-weight="700" fill="#222">사전 학습</text><line x1="150" y1="79.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><circle cx="150" cy="79.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="105.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="131.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="580" cy="53.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="79.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="100.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="105.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="110.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="131.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="157.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="167" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">입력 이미지</text><text x="602" y="99" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">1,000개</text><text x="602" y="115" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">클래스</text><text x="360.0" y="177" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">ImageNet 사진 약 128만 장으로 모든 가중치를 학습</text><line x1="360.0" y1="189" x2="360.0" y2="217" stroke="#555" stroke-width="1.6" marker-end="url(#ah8)"></line><text x="370.0" y="208" text-anchor="start" font-size="10.5" font-weight="700" fill="#333">가중치를 그대로 가져와 마지막 층만 교체</text><text x="30" y="220" text-anchor="start" font-size="13" font-weight="700" fill="#222">미세 조정</text><text x="30" y="238" text-anchor="start" font-size="11" font-weight="400" fill="#555">(Option 1)</text><line x1="150" y1="264.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="480" y1="251.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="251.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><circle cx="150" cy="264.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="290.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="316.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="580" cy="277.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="303.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">내 이미지</text><text x="360.0" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#757575">동결: 학습하지 않는다</text><text x="602" y="284" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">내 클래스</text><text x="602" y="300" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">2개</text><text x="530" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6A1B9A">새 출력층만 학습</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 395" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
+<defs><marker id="ah8" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker></defs><rect width="720" height="395" fill="white"></rect><text x="30" y="35" text-anchor="start" font-size="13" font-weight="700" fill="#222">1단계 사전 학습</text><text x="30" y="53" text-anchor="start" font-size="11" font-weight="400" fill="#555">대량의 데이터</text><line x1="150" y1="79.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><circle cx="150" cy="79.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="105.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="131.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="580" cy="53.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="79.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="100.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="105.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="110.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="131.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="157.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="167" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">입력 이미지</text><text x="602" y="99" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">1,000개</text><text x="602" y="115" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">클래스</text><text x="360.0" y="177" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">ImageNet 사진 약 128만 장 · 클래스 1,000개로 모든 가중치를 학습</text><line x1="360.0" y1="189" x2="360.0" y2="217" stroke="#555" stroke-width="1.6" marker-end="url(#ah8)"></line><text x="370.0" y="208" text-anchor="start" font-size="10.5" font-weight="700" fill="#333">가중치를 그대로 가져와 마지막 층만 교체</text><text x="30" y="220" text-anchor="start" font-size="13" font-weight="700" fill="#222">2단계 미세 조정</text><text x="30" y="238" text-anchor="start" font-size="11" font-weight="400" fill="#555">소량의 데이터</text><line x1="150" y1="264.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="480" y1="251.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="251.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><circle cx="150" cy="264.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="290.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="316.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="580" cy="277.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="303.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">내 이미지</text><text x="360.0" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#757575">1단계에서 가져온 가중치</text><text x="602" y="284" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">내 클래스</text><text x="602" y="300" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">2개</text><text x="580" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6A1B9A">새 출력층</text><text x="360.0" y="378" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">내 사진 수백 장으로 다시 학습</text>
 </svg>
 </div>
+</section>
+<section id="단계-사전-학습-pre-training" class="level3">
+<h3 class="anchored" data-anchor-id="단계-사전-학습-pre-training">1단계: 사전 학습 (Pre-training)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+사전 학습 (Pre-training)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>대량의 데이터로 모델을 미리 학습시키는 것. “사전”은 내 문제를 풀기 전에 먼저 학습했다는 뜻.</p>
+</div>
+</div>
 <ul>
-<li>위: ImageNet으로 학습. 출력 노드 1,000개 = 클래스 1,000개</li>
-<li>아래: 출력층만 내 클래스 수로 교체. 나머지 층은 가중치를 그대로 가져옴</li>
-<li>새 출력층의 가중치는 처음부터 학습</li>
+<li>그 결과물이 사전 학습 모델 (Pretrained Model)</li>
+<li>예: ImageNet(사진 약 128만 장, 클래스 1,000개)으로 학습한 ResNet-18(7장)</li>
+<li>가중치가 공개되어 있어 누구나 내려받아 씀</li>
 </ul>
+</section>
+<section id="단계-미세-조정-fine-tuning" class="level3">
+<h3 class="anchored" data-anchor-id="단계-미세-조정-fine-tuning">2단계: 미세 조정 (Fine-tuning)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+미세 조정 (Fine-tuning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>사전 학습된 가중치에서 출발해 내가 가진 소량의 데이터로 다시 학습하는 것.</p>
+</div>
+</div>
+<ol type="1">
+<li>사전 학습 모델을 가져옴</li>
+<li>마지막 분류기를 내 클래스 수로 교체 (1,000개 → 2개)</li>
+<li>내 데이터로 다시 학습</li>
+</ol>
+</section>
+<section id="다시-학습하는-범위" class="level3">
+<h3 class="anchored" data-anchor-id="다시-학습하는-범위">다시 학습하는 범위</h3>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -367,43 +384,40 @@ window.Quarto = {
 </div>
 </div>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
 <thead>
 <tr class="header">
 <th></th>
-<th>학습하는 파라미터</th>
+<th>학습하는 층</th>
 <th>나머지 층</th>
+<th>쓰는 경우</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><strong>Option 1</strong></td>
-<td>새 출력층만</td>
+<td>마지막 층만</td>
 <td>동결</td>
+<td>데이터가 적을 때</td>
 </tr>
 <tr class="even">
 <td><strong>Option 2</strong></td>
-<td>모든 파라미터</td>
-<td>사전 학습 가중치에서 출발해 함께 갱신</td>
+<td>모든 층</td>
+<td>1단계 가중치에서 출발해 함께 학습</td>
+<td>데이터가 충분할 때</td>
 </tr>
 </tbody>
 </table>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-미세 조정 (Fine-tuning)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>사전 학습된 가중치에서 출발해 내 데이터로 다시 학습하는 것. Option 1과 Option 2 모두 미세 조정.</p>
-</div>
-</div>
 <ul>
+<li>위 그림의 2단계가 Option 1</li>
 <li>데이터가 적으면 Option 1: 학습할 파라미터가 적음 → 과적합이 덜함</li>
-<li>데이터가 충분하면 Option 2: 모든 층을 내 데이터에 맞춤</li>
 </ul>
+</section>
 <section id="학습하는-파라미터-수" class="level3">
 <h3 class="anchored" data-anchor-id="학습하는-파라미터-수">학습하는 파라미터 수</h3>
 <ul>
@@ -443,7 +457,7 @@ window.Quarto = {
 <li>나머지 층을 동결하고 출력층을 클래스 7개로 교체 → 학습하는 파라미터는?</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -452,10 +466,26 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>새 출력층만 학습. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
+<p>마지막 층만 학습. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
 </div>
+</div>
+</div>
+</section>
+<section id="전이-학습-transfer-learning" class="level3">
+<h3 class="anchored" data-anchor-id="전이-학습-transfer-learning">전이 학습 (Transfer Learning)</h3>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+전이 학습 (Transfer Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>1단계 사전 학습과 2단계 미세 조정 전체. 대량의 데이터에서 배운 것을 내 문제로 옮겨 쓰는 방법.</p>
 </div>
 </div>
 <hr>
@@ -532,16 +562,24 @@ window.Quarto = {
 <td>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더함</td>
 </tr>
 <tr class="even">
-<td><strong>전이 학습</strong></td>
-<td>사전 학습 모델을 가져와 마지막 분류기를 교체하고 내 데이터로 다시 학습</td>
+<td><strong>사전 학습</strong></td>
+<td>대량의 데이터로 모델을 미리 학습. 예: ImageNet 128만 장</td>
 </tr>
 <tr class="odd">
-<td><strong>Option 1 (동결)</strong></td>
-<td>새 출력층만 학습. ResNet-18 → 클래스 2개면 <span class="math inline">\(512 \times 2 + 2 = 1{,}026\)</span>개</td>
+<td><strong>미세 조정</strong></td>
+<td>사전 학습 모델의 마지막 분류기를 교체하고 내 소량의 데이터로 다시 학습</td>
 </tr>
 <tr class="even">
+<td><strong>Option 1 (동결)</strong></td>
+<td>마지막 층만 학습. ResNet-18 → 클래스 2개면 <span class="math inline">\(512 \times 2 + 2 = 1{,}026\)</span>개</td>
+</tr>
+<tr class="odd">
 <td><strong>Option 2</strong></td>
-<td>모든 파라미터를 사전 학습 가중치에서 출발해 학습</td>
+<td>모든 층을 1단계 가중치에서 출발해 학습</td>
+</tr>
+<tr class="even">
+<td><strong>전이 학습</strong></td>
+<td>사전 학습 + 미세 조정 전체</td>
 </tr>
 <tr class="odd">
 <td><strong>왜 작동하는가</strong></td>
