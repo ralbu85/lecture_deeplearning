@@ -164,7 +164,6 @@ window.Quarto = {
   <li><a href="#단계-사전-학습-pre-training" id="toc-단계-사전-학습-pre-training" class="nav-link" data-scroll-target="#단계-사전-학습-pre-training">1단계: 사전 학습 (Pre-training)</a></li>
   <li><a href="#단계-미세-조정-fine-tuning" id="toc-단계-미세-조정-fine-tuning" class="nav-link" data-scroll-target="#단계-미세-조정-fine-tuning">2단계: 미세 조정 (Fine-tuning)</a></li>
   <li><a href="#결과-예-개미벌-사진-244장" id="toc-결과-예-개미벌-사진-244장" class="nav-link" data-scroll-target="#결과-예-개미벌-사진-244장">결과 예: 개미·벌 사진 244장</a></li>
-  <li><a href="#전이-학습-transfer-learning" id="toc-전이-학습-transfer-learning" class="nav-link" data-scroll-target="#전이-학습-transfer-learning">전이 학습 (Transfer Learning)</a></li>
   </ul></li>
   <li><a href="#왜-작동하는가" id="toc-왜-작동하는가" class="nav-link" data-scroll-target="#왜-작동하는가">왜 작동하는가?</a>
   <ul class="collapse">
@@ -329,10 +328,23 @@ window.Quarto = {
 <defs><marker id="ah8" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#333"></path></marker></defs><rect width="720" height="330" fill="white"></rect><rect x="30" y="62" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="35" y="57" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="40" y="52" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="45" y="47" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="50" y="42" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="55" y="37" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="60" y="32" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="85" y="25" width="190" height="90" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.8"></rect><text x="180.0" y="56.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1565C0">대량의 데이터</text><text x="180.0" y="75.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">ImageNet 사진 약 128만 장</text><text x="180.0" y="94.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">클래스 1,000개</text><line x1="285" y1="70" x2="455" y2="70" stroke="#333" stroke-width="2.2" marker-end="url(#ah8)"></line><text x="370.0" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#222">1단계 사전 학습</text><text x="370.0" y="92" text-anchor="middle" font-size="10.5" font-weight="400" fill="#666">모든 가중치를 학습</text><rect x="465" y="25" width="220" height="90" rx="10" fill="#FFEBEE" stroke="#C62828" stroke-width="1.8"></rect><text x="575.0" y="56.0" text-anchor="middle" font-size="13" font-weight="700" fill="#C62828">사전 학습 모델</text><text x="575.0" y="75.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">ResNet-18</text><text x="575.0" y="94.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">출력층: 클래스 1,000개</text><line x1="575" y1="118" x2="575" y2="200" stroke="#333" stroke-width="2.2" marker-end="url(#ah8)"></line><text x="585" y="152" text-anchor="start" font-size="11" font-weight="700" fill="#222">가져와서 마지막 층을</text><text x="585" y="170" text-anchor="start" font-size="11" font-weight="700" fill="#222">내 클래스 수로 교체</text><rect x="30" y="247" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="35" y="242" width="34" height="26" rx="3" fill="white" stroke="#1565C0" stroke-width="1.1"></rect><rect x="85" y="210" width="190" height="90" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.8"></rect><text x="180.0" y="241.0" text-anchor="middle" font-size="13" font-weight="700" fill="#1565C0">내가 가진 소량의 데이터</text><text x="180.0" y="260.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">개미·벌 사진 244장</text><text x="180.0" y="279.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">클래스 2개</text><line x1="285" y1="255" x2="455" y2="255" stroke="#333" stroke-width="2.2" marker-end="url(#ah8)"></line><text x="370.0" y="243" text-anchor="middle" font-size="12.5" font-weight="700" fill="#222">2단계 미세 조정</text><text x="370.0" y="277" text-anchor="middle" font-size="10.5" font-weight="400" fill="#666">이어서 학습</text><rect x="465" y="210" width="220" height="90" rx="10" fill="#FFEBEE" stroke="#C62828" stroke-width="1.8"></rect><text x="575.0" y="241.0" text-anchor="middle" font-size="13" font-weight="700" fill="#C62828">내 모델</text><text x="575.0" y="260.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">ResNet-18</text><text x="575.0" y="279.0" text-anchor="middle" font-size="11" font-weight="400" fill="#444">출력층: 클래스 2개</text>
 </svg>
 </div>
-<ul>
-<li>1단계 사전 학습: 대량의 데이터로 모델을 미리 학습</li>
-<li>2단계 미세 조정: 1단계 모델을 가져와 마지막 층을 바꾸고, 내가 가진 소량의 데이터로 이어서 학습</li>
-</ul>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+전이 학습 (Transfer Learning)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>대량의 데이터에서 배운 것을 내 문제로 옮겨(transfer) 쓰는 방법. 두 단계로 학습.</p>
+<ol type="1">
+<li>사전 학습: 대량의 데이터로 모델을 미리 학습</li>
+<li>미세 조정: 1단계 모델을 가져와 마지막 층을 바꾸고, 내가 가진 소량의 데이터로 이어서 학습</li>
+</ol>
+</div>
+</div>
 </section>
 <section id="단계-사전-학습-pre-training" class="level3">
 <h3 class="anchored" data-anchor-id="단계-사전-학습-pre-training">1단계: 사전 학습 (Pre-training)</h3>
@@ -456,7 +468,7 @@ window.Quarto = {
 <li>학습하는 파라미터는?</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -465,7 +477,7 @@ window.Quarto = {
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>새 출력층(2,048 → 7)만 학습. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
 </div>
@@ -488,11 +500,11 @@ window.Quarto = {
 <td style="text-align: center;">0.7 안팎</td>
 </tr>
 <tr class="even">
-<td>사전 학습 + 미세 조정, Option 1</td>
+<td>전이 학습, Option 1</td>
 <td style="text-align: center;">약 0.93</td>
 </tr>
 <tr class="odd">
-<td>사전 학습 + 미세 조정, Option 2</td>
+<td>전이 학습, Option 2</td>
 <td style="text-align: center;">약 0.93</td>
 </tr>
 </tbody>
@@ -502,22 +514,6 @@ window.Quarto = {
 <li>수백 장이면 Option 1로 충분</li>
 <li>실습 7에서 직접 확인</li>
 </ul>
-</section>
-<section id="전이-학습-transfer-learning" class="level3">
-<h3 class="anchored" data-anchor-id="전이-학습-transfer-learning">전이 학습 (Transfer Learning)</h3>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-전이 학습 (Transfer Learning)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>1단계 사전 학습과 2단계 미세 조정 전체. 대량의 데이터에서 배운 것을 내 문제로 옮겨(transfer) 쓰는 방법.</p>
-</div>
-</div>
 <hr>
 </section>
 </section>
