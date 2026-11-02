@@ -151,7 +151,10 @@ window.Quarto = {
   <li><a href="#뉴럴-네트워크의-학습-전략" id="toc-뉴럴-네트워크의-학습-전략" class="nav-link active" data-scroll-target="#뉴럴-네트워크의-학습-전략">뉴럴 네트워크의 학습 전략</a></li>
   <li><a href="#데이터-증강-data-augmentation" id="toc-데이터-증강-data-augmentation" class="nav-link" data-scroll-target="#데이터-증강-data-augmentation">데이터 증강 (Data Augmentation)</a>
   <ul class="collapse">
-  <li><a href="#데이터-증강-방식" id="toc-데이터-증강-방식" class="nav-link" data-scroll-target="#데이터-증강-방식">데이터 증강 방식</a></li>
+  <li><a href="#위치-변경" id="toc-위치-변경" class="nav-link" data-scroll-target="#위치-변경">위치 변경</a></li>
+  <li><a href="#회전" id="toc-회전" class="nav-link" data-scroll-target="#회전">회전</a></li>
+  <li><a href="#색-바꾸기" id="toc-색-바꾸기" class="nav-link" data-scroll-target="#색-바꾸기">색 바꾸기</a></li>
+  <li><a href="#증강을-쓸-때" id="toc-증강을-쓸-때" class="nav-link" data-scroll-target="#증강을-쓸-때">증강을 쓸 때</a></li>
   </ul></li>
   <li><a href="#데이터-합성-data-synthesis" id="toc-데이터-합성-data-synthesis" class="nav-link" data-scroll-target="#데이터-합성-data-synthesis">데이터 합성 (Data Synthesis)</a></li>
   <li><a href="#사전-학습된-모델-활용-using-pretrained-model" id="toc-사전-학습된-모델-활용-using-pretrained-model" class="nav-link" data-scroll-target="#사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</a>
@@ -159,7 +162,10 @@ window.Quarto = {
   <li><a href="#학습하는-파라미터-수" id="toc-학습하는-파라미터-수" class="nav-link" data-scroll-target="#학습하는-파라미터-수">학습하는 파라미터 수</a></li>
   <li><a href="#연습-동결하면-몇-개를-학습하나" id="toc-연습-동결하면-몇-개를-학습하나" class="nav-link" data-scroll-target="#연습-동결하면-몇-개를-학습하나">연습 — 동결하면 몇 개를 학습하나</a></li>
   </ul></li>
-  <li><a href="#왜-작동하는가" id="toc-왜-작동하는가" class="nav-link" data-scroll-target="#왜-작동하는가">왜 작동하는가?</a></li>
+  <li><a href="#왜-작동하는가" id="toc-왜-작동하는가" class="nav-link" data-scroll-target="#왜-작동하는가">왜 작동하는가?</a>
+  <ul class="collapse">
+  <li><a href="#같은-형태의-입력-use-the-same-input-type" id="toc-같은-형태의-입력-use-the-same-input-type" class="nav-link" data-scroll-target="#같은-형태의-입력-use-the-same-input-type">같은 형태의 입력 (Use the same input type)</a></li>
+  </ul></li>
   <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
   </ul>
 </nav>
@@ -197,29 +203,29 @@ window.Quarto = {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li>학습 데이터와 테스트 데이터의 성능을 보고 다음에 할 일을 정할 수 있다</li>
-<li>데이터 증강의 방식(위치 변경, 회전, 색 바꾸기)과 데이터 합성의 차이를 설명할 수 있다</li>
-<li>사전 학습 모델을 가져와 마지막 분류기를 교체하고 다시 학습하는 절차를 설명할 수 있다</li>
-<li>동결했을 때 학습하는 파라미터 수를 <strong>직접 계산</strong>할 수 있다</li>
-<li>사전 학습 모델이 적은 데이터로도 작동하는 이유를 설명할 수 있다</li>
+<li>학습 데이터와 테스트 데이터의 성능으로 다음 할 일 정하기</li>
+<li>데이터 증강의 방식(위치 변경·회전·색 바꾸기)과 데이터 합성 구분하기</li>
+<li>사전 학습 모델의 분류기를 교체하고 다시 학습하는 절차 설명하기</li>
+<li>동결했을 때 학습하는 파라미터 수 <strong>직접 계산</strong>하기</li>
+<li>사전 학습 모델이 적은 데이터로도 작동하는 이유 설명하기</li>
 </ul>
 </div>
 </div>
 <hr>
 <section id="뉴럴-네트워크의-학습-전략" class="level2">
 <h2 class="anchored" data-anchor-id="뉴럴-네트워크의-학습-전략">뉴럴 네트워크의 학습 전략</h2>
-<p>앞 장에서 CNN을 쌓는 방법을 배웠다. 학습을 마친 CNN은 두 가지 성능을 차례로 확인한다.</p>
 <svg viewbox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:1.5em auto;">
 <defs> <marker id="ah7" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker> <marker id="ah7w" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#fff"></path></marker> </defs> <!-- Q1 --> <rect x="20" y="60" width="180" height="70" rx="10" fill="#1F3F7A" opacity="0.12" stroke="#1F3F7A" stroke-width="1.5"></rect> <text x="110" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">학습 데이터에 대한</text> <text x="110" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#1F3F7A">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="200" y1="95" x2="260" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="230" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Q2 --> <rect x="265" y="60" width="180" height="70" rx="10" fill="#8C1515" opacity="0.1" stroke="#8C1515" stroke-width="1.5"></rect> <text x="355" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">테스트 데이터에 대한</text> <text x="355" y="105" text-anchor="middle" font-size="11" font-weight="700" fill="#8C1515">성능이 좋은가?</text> <!-- Yes arrow --> <line x1="445" y1="95" x2="510" y2="95" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="478" y="88" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">Yes</text> <!-- Done --> <rect x="515" y="70" width="100" height="50" rx="8" fill="#2E7D32" opacity="0.15" stroke="#2E7D32" stroke-width="1.5"></rect> <text x="565" y="100" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">완료!</text> <!-- No from Q1 --> <line x1="110" y1="130" x2="110" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="125" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="30" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="110" y="200" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 큰 규모의</text> <text x="110" y="217" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">아키텍처</text> <!-- Loop back --> <path d="M 30,205 Q 5,205 5,95 Q 5,60 20,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path> <!-- No from Q2 --> <line x1="355" y1="130" x2="355" y2="175" stroke="#555" stroke-width="1.5" marker-end="url(#ah7)"></line> <text x="370" y="155" font-size="11" font-weight="700" fill="#C62828">No</text> <rect x="275" y="180" width="160" height="50" rx="8" fill="#D4A017" opacity="0.15" stroke="#D4A017" stroke-width="1.5"></rect> <text x="355" y="209" text-anchor="middle" font-size="11" font-weight="600" fill="#9A7B00">더 많은 데이터</text> <!-- Loop back --> <path d="M 275,205 Q 250,205 250,95 Q 250,60 265,80" fill="none" stroke="#D4A017" stroke-width="1.2" marker-end="url(#ah7)"></path>
 </svg>
-<p>학습 데이터에 대한 성능이 낮으면 모델이 학습 데이터조차 설명하지 못하는 것이다. 더 큰 규모의 아키텍처를 쓴다. 7장에서 본 대로 층을 깊게 쌓을수록 정확도가 올라간다.</p>
-<p>학습 데이터에 대한 성능은 좋은데 테스트 데이터에 대한 성능이 낮으면 과적합이다. 4장의 러닝커브에서 훈련 손실과 검증 손실의 간격이 벌어지는 상황이다. 이때는 더 많은 데이터가 필요하다.</p>
-<p>데이터를 새로 모으려면 시간과 비용이 든다. 이 장은 가진 데이터를 변형해 늘리는 방법과, 다른 사람이 많은 데이터로 학습해 둔 모델을 가져오는 방법을 다룬다.</p>
+<ul>
+<li>학습 데이터 성능이 낮음 → 학습 데이터도 설명하지 못함 → <strong>더 큰 규모의 아키텍처</strong></li>
+<li>학습 데이터 성능은 좋은데 테스트 데이터 성능이 낮음 → 과적합(4장 러닝커브) → <strong>더 많은 데이터</strong></li>
+<li>데이터를 새로 모으려면 시간과 비용이 듦 → 가진 데이터를 늘리거나 남이 학습한 모델을 가져옴</li>
+</ul>
 <hr>
 </section>
 <section id="데이터-증강-data-augmentation" class="level2">
 <h2 class="anchored" data-anchor-id="데이터-증강-data-augmentation">데이터 증강 (Data Augmentation)</h2>
-<p>CNN은 이미지에서 특성을 뽑아내는 방법이다. 고양이 사진을 좌우로 뒤집거나 조금 돌려도 고양이의 특성은 그대로 남는다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -230,44 +236,53 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>같은 이미지에 변형을 가하여 새로운 데이터를 만드는 방법. 이미지의 특성을 담은 데이터가 많아지므로 정확도가 높아질 수 있다.</p>
+<p>같은 이미지에 변형을 가하여 새로운 데이터를 생성하는 방법.</p>
 </div>
 </div>
-<section id="데이터-증강-방식" class="level3">
-<h3 class="anchored" data-anchor-id="데이터-증강-방식">데이터 증강 방식</h3>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th>방식</th>
-<th>변형</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>위치 변경</td>
-<td>이미지를 좌우로 옮기거나 좌우를 뒤집는다</td>
-</tr>
-<tr class="even">
-<td>회전</td>
-<td>이미지를 일정 각도만큼 돌린다</td>
-</tr>
-<tr class="odd">
-<td>색 바꾸기</td>
-<td>밝기, 대비, 채도를 바꾼다</td>
-</tr>
-</tbody>
-</table>
-<p><img src="../assets/img/ch08_augment.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
-<p>네 장 모두 고양이다. 모델은 네 장을 서로 다른 데이터로 받는다.</p>
-<p>증강한 이미지는 파일로 저장해 두지 않는다. 학습 중에 이미지를 꺼낼 때마다 무작위로 변형한다. 그래서 에폭마다 모델이 보는 이미지가 조금씩 다르다.</p>
-<p>증강은 학습 데이터에만 적용한다. 검증 데이터와 테스트 데이터는 실제로 들어올 이미지와 같은 상태로 두어야 성능을 제대로 잴 수 있다.</p>
-<p>변형한 뒤에도 정답은 그대로여야 한다. 숫자 6을 180° 돌리면 9가 된다. 이런 변형은 쓰지 않는다.</p>
+<ul>
+<li>CNN은 이미지에서 특성을 뽑아내는 방법</li>
+<li>변형해도 이미지의 특성은 그대로 남음</li>
+<li>특성을 포함한 데이터가 많아지므로 정확도가 높아질 수 있음</li>
+</ul>
+<section id="위치-변경" class="level3">
+<h3 class="anchored" data-anchor-id="위치-변경">위치 변경</h3>
+<ul>
+<li>좌우로 이동, 좌우 반전</li>
+</ul>
+<p><img src="../assets/img/ch08_aug_shift.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
+</section>
+<section id="회전" class="level3">
+<h3 class="anchored" data-anchor-id="회전">회전</h3>
+<ul>
+<li>일정 각도만큼 돌림</li>
+</ul>
+<p><img src="../assets/img/ch08_aug_rotate.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
+</section>
+<section id="색-바꾸기" class="level3">
+<h3 class="anchored" data-anchor-id="색-바꾸기">색 바꾸기</h3>
+<ul>
+<li>밝기, 채도, 대비를 바꿈</li>
+</ul>
+<p><img src="../assets/img/ch08_aug_color.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
+</section>
+<section id="증강을-쓸-때" class="level3">
+<h3 class="anchored" data-anchor-id="증강을-쓸-때">증강을 쓸 때</h3>
+<ul>
+<li>위 사진은 원본 1장과 변형 12장. 13장 모두 정답은 고양이</li>
+<li>변형한 이미지를 파일로 저장하지 않음. 학습 중 이미지를 꺼낼 때마다 무작위로 변형 → 에폭마다 다른 이미지</li>
+<li>학습 데이터에만 적용. 검증·테스트 데이터는 그대로 둠</li>
+<li>정답이 바뀌는 변형은 쓰지 않음</li>
+</ul>
+<div style="text-align:center;margin:1em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 470 190" width="100%" style="max-width:470px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:0 auto;">
+<defs><marker id="ah69" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker></defs><rect x="30" y="15" width="120" height="120" rx="8" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.5"></rect><text x="90" y="77" text-anchor="middle" dominant-baseline="central" font-size="80" font-weight="700" fill="#333">6</text><text x="90" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#2E7D32">정답: 6</text><line x1="165" y1="75" x2="300" y2="75" stroke="#555" stroke-width="1.6" marker-end="url(#ah69)"></line><text x="232" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#333">180° 회전</text><rect x="315" y="15" width="120" height="120" rx="8" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.5"></rect><text x="375" y="77" text-anchor="middle" dominant-baseline="central" font-size="80" font-weight="700" fill="#333" transform="rotate(180 375 75)">6</text><text x="375" y="160" text-anchor="middle" font-size="13" font-weight="700" fill="#C62828">보기에는 9</text><text x="375" y="178" text-anchor="middle" font-size="13" font-weight="700" fill="#C62828">정답 6과 맞지 않음</text>
+</svg>
+</div>
 <hr>
 </section>
 </section>
 <section id="데이터-합성-data-synthesis" class="level2">
 <h2 class="anchored" data-anchor-id="데이터-합성-data-synthesis">데이터 합성 (Data Synthesis)</h2>
-<p>데이터 증강이 기존 이미지를 변형하는 것이라면, 데이터 합성은 새로 합성한 이미지로 데이터를 만드는 것이다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -278,15 +293,22 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더하는 방법.</p>
+<p>새롭게 합성된 이미지를 이용하여 새로운 데이터를 만드는 방법.</p>
 </div>
 </div>
-<p>사진 속 글자를 읽는 OCR 모델이 예다. 간판과 표지판을 찍은 실제 글자 이미지에 더해, 여러 글꼴과 배경과 잡음을 조합해 컴퓨터로 만든 글자 이미지로도 학습한다.</p>
+<ul>
+<li>증강: 기존 이미지에 노이즈나 변형을 가함</li>
+<li>합성: 컴퓨터로 새 이미지를 만듦</li>
+<li>예: 사진 속 글자를 읽는 OCR 모델 → 글꼴, 기울기, 배경색, 잡음을 조합해 글자 이미지를 합성</li>
+</ul>
+<p><img src="../assets/img/ch08_synth.png" style="width:100%;max-width:900px;display:block;margin:1em auto;"></p>
+<ul>
+<li>6장 모두 컴퓨터로 만든 “부경대” 글자 이미지</li>
+</ul>
 <hr>
 </section>
 <section id="사전-학습된-모델-활용-using-pretrained-model" class="level2">
 <h2 class="anchored" data-anchor-id="사전-학습된-모델-활용-using-pretrained-model">사전 학습된 모델 활용 (Using Pretrained Model)</h2>
-<p>데이터를 늘리는 또 하나의 방법은 다른 사람이 대량의 데이터로 학습해 둔 모델을 가져오는 것이다. ImageNet은 사진 약 128만 장을 1,000가지 클래스로 나눈 데이터셋이다. 이 데이터로 학습한 CNN이 가중치까지 공개되어 있다.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -297,9 +319,12 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>대량의 데이터로 미리 학습시켜 가중치까지 공개한 모델. 7장의 ResNet도 ImageNet으로 학습한 가중치가 공개되어 있다.</p>
+<p>대량의 데이터로 미리 학습시켜 가중치까지 공개한 모델.</p>
 </div>
 </div>
+<ul>
+<li>예: ImageNet(사진 약 128만 장, 클래스 1,000개)으로 학습한 ResNet(7장)</li>
+</ul>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -312,9 +337,9 @@ window.Quarto = {
 <div class="callout-body-container callout-body">
 <p>사전 학습 모델을 가져와 내 문제에 맞게 다시 학습시키는 방법.</p>
 <ol type="1">
-<li>사전에 학습된 대형 모델을 가져온다</li>
-<li>마지막 분류기 부분을 내가 원하는 분류기로 교체한다</li>
-<li>내가 가진 소량의 데이터로 마지막 부분을 다시 학습한다</li>
+<li>사전에 학습된 대형 모델을 가져옴</li>
+<li>마지막 분류기 부분을 내가 원하는 분류기로 교체</li>
+<li>내가 가진 소량의 데이터로 마지막 부분을 다시 학습</li>
 </ol>
 </div>
 </div>
@@ -323,7 +348,11 @@ window.Quarto = {
 <defs><marker id="ah8" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#555"></path></marker></defs><rect width="720" height="400" fill="white"></rect><text x="30" y="35" text-anchor="start" font-size="13" font-weight="700" fill="#222">사전 학습</text><line x1="150" y1="79.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="79.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="105.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="150" y1="131.0" x2="240" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="66.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="92.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="118.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="240" y1="144.0" x2="320" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="66.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="92.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="118.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="320" y1="144.0" x2="400" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="66.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="92.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="118.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="66.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="92.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="118.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="400" y1="144.0" x2="480" y2="144.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="66.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="92.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="118.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="53.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="79.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="105.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="131.0" stroke="#C9C9C9" stroke-width="0.8"></line><line x1="480" y1="144.0" x2="580" y2="157.0" stroke="#C9C9C9" stroke-width="0.8"></line><circle cx="150" cy="79.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="105.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="131.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="240" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="320" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="400" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="66.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="92.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="118.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="480" cy="144.0" r="9" fill="#FFCDD2" stroke="#C62828" stroke-width="1.6"></circle><circle cx="580" cy="53.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="79.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="100.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="105.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="110.0" r="1.6" fill="#6A1B9A"></circle><circle cx="580" cy="131.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="157.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="167" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">입력 이미지</text><text x="602" y="99" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">1,000개</text><text x="602" y="115" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">클래스</text><text x="360.0" y="177" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">ImageNet 사진 약 128만 장으로 모든 가중치를 학습</text><line x1="360.0" y1="189" x2="360.0" y2="217" stroke="#555" stroke-width="1.6" marker-end="url(#ah8)"></line><text x="370.0" y="208" text-anchor="start" font-size="10.5" font-weight="700" fill="#333">가중치를 그대로 가져와 마지막 층만 교체</text><text x="30" y="220" text-anchor="start" font-size="13" font-weight="700" fill="#222">미세 조정</text><text x="30" y="238" text-anchor="start" font-size="11" font-weight="400" fill="#555">(Option 1)</text><line x1="150" y1="264.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="264.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="290.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="150" y1="316.0" x2="240" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="251.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="277.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="303.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="240" y1="329.0" x2="320" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="251.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="277.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="303.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="320" y1="329.0" x2="400" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="251.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="277.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="303.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="251.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="277.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="303.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="400" y1="329.0" x2="480" y2="329.0" stroke="#D6D6D6" stroke-width="0.8"></line><line x1="480" y1="251.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="251.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="277.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="303.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="277.0" stroke="#6A1B9A" stroke-width="1.6"></line><line x1="480" y1="329.0" x2="580" y2="303.0" stroke="#6A1B9A" stroke-width="1.6"></line><circle cx="150" cy="264.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="290.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="150" cy="316.0" r="9" fill="#BBDEFB" stroke="#1565C0" stroke-width="1.6"></circle><circle cx="240" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="240" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="320" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="400" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="251.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="277.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="303.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="480" cy="329.0" r="9" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="1.6"></circle><circle cx="580" cy="277.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><circle cx="580" cy="303.0" r="9" fill="#E1BEE7" stroke="#6A1B9A" stroke-width="1.6"></circle><text x="150" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1565C0">내 이미지</text><text x="360.0" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#757575">동결: 학습하지 않는다</text><text x="602" y="284" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">내 클래스</text><text x="602" y="300" text-anchor="start" font-size="11" font-weight="700" fill="#6A1B9A">2개</text><text x="530" y="352" text-anchor="middle" font-size="10.5" font-weight="700" fill="#6A1B9A">새 출력층만 학습</text>
 </svg>
 </div>
-<p>위는 ImageNet으로 학습한 모델이다. 출력층 노드는 1,000개이고 노드 하나가 클래스 하나다. 아래는 같은 모델에서 출력층만 내 클래스 수만큼의 노드로 바꾼 것이다. 나머지 층의 가중치는 위에서 그대로 가져온다. 새 출력층의 가중치는 처음부터 학습한다.</p>
+<ul>
+<li>위: ImageNet으로 학습. 출력 노드 1,000개 = 클래스 1,000개</li>
+<li>아래: 출력층만 내 클래스 수로 교체. 나머지 층은 가중치를 그대로 가져옴</li>
+<li>새 출력층의 가중치는 처음부터 학습</li>
+</ul>
 <div class="callout callout-style-default callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -334,10 +363,9 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>층의 파라미터를 학습하지 않고 고정하는 것. 동결한 층의 가중치는 경사하강법으로 갱신되지 않는다.</p>
+<p>층의 파라미터를 학습하지 않고 고정하는 것. 경사하강법으로 갱신되지 않음.</p>
 </div>
 </div>
-<p>다시 학습할 범위는 둘 중 하나로 정한다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -369,13 +397,19 @@ window.Quarto = {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>사전 학습된 가중치에서 출발해 내 데이터로 다시 학습하는 것. Option 1과 Option 2가 모두 미세 조정이다.</p>
+<p>사전 학습된 가중치에서 출발해 내 데이터로 다시 학습하는 것. Option 1과 Option 2 모두 미세 조정.</p>
 </div>
 </div>
-<p>데이터가 적으면 Option 1을 쓴다. 학습할 파라미터가 적을수록 적은 데이터로도 과적합이 덜하다. 데이터가 충분하면 Option 2로 모든 층을 내 데이터에 맞춘다.</p>
+<ul>
+<li>데이터가 적으면 Option 1: 학습할 파라미터가 적음 → 과적합이 덜함</li>
+<li>데이터가 충분하면 Option 2: 모든 층을 내 데이터에 맞춤</li>
+</ul>
 <section id="학습하는-파라미터-수" class="level3">
 <h3 class="anchored" data-anchor-id="학습하는-파라미터-수">학습하는 파라미터 수</h3>
-<p>ResNet-18의 마지막 층은 512개의 특성을 받아 1,000개 클래스의 점수를 낸다. 이 층을 클래스 2개의 출력층으로 바꾼다. 파라미터 수는 2장의 공식대로 입력 수 × 출력 수 + 출력 수다.</p>
+<ul>
+<li>ResNet-18의 마지막 층: 특성 512개 → 클래스 1,000개</li>
+<li>클래스 2개로 교체. 파라미터 = 입력 수 × 출력 수 + 출력 수 (2장)</li>
+</ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -397,11 +431,17 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p>출력층을 바꾼 ResNet-18의 파라미터는 모두 약 1,100만 개다. Option 1은 이 가운데 새 출력층의 1,026개만 학습한다. Option 2는 약 1,100만 개를 모두 학습한다.</p>
+<ul>
+<li>출력층을 바꾼 ResNet-18 전체: 약 1,100만 개</li>
+<li>Option 1: 1,026개만 학습 / Option 2: 약 1,100만 개 모두 학습</li>
+</ul>
 </section>
 <section id="연습-동결하면-몇-개를-학습하나" class="level3">
 <h3 class="anchored" data-anchor-id="연습-동결하면-몇-개를-학습하나">연습 — 동결하면 몇 개를 학습하나</h3>
-<p>ResNet-50의 마지막 층은 2,048개의 특성을 받는다. 나머지 층을 동결하고 출력층을 클래스 7개로 바꾸면 학습하는 파라미터는 몇 개인가?</p>
+<ul>
+<li>ResNet-50의 마지막 층: 특성 2,048개</li>
+<li>나머지 층을 동결하고 출력층을 클래스 7개로 교체 → 학습하는 파라미터는?</li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -414,7 +454,7 @@ window.Quarto = {
 </div>
 <div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>새 출력층만 학습한다. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
+<p>새 출력층만 학습. <span class="math inline">\(2{,}048 \times 7 + 7 = 14{,}336 + 7 = \mathbf{14{,}343}\)</span>개.</p>
 </div>
 </div>
 </div>
@@ -423,7 +463,9 @@ window.Quarto = {
 </section>
 <section id="왜-작동하는가" class="level2">
 <h2 class="anchored" data-anchor-id="왜-작동하는가">왜 작동하는가?</h2>
-<p>사전 학습 모델은 대량의 데이터를 학습하면서 이미지 전반을 분류하기 위한 공통된 패턴을 충분히 학습했다. CNN의 앞쪽 층은 단순한 패턴을 잡고, 뒤쪽 층으로 갈수록 그 패턴을 조합한 복잡한 패턴을 잡는다.</p>
+<ul>
+<li>대량의 데이터를 학습하면서 이미지 전반을 분류하기 위한 공통된 패턴을 충분히 학습했기 때문</li>
+</ul>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -447,11 +489,21 @@ window.Quarto = {
 </tbody>
 </table>
 <p><img src="../assets/img/ch08_kernels.png" style="width:100%;max-width:760px;display:block;margin:1em auto;"></p>
-<p>그림은 ResNet-18 첫 콘볼루션 층의 커널 64개다. 커널 하나는 <span class="math inline">\(7 \times 7 \times 3\)</span>이다. 6장의 3차원 커널처럼 R, G, B 세 채널을 함께 본다. 왼쪽은 ImageNet으로 학습한 커널이고 오른쪽은 학습 전의 무작위 초깃값이다.</p>
-<p>학습한 커널은 여러 방향의 줄무늬와 색 덩어리 모양이다. 줄무늬 커널은 같은 방향의 에지에서 큰 값을 낸다. 6장의 에지 검출 커널과 같은 일을 하는 커널을 데이터에서 스스로 배운 것이다.</p>
-<p>이런 패턴은 고양이 사진에도, 개미 사진에도, 공장 부품 사진에도 쓰인다. 공통된 패턴은 이미 학습되어 있으므로 내 데이터로는 그 패턴을 내 클래스에 잇는 마지막 층만 학습하면 된다. 그래서 적은 데이터로도 작동한다.</p>
-<p>사전 학습 모델에는 학습할 때와 같은 형태의 입력을 넣는다. ImageNet으로 학습한 모델은 <span class="math inline">\(224 \times 224\)</span> 크기에, ImageNet 사진의 채널별 평균과 표준편차로 표준화한 입력을 받았다. 내 사진도 같은 크기로 바꾸고 같은 평균과 표준편차로 표준화한다.</p>
+<ul>
+<li>ResNet-18 첫 콘볼루션 층의 커널 64개. 커널 하나는 <span class="math inline">\(7 \times 7 \times 3\)</span>(6장의 3차원 커널)</li>
+<li>왼쪽: ImageNet으로 학습 → 여러 방향의 줄무늬, 색 덩어리. 줄무늬 커널은 6장의 에지 검출 커널과 같은 역할</li>
+<li>오른쪽: 학습 전 무작위 → 잡음</li>
+<li>공통된 패턴은 이미 학습됨 → 내 데이터로는 마지막 층만 학습해도 됨</li>
+</ul>
+<section id="같은-형태의-입력-use-the-same-input-type" class="level3">
+<h3 class="anchored" data-anchor-id="같은-형태의-입력-use-the-same-input-type">같은 형태의 입력 (Use the same input type)</h3>
+<ul>
+<li>사전 학습 모델에는 학습할 때와 같은 형태로 입력</li>
+<li>ImageNet 모델: <span class="math inline">\(224 \times 224\)</span> 크기, ImageNet 사진의 채널별 평균·표준편차로 표준화</li>
+<li>내 사진도 같은 크기, 같은 평균·표준편차로 바꿔서 입력</li>
+</ul>
 <hr>
+</section>
 </section>
 <section id="핵심-요약" class="level2">
 <h2 class="anchored" data-anchor-id="핵심-요약">핵심 요약</h2>
@@ -477,7 +529,7 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td><strong>데이터 합성</strong></td>
-<td>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더한다</td>
+<td>컴퓨터로 새 이미지를 합성하여 학습 데이터에 더함</td>
 </tr>
 <tr class="even">
 <td><strong>전이 학습</strong></td>
@@ -493,12 +545,12 @@ window.Quarto = {
 </tr>
 <tr class="odd">
 <td><strong>왜 작동하는가</strong></td>
-<td>에지·코너 같은 공통된 패턴을 대량의 데이터로 이미 학습했다. 입력은 학습 때와 같은 형태로</td>
+<td>에지·코너 같은 공통된 패턴을 대량의 데이터로 이미 학습. 입력은 학습 때와 같은 형태로</td>
 </tr>
 </tbody>
 </table>
 <blockquote class="blockquote">
-<p><strong>다음 장 예고</strong>: 이미지 분류를 넘어선 컴퓨터 비전 분야, 객체탐지와 시맨틱 분할을 다룬다.</p>
+<p><strong>다음 장 예고</strong>: 이미지 분류를 넘어선 컴퓨터 비전 분야, 객체탐지와 시맨틱 분할.</p>
 </blockquote>
 
 
