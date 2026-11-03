@@ -455,35 +455,47 @@ MaxPool2d (1, 128, 4, 4)</code></pre>
 </section>
 <section id="컬러-사진-데이터" class="level2">
 <h2 class="anchored" data-anchor-id="컬러-사진-데이터">4. 컬러 사진 데이터</h2>
-<p>CIFAR-10은 32×32 컬러 사진 6만 장이고 열 종류로 나뉩니다. 실습 4에서 열마다 훈련 데이터의 평균과 표준편차로 표준화했듯이, 사진도 <strong>채널마다</strong> 표준화합니다. 아래 숫자는 훈련 사진 5만 장의 R, G, B 채널별 평균과 표준편차입니다. <code>transforms.Compose</code>는 나열한 변환을 차례로 적용합니다.</p>
-<div id="a28fff25" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> (<span class="fl">0.4914</span>, <span class="fl">0.4822</span>, <span class="fl">0.4465</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>std <span class="op">=</span> (<span class="fl">0.2470</span>, <span class="fl">0.2435</span>, <span class="fl">0.2616</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> transforms.Compose([</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize(mean, std),</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="5c9296e4" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — CIFAR-10을 내려받습니다(약 170MB). 원본 서버가 느려 수업용 미러를 씁니다.</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>datasets.CIFAR10.url <span class="op">=</span> <span class="st">'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/cifar-10-python.tar.gz'</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>tr_full <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>tf)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>te_full <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">False</span>, download<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>tf)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_full.classes)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>CIFAR-10은 32×32 컬러 사진 6만 장이고 열 종류로 나뉩니다. 먼저 훈련 사진 5만 장을 내려받습니다.</p>
+<div id="5c9296e4" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — CIFAR-10을 내려받습니다(약 170MB). 원본 서버가 느려 수업용 미러를 씁니다.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>datasets.CIFAR10.url <span class="op">=</span> <span class="st">'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/cifar-10-python.tar.gz'</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>raw <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(raw.classes)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(raw.data.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Files already downloaded and verified
-Files already downloaded and verified
-['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']</code></pre>
+['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
+(50000, 32, 32, 3)</code></pre>
 </div>
 </div>
-<p><code>airplane</code>부터 <code>truck</code>까지 열 개의 이름이 나옵니다. 정답 번호 0~9가 이 순서입니다.</p>
+<p><code>airplane</code>부터 <code>truck</code>까지 열 개의 이름이 나옵니다. 정답 번호 0~9가 이 순서입니다. <code>raw.data</code>는 사진 5만 장의 픽셀 값을 담은 배열입니다. 모양은 (사진 수, 세로, 가로, 채널) = <code>(50000, 32, 32, 3)</code>이고, 값은 0~255의 정수입니다.</p>
+<p>실습 4에서 열마다 훈련 데이터의 평균과 표준편차로 표준화했듯이, 사진도 <strong>채널마다</strong> 표준화합니다. 먼저 R, G, B 채널별 평균과 표준편차를 구합니다. <code>axis=(0, 1, 2)</code>는 사진, 세로, 가로 세 축을 모두 묶어 계산하라는 뜻이므로 채널 축만 남아 값이 세 개씩 나옵니다. 아래에서 쓸 <code>ToTensor</code>가 픽셀 값을 0~1로 바꾸므로, 평균과 표준편차도 255로 나눠 같은 범위로 맞춥니다.</p>
+<div id="b7d1e2a4" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> raw.data.mean(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)) <span class="op">/</span> <span class="dv">255</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>std <span class="op">=</span> raw.data.std(axis<span class="op">=</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)) <span class="op">/</span> <span class="dv">255</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mean.<span class="bu">round</span>(<span class="dv">4</span>), std.<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.4914 0.4822 0.4465] [0.247  0.2435 0.2616]</code></pre>
+</div>
+</div>
+<p>R, G, B 순서로 평균은 <strong>0.4914, 0.4822, 0.4465</strong>, 표준편차는 <strong>0.247, 0.2435, 0.2616</strong>입니다.</p>
+<p>이 값으로 변환을 만들어 훈련 데이터와 테스트 데이터에 붙입니다. <code>transforms.Compose</code>는 나열한 변환을 차례로 적용합니다. 테스트 사진에도 훈련 사진에서 구한 평균과 표준편차를 그대로 씁니다.</p>
+<div id="a28fff25" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>tf <span class="op">=</span> transforms.Compose([</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize(mean, std),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>tr_full <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>tf)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>te_full <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">False</span>, transform<span class="op">=</span>tf)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>CIFAR-10에는 훈련 5만 장과 테스트 1만 장만 있고 검증 세트가 따로 없습니다. 그래서 훈련 5만 장을 훈련 4만 장과 검증 1만 장으로 나눕니다. 사진을 직접 나누지 않고 사진 번호를 나눕니다. 사진 번호는 데이터셋에서 몇 번째 사진인지를 나타내는 0~49999의 정수이고, <code>tr_full[0]</code>이 0번 사진입니다. 이 번호를 <code>train_test_split</code>으로 8 : 2로 나눕니다.</p>
 <div id="85d367ed" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tr_idx, va_idx <span class="op">=</span> train_test_split(<span class="bu">range</span>(<span class="dv">50000</span>), test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr_idx), <span class="bu">len</span>(va_idx))</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_idx[:<span class="dv">5</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>tr_idx, va_idx <span class="op">=</span> train_test_split(<span class="bu">range</span>(<span class="dv">50000</span>), test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(tr_idx), <span class="bu">len</span>(va_idx))</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_idx[:<span class="dv">5</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>40000 10000
 [39087, 30893, 45278, 16398, 13653]</code></pre>
@@ -492,10 +504,10 @@ Files already downloaded and verified
 <p>훈련 번호가 <strong>40000</strong>개, 검증 번호가 <strong>10000</strong>개입니다. 앞 다섯 개가 <code>[39087, 30893, 45278, 16398, 13653]</code>처럼 섞여 있어, 훈련과 검증에 열 종류가 고르게 들어갑니다.</p>
 <p><code>Subset(데이터셋, 번호 리스트)</code>는 데이터셋에서 리스트에 든 번호의 사진만 골라 낸 새 데이터셋입니다. 번호 리스트는 위에서 만든 <code>tr_idx</code>처럼 사진 번호를 담은 리스트입니다. <code>Subset(tr_full, tr_idx)</code>는 <code>tr_full</code>의 39087번, 30893번, … 사진 4만 장으로 된 데이터셋입니다. 사진을 복사하지 않고 번호만 기억했다가, 꺼낼 때 <code>tr_full</code>에서 그 번호의 사진을 가져옵니다. 훈련 번호로 훈련 세트를, 검증 번호로 검증 세트를 만듭니다.</p>
 <div id="86fd614a" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>train_ds <span class="op">=</span> Subset(tr_full, tr_idx)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>val_ds <span class="op">=</span> Subset(tr_full, va_idx)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_ds), <span class="bu">len</span>(val_ds))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>train_ds <span class="op">=</span> Subset(tr_full, tr_idx)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>val_ds <span class="op">=</span> Subset(tr_full, va_idx)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_ds), <span class="bu">len</span>(val_ds))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>40000 10000</code></pre>
 </div>
@@ -503,10 +515,10 @@ Files already downloaded and verified
 <p>훈련 세트는 <strong>40000</strong>장, 검증 세트는 <strong>10000</strong>장입니다.</p>
 <p><code>train_ds</code>의 0번 사진은 원래 데이터셋의 <code>tr_idx[0]</code>번, 곧 39087번 사진입니다. 두 쪽에서 꺼내 정답 번호를 비교합니다.</p>
 <div id="53e706cb" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>x0, y0 <span class="op">=</span> train_ds[<span class="dv">0</span>]</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>x1, y1 <span class="op">=</span> tr_full[tr_idx[<span class="dv">0</span>]]</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y0, y1, tr_full.classes[y0])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>x0, y0 <span class="op">=</span> train_ds[<span class="dv">0</span>]</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>x1, y1 <span class="op">=</span> tr_full[tr_idx[<span class="dv">0</span>]]</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y0, y1, tr_full.classes[y0])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>6 6 frog</code></pre>
 </div>
@@ -514,12 +526,12 @@ Files already downloaded and verified
 <p>둘 다 <strong>6</strong>(<code>frog</code>)입니다. <code>Subset</code>의 0번이 원래 데이터셋의 39087번을 가리킵니다.</p>
 <p>세 데이터셋을 로더에 넣습니다. 테스트는 CIFAR-10이 따로 둔 1만 장을 그대로 씁니다. 훈련 로더만 <code>shuffle=True</code>로 에폭마다 순서를 섞습니다.</p>
 <div id="3b86491b" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(val_ds, batch_size<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(te_full, batch_size<span class="op">=</span><span class="dv">256</span>)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader), <span class="bu">len</span>(val_loader), <span class="bu">len</span>(test_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(val_ds, batch_size<span class="op">=</span><span class="dv">256</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(te_full, batch_size<span class="op">=</span><span class="dv">256</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_loader), <span class="bu">len</span>(val_loader), <span class="bu">len</span>(test_loader))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>313 40 40</code></pre>
 </div>
@@ -527,13 +539,13 @@ Files already downloaded and verified
 <p>훈련은 <strong>313</strong>배치입니다. 4만 장을 128장씩 나누면 312배치에 64장이 남아 313배치가 됩니다. 검증과 테스트는 256장씩 <strong>40</strong>배치입니다.</p>
 <p>배치 하나를 꺼내 모양과 표준화 결과를 봅니다. <code>xb[:, 0]</code>은 배치의 R 채널입니다.</p>
 <div id="3f824b8b" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), yb[:<span class="dv">8</span>])</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xb[:, <span class="dv">0</span>].mean().item(), xb[:, <span class="dv">0</span>].std().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), yb[:<span class="dv">8</span>])</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(xb[:, <span class="dv">0</span>].mean().item(), xb[:, <span class="dv">0</span>].std().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(128, 3, 32, 32) tensor([8, 5, 7, 0, 9, 4, 2, 5])
--0.07901124656200409 1.0051720142364502</code></pre>
+-0.0789996013045311 1.0050407648086548</code></pre>
 </div>
 </div>
 <p>배치는 <code>(128, 3, 32, 32)</code>입니다. 컬러라서 채널이 3입니다. R 채널의 평균은 0 근처, 표준편차는 1 근처입니다. <code>Normalize</code>가 채널마다 평균을 빼고 표준편차로 나누었기 때문입니다.</p>
@@ -543,10 +555,10 @@ Files already downloaded and verified
 <h2 class="anchored" data-anchor-id="gpu에서-학습시킨다">5. GPU에서 학습시킨다</h2>
 <p><code>device</code>는 계산할 장치입니다. GPU가 있으면 <code>cuda</code>, 없으면 <code>cpu</code>입니다. 모델을 <code>.to(device)</code>로 그 장치에 옮깁니다.</p>
 <div id="ac683021" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(device)</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> model.to(device)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(device)</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> model.to(device)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cuda</code></pre>
 </div>
@@ -554,59 +566,59 @@ Files already downloaded and verified
 <p>Colab에서 GPU 런타임이면 <code>cuda</code>가 나옵니다.</p>
 <p>모델과 데이터는 같은 장치에 있어야 계산됩니다. 학습 함수는 배치마다 다섯 줄(기울기 지우기 → 예측 → 손실 → 기울기 계산 → 갱신)을 실행하고, 그 앞에 배치를 장치로 옮기는 줄이 들어갑니다. 빈칸을 채웁니다.</p>
 <div id="714aecae" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def train_one_epoch(model, loader, criterion, optimizer):</span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.train()</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     total = 0.0</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#*     n = 0</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*     for xb, yb in loader:</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#*         xb, yb = xb.to(___), yb.to(___)      # 배치를 모델과 같은 장치로</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#*         optimizer.zero_grad()</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">#*         pred = model(xb)</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">#*         loss = criterion(pred, yb)</span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">#*         loss.backward()</span></span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">#*         optimizer.step()</span></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="co">#*         total += loss.item() * len(yb)</span></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a><span class="co">#*         n += len(yb)</span></span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return total / n</span></span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>        xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> model(xb)</span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(pred, yb)</span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def train_one_epoch(model, loader, criterion, optimizer):</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.train()</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#*     total = 0.0</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#*     n = 0</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#*     for xb, yb in loader:</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#*         xb, yb = xb.to(___), yb.to(___)      # 배치를 모델과 같은 장치로</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#*         optimizer.zero_grad()</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#*         pred = model(xb)</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#*         loss = criterion(pred, yb)</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co">#*         loss.backward()</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="co">#*         optimizer.step()</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">#*         total += loss.item() * len(yb)</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a><span class="co">#*         n += len(yb)</span></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return total / n</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>        xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>        pred <span class="op">=</span> model(xb)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(pred, yb)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>        n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>평가 함수는 가중치를 바꾸지 않고 손실과 맞힌 수를 셉니다. 여기에도 배치를 장치로 옮기는 줄이 들어갑니다.</p>
 <div id="5e805943" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>            out <span class="op">=</span> model(xb)</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> criterion(out, yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> (out.argmax(<span class="dv">1</span>) <span class="op">==</span> yb).<span class="bu">sum</span>().item()</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>            n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n, correct <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>            xb, yb <span class="op">=</span> xb.to(device), yb.to(device)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>            out <span class="op">=</span> model(xb)</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> criterion(out, yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> (out.argmax(<span class="dv">1</span>) <span class="op">==</span> yb).<span class="bu">sum</span>().item()</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>            n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n, correct <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>손실과 옵티마이저를 만들고, 학습 전의 검증 손실과 정확도를 봅니다.</p>
 <div id="441d0e62" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, val_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, val_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(2.302802442932129, 0.0843)</code></pre>
 </div>
@@ -614,11 +626,11 @@ Files already downloaded and verified
 <p>손실은 약 <strong>2.30</strong>, 정확도는 <strong>0.1</strong> 안팎입니다. 열 종류를 찍는 수준입니다.</p>
 <p>10 에폭을 돌리며 에폭마다 검증 손실과 정확도를 찍습니다.</p>
 <div id="05bbb2df" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    val_loss, val_acc <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(epoch, <span class="bu">round</span>(val_loss, <span class="dv">4</span>), <span class="bu">round</span>(val_acc, <span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    val_loss, val_acc <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(epoch, <span class="bu">round</span>(val_loss, <span class="dv">4</span>), <span class="bu">round</span>(val_acc, <span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>0 1.1994 0.5749
 1 0.9801 0.6524
@@ -635,9 +647,9 @@ Files already downloaded and verified
 <p>검증 정확도는 첫 에폭에 약 0.58이고 0.75 근처에서 더 오르지 않습니다. 검증 손실은 여섯 번째 에폭 무렵 가장 낮고 그 뒤로 다시 올라갑니다. 모델이 훈련 사진에만 맞춰지는 과적합의 신호입니다.</p>
 <p>테스트 세트로 한 번 평가합니다.</p>
 <div id="b804c10f" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_acc <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_acc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_acc <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_acc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>0.7477</code></pre>
 </div>
@@ -649,22 +661,22 @@ Files already downloaded and verified
 <h2 class="anchored" data-anchor-id="내-사진을-판별한다">6. 내 사진을 판별한다</h2>
 <p>모델은 32×32로 표준화된 사진만 받습니다. 휴대폰 사진도 같은 모양으로 바꿉니다. <code>Resize(32)</code>는 짧은 변을 32로 줄이고, <code>CenterCrop(32)</code>는 가운데 32×32를 잘라 냅니다. 그 뒤는 학습 때와 같은 <code>ToTensor</code>와 <code>Normalize</code>입니다.</p>
 <div id="507d4f8d" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>photo_tf <span class="op">=</span> transforms.Compose([</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    transforms.Resize(<span class="dv">32</span>),</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    transforms.CenterCrop(<span class="dv">32</span>),</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize(mean, std),</span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>photo_tf <span class="op">=</span> transforms.Compose([</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    transforms.Resize(<span class="dv">32</span>),</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    transforms.CenterCrop(<span class="dv">32</span>),</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    transforms.ToTensor(),</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize(mean, std),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>예시 사진으로 먼저 해 봅니다. scikit-image에 들어 있는 고양이 사진입니다.</p>
 <div id="cell-lab06-cat" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 예시 사진 불러오기</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage <span class="im">import</span> data</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>photo <span class="op">=</span> Image.fromarray(data.chelsea())</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(photo)</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 예시 사진 불러오기</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage <span class="im">import</span> data</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>photo <span class="op">=</span> Image.fromarray(data.chelsea())</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(photo)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -675,9 +687,9 @@ Files already downloaded and verified
 </div>
 <p>사진을 변환하고 모양을 봅니다. <code>photo.size</code>는 PIL 사진의 (너비, 높이)입니다.</p>
 <div id="1b29b0f1" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> photo_tf(photo)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(photo.size, <span class="bu">tuple</span>(x.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> photo_tf(photo)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(photo.size, <span class="bu">tuple</span>(x.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(451, 300) (3, 32, 32)</code></pre>
 </div>
@@ -685,11 +697,11 @@ Files already downloaded and verified
 <p>출력은 <code>(451, 300) (3, 32, 32)</code>입니다. 451×300 사진이 모델이 받는 <code>(3, 32, 32)</code>가 되었습니다.</p>
 <p>모델에 들어가는 32×32 사진을 그려 봅니다. 표준화하기 전 단계까지만 적용한 그림입니다.</p>
 <div id="cell-lab06-cat32" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 모델이 보는 32×32 사진</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> transforms.CenterCrop(<span class="dv">32</span>)(transforms.Resize(<span class="dv">32</span>)(photo))</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(small)</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 모델이 보는 32×32 사진</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> transforms.CenterCrop(<span class="dv">32</span>)(transforms.Resize(<span class="dv">32</span>)(photo))</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(small)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -701,12 +713,12 @@ Files already downloaded and verified
 <p>학습에 쓴 CIFAR-10 사진과 같은 해상도입니다. 수염과 털의 결은 사라지고 얼굴의 윤곽과 색만 남습니다.</p>
 <p>예측합니다. 모델은 배치를 받으므로 <code>unsqueeze(0)</code>으로 <code>(1, 3, 32, 32)</code>를 만들고, 모델과 같은 장치로 옮깁니다. 점수 10개를 <code>softmax</code>로 확률로 바꿉니다.</p>
 <div id="7535a274" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> model(x.unsqueeze(<span class="dv">0</span>).to(device))</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> torch.softmax(out, dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_full.classes[prob.argmax().item()], prob.<span class="bu">max</span>().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> model(x.unsqueeze(<span class="dv">0</span>).to(device))</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> torch.softmax(out, dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_full.classes[prob.argmax().item()], prob.<span class="bu">max</span>().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cat 0.5090693831443787</code></pre>
 </div>
@@ -714,15 +726,15 @@ Files already downloaded and verified
 <p>예측한 종류와 그 확률이 나옵니다. 같은 코드로 학습을 다시 하면 이 사진의 판별은 <code>cat</code>, <code>dog</code>, <code>frog</code> 사이에서 바뀝니다. 테스트 정확도는 매번 0.75 근처인데 사진 한 장의 판별은 흔들립니다.</p>
 <p>사진 한 장을 받아 예측 이름과 확률을 돌려주는 함수로 조립합니다.</p>
 <div id="d88daddd" class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(photo):</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> photo_tf(photo).unsqueeze(<span class="dv">0</span>).to(device)</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> torch.softmax(model(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> tr_full.classes[prob.argmax().item()], prob.<span class="bu">max</span>().item()</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(photo):</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> photo_tf(photo).unsqueeze(<span class="dv">0</span>).to(device)</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> torch.softmax(model(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> tr_full.classes[prob.argmax().item()], prob.<span class="bu">max</span>().item()</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>('cat', 0.5090693831443787)</code></pre>
 </div>
@@ -730,16 +742,16 @@ Files already downloaded and verified
 <p>바로 위와 같은 결과가 나옵니다.</p>
 <p>이제 내 사진을 올립니다. 아래 셀은 <strong>Colab에서만</strong> 실행됩니다. 실행하면 파일 선택 버튼이 나타나고, 사진(JPG, PNG)을 여러 장 고를 수 있습니다. 사람은 찍지 않습니다.</p>
 <div id="df9a862c" class="cell" data-execution_count="30">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — (Colab) 내 사진 올리기</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> files</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — (Colab) 내 사진 올리기</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> files</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>올린 사진마다 <code>predict</code>를 실행합니다. <code>ImageOps.exif_transpose</code>는 휴대폰 사진에 저장된 회전 정보를 반영해 사진을 바로 세웁니다.</p>
 <div id="b2850b60" class="cell" data-execution_count="31">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> uploaded:</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    photo <span class="op">=</span> ImageOps.exif_transpose(Image.<span class="bu">open</span>(name)).convert(<span class="st">'RGB'</span>)</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> uploaded:</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    photo <span class="op">=</span> ImageOps.exif_transpose(Image.<span class="bu">open</span>(name)).convert(<span class="st">'RGB'</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>사진 이름 옆에 예측한 종류와 확률이 나옵니다. 물체가 사진 가운데에 크게 찍힌 사진일수록 잘 맞힙니다. <code>CenterCrop</code>이 가운데만 남기기 때문입니다.</p>
 <hr>
@@ -750,12 +762,12 @@ Files already downloaded and verified
 <h3 class="anchored" data-anchor-id="과제-1-내-사진-다섯-장">📝 과제 1 · 내 사진 다섯 장</h3>
 <p>CIFAR-10의 열 종류(<code>airplane</code>, <code>automobile</code>, <code>bird</code>, <code>cat</code>, <code>deer</code>, <code>dog</code>, <code>frog</code>, <code>horse</code>, <code>ship</code>, <code>truck</code>) 가운데 주변에서 찍을 수 있는 것을 다섯 장 찍어 올리고, 판별 결과를 표에 적습니다.</p>
 <div id="0015c625" class="cell" data-execution_count="32">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 업로드 셀을 다시 실행해 사진을 올리고, for 반복문으로 사진마다 predict(photo)를 실행합니다.</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> uploaded:</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    photo <span class="op">=</span> ImageOps.exif_transpose(Image.<span class="bu">open</span>(name)).convert(<span class="st">'RGB'</span>)</span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 업로드 셀을 다시 실행해 사진을 올리고, for 반복문으로 사진마다 predict(photo)를 실행합니다.</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> uploaded:</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    photo <span class="op">=</span> ImageOps.exif_transpose(Image.<span class="bu">open</span>(name)).convert(<span class="st">'RGB'</span>)</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <table class="caption-top table">
 <thead>
@@ -808,18 +820,18 @@ Files already downloaded and verified
 <h3 class="anchored" data-anchor-id="과제-2-틀린-사진-들여다보기">📝 과제 2 · 틀린 사진 들여다보기</h3>
 <p>틀린 사진 한 장을 골라 모델이 보는 32×32 사진을 그리고, 열 종류의 확률을 모두 출력합니다. 정답 종류의 확률은 몇 번째로 높은지 적습니다.</p>
 <div id="3e9165a3" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 small = transforms.CenterCrop(32)(transforms.Resize(32)(photo))로 그림을 그립니다. 확률은 predict 함수 안의 세 줄로 prob을 구한 뒤, for name, p in zip(tr_full.classes, prob): 로 하나씩 출력합니다.</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> transforms.CenterCrop(<span class="dv">32</span>)(transforms.Resize(<span class="dv">32</span>)(photo))</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(small)</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> photo_tf(photo).unsqueeze(<span class="dv">0</span>).to(device)</span>
-<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
-<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    prob <span class="op">=</span> torch.softmax(model(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
-<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, p <span class="kw">in</span> <span class="bu">zip</span>(tr_full.classes, prob):</span>
-<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, <span class="bu">round</span>(p.item(), <span class="dv">3</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 small = transforms.CenterCrop(32)(transforms.Resize(32)(photo))로 그림을 그립니다. 확률은 predict 함수 안의 세 줄로 prob을 구한 뒤, for name, p in zip(tr_full.classes, prob): 로 하나씩 출력합니다.</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> transforms.CenterCrop(<span class="dv">32</span>)(transforms.Resize(<span class="dv">32</span>)(photo))</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(small)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> photo_tf(photo).unsqueeze(<span class="dv">0</span>).to(device)</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>    prob <span class="op">=</span> torch.softmax(model(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, p <span class="kw">in</span> <span class="bu">zip</span>(tr_full.classes, prob):</span>
+<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, <span class="bu">round</span>(p.item(), <span class="dv">3</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -893,7 +905,7 @@ truck 0.0</code></pre>
 </tr>
 <tr class="even">
 <td>채널별 표준화</td>
-<td><code>transforms.Normalize(mean, std)</code>. 훈련 사진의 채널별 평균과 표준편차</td>
+<td><code>raw.data.mean(axis=(0, 1, 2)) / 255</code>, <code>raw.data.std(axis=(0, 1, 2)) / 255</code>로 훈련 사진의 채널별 평균과 표준편차를 구해 <code>transforms.Normalize(mean, std)</code>에 넣음</td>
 </tr>
 <tr class="odd">
 <td>GPU</td>
