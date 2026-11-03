@@ -723,7 +723,8 @@ MaxPool2d (1, 128, 4, 4)</code></pre>
 <pre><code>cat 0.5090693831443787</code></pre>
 </div>
 </div>
-<p>예측한 종류와 그 확률이 나옵니다. 같은 코드로 학습을 다시 하면 이 사진의 판별은 <code>cat</code>, <code>dog</code>, <code>frog</code> 사이에서 바뀝니다. 테스트 정확도는 매번 0.75 근처인데 사진 한 장의 판별은 흔들립니다.</p>
+<p>출력은 <code>cat 0.509…</code>입니다. 이 사진을 <code>cat</code>으로 판별했고, 그 확률은 약 0.51입니다.</p>
+<p>이 결과는 다시 학습하면 바뀔 수 있습니다. 시드를 고정해도 GPU 계산에는 실행마다 아주 작은 차이가 생기고, 그 차이가 학습 동안 쌓여 가중치가 매번 조금씩 달라지기 때문입니다. 이 페이지를 만들며 같은 코드로 여러 번 학습했을 때 이 사진은 <code>cat</code>(0.51), <code>dog</code>(0.56), <code>frog</code>(0.60)로 판별되었고, 테스트 정확도는 매번 0.75 근처였습니다. 테스트 사진 1만 장 중 약 7,500장을 맞히는 것은 매번 비슷하지만, 이 사진이 그 7,500장에 드는지는 학습마다 다릅니다. Colab에서 실행한 결과도 이 페이지와 다를 수 있습니다.</p>
 <p>사진 한 장을 받아 예측 이름과 확률을 돌려주는 함수로 조립합니다.</p>
 <div id="d88daddd" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
