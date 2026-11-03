@@ -205,7 +205,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>⏱ 75분</strong> · 7주차 실습 — ImageNet으로 학습된 ResNet-18을 가져와 학습 없이 사진을 판별하고, 마지막 층을 바꿔 개미·벌 사진 244장으로 다시 학습하기</p>
 <section id="이번-시간의-질문" class="level2">
 <h2 class="anchored" data-anchor-id="이번-시간의-질문">🎯 이번 시간의 질문</h2>
-<p>실습 6에서는 CIFAR-10 사진 4만 장으로 CNN을 처음부터 학습시켰습니다. 고양이 예시 사진은 다시 학습할 때마다 <code>cat</code>, <code>dog</code>, <code>frog</code>로 판별이 바뀌었습니다.</p>
+<p>실습 6에서는 CIFAR-10 사진 4만 장으로 CNN을 처음부터 학습시켰습니다.</p>
 <blockquote class="blockquote">
 <p><strong>이미 학습된 모델을 가져오면, 적은 사진으로도 맞힐까요?</strong></p>
 </blockquote>
@@ -289,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="학습-없이-판별한다" class="level2">
 <h2 class="anchored" data-anchor-id="학습-없이-판별한다">2. 학습 없이 판별한다</h2>
-<p>실습 6과 같은 고양이 사진을 씁니다.</p>
+<p>scikit-image에 들어 있는 고양이 사진을 씁니다.</p>
 <div id="cell-lab07-cat" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 예시 사진 불러오기</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage <span class="im">import</span> data</span>
@@ -323,7 +323,7 @@ lynx 0.005
 Persian cat 0.0</code></pre>
 </div>
 </div>
-<p>1~3위는 <code>Egyptian cat</code>, <code>tiger cat</code>, <code>tabby</code>이고, 셋 다 고양이 종류입니다. 이 모델은 우리가 한 번도 학습시키지 않았습니다. 그래도 고양이 종류 셋을 맨 위에 놓습니다. 실습 6의 모델은 같은 사진을 <code>cat</code>, <code>dog</code>, <code>frog</code> 사이에서 오갔습니다.</p>
+<p>1~3위는 <code>Egyptian cat</code>, <code>tiger cat</code>, <code>tabby</code>이고, 셋 다 고양이 종류입니다. 이 모델은 우리가 한 번도 학습시키지 않았습니다. 그래도 고양이 종류 셋을 맨 위에 놓습니다.</p>
 <p>사진 한 장을 받아 상위 다섯 개를 돌려주는 함수로 조립합니다.</p>
 <div id="a42408ea" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
