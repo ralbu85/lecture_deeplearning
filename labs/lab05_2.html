@@ -257,20 +257,12 @@ window.Quarto = {
 <td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
 </tr>
 <tr class="odd">
-<td>💬</td>
-<td>결과를 함께 읽습니다</td>
-</tr>
-<tr class="even">
-<td>✅</td>
-<td>이 숫자가 나오면 맞습니다</td>
-</tr>
-<tr class="odd">
 <td>📝</td>
 <td>과제. 힌트를 보고 스스로 풉니다</td>
 </tr>
 </tbody>
 </table>
-<div id="24c5ed39" class="cell" data-execution_count="1">
+<div id="127cd46c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 옷 사진 데이터를 ToTensor를 붙여 내려받습니다.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -290,23 +282,23 @@ window.Quarto = {
 <pre><code>준비 완료!</code></pre>
 </div>
 </div>
-<p>✅ <code>준비 완료!</code>가 나오면 됩니다.</p>
+<p><code>준비 완료!</code>가 나오면 준비가 끝난 것입니다.</p>
 <hr>
 </section>
 <section id="출력-크기는-공식으로-먼저-센다" class="level2">
 <h2 class="anchored" data-anchor-id="출력-크기는-공식으로-먼저-센다">1. 출력 크기는 공식으로 먼저 센다</h2>
 <p><span class="math display">\[\text{출력 크기} = \left\lfloor \frac{N - K + 2P}{S} \right\rfloor + 1\]</span></p>
 <p>이론 6장의 공식입니다. <span class="math inline">\(N\)</span>은 입력 한 변, <span class="math inline">\(K\)</span>는 커널 크기, <span class="math inline">\(P\)</span>는 패딩, <span class="math inline">\(S\)</span>는 스트라이드입니다. 파이썬의 <code>//</code>가 곧 버림입니다. 6장 연습의 32×32 입력, 5×5 커널, 패딩 2, 스트라이드 2를 한 줄로 계산합니다.</p>
-<div id="a24cd177" class="cell" data-execution_count="2">
+<div id="27d94910" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>((<span class="dv">32</span> <span class="op">-</span> <span class="dv">5</span> <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> <span class="dv">2</span>) <span class="op">//</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>16</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <strong>16</strong>이면 맞습니다. <span class="math inline">\((32-5+4)/2 = 15.5\)</span>를 버려서 15, 거기에 1을 더해 16입니다.</p>
+<p>출력은 <strong>16</strong>입니다. <span class="math inline">\((32-5+4)/2 = 15.5\)</span>를 버려서 15, 거기에 1을 더해 16입니다.</p>
 <p>공식을 함수로 조립하고, 같은 설정의 <code>nn.Conv2d</code>에 실제로 입력을 통과시켜 마지막 축의 길이와 대조합니다. <code>torch.zeros(1, 1, N, N)</code>은 값이 모두 0인 <code>(N, C, H, W)</code> 입력입니다. 빈칸을 채웁니다.</p>
-<div id="e7f4f14f" class="cell" data-execution_count="3">
+<div id="fa3ac299" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def out_size(N, K, P, S):</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     return (N - ___ + 2 * ___) // ___ + 1</span></span>
@@ -328,14 +320,13 @@ window.Quarto = {
 28 5 0 1 -&gt; 24 24</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 세 줄 모두 두 숫자가 같고, 마지막 줄이 <code>24 24</code>면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 마지막 줄 28×28 입력에 5×5 커널, 패딩 0, 스트라이드 1은 <strong>24</strong>입니다. 4절의 CNN이 이 설정입니다. <code>nn.Conv2d(1, 1, ...)</code>의 두 숫자는 입력 채널 수와 커널 수입니다.</p>
+<p>세 줄 모두 두 숫자가 같고, 마지막 줄은 <code>24 24</code>입니다. 마지막 줄 28×28 입력에 5×5 커널, 패딩 0, 스트라이드 1은 <strong>24</strong>입니다. 4절의 CNN이 이 설정입니다. <code>nn.Conv2d(1, 1, ...)</code>의 두 숫자는 입력 채널 수와 커널 수입니다.</p>
 <hr>
 </section>
 <section id="콘볼루션-층의-파라미터-수" class="level2">
 <h2 class="anchored" data-anchor-id="콘볼루션-층의-파라미터-수">2. 콘볼루션 층의 파라미터 수</h2>
 <p>커널 하나의 파라미터는 <span class="math inline">\(K \times K \times C_{\text{in}}\)</span>개에 편향 1개이고, 커널이 <span class="math inline">\(M\)</span>개면 <span class="math inline">\(M\)</span>배입니다. 이론 6장의 비교표 그대로 3×3×3 커널 32개짜리 층과, 5장의 완전연결 첫 층(150,528 → 256)을 만들어 <code>weight.shape</code>를 봅니다.</p>
-<div id="fafda9f5" class="cell" data-execution_count="4">
+<div id="9958b393" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>conv <span class="op">=</span> nn.Conv2d(<span class="dv">3</span>, <span class="dv">32</span>, kernel_size<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span>, <span class="dv">256</span>)</span>
@@ -349,14 +340,13 @@ window.Quarto = {
 torch.Size([256, 150528]) 38535424</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 커널 <code>(32, 3, 3, 3)</code>과 편향 32, 합쳐서 <strong>896</strong>개. 완전연결은 <code>(256, 150528)</code>에 <strong>38,535,424</strong>개면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 6장 비교표의 두 숫자입니다. 약 4만 배 차이입니다. - <code>weight.shape</code>의 네 축은 5-1의 <code>F.conv2d</code> 커널과 같은 <code>(커널 수, 입력 채널 수, K, K)</code>입니다. - 콘볼루션의 파라미터 수에는 <strong>이미지 크기가 들어가지 않습니다.</strong> 커널 하나가 모든 위치를 돌아다니며 같은 가중치를 쓰기 때문입니다. 사진이 224×224든 32×32든 896개입니다.</p>
+<p>콘볼루션 층은 커널 <code>(32, 3, 3, 3)</code>과 편향 32개, 합쳐서 <strong>896</strong>개입니다. 완전연결 층은 <code>(256, 150528)</code>에 <strong>38,535,424</strong>개입니다. 6장 비교표의 두 숫자입니다. 약 4만 배 차이입니다. - <code>weight.shape</code>의 네 축은 5-1의 <code>F.conv2d</code> 커널과 같은 <code>(커널 수, 입력 채널 수, K, K)</code>입니다. - 콘볼루션의 파라미터 수에는 <strong>이미지 크기가 들어가지 않습니다.</strong> 커널 하나가 모든 위치를 돌아다니며 같은 가중치를 쓰기 때문입니다. 사진이 224×224든 32×32든 896개입니다.</p>
 <hr>
 </section>
 <section id="옷-사진-데이터" class="level2">
 <h2 class="anchored" data-anchor-id="옷-사진-데이터">3. 옷 사진 데이터</h2>
 <p>FashionMNIST 6만 장 중 앞 12,000장만 써서 실습 4처럼 훈련·검증으로 나눕니다. <code>Subset</code>은 데이터셋에서 번호 목록에 해당하는 것만 골라 낸 데이터셋입니다. 테스트는 FashionMNIST가 따로 두는 10,000장을 그대로 씁니다.</p>
-<div id="ac862998" class="cell" data-execution_count="5">
+<div id="1593b68c" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>tr_idx, va_idx <span class="op">=</span> train_test_split(<span class="bu">range</span>(<span class="dv">12000</span>), test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -372,9 +362,9 @@ torch.Size([256, 150528]) 38535424</code></pre>
 75 10 40</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>9600 2400 10000</code>과 <code>75 10 40</code>이면 맞습니다. 훈련 9,600장을 128장씩 나누면 75배치입니다.</p>
+<p><code>9600 2400 10000</code>과 <code>75 10 40</code>이 나옵니다. 훈련 9,600장을 128장씩 나누면 75배치입니다.</p>
 <p>배치 하나를 꺼내 모양을 봅니다.</p>
-<div id="61a67ea2" class="cell" data-execution_count="6">
+<div id="b5cbc57b" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), <span class="bu">tuple</span>(yb.shape))</span>
@@ -384,14 +374,13 @@ torch.Size([256, 150528]) 38535424</code></pre>
 tensor([2, 0, 8, 4, 1, 6, 5, 3])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(128, 1, 28, 28) (128,)</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 흑백이므로 채널이 1입니다. 정답은 0~9의 클래스 번호이고, 실습 4의 연비처럼 <code>(128, 1)</code>이 아니라 <code>(128,)</code>입니다. 분류의 정답은 번호 하나이기 때문입니다.</p>
+<p>출력은 <code>(128, 1, 28, 28) (128,)</code>입니다. 흑백이므로 채널이 1입니다. 정답은 0~9의 클래스 번호이고, 실습 4의 연비처럼 <code>(128, 1)</code>이 아니라 <code>(128,)</code>입니다. 분류의 정답은 번호 하나이기 때문입니다.</p>
 <hr>
 </section>
 <section id="콘볼루션-층-하나짜리-신경망" class="level2">
 <h2 class="anchored" data-anchor-id="콘볼루션-층-하나짜리-신경망">4. 콘볼루션 층 하나짜리 신경망</h2>
 <p>5×5 커널 8개짜리 콘볼루션 층 뒤에 <code>ReLU</code>를 붙이고, 그 결과를 펼쳐 <code>Linear</code>로 열 클래스의 점수를 냅니다. 1절에서 센 대로 28×28이 콘볼루션을 지나면 24×24이므로, 펼친 길이는 <span class="math inline">\(8 \times 24 \times 24\)</span>입니다. <code>nn.Flatten</code>은 5-1의 <code>flatten(start_dim=1)</code>을 층으로 만든 것입니다. 한 층씩 통과시키며 모양을 찍습니다.</p>
-<div id="c377c752" class="cell" data-execution_count="7">
+<div id="76a2e158" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cnn <span class="op">=</span> nn.Sequential(</span>
@@ -412,10 +401,9 @@ Flatten (1, 4608)
 Linear (1, 10)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>Conv2d (1, 8, 24, 24)</code> → <code>ReLU (1, 8, 24, 24)</code> → <code>Flatten (1, 4608)</code> → <code>Linear (1, 10)</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 커널 8개가 특성 맵 8장을 만들어 채널이 1에서 8이 되고, 패딩이 없어 변이 28에서 24로 줍니다. 펼친 4,608개가 <code>Linear</code>로 들어가 열 클래스의 점수 10개가 나옵니다.</p>
+<p><code>Conv2d (1, 8, 24, 24)</code> → <code>ReLU (1, 8, 24, 24)</code> → <code>Flatten (1, 4608)</code> → <code>Linear (1, 10)</code> 순서로 나옵니다. 커널 8개가 특성 맵 8장을 만들어 채널이 1에서 8이 되고, 패딩이 없어 변이 28에서 24로 줍니다. 펼친 4,608개가 <code>Linear</code>로 들어가 열 클래스의 점수 10개가 나옵니다.</p>
 <p>파라미터 수를 셉니다. <code>weight</code>와 <code>bias</code>가 있는 층은 콘볼루션과 <code>Linear</code> 둘입니다.</p>
-<div id="f39eeb24" class="cell" data-execution_count="8">
+<div id="01f84086" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cnn[<span class="dv">0</span>].weight.shape, cnn[<span class="dv">0</span>].bias.shape)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cnn[<span class="dv">3</span>].weight.shape, cnn[<span class="dv">3</span>].bias.shape)</span>
@@ -426,14 +414,13 @@ torch.Size([10, 4608]) torch.Size([10])
 208 46090</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 콘볼루션 <strong>208</strong>개, <code>Linear</code> <strong>46,090</strong>개면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 합쳐서 46,298개인데 그중 콘볼루션은 208개뿐이고 나머지가 뒤의 <code>Linear</code>입니다. 콘볼루션이 줄인 파라미터를 펼쳐서 넣는 <code>Linear</code>가 다시 키웁니다. 이 부분을 줄이는 방법은 다음 실습에서 다룹니다.</p>
+<p>콘볼루션은 <strong>208</strong>개, <code>Linear</code>는 <strong>46,090</strong>개입니다. 합쳐서 46,298개인데 그중 콘볼루션은 208개뿐이고 나머지가 뒤의 <code>Linear</code>입니다. 콘볼루션이 줄인 파라미터를 펼쳐서 넣는 <code>Linear</code>가 다시 키웁니다. 이 부분을 줄이는 방법은 다음 실습에서 다룹니다.</p>
 <hr>
 </section>
 <section id="분류를-학습시킨다" class="level2">
 <h2 class="anchored" data-anchor-id="분류를-학습시킨다">5. 분류를 학습시킨다</h2>
 <p>출력이 클래스별 점수 10개이고 정답이 번호 하나이므로 손실은 <code>CrossEntropyLoss</code>입니다. 점수 10개를 이론 3장의 소프트맥스로 확률로 바꾼 뒤, 정답 클래스의 확률이 낮을수록 큰 값을 냅니다. 배치 하나를 통과시켜 출력 모양과 손실을 봅니다.</p>
-<div id="de5e289f" class="cell" data-execution_count="9">
+<div id="cca6e632" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(cnn.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
@@ -449,10 +436,9 @@ tensor([-0.0387,  0.0005, -0.0229, -0.0291, -0.0512,  0.0490,  0.0066,  0.0442,
 2.280423164367676</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 출력 <code>(128, 10)</code>, 손실 약 <strong>2.28</strong>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — <code>out[0]</code>은 첫 사진의 클래스별 점수 10개입니다. 학습 전이라 모두 0 근처로 비슷합니다. 열 클래스를 똑같은 확률로 찍으면 손실은 <span class="math inline">\(-\ln(1/10) = 2.30\)</span>이고, 지금이 그 상태입니다.</p>
+<p>출력은 <code>(128, 10)</code>, 손실은 약 <strong>2.28</strong>입니다. <code>out[0]</code>은 첫 사진의 클래스별 점수 10개입니다. 학습 전이라 모두 0 근처로 비슷합니다. 열 클래스를 똑같은 확률로 찍으면 손실은 <span class="math inline">\(-\ln(1/10) = 2.30\)</span>이고, 지금이 그 상태입니다.</p>
 <p><code>out.argmax(1)</code>은 행마다 점수 10개 중 가장 큰 자리의 번호, 즉 예측 클래스입니다. 정답과 같은지 비교해 맞힌 수를 셉니다.</p>
-<div id="99ce8e20" class="cell" data-execution_count="10">
+<div id="380689be" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out.argmax(<span class="dv">1</span>)[:<span class="dv">8</span>])</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">8</span>])</span>
@@ -463,9 +449,9 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 16</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 128장 중 맞힌 수가 <strong>16</strong>장입니다. 이 “맞힌 수 ÷ 전체”가 <strong>정확도</strong>입니다. 찍어서 맞는 10%와 비슷합니다.</p>
+<p>128장 중 맞힌 수가 <strong>16</strong>장입니다. 이 “맞힌 수 ÷ 전체”가 <strong>정확도</strong>입니다. 찍어서 맞는 10%와 비슷합니다.</p>
 <p>학습 함수는 실습 4의 것과 <strong>같습니다.</strong> 다시 씁니다.</p>
-<div id="d5c4ffc9" class="cell" data-execution_count="11">
+<div id="4930daad" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
@@ -482,7 +468,7 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>평가 함수는 실습 4의 것에 <strong>맞힌 수</strong>를 세는 줄이 더해집니다. 손실과 정확도 두 값을 돌려줍니다. 빈칸을 채웁니다.</p>
-<div id="31fc0264" class="cell" data-execution_count="12">
+<div id="9b6adfdf" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def evaluate(model, loader, criterion):</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.eval()</span></span>
@@ -516,9 +502,9 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 <pre><code>(2.2810735861460367, 0.15)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 학습 전 검증 손실 약 <strong>2.28</strong>, 정확도 <strong>0.15</strong>면 맞습니다.</p>
+<p>학습 전 검증 손실은 약 <strong>2.28</strong>, 정확도는 <strong>0.15</strong>입니다.</p>
 <p>8 에폭을 돌리며 에폭마다 검증 손실과 정확도를 찍습니다.</p>
-<div id="e51bc711" class="cell" data-execution_count="13">
+<div id="afeb8349" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">8</span>):</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(cnn, train_loader, criterion, optimizer)</span>
@@ -535,9 +521,9 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 7 0.4012 0.8567</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 검증 손실이 약 0.59에서 0.40으로 내려가고, 정확도는 약 0.78에서 <strong>0.86</strong>으로 올라갑니다. 학습 코드는 실습 3·4의 다섯 줄 그대로이고, 입력의 모양만 표에서 이미지로 바뀌었습니다.</p>
+<p>검증 손실이 약 0.59에서 0.40으로 내려가고, 정확도는 약 0.78에서 <strong>0.86</strong>으로 올라갑니다. 학습 코드는 실습 3·4의 다섯 줄 그대로이고, 입력의 모양만 표에서 이미지로 바뀌었습니다.</p>
 <p>테스트 세트로 한 번 평가합니다.</p>
-<div id="ea5bbccd" class="cell" data-execution_count="14">
+<div id="4a375efc" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_acc <span class="op">=</span> evaluate(cnn, test_loader, criterion)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_acc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -545,7 +531,7 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 <pre><code>0.8515</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 약 <strong>0.85</strong>면 맞습니다. 콘볼루션 층 하나로 열 종류의 옷을 열에 여덟 이상 맞힙니다.</p>
+<p>테스트 정확도는 약 <strong>0.85</strong>입니다. 콘볼루션 층 하나로 열 종류의 옷을 열에 여덟 이상 맞힙니다.</p>
 <p>커널 8개의 값은 사람이 정한 것이 아니라 <strong>학습으로 얻은 것</strong>입니다. 첫 층의 가중치를 꺼내 그림으로 보고, 사진 한 장을 통과시켜 각 커널이 어디에 반응하는지 봅니다.</p>
 <div id="cell-lab05-kernels" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 학습된 커널 8개와 특성 맵 8장</span></span>
@@ -574,7 +560,7 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 </div>
 </div>
 </div>
-<p>💬 윗줄이 커널, 아랫줄이 그 커널을 통과한 특성 맵입니다. 커널마다 밝은 곳이 다릅니다. 어떤 커널은 윤곽에, 어떤 커널은 넓은 면에 반응합니다. 5-1 과제 3의 세로 에지 커널처럼 경계를 잡아내는 값이 데이터만 보고 정해졌습니다.</p>
+<p>윗줄이 커널, 아랫줄이 그 커널을 통과한 특성 맵입니다. 커널마다 밝은 곳이 다릅니다. 어떤 커널은 윤곽에, 어떤 커널은 넓은 면에 반응합니다. 5-1 과제 3의 세로 에지 커널처럼 경계를 잡아내는 값이 데이터만 보고 정해졌습니다.</p>
 <hr>
 </section>
 <section id="실습-과제-10분" class="level2">
@@ -582,7 +568,7 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 <section id="과제-1-커널이-2개뿐이면" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-커널이-2개뿐이면">📝 과제 1 · 커널이 2개뿐이면</h3>
 <p><code>Conv2d(1, 8, ...)</code>의 커널 수를 2로 바꾼 신경망을 같은 방식으로 8 에폭 학습시켜 테스트 정확도를 봅니다. 파라미터 수도 셉니다.</p>
-<div id="3374b613" class="cell" data-execution_count="16">
+<div id="db10a059" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 4절의 nn.Sequential을 그대로 쓰되 Conv2d(1, 2, ...)와 Linear(2 * 24 * 24, 10)으로 바꿉니다. optimizer도 새 모델로 다시 만들고, 5절의 8 에폭 반복문과 evaluate(…, test_loader, …)를 그대로 씁니다. 파라미터는 5*5*1*2+2 + 2*24*24*10+10입니다.</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
@@ -627,7 +613,7 @@ tensor([2, 0, 8, 4, 1, 6, 5, 3])
 <section id="과제-2-사진이-224224가-되면" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-사진이-224224가-되면">📝 과제 2 · 사진이 224×224가 되면</h3>
 <p>4절의 신경망에 224×224 흑백 사진을 넣는다고 합시다. 콘볼루션 출력의 한 변, 펼친 길이, <code>Linear(→10)</code>의 파라미터 수를 1절의 <code>out_size</code>와 공식으로 계산합니다. 콘볼루션 층의 파라미터는 몇 개인지도 적습니다.</p>
-<div id="ef7a18da" class="cell" data-execution_count="17">
+<div id="cbe9bb82" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 한 변은 out_size(224, 5, 0, 1)입니다. 펼친 길이는 8 * 한 변 * 한 변, Linear는 펼친 길이 * 10 + 10입니다. 콘볼루션 층은 4절과 같은 208개입니다.</span></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>side <span class="op">=</span> out_size(<span class="dv">224</span>, <span class="dv">5</span>, <span class="dv">0</span>, <span class="dv">1</span>)</span>

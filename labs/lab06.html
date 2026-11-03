@@ -230,20 +230,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
 </tr>
 <tr class="odd">
-<td>💬</td>
-<td>결과를 함께 읽습니다</td>
-</tr>
-<tr class="even">
-<td>✅</td>
-<td>이 숫자가 나오면 맞습니다</td>
-</tr>
-<tr class="odd">
 <td>📝</td>
 <td>과제. 힌트를 보고 스스로 풉니다</td>
 </tr>
 </tbody>
 </table>
-<div id="7fb6da9f" class="cell" data-execution_count="1">
+<div id="ccb1dfed" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
@@ -259,13 +251,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>준비 완료!</code></pre>
 </div>
 </div>
-<p>✅ <code>준비 완료!</code>가 나오면 됩니다.</p>
+<p><code>준비 완료!</code>가 나오면 준비가 끝난 것입니다.</p>
 <hr>
 </section>
 <section id="콘볼루션-층" class="level2">
 <h2 class="anchored" data-anchor-id="콘볼루션-층">1. 콘볼루션 층</h2>
 <p><code>nn.Conv2d</code>는 작은 커널을 사진 위로 한 칸씩 옮기며 곱하고 더해 특성 맵을 만드는 층입니다. <code>nn.Conv2d(입력 채널 수, 커널 수, kernel_size=커널 크기)</code>로 만듭니다. 컬러 사진은 R, G, B 세 장이므로 입력 채널 수는 3입니다. 3×3 커널 32개짜리 층을 만들고, 32×32 컬러 사진 한 장 모양의 입력 <code>(1, 3, 32, 32)</code>를 넣습니다. 층은 <code>(사진 수, 채널, 세로, 가로)</code> 모양을 받습니다. 지금은 모양만 보므로 값이 모두 0인 입력을 씁니다.</p>
-<div id="e95cee1e" class="cell" data-execution_count="2">
+<div id="5fffe610" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>conv <span class="op">=</span> nn.Conv2d(<span class="dv">3</span>, <span class="dv">32</span>, kernel_size<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> conv(torch.zeros(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">32</span>, <span class="dv">32</span>))</span>
@@ -274,10 +266,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>torch.Size([1, 32, 30, 30])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>torch.Size([1, 32, 30, 30])</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 커널 하나가 특성 맵 한 장을 만들므로 커널 32개에서 특성 맵 32장이 나와 채널이 3에서 32가 됩니다. 3×3 커널은 가장자리 한 칸에서는 사진 밖으로 나가 계산할 수 없으므로 한 변이 32에서 30으로 줄어듭니다.</p>
+<p>출력은 <code>torch.Size([1, 32, 30, 30])</code>입니다. 커널 하나가 특성 맵 한 장을 만들므로 커널 32개에서 특성 맵 32장이 나와 채널이 3에서 32가 됩니다. 3×3 커널은 가장자리 한 칸에서는 사진 밖으로 나가 계산할 수 없으므로 한 변이 32에서 30으로 줄어듭니다.</p>
 <p>테두리에 0을 한 겹 두르는 <code>padding=1</code>을 주면 가장자리에서도 계산할 수 있어 크기가 그대로 남습니다.</p>
-<div id="b67ebdf2" class="cell" data-execution_count="3">
+<div id="2f55edb2" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>conv <span class="op">=</span> nn.Conv2d(<span class="dv">3</span>, <span class="dv">32</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> conv(torch.zeros(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">32</span>, <span class="dv">32</span>))</span>
@@ -286,9 +277,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>torch.Size([1, 32, 32, 32])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>torch.Size([1, 32, 32, 32])</code>이면 맞습니다.</p>
+<p>출력은 <code>torch.Size([1, 32, 32, 32])</code>로, 크기 32×32가 그대로 남습니다.</p>
 <p>층이 학습하는 값은 커널의 가중치와 편향입니다. 커널 하나는 3×3 크기가 입력 채널 3장만큼 있어 가중치가 3×3×3 = 27개이고, 편향이 1개 붙습니다. 커널이 32개이므로 이것의 32배입니다. <code>conv.weight.shape</code>로 확인합니다.</p>
-<div id="795d38a7" class="cell" data-execution_count="4">
+<div id="b8cc3afc" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(conv.weight.shape, conv.bias.shape)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="dv">3</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">+</span> <span class="dv">32</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -297,14 +288,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 896</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>torch.Size([32, 3, 3, 3]) torch.Size([32])</code>와 <strong>896</strong>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — <code>weight.shape</code>의 네 숫자는 (커널 수, 입력 채널 수, 커널 세로, 커널 가로)입니다. 파라미터 수에 사진 크기 32×32는 들어가지 않습니다. 커널 하나가 사진의 모든 위치를 돌며 같은 가중치를 쓰기 때문입니다.</p>
+<p>가중치는 <code>torch.Size([32, 3, 3, 3])</code>, 편향은 <code>torch.Size([32])</code>이고, 파라미터는 <strong>896</strong>개입니다. <code>weight.shape</code>의 네 숫자는 (커널 수, 입력 채널 수, 커널 세로, 커널 가로)입니다. 파라미터 수에 사진 크기 32×32는 들어가지 않습니다. 커널 하나가 사진의 모든 위치를 돌며 같은 가중치를 쓰기 때문입니다.</p>
 <hr>
 </section>
 <section id="relu와-풀링을-층으로-쓴다" class="level2">
 <h2 class="anchored" data-anchor-id="relu와-풀링을-층으로-쓴다">2. ReLU와 풀링을 층으로 쓴다</h2>
 <p>콘볼루션 층 뒤에는 ReLU와 풀링이 붙습니다. <code>nn.ReLU</code>는 음수를 0으로 바꾸고 양수는 그대로 두는 층입니다. 음수가 세 칸 섞인 3×3 행렬에 적용합니다.</p>
-<div id="e4b4fdfc" class="cell" data-execution_count="5">
+<div id="836b1bb7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>relu <span class="op">=</span> nn.ReLU()</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> torch.tensor([[<span class="op">-</span><span class="fl">5.</span>, <span class="fl">3.</span>, <span class="fl">7.</span>], [<span class="fl">2.</span>, <span class="op">-</span><span class="fl">3.</span>, <span class="fl">9.</span>], [<span class="fl">1.</span>, <span class="fl">1.</span>, <span class="op">-</span><span class="fl">1.</span>]])</span>
@@ -315,9 +305,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         [1., 1., 0.]])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — −5, −3, −1 세 칸만 0이 되면 맞습니다.</p>
+<p>−5, −3, −1 세 칸만 0이 되고 나머지는 그대로입니다.</p>
 <p><code>nn.MaxPool2d(2)</code>는 Max 풀링 층입니다. 2×2 창을 두 칸씩 옮기며 창마다 가장 큰 값 하나만 남깁니다. 4×4 행렬을 넣으면 창이 네 개이므로 2×2가 나옵니다. 층은 <code>(N, C, H, W)</code> 모양을 받으므로 <code>unsqueeze(0)</code>을 두 번 써서 <code>(1, 1, 4, 4)</code>로 만듭니다.</p>
-<div id="a99c6003" class="cell" data-execution_count="6">
+<div id="e5e84183" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pool <span class="op">=</span> nn.MaxPool2d(<span class="dv">2</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.tensor([[<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>, <span class="fl">0.</span>],</span>
@@ -330,8 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           [4., 2.]]]])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>[[2., 3.], [4., 2.]]</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 네 창의 최댓값입니다.</p>
+<p>출력은 <code>[[2., 3.], [4., 2.]]</code>입니다. 네 창의 최댓값입니다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -364,7 +353,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>채널이 여러 장이면 어떻게 되는지 봅니다. 크기 14×14, 채널 6장인 입력(값은 모두 0)을 넣고, 풀링 층에 학습할 파라미터가 있는지 꺼내 봅니다.</p>
-<div id="373f45b2" class="cell" data-execution_count="7">
+<div id="c05a1de2" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> torch.zeros(<span class="dv">1</span>, <span class="dv">6</span>, <span class="dv">14</span>, <span class="dv">14</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pool(x).shape)</span>
@@ -374,14 +363,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 []</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>torch.Size([1, 6, 7, 7])</code>과 빈 목록 <code>[]</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 풀링은 채널마다 따로 적용되어 크기만 절반이 되고 채널 6은 그대로입니다. 최댓값을 고르는 규칙뿐이라 학습할 파라미터가 없습니다. <code>nn.ReLU</code>도 마찬가지입니다.</p>
+<p>출력은 <code>torch.Size([1, 6, 7, 7])</code>과 빈 목록 <code>[]</code>입니다. 풀링은 채널마다 따로 적용되어 크기만 절반이 되고 채널 6은 그대로입니다. 최댓값을 고르는 규칙뿐이라 학습할 파라미터가 없습니다. <code>nn.ReLU</code>도 마찬가지입니다.</p>
 <hr>
 </section>
 <section id="블록을-쌓고-모양을-따라간다" class="level2">
 <h2 class="anchored" data-anchor-id="블록을-쌓고-모양을-따라간다">3. 블록을 쌓고 모양을 따라간다</h2>
 <p>3×3 콘볼루션 → ReLU → 2×2 Max 풀링을 한 블록으로 보고 세 번 쌓습니다. 커널 수는 32, 64, 128로 늘립니다. 두 번째 블록의 입력 채널 수는 첫 블록의 커널 수 32이고, 세 번째 블록은 64입니다. 콘볼루션에는 1절처럼 <code>padding=1</code>을 주므로 크기는 풀링에서만 절반으로 줄어듭니다. 32×32 컬러 사진 한 장 모양의 입력 <code>(1, 3, 32, 32)</code>를 넣고 층을 하나씩 통과시키며 모양을 찍습니다.</p>
-<div id="f1e5325c" class="cell" data-execution_count="8">
+<div id="51f276c3" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> nn.Sequential(</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    nn.Conv2d(<span class="dv">3</span>, <span class="dv">32</span>, kernel_size<span class="op">=</span><span class="dv">3</span>, padding<span class="op">=</span><span class="dv">1</span>), nn.ReLU(), nn.MaxPool2d(<span class="dv">2</span>),</span>
@@ -405,10 +393,9 @@ ReLU (1, 128, 8, 8)
 MaxPool2d (1, 128, 4, 4)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 마지막 줄이 <code>MaxPool2d (1, 128, 4, 4)</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 크기는 풀링마다 32 → 16 → 8 → 4로 줄고, 채널은 3 → 32 → 64 → 128로 늘어납니다. 층을 지날수록 특성 맵은 작아지고 장수는 많아집니다.</p>
+<p>마지막 줄은 <code>MaxPool2d (1, 128, 4, 4)</code>입니다. 크기는 풀링마다 32 → 16 → 8 → 4로 줄고, 채널은 3 → 32 → 64 → 128로 늘어납니다. 층을 지날수록 특성 맵은 작아지고 장수는 많아집니다.</p>
 <p>뒤에 분류부를 붙입니다. 128×4×4를 펼쳐 은닉 256 노드에 넣고, 열 클래스의 점수를 냅니다.</p>
-<div id="970ede8e" class="cell" data-execution_count="9">
+<div id="84990159" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> nn.Sequential(</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    nn.Flatten(),</span>
@@ -420,9 +407,9 @@ MaxPool2d (1, 128, 4, 4)</code></pre>
 <pre><code>torch.Size([1, 10])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>torch.Size([1, 10])</code>이면 맞습니다.</p>
+<p>출력은 <code>torch.Size([1, 10])</code>으로, 열 클래스의 점수 10개입니다.</p>
 <p>두 부분을 모델 하나로 조립합니다. <code>nn.Module</code>을 물려받는 클래스를 만들고, <code>__init__</code>에는 층을, <code>forward</code>에는 계산 순서를 적습니다. <code>super().__init__()</code>은 <code>nn.Module</code>의 준비 작업을 먼저 실행하는 줄입니다. 실습 7부터 나오는 모델이 모두 이 형태입니다.</p>
-<div id="94ec193d" class="cell" data-execution_count="10">
+<div id="ae15c36f" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CNN(nn.Module):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
@@ -449,14 +436,13 @@ MaxPool2d (1, 128, 4, 4)</code></pre>
 <pre><code>torch.Size([2, 10])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 사진 두 장을 넣어 <code>torch.Size([2, 10])</code>이 나오면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — <code>self.features</code>는 사진에서 특성 맵을 뽑는 특성 학습부, <code>self.classifier</code>는 그 특성으로 종류를 가르는 분류부입니다. <code>model(x)</code>를 부르면 <code>forward</code>가 실행됩니다.</p>
+<p>사진 두 장을 넣었으므로 출력은 <code>torch.Size([2, 10])</code>입니다. <code>self.features</code>는 사진에서 특성 맵을 뽑는 특성 학습부, <code>self.classifier</code>는 그 특성으로 종류를 가르는 분류부입니다. <code>model(x)</code>를 부르면 <code>forward</code>가 실행됩니다.</p>
 <hr>
 </section>
 <section id="컬러-사진-데이터" class="level2">
 <h2 class="anchored" data-anchor-id="컬러-사진-데이터">4. 컬러 사진 데이터</h2>
 <p>CIFAR-10은 32×32 컬러 사진 6만 장이고 열 종류로 나뉩니다. 실습 4에서 열마다 훈련 데이터의 평균과 표준편차로 표준화했듯이, 사진도 <strong>채널마다</strong> 표준화합니다. 아래 숫자는 훈련 사진 5만 장의 R, G, B 채널별 평균과 표준편차입니다. <code>transforms.Compose</code>는 나열한 변환을 차례로 적용합니다.</p>
-<div id="8f43ff23" class="cell" data-execution_count="11">
+<div id="600613f4" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> (<span class="fl">0.4914</span>, <span class="fl">0.4822</span>, <span class="fl">0.4465</span>)</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>std <span class="op">=</span> (<span class="fl">0.2470</span>, <span class="fl">0.2435</span>, <span class="fl">0.2616</span>)</span>
@@ -465,7 +451,7 @@ MaxPool2d (1, 128, 4, 4)</code></pre>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    transforms.Normalize(mean, std),</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="099b30cb" class="cell" data-execution_count="12">
+<div id="43a63dbc" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — CIFAR-10을 내려받습니다(약 170MB). 원본 서버가 느려 수업용 미러를 씁니다.</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>datasets.CIFAR10.url <span class="op">=</span> <span class="st">'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/cifar-10-python.tar.gz'</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>tr_full <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>tf)</span>
@@ -477,9 +463,9 @@ Files already downloaded and verified
 ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']</code></pre>
 </div>
 </div>
-<p>✅ <code>airplane</code>부터 <code>truck</code>까지 열 개의 이름이 나오면 됩니다. 번호 0~9가 이 순서입니다.</p>
+<p><code>airplane</code>부터 <code>truck</code>까지 열 개의 이름이 나옵니다. 정답 번호 0~9가 이 순서입니다.</p>
 <p>훈련 사진 5만 장의 번호 0~49999를 8 : 2로 나눠 훈련 4만 장, 검증 1만 장으로 쓰고 로더를 만듭니다. <code>Subset</code>은 데이터셋에서 번호 목록에 해당하는 사진만 골라 낸 데이터셋입니다. 테스트는 따로 둔 1만 장을 그대로 씁니다.</p>
-<div id="dab56a7a" class="cell" data-execution_count="13">
+<div id="c597b806" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tr_idx, va_idx <span class="op">=</span> train_test_split(<span class="bu">range</span>(<span class="dv">50000</span>), test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -493,9 +479,9 @@ Files already downloaded and verified
 <pre><code>40000 10000 10000</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>40000 10000 10000</code>이면 맞습니다.</p>
+<p>훈련 <strong>40000</strong>장, 검증 <strong>10000</strong>장, 테스트 <strong>10000</strong>장입니다.</p>
 <p>배치 하나를 꺼내 모양과 표준화 결과를 봅니다. <code>xb[:, 0]</code>은 배치의 R 채널입니다.</p>
-<div id="ded99703" class="cell" data-execution_count="14">
+<div id="ee13e656" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">tuple</span>(xb.shape), yb[:<span class="dv">8</span>])</span>
@@ -505,14 +491,13 @@ Files already downloaded and verified
 -0.07901124656200409 1.0051720142364502</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(128, 3, 32, 32)</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 컬러라서 채널이 3입니다. R 채널의 평균은 0 근처, 표준편차는 1 근처입니다. <code>Normalize</code>가 채널마다 평균을 빼고 표준편차로 나누었기 때문입니다.</p>
+<p>배치는 <code>(128, 3, 32, 32)</code>입니다. 컬러라서 채널이 3입니다. R 채널의 평균은 0 근처, 표준편차는 1 근처입니다. <code>Normalize</code>가 채널마다 평균을 빼고 표준편차로 나누었기 때문입니다.</p>
 <hr>
 </section>
 <section id="gpu에서-학습시킨다" class="level2">
 <h2 class="anchored" data-anchor-id="gpu에서-학습시킨다">5. GPU에서 학습시킨다</h2>
 <p><code>device</code>는 계산할 장치입니다. GPU가 있으면 <code>cuda</code>, 없으면 <code>cpu</code>입니다. 모델을 <code>.to(device)</code>로 그 장치에 옮깁니다.</p>
-<div id="324b59f5" class="cell" data-execution_count="15">
+<div id="36279dad" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(device)</span>
@@ -521,9 +506,9 @@ Files already downloaded and verified
 <pre><code>cuda</code></pre>
 </div>
 </div>
-<p>✅ Colab에서 GPU 런타임이면 <code>cuda</code>가 나옵니다.</p>
+<p>Colab에서 GPU 런타임이면 <code>cuda</code>가 나옵니다.</p>
 <p>모델과 데이터는 같은 장치에 있어야 계산됩니다. 학습 함수는 배치마다 다섯 줄(기울기 지우기 → 예측 → 손실 → 기울기 계산 → 갱신)을 실행하고, 그 앞에 배치를 장치로 옮기는 줄이 들어갑니다. 빈칸을 채웁니다.</p>
-<div id="b9f1890e" class="cell" data-execution_count="16">
+<div id="4ebb3b64" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def train_one_epoch(model, loader, criterion, optimizer):</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     model.train()</span></span>
@@ -555,7 +540,7 @@ Files already downloaded and verified
 <span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>평가 함수는 가중치를 바꾸지 않고 손실과 맞힌 수를 셉니다. 여기에도 배치를 장치로 옮기는 줄이 들어갑니다.</p>
-<div id="7baf80bb" class="cell" data-execution_count="17">
+<div id="fb289163" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
@@ -572,7 +557,7 @@ Files already downloaded and verified
 <span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n, correct <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>손실과 옵티마이저를 만들고, 학습 전의 검증 손실과 정확도를 봅니다.</p>
-<div id="203bbfff" class="cell" data-execution_count="18">
+<div id="48360123" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
@@ -581,44 +566,44 @@ Files already downloaded and verified
 <pre><code>(2.302802442932129, 0.0843)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 손실 약 <strong>2.30</strong>, 정확도 <strong>0.1</strong> 안팎이면 맞습니다. 열 종류를 찍는 수준입니다.</p>
+<p>손실은 약 <strong>2.30</strong>, 정확도는 <strong>0.1</strong> 안팎입니다. 열 종류를 찍는 수준입니다.</p>
 <p>10 에폭을 돌리며 에폭마다 검증 손실과 정확도를 찍습니다.</p>
-<div id="2a9fa2a6" class="cell" data-execution_count="19">
+<div id="a909817c" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
 <span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    val_loss, val_acc <span class="op">=</span> evaluate(model, val_loader, criterion)</span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(epoch, <span class="bu">round</span>(val_loss, <span class="dv">4</span>), <span class="bu">round</span>(val_acc, <span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0 1.2009 0.5794
-1 0.972 0.6513
-2 0.8218 0.7101
-3 0.7926 0.7234
-4 0.814 0.7151
-5 0.738 0.7506
-6 0.7642 0.7495
-7 0.8899 0.7358
-8 0.856 0.749
-9 0.9684 0.747</code></pre>
+<pre><code>0 1.1923 0.5801
+1 0.9718 0.6563
+2 0.8382 0.7092
+3 0.7734 0.727
+4 0.7892 0.7296
+5 0.7491 0.7455
+6 0.7735 0.7522
+7 0.8086 0.7539
+8 0.8555 0.7461
+9 0.9331 0.7532</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 검증 정확도는 첫 에폭에 약 0.58이고 0.75 근처에서 더 오르지 않습니다. 검증 손실은 여섯 번째 에폭 무렵 가장 낮고 그 뒤로 다시 올라갑니다. 모델이 훈련 사진에만 맞춰지는 과적합의 신호입니다.</p>
+<p>검증 정확도는 첫 에폭에 약 0.58이고 0.75 근처에서 더 오르지 않습니다. 검증 손실은 여섯 번째 에폭 무렵 가장 낮고 그 뒤로 다시 올라갑니다. 모델이 훈련 사진에만 맞춰지는 과적합의 신호입니다.</p>
 <p>테스트 세트로 한 번 평가합니다.</p>
-<div id="2912a58e" class="cell" data-execution_count="20">
+<div id="6e93f34f" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>test_loss, test_acc <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_acc)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>0.7438</code></pre>
+<pre><code>0.7472</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 약 <strong>0.75</strong>이면 맞습니다. 처음 보는 사진 열 장 중 일곱 장 이상을 맞힙니다.</p>
+<p>테스트 정확도는 약 <strong>0.75</strong>입니다. 처음 보는 사진 열 장 중 일곱 장 이상을 맞힙니다.</p>
 <hr>
 </section>
 <section id="내-사진을-판별한다" class="level2">
 <h2 class="anchored" data-anchor-id="내-사진을-판별한다">6. 내 사진을 판별한다</h2>
 <p>모델은 32×32로 표준화된 사진만 받습니다. 휴대폰 사진도 같은 모양으로 바꿉니다. <code>Resize(32)</code>는 짧은 변을 32로 줄이고, <code>CenterCrop(32)</code>는 가운데 32×32를 잘라 냅니다. 그 뒤는 학습 때와 같은 <code>ToTensor</code>와 <code>Normalize</code>입니다.</p>
-<div id="b9e2aaf8" class="cell" data-execution_count="21">
+<div id="5902774f" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>photo_tf <span class="op">=</span> transforms.Compose([</span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    transforms.Resize(<span class="dv">32</span>),</span>
@@ -644,7 +629,7 @@ Files already downloaded and verified
 </div>
 </div>
 <p>사진을 변환하고 모양을 봅니다. <code>photo.size</code>는 PIL 사진의 (너비, 높이)입니다.</p>
-<div id="f735e08d" class="cell" data-execution_count="23">
+<div id="e708af8e" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> photo_tf(photo)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(photo.size, <span class="bu">tuple</span>(x.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -652,7 +637,7 @@ Files already downloaded and verified
 <pre><code>(451, 300) (3, 32, 32)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(451, 300) (3, 32, 32)</code>이면 맞습니다.</p>
+<p>출력은 <code>(451, 300) (3, 32, 32)</code>입니다. 451×300 사진이 모델이 받는 <code>(3, 32, 32)</code>가 되었습니다.</p>
 <p>모델에 들어가는 32×32 사진을 그려 봅니다. 표준화하기 전 단계까지만 적용한 그림입니다.</p>
 <div id="cell-lab06-cat32" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 모델이 보는 32×32 사진</span></span>
@@ -668,9 +653,9 @@ Files already downloaded and verified
 </div>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 학습에 쓴 CIFAR-10 사진과 같은 해상도입니다. 수염과 털의 결은 사라지고 얼굴의 윤곽과 색만 남습니다.</p>
+<p>학습에 쓴 CIFAR-10 사진과 같은 해상도입니다. 수염과 털의 결은 사라지고 얼굴의 윤곽과 색만 남습니다.</p>
 <p>예측합니다. 모델은 배치를 받으므로 <code>unsqueeze(0)</code>으로 <code>(1, 3, 32, 32)</code>를 만들고, 모델과 같은 장치로 옮깁니다. 점수 10개를 <code>softmax</code>로 확률로 바꿉니다.</p>
-<div id="b62d1be4" class="cell" data-execution_count="25">
+<div id="0f4e4f8b" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">eval</span>()</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():</span>
@@ -678,12 +663,12 @@ Files already downloaded and verified
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> torch.softmax(out, dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
 <span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tr_full.classes[prob.argmax().item()], prob.<span class="bu">max</span>().item())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>frog 0.6003156304359436</code></pre>
+<pre><code>dog 0.5595197081565857</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 예측한 종류와 그 확률이 나옵니다. 같은 코드로 학습을 다시 하면 이 사진의 판별은 <code>cat</code>, <code>dog</code>, <code>frog</code> 사이에서 바뀝니다. 테스트 정확도는 매번 0.75 근처인데 사진 한 장의 판별은 흔들립니다.</p>
+<p>예측한 종류와 그 확률이 나옵니다. 같은 코드로 학습을 다시 하면 이 사진의 판별은 <code>cat</code>, <code>dog</code>, <code>frog</code> 사이에서 바뀝니다. 테스트 정확도는 매번 0.75 근처인데 사진 한 장의 판별은 흔들립니다.</p>
 <p>사진 한 장을 받아 예측 이름과 확률을 돌려주는 함수로 조립합니다.</p>
-<div id="24475195" class="cell" data-execution_count="26">
+<div id="91e83dc1" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(photo):</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> photo_tf(photo).unsqueeze(<span class="dv">0</span>).to(device)</span>
@@ -694,24 +679,24 @@ Files already downloaded and verified
 <span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>('frog', 0.6003156304359436)</code></pre>
+<pre><code>('dog', 0.5595197081565857)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 바로 위와 같은 결과면 맞습니다.</p>
+<p>바로 위와 같은 결과가 나옵니다.</p>
 <p>이제 내 사진을 올립니다. 아래 셀은 <strong>Colab에서만</strong> 실행됩니다. 실행하면 파일 선택 버튼이 나타나고, 사진(JPG, PNG)을 여러 장 고를 수 있습니다. 사람은 찍지 않습니다.</p>
-<div id="064cfe05" class="cell" data-execution_count="27">
+<div id="59e63bbb" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — (Colab) 내 사진 올리기</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> files</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>올린 사진마다 <code>predict</code>를 실행합니다. <code>ImageOps.exif_transpose</code>는 휴대폰 사진에 저장된 회전 정보를 반영해 사진을 바로 세웁니다.</p>
-<div id="9f127c97" class="cell" data-execution_count="28">
+<div id="650e4bcd" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> uploaded:</span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    photo <span class="op">=</span> ImageOps.exif_transpose(Image.<span class="bu">open</span>(name)).convert(<span class="st">'RGB'</span>)</span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(name, predict(photo))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>💬 사진 이름 옆에 예측한 종류와 확률이 나옵니다. 물체가 사진 가운데에 크게 찍힌 사진일수록 잘 맞힙니다. <code>CenterCrop</code>이 가운데만 남기기 때문입니다.</p>
+<p>사진 이름 옆에 예측한 종류와 확률이 나옵니다. 물체가 사진 가운데에 크게 찍힌 사진일수록 잘 맞힙니다. <code>CenterCrop</code>이 가운데만 남기기 때문입니다.</p>
 <hr>
 </section>
 <section id="실습-과제-10분" class="level2">
@@ -719,7 +704,7 @@ Files already downloaded and verified
 <section id="과제-1-내-사진-다섯-장" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-내-사진-다섯-장">📝 과제 1 · 내 사진 다섯 장</h3>
 <p>CIFAR-10의 열 종류(<code>airplane</code>, <code>automobile</code>, <code>bird</code>, <code>cat</code>, <code>deer</code>, <code>dog</code>, <code>frog</code>, <code>horse</code>, <code>ship</code>, <code>truck</code>) 가운데 주변에서 찍을 수 있는 것을 다섯 장 찍어 올리고, 판별 결과를 표에 적습니다.</p>
-<div id="a405b8e0" class="cell" data-execution_count="29">
+<div id="28418b7e" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 업로드 셀을 다시 실행해 사진을 올리고, for 반복문으로 사진마다 predict(photo)를 실행합니다.</span></span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span>
@@ -777,7 +762,7 @@ Files already downloaded and verified
 <section id="과제-2-틀린-사진-들여다보기" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-틀린-사진-들여다보기">📝 과제 2 · 틀린 사진 들여다보기</h3>
 <p>틀린 사진 한 장을 골라 모델이 보는 32×32 사진을 그리고, 열 종류의 확률을 모두 출력합니다. 정답 종류의 확률은 몇 번째로 높은지 적습니다.</p>
-<div id="bea6d968" class="cell" data-execution_count="30">
+<div id="97674364" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 6절의 small = transforms.CenterCrop(32)(transforms.Resize(32)(photo))로 그림을 그립니다. 확률은 predict 함수 안의 세 줄로 prob을 구한 뒤, for name, p in zip(tr_full.classes, prob): 로 하나씩 출력합니다.</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>small <span class="op">=</span> transforms.CenterCrop(<span class="dv">32</span>)(transforms.Resize(<span class="dv">32</span>)(photo))</span>
@@ -800,11 +785,11 @@ Files already downloaded and verified
 <div class="cell-output cell-output-stdout">
 <pre><code>airplane 0.0
 automobile 0.0
-bird 0.003
-cat 0.052
-deer 0.001
-dog 0.343
-frog 0.6
+bird 0.0
+cat 0.018
+deer 0.277
+dog 0.56
+frog 0.146
 horse 0.0
 ship 0.0
 truck 0.0</code></pre>

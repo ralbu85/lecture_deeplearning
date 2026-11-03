@@ -259,20 +259,12 @@ window.Quarto = {
 <td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
 </tr>
 <tr class="odd">
-<td>💬</td>
-<td>결과를 함께 읽습니다</td>
-</tr>
-<tr class="even">
-<td>✅</td>
-<td>이 숫자가 나오면 맞습니다</td>
-</tr>
-<tr class="odd">
 <td>📝</td>
 <td>과제. 힌트를 보고 스스로 풉니다</td>
 </tr>
 </tbody>
 </table>
-<div id="0fd918ad" class="cell" data-execution_count="1">
+<div id="6188e95c" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
@@ -285,13 +277,13 @@ window.Quarto = {
 <pre><code>준비 완료!</code></pre>
 </div>
 </div>
-<p>✅ <code>준비 완료!</code>가 나오면 됩니다.</p>
+<p><code>준비 완료!</code>가 나오면 준비가 끝난 것입니다.</p>
 <hr>
 </section>
 <section id="사전-학습된-탐지-모델을-불러온다" class="level2">
 <h2 class="anchored" data-anchor-id="사전-학습된-탐지-모델을-불러온다">1. 사전 학습된 탐지 모델을 불러온다</h2>
 <p>YOLO는 사진을 한 번 훑어 물체의 박스와 클래스를 함께 내는 탐지 모델입니다. <code>yolo11n.pt</code>는 COCO 사진으로 사전 학습된 가장 작은 YOLO의 가중치입니다. 처음 실행하면 가중치를 내려받습니다.</p>
-<div id="17b7cd1d" class="cell" data-execution_count="2">
+<div id="8589a930" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">'yolo11n.pt'</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(model.names))</span>
@@ -301,8 +293,7 @@ window.Quarto = {
 person car bus</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>80</code>과 <code>person car bus</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — COCO의 클래스 80개를 찾도록 학습된 모델입니다. 이론 9장 마지막 절에서 말한, 대량의 데이터로 사전 학습한 탐지 모델이 바로 이것입니다.</p>
+<p><code>80</code>과 <code>person car bus</code>가 나옵니다. COCO의 클래스 80개를 찾도록 학습된 모델입니다. 이론 9장 마지막 절에서 말한, 대량의 데이터로 사전 학습한 탐지 모델이 바로 이것입니다.</p>
 <hr>
 </section>
 <section id="사진-한-장을-탐지한다" class="level2">
@@ -337,13 +328,13 @@ person car bus</code></pre>
 </div>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 버스 1대와 사람 4명에 박스가 그려지면 맞습니다.</p>
+<p>버스 1대와 사람 4명에 박스가 그려집니다.</p>
 <hr>
 </section>
 <section id="출력을-읽는다" class="level2">
 <h2 class="anchored" data-anchor-id="출력을-읽는다">3. 출력을 읽는다</h2>
 <p><code>r.boxes</code>에 박스마다 클래스 번호(<code>cls</code>), 신뢰도(<code>conf</code>), 좌표(<code>xyxy</code>)가 들어 있습니다. 이론 9장의 “출력 = 클래스 + 박스 + 신뢰도”를 그대로 꺼내 봅니다.</p>
-<div id="bbfff461" class="cell" data-execution_count="5">
+<div id="94625c34" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, p, b <span class="kw">in</span> <span class="bu">zip</span>(r.boxes.cls.tolist(), r.boxes.conf.tolist(), r.boxes.xyxy.tolist()):</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(r.names[<span class="bu">int</span>(c)], <span class="bu">round</span>(p, <span class="dv">2</span>), [<span class="bu">round</span>(v) <span class="cf">for</span> v <span class="kw">in</span> b])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -355,10 +346,9 @@ person 0.86 [223, 409, 344, 860]
 person 0.62 [0, 556, 69, 872]</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 첫 줄이 <code>bus 0.94 [4, 229, 796, 728]</code>에 가까우면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 한 줄이 물체 하나입니다. 클래스는 분류의 출력, 네 숫자는 회귀의 출력, 가운데 숫자는 신뢰도입니다. 신뢰도가 높은 순서로 나옵니다.</p>
+<p>첫 줄은 <code>bus 0.94 [4, 229, 796, 728]</code>에 가까운 값입니다. 한 줄이 물체 하나입니다. 클래스는 분류의 출력, 네 숫자는 회귀의 출력, 가운데 숫자는 신뢰도입니다. 신뢰도가 높은 순서로 나옵니다.</p>
 <p><code>xyxy</code>는 박스를 왼쪽 위 모서리 <span class="math inline">\((x_1, y_1)\)</span>와 오른쪽 아래 모서리 <span class="math inline">\((x_2, y_2)\)</span>로 적습니다. 이론 9장의 <span class="math inline">\((x, y, w, h)\)</span>로 바꾸는 함수를 만듭니다. 너비는 <span class="math inline">\(x_2 - x_1\)</span>, 높이는 <span class="math inline">\(y_2 - y_1\)</span>입니다.</p>
-<div id="2b6d1378" class="cell" data-execution_count="6">
+<div id="a56403f0" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_xywh(b):</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    x1, y1, x2, y2 <span class="op">=</span> b</span>
@@ -369,13 +359,13 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <pre><code>[4, 229, 792, 499]</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>[4, 229, 792, 499]</code>에 가까우면 맞습니다. 버스 박스는 너비 792, 높이 499픽셀입니다.</p>
+<p><code>[4, 229, 792, 499]</code>에 가까운 값이 나옵니다. 버스 박스는 너비 792, 높이 499픽셀입니다.</p>
 <hr>
 </section>
 <section id="신뢰도-기준을-바꾼다" class="level2">
 <h2 class="anchored" data-anchor-id="신뢰도-기준을-바꾼다">4. 신뢰도 기준을 바꾼다</h2>
 <p>모델은 후보 박스를 넉넉히 내고, 신뢰도가 기준보다 낮은 후보를 버립니다. 기본 기준은 0.25입니다. <code>conf=</code>로 기준을 바꿔 남는 박스를 셉니다.</p>
-<div id="7572a572" class="cell" data-execution_count="7">
+<div id="4bd83e7a" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> conf <span class="kw">in</span> [<span class="fl">0.05</span>, <span class="fl">0.25</span>, <span class="fl">0.7</span>]:</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    r_c <span class="op">=</span> model(img, conf<span class="op">=</span>conf, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
@@ -386,7 +376,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 0.7 4 ['bus', 'person', 'person', 'person']</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 박스 수가 <code>11</code>, <code>5</code>, <code>4</code>이면 맞습니다.</p>
+<p>박스 수는 차례로 <code>11</code>, <code>5</code>, <code>4</code>입니다.</p>
 <div id="cell-lab09-conf" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 기준 0.05로 탐지한 결과</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>r_low <span class="op">=</span> model(img, conf<span class="op">=</span><span class="fl">0.05</span>, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
@@ -401,7 +391,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 </div>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 기준을 0.05로 낮추면 소화전(<code>fire hydrant</code>), 정지 표지판(<code>stop sign</code>), 가방(<code>handbag</code>)처럼 신뢰도가 낮은 엉뚱한 박스까지 남습니다. 0.7로 높이면 신뢰도 0.62였던 사진 왼쪽 끝의 사람이 빠집니다. 기준이 낮으면 엉뚱한 박스가 늘고, 높으면 놓치는 물체가 생깁니다.</p>
+<p>기준을 0.05로 낮추면 소화전(<code>fire hydrant</code>), 정지 표지판(<code>stop sign</code>), 가방(<code>handbag</code>)처럼 신뢰도가 낮은 엉뚱한 박스까지 남습니다. 0.7로 높이면 신뢰도 0.62였던 사진 왼쪽 끝의 사람이 빠집니다. 기준이 낮으면 엉뚱한 박스가 늘고, 높으면 놓치는 물체가 생깁니다.</p>
 <hr>
 </section>
 <section id="nms-기준을-바꾼다" class="level2">
@@ -426,14 +416,13 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 </div>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>47 10 37</code>이면 맞습니다. 전체 47개 가운데 버스가 10개, 사람이 37개입니다.</p>
-<p>💬 <strong>결과 해설</strong> — 2절에서 5개였던 박스가 47개가 되었습니다. 버스 한 대에 10개, 사람 네 명에게 37개입니다. 박스들이 몇 픽셀 차이로 거의 같은 자리에 겹쳐 있어서 그림에서는 테두리가 두꺼워 보입니다. 모델은 물체 하나에 비슷한 박스를 여러 개 내놓고, NMS가 그중 신뢰도가 가장 높은 것만 남겨 왔던 것입니다.</p>
+<p><code>47 10 37</code>이 나옵니다. 2절에서 5개였던 박스가 47개가 되었습니다. 버스 한 대에 10개, 사람 네 명에게 37개입니다. 박스들이 몇 픽셀 차이로 거의 같은 자리에 겹쳐 있어서 그림에서는 테두리가 두꺼워 보입니다. 모델은 물체 하나에 비슷한 박스를 여러 개 내놓고, NMS가 그중 신뢰도가 가장 높은 것만 남겨 왔던 것입니다.</p>
 <hr>
 </section>
 <section id="iou를-직접-계산한다" class="level2">
 <h2 class="anchored" data-anchor-id="iou를-직접-계산한다">6. IoU를 직접 계산한다</h2>
 <p>겹친 박스들이 정말 많이 겹치는지 IoU로 확인합니다. 이론 9장의 좌표 계산 절차를 함수로 만듭니다. 교집합은 시작점 가운데 큰 값부터 끝점 가운데 작은 값까지이고, 두 박스가 떨어져 있으면 너비나 높이를 0으로 둡니다.</p>
-<div id="4d970a5a" class="cell" data-execution_count="10">
+<div id="6d0d2003" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def iou(a, b):</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     x1, y1 = max(a[0], b[0]), max(a[1], b[1])</span></span>
@@ -453,9 +442,9 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <pre><code>0.2</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>0.2</code>이면 맞습니다. 이론 9장에서 칸을 세어 구한 값과 같습니다.</p>
+<p>출력은 <strong>0.2</strong>입니다. 이론 9장에서 칸을 세어 구한 값과 같습니다.</p>
 <p>NMS를 끈 결과에서 버스 박스 두 개를 꺼내 IoU를 구합니다.</p>
-<div id="60944fdb" class="cell" data-execution_count="11">
+<div id="3963b715" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>bus_boxes <span class="op">=</span> [to_xywh(b) <span class="cf">for</span> c, b <span class="kw">in</span> <span class="bu">zip</span>(r_all.boxes.cls.tolist(), r_all.boxes.xyxy.tolist())</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="cf">if</span> r_all.names[<span class="bu">int</span>(c)] <span class="op">==</span> <span class="st">'bus'</span>]</span>
@@ -466,21 +455,20 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 0.95</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 버스 박스 <code>10</code>개, IoU <code>0.95</code>에 가까우면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 두 박스의 IoU가 기준 0.7보다 크므로 NMS는 둘을 같은 버스로 보고 신뢰도가 낮은 쪽을 지웁니다. 그래서 기본 설정에서는 버스 박스가 하나만 남았습니다.</p>
+<p>버스 박스는 <code>10</code>개이고, 그중 두 박스의 IoU는 <code>0.95</code>에 가깝습니다. 이 값이 기준 0.7보다 크므로 NMS는 둘을 같은 버스로 보고 신뢰도가 낮은 쪽을 지웁니다. 그래서 기본 설정에서는 버스 박스가 하나만 남았습니다.</p>
 <hr>
 </section>
 <section id="카메라로-찍어-바로-탐지한다" class="level2">
 <h2 class="anchored" data-anchor-id="카메라로-찍어-바로-탐지한다">7. 카메라로 찍어 바로 탐지한다</h2>
 <p>아래 셀들은 <strong>Colab에서만</strong> 실행됩니다. 사람은 찍지 않습니다. 컵, 의자, 노트북, 휴대폰, 병처럼 주변 물건을 찍습니다.</p>
 <p>휴대폰으로 Colab을 열었다면 사진 올리기가 가장 간단합니다. 파일 선택 창에서 카메라를 고르면 바로 찍어 올릴 수 있습니다.</p>
-<div id="fe3f13e5" class="cell" data-execution_count="12">
+<div id="b3d7c48f" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — (Colab) 사진 올리기</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> files</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>uploaded <span class="op">=</span> files.upload()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>노트북 컴퓨터라면 웹캠으로 찍을 수 있습니다. 아래 셀을 실행하면 카메라 화면과 <code>찍기</code> 버튼이 나타납니다. 처음에는 브라우저가 카메라 사용을 허락할지 묻습니다.</p>
-<div id="f2a9a152" class="cell" data-execution_count="13">
+<div id="bc68a25a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — (Colab) 웹캠으로 사진 찍기</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, Javascript</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab.output <span class="im">import</span> eval_js</span>
@@ -519,7 +507,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(name)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>찍거나 올린 사진을 탐지합니다. 올린 사진이면 <code>name</code>에 파일 이름을 넣습니다. 예를 들어 <code>name = list(uploaded)[0]</code>입니다.</p>
-<div id="448db050" class="cell" data-execution_count="14">
+<div id="a07bf14a" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>r_me <span class="op">=</span> model(name, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(r_me.plot()[:, :, ::<span class="op">-</span><span class="dv">1</span>])</span>
@@ -528,7 +516,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> c, p <span class="kw">in</span> <span class="bu">zip</span>(r_me.boxes.cls.tolist(), r_me.boxes.conf.tolist()):</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(r_me.names[<span class="bu">int</span>(c)], <span class="bu">round</span>(p, <span class="dv">2</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>💬 찍은 물건마다 박스와 클래스, 신뢰도가 나옵니다. 80개 클래스에 없는 물건은 박스가 그려지지 않거나 비슷한 클래스로 나옵니다.</p>
+<p>찍은 물건마다 박스와 클래스, 신뢰도가 나옵니다. 80개 클래스에 없는 물건은 박스가 그려지지 않거나 비슷한 클래스로 나옵니다.</p>
 <hr>
 </section>
 <section id="실습-과제-10분" class="level2">
@@ -536,7 +524,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <section id="과제-1-주변-물건-세-장" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-주변-물건-세-장">📝 과제 1 · 주변 물건 세 장</h3>
 <p>주변 물건을 세 장 찍어 탐지하고, 사진마다 찾은 물체와 신뢰도를 표에 적습니다.</p>
-<div id="16f171d7" class="cell" data-execution_count="15">
+<div id="4099a462" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 7절의 사진 올리기나 take_photo()로 사진을 찍고, 탐지 셀을 사진마다 다시 실행합니다.</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>name <span class="op">=</span> take_photo()</span>
@@ -581,7 +569,7 @@ person 0.62 [0, 556, 69, 872]</code></pre>
 <section id="과제-2-놓친-물건은-80개-클래스에-있는가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-놓친-물건은-80개-클래스에-있는가">📝 과제 2 · 놓친 물건은 80개 클래스에 있는가</h3>
 <p>과제 1에서 박스가 나오지 않은 물건이 있다면, 그 물건이 80개 클래스에 들어 있는지 확인합니다. 클래스에 있다면 신뢰도 기준을 0.1로 낮춰 다시 탐지해 봅니다.</p>
-<div id="48b1e0f8" class="cell" data-execution_count="16">
+<div id="ccbb434a" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: model.names.values()에 클래스 이름 80개가 들어 있습니다. 'cup' in model.names.values()처럼 확인합니다.</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 다시 탐지할 때는 model(name, conf=0.1)처럼 기준을 넣습니다.</span></span>

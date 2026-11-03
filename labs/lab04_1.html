@@ -264,20 +264,12 @@ window.Quarto = {
 <td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
 </tr>
 <tr class="odd">
-<td>💬</td>
-<td>결과를 함께 읽습니다</td>
-</tr>
-<tr class="even">
-<td>✅</td>
-<td>이 숫자가 나오면 맞습니다</td>
-</tr>
-<tr class="odd">
 <td>📝</td>
 <td>과제. 힌트를 보고 스스로 풉니다</td>
 </tr>
 </tbody>
 </table>
-<div id="00fe7913" class="cell" data-execution_count="1">
+<div id="14597192" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 표를 내려받아 auto로 읽습니다.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -289,13 +281,13 @@ window.Quarto = {
 <pre><code>준비 완료!</code></pre>
 </div>
 </div>
-<p>✅ <code>준비 완료!</code>가 나오면 됩니다.</p>
+<p><code>준비 완료!</code>가 나오면 준비가 끝난 것입니다.</p>
 <hr>
 </section>
 <section id="표에는-무엇이-들어-있나" class="level2">
 <h2 class="anchored" data-anchor-id="표에는-무엇이-들어-있나">1. 표에는 무엇이 들어 있나</h2>
 <p>표를 받으면 크기와 앞부분부터 봅니다. <code>.shape</code>는 (행 수, 열 수), <code>.head()</code>는 앞의 다섯 행입니다.</p>
-<div id="990cbcda" class="cell" data-execution_count="2">
+<div id="8c2a0168" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(auto.shape)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>auto.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -382,9 +374,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 392행 × 8열입니다. <strong>한 행 = 자동차 한 대</strong>이고, 예측할 종속변수는 마지막 열 <code>mpg</code>(연비), 나머지 일곱 열이 독립변수입니다.</p>
+<p>392행 × 8열입니다. <strong>한 행 = 자동차 한 대</strong>이고, 예측할 종속변수는 마지막 열 <code>mpg</code>(연비), 나머지 일곱 열이 독립변수입니다.</p>
 <p>모든 열이 숫자입니다. 그런데 <code>origin</code>의 1, 2, 3은 크기가 아니라 미국·유럽·일본이라는 <strong>이름</strong>입니다. <code>.value_counts()</code>는 값마다 몇 번 나오는지 셉니다.</p>
-<div id="5809f2ed" class="cell" data-execution_count="3">
+<div id="9dd2840b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>auto[<span class="st">'origin'</span>].value_counts()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -395,8 +387,8 @@ window.Quarto = {
 Name: count, dtype: int64</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 미국(1) 245대, 일본(3) 79대, 유럽(2) 68대입니다. - 이 열은 4절에서 원-핫으로 바꿉니다. 그대로 넣으면 모델이 “일본은 미국의 3배”로 읽습니다. - 나머지 여섯 열은 크기에 의미가 있는 숫자형 변수입니다. 이름을 리스트에 담아 둡니다.</p>
-<div id="662c6aca" class="cell" data-execution_count="4">
+<p>미국(1) 245대, 일본(3) 79대, 유럽(2) 68대입니다. - 이 열은 4절에서 원-핫으로 바꿉니다. 그대로 넣으면 모델이 “일본은 미국의 3배”로 읽습니다. - 나머지 여섯 열은 크기에 의미가 있는 숫자형 변수입니다. 이름을 리스트에 담아 둡니다.</p>
+<div id="07265483" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 숫자형 여섯 열의 이름</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>num_cols <span class="op">=</span> [<span class="st">'cylinders'</span>, <span class="st">'displacement'</span>, <span class="st">'horsepower'</span>, <span class="st">'weight'</span>, <span class="st">'acceleration'</span>, <span class="st">'model_year'</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -432,7 +424,7 @@ Name: count, dtype: int64</code></pre>
 </tbody>
 </table>
 <p><code>train_test_split</code>은 표를 무작위로 두 조각으로 나눕니다. <code>test_size=0.3</code>이면 30%를 떼어 내고, <code>random_state=42</code>를 주면 실행할 때마다 같은 조각이 나옵니다.</p>
-<div id="559f8d81" class="cell" data-execution_count="5">
+<div id="0740106a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -442,8 +434,8 @@ Name: count, dtype: int64</code></pre>
 <pre><code>274 118</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 274대와 118대입니다. 274대가 훈련 세트입니다. 남은 118대를 반으로 나눠 검증과 테스트를 만듭니다.</p>
-<div id="82607dbb" class="cell" data-execution_count="6">
+<p>274대와 118대입니다. 274대가 훈련 세트입니다. 남은 118대를 반으로 나눠 검증과 테스트를 만듭니다.</p>
+<div id="68ccaab1" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>val_df, test_df <span class="op">=</span> train_test_split(rest_df, test_size<span class="op">=</span><span class="fl">0.5</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(val_df), <span class="bu">len</span>(test_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -451,13 +443,13 @@ Name: count, dtype: int64</code></pre>
 <pre><code>274 59 59</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>274 59 59</code>가 나오면 맞습니다.</p>
+<p>훈련 <strong>274</strong>대, 검증 <strong>59</strong>대, 테스트 <strong>59</strong>대입니다.</p>
 <hr>
 </section>
 <section id="훈련-세트의-눈금으로-표준화하기" class="level2">
 <h2 class="anchored" data-anchor-id="훈련-세트의-눈금으로-표준화하기">3. 훈련 세트의 눈금으로 표준화하기</h2>
 <p><code>weight</code> 열은 수천, <code>acceleration</code> 열은 십 단위입니다. 열마다 평균 0, 표준편차 1로 맞추면 학습이 안정됩니다. 이때 평균과 표준편차는 <strong>훈련 세트에서</strong> 구합니다. 먼저 <code>weight</code> 열 하나로 해 봅니다. <code>.std(ddof=0)</code>은 분모를 <span class="math inline">\(n\)</span>으로 두는 표준편차입니다.</p>
-<div id="f6a8cd58" class="cell" data-execution_count="7">
+<div id="fba74028" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>w_mean <span class="op">=</span> train_df[<span class="st">'weight'</span>].mean()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>w_std <span class="op">=</span> train_df[<span class="st">'weight'</span>].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
@@ -466,9 +458,9 @@ Name: count, dtype: int64</code></pre>
 <pre><code>2986.485401459854 837.4454518494796</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 훈련 세트 274대의 무게 평균은 약 <strong>2986</strong>, 표준편차는 약 <strong>837</strong>입니다.</p>
+<p>훈련 세트 274대의 무게 평균은 약 <strong>2986</strong>, 표준편차는 약 <strong>837</strong>입니다.</p>
 <p>각 값에서 평균을 빼고 표준편차로 나눕니다.</p>
-<div id="f6b13204" class="cell" data-execution_count="8">
+<div id="93e33c03" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>w_train <span class="op">=</span> (train_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_train.mean(), w_train.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -476,9 +468,9 @@ Name: count, dtype: int64</code></pre>
 <pre><code>-6.969283220274705e-17 0.9999999999999999</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 평균은 0(<code>e-17</code>처럼 아주 작은 수), 표준편차는 1이면 맞습니다. 자기 평균을 빼고 자기 표준편차로 나눴으니 당연합니다.</p>
+<p>평균은 <strong>0</strong>(<code>e-17</code>처럼 아주 작은 수), 표준편차는 <strong>1</strong>입니다. 자기 평균을 빼고 자기 표준편차로 나눴기 때문입니다.</p>
 <p>검증 세트는 검증 세트의 평균이 아니라 <strong>훈련 세트의 평균과 표준편차</strong>로 변환합니다.</p>
-<div id="d19b7397" class="cell" data-execution_count="9">
+<div id="e577a94c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w_val <span class="op">=</span> (val_df[<span class="st">'weight'</span>] <span class="op">-</span> w_mean) <span class="op">/</span> w_std</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(w_val.mean(), w_val.std(ddof<span class="op">=</span><span class="dv">0</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -486,9 +478,9 @@ Name: count, dtype: int64</code></pre>
 <pre><code>-0.08372189489963786 0.9789892659943903</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 평균 약 <strong>-0.08</strong>, 표준편차 약 <strong>0.98</strong>입니다. 0과 1이 아닙니다. - 훈련 세트의 값을 썼기 때문입니다. 모델이 배우는 것은 훈련 세트의 눈금이므로, 새 데이터도 그 눈금으로 잽니다. - 검증과 테스트 세트는 항상 이렇게 변환합니다.</p>
+<p>평균 약 <strong>-0.08</strong>, 표준편차 약 <strong>0.98</strong>입니다. 0과 1이 아닙니다. - 훈련 세트의 값을 썼기 때문입니다. 모델이 배우는 것은 훈련 세트의 눈금이므로, 새 데이터도 그 눈금으로 잽니다. - 검증과 테스트 세트는 항상 이렇게 변환합니다.</p>
 <p>같은 계산을 숫자형 여섯 열에 한 번에 합니다. <code>mu</code>와 <code>sd</code>는 열마다 값이 하나씩 있는 벡터이고, <code>.round(2)</code>는 소수 둘째 자리로 반올림해 보여 줍니다.</p>
-<div id="e9f879f7" class="cell" data-execution_count="10">
+<div id="79766a79" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>mu <span class="op">=</span> train_df[num_cols].mean()</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>sd <span class="op">=</span> train_df[num_cols].std(ddof<span class="op">=</span><span class="dv">0</span>)</span>
@@ -503,7 +495,7 @@ model_year        76.14
 dtype: float64</code></pre>
 </div>
 </div>
-<div id="6d2cba22" class="cell" data-execution_count="11">
+<div id="6c45a434" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>train_num <span class="op">=</span> (train_df[num_cols] <span class="op">-</span> mu) <span class="op">/</span> sd</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_num.mean().<span class="bu">round</span>(<span class="dv">4</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -517,13 +509,13 @@ model_year     -0.0
 dtype: float64</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 여섯 열의 평균이 모두 0이면 맞습니다.</p>
+<p>여섯 열의 평균이 모두 <strong>0</strong>입니다.</p>
 <hr>
 </section>
 <section id="이름인-열은-원-핫으로" class="level2">
 <h2 class="anchored" data-anchor-id="이름인-열은-원-핫으로">4. 이름인 열은 원-핫으로</h2>
 <p><code>origin</code>은 범주형 열입니다. <code>pd.Categorical</code>로 범주를 <code>[1, 2, 3]</code>으로 정해 두고, <code>get_dummies</code>로 열 세 개로 바꿉니다. 미국(1)이면 <code>origin_1</code>만 1입니다. 범주를 미리 정해 두는 것은 세 세트의 열 개수를 같게 하기 위해서입니다.</p>
-<div id="fdf5db2a" class="cell" data-execution_count="12">
+<div id="8ade3288" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>train_df[<span class="st">'origin'</span>] <span class="op">=</span> pd.Categorical(train_df[<span class="st">'origin'</span>], categories<span class="op">=</span>[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>])</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>pd.get_dummies(train_df, columns<span class="op">=</span>[<span class="st">'origin'</span>]).head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -619,13 +611,13 @@ dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 표 오른쪽 끝에 <code>origin_1</code>, <code>origin_2</code>, <code>origin_3</code> 세 열이 생기고 행마다 <code>True</code>가 하나씩이면 맞습니다. <code>True</code>/<code>False</code>는 텐서로 바꿀 때 1과 0이 됩니다.</p>
+<p>표 오른쪽 끝에 <code>origin_1</code>, <code>origin_2</code>, <code>origin_3</code> 세 열이 생기고, 행마다 <code>True</code>가 하나씩 있습니다. <code>True</code>/<code>False</code>는 텐서로 바꿀 때 1과 0이 됩니다.</p>
 <hr>
 </section>
 <section id="전처리를-함수-하나로-조립하기" class="level2">
 <h2 class="anchored" data-anchor-id="전처리를-함수-하나로-조립하기">5. 전처리를 함수 하나로 조립하기</h2>
 <p>3절의 표준화와 4절의 원-핫을 한 함수에 넣어 세 세트에 똑같이 적용합니다. <code>df.copy()</code>는 원본 표를 두고 복사본에서 바꾸는 것입니다. 함수 안의 <code>mu</code>, <code>sd</code>는 훈련 세트에서 구한 값입니다. 빈칸을 채웁니다.</p>
-<div id="e4a63a6f" class="cell" data-execution_count="13">
+<div id="f0017c18" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 빈칸(___)을 채운 뒤 실행하세요</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co">#* def prep(df):</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co">#*     out = df.copy()</span></span>
@@ -714,8 +706,8 @@ dtype: float64</code></pre>
 </div>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 열이 <strong>10개</strong>입니다. 숫자형 6개, <code>mpg</code>, 원-핫 3개입니다. 같은 함수를 검증과 테스트 세트에 적용합니다.</p>
-<div id="71707108" class="cell" data-execution_count="14">
+<p>열이 <strong>10개</strong>입니다. 숫자형 6개, <code>mpg</code>, 원-핫 3개입니다. 같은 함수를 검증과 테스트 세트에 적용합니다.</p>
+<div id="ec09cfac" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>val_p <span class="op">=</span> prep(val_df)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>test_p <span class="op">=</span> prep(test_df)</span>
@@ -724,13 +716,13 @@ dtype: float64</code></pre>
 <pre><code>(274, 10) (59, 10) (59, 10)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 세 세트 모두 열이 10개면 맞습니다. 범주를 고정했으므로 열이 같습니다.</p>
+<p>세 세트 모두 열이 <strong>10</strong>개입니다. 범주를 고정했으므로 열이 같습니다.</p>
 <hr>
 </section>
 <section id="표를-텐서로" class="level2">
 <h2 class="anchored" data-anchor-id="표를-텐서로">6. 표를 텐서로</h2>
 <p><code>mpg</code>를 뺀 아홉 열이 <code>X</code>, <code>mpg</code>가 <code>y</code>입니다. <code>drop(columns='mpg')</code>는 그 열을 뺀 표를 돌려주고, <code>to_numpy(dtype='float32')</code>는 표를 실수 배열로 바꿉니다. 그 배열을 <code>torch.tensor</code>에 넣습니다. 실습 3과 같이 <code>X</code>는 <code>(데이터 수, 변수 수)</code>, <code>y</code>는 <code>(데이터 수, 1)</code>입니다.</p>
-<div id="7521f8b3" class="cell" data-execution_count="15">
+<div id="469f6d3a" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>X_tr <span class="op">=</span> torch.tensor(train_p.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>y_tr <span class="op">=</span> torch.tensor(train_p[[<span class="st">'mpg'</span>]].to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
@@ -739,9 +731,9 @@ dtype: float64</code></pre>
 <pre><code>torch.Size([274, 9]) torch.Size([274, 1])</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — <code>(274, 9)</code>와 <code>(274, 1)</code>입니다. <code>y</code>에 <code>[['mpg']]</code>로 대괄호를 두 번 쓴 것은 열 하나짜리 표를 만들어 <code>(274, 1)</code>을 얻기 위해서입니다.</p>
+<p><code>(274, 9)</code>와 <code>(274, 1)</code>입니다. <code>y</code>에 <code>[['mpg']]</code>로 대괄호를 두 번 쓴 것은 열 하나짜리 표를 만들어 <code>(274, 1)</code>을 얻기 위해서입니다.</p>
 <p>검증과 테스트도 같은 두 줄이므로 함수로 만듭니다.</p>
-<div id="9a370e64" class="cell" data-execution_count="16">
+<div id="ebf46c32" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> to_tensor(df):</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> torch.tensor(df.drop(columns<span class="op">=</span><span class="st">'mpg'</span>).to_numpy(dtype<span class="op">=</span><span class="st">'float32'</span>))</span>
@@ -755,13 +747,13 @@ dtype: float64</code></pre>
 <pre><code>torch.Size([59, 9]) torch.Size([59, 9])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(59, 9)</code>가 두 번 나오면 맞습니다.</p>
+<p>검증과 테스트 모두 <code>(59, 9)</code>입니다.</p>
 <hr>
 </section>
 <section id="배치로-꺼내면-어떻게-나오나" class="level2">
 <h2 class="anchored" data-anchor-id="배치로-꺼내면-어떻게-나오나">7. 배치로 꺼내면 어떻게 나오나</h2>
 <p>실습 3에서는 매번 274건 전체로 기울기를 구했습니다. 이번에는 <strong>32건씩</strong> 나누어 구합니다. 먼저 <code>TensorDataset</code>으로 <code>X</code>의 한 행과 <code>y</code>의 한 행을 짝지어 담습니다. 길이는 데이터 수이고, 번호로 한 쌍을 꺼낼 수 있습니다.</p>
-<div id="403b5cb5" class="cell" data-execution_count="17">
+<div id="2b28c3c4" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -774,9 +766,9 @@ dtype: float64</code></pre>
          1.0000]), tensor([22.]))</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 길이는 274이고, <code>train_ds[0]</code>은 첫 자동차의 입력 9개와 연비 하나의 쌍입니다.</p>
+<p>길이는 274이고, <code>train_ds[0]</code>은 첫 자동차의 입력 9개와 연비 하나의 쌍입니다.</p>
 <p><code>DataLoader</code>는 데이터셋을 <code>batch_size</code>씩 잘라 줍니다. <code>shuffle=True</code>는 한 바퀴 돌 때마다 순서를 섞습니다. 그 앞의 <code>torch.manual_seed(42)</code>는 섞는 순서를 고정해 실행할 때마다 같은 결과가 나오게 합니다.</p>
-<div id="260d484d" class="cell" data-execution_count="18">
+<div id="3781e958" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
@@ -785,9 +777,9 @@ dtype: float64</code></pre>
 <pre><code>9</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 9가 나오면 맞습니다. 274건을 32씩 나누면 8배치에 18건이 남아 9배치입니다.</p>
+<p><strong>9</strong>배치입니다. 274건을 32씩 나누면 8배치에 18건이 남아 9배치가 됩니다.</p>
 <p><code>for</code>로 로더를 한 바퀴 돌며 배치마다 모양을 찍어 봅니다.</p>
-<div id="1efbd6b1" class="cell" data-execution_count="19">
+<div id="0b7cdd4b" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> xb, yb <span class="kw">in</span> train_loader:</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(xb.shape, yb.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -803,9 +795,9 @@ torch.Size([32, 9]) torch.Size([32, 1])
 torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — <code>(32, 9)</code>와 <code>(32, 1)</code>이 여덟 번 나오고, 마지막은 남은 <strong>18건</strong>입니다. - 이 한 바퀴가 한 <strong>에폭</strong>, 배치 하나가 한 <strong>이터레이션</strong>입니다. - 4-2의 학습 반복문은 이 <code>for</code> 안에 실습 3의 다섯 줄을 넣은 것입니다.</p>
+<p><code>(32, 9)</code>와 <code>(32, 1)</code>이 여덟 번 나오고, 마지막은 남은 <strong>18건</strong>입니다. - 이 한 바퀴가 한 <strong>에폭</strong>, 배치 하나가 한 <strong>이터레이션</strong>입니다. - 4-2의 학습 반복문은 이 <code>for</code> 안에 실습 3의 다섯 줄을 넣은 것입니다.</p>
 <p><code>iter(train_loader)</code>로 새 바퀴를 시작하고 <code>next</code>로 첫 배치를 꺼냅니다. 첫 배치의 연비 세 개를 봅니다.</p>
-<div id="5a48cc21" class="cell" data-execution_count="20">
+<div id="6ad01acb" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -814,7 +806,7 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 </div>
 </div>
 <p>한 번 더 꺼냅니다.</p>
-<div id="60447453" class="cell" data-execution_count="21">
+<div id="24d096e3" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>xb, yb <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yb[:<span class="dv">3</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -822,9 +814,9 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <pre><code>tensor([16., 23., 24.])</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 다른 자동차가 나옵니다. <code>shuffle=True</code>라서 바퀴마다 배치의 구성이 달라집니다.</p>
+<p>다른 자동차가 나옵니다. <code>shuffle=True</code>라서 바퀴마다 배치의 구성이 달라집니다.</p>
 <p>검증과 테스트 로더는 섞지 않습니다. 평가는 순서와 무관합니다.</p>
-<div id="2a71740a" class="cell" data-execution_count="22">
+<div id="abd98391" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 검증·테스트 로더</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>val_loader <span class="op">=</span> DataLoader(TensorDataset(X_va, y_va), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_te, y_te), batch_size<span class="op">=</span><span class="dv">64</span>)</span>
@@ -833,7 +825,7 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <pre><code>1 1</code></pre>
 </div>
 </div>
-<p>💬 59건은 64보다 작으므로 각각 1배치입니다.</p>
+<p>59건은 64보다 작으므로 각각 1배치입니다.</p>
 <hr>
 </section>
 <section id="실습-과제-15분" class="level2">
@@ -841,7 +833,7 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <section id="과제-1-80-10-10으로-나누면-몇-대씩인가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-80-10-10으로-나누면-몇-대씩인가">📝 과제 1 · 80 / 10 / 10으로 나누면 몇 대씩인가</h3>
 <p>훈련 80%, 검증 10%, 테스트 10%가 되도록 나누고 세 세트의 크기를 출력합니다. 먼저 크기를 예상해 봅니다.</p>
-<div id="19bc3792" class="cell" data-execution_count="23">
+<div id="4c26ca97" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 2절의 두 줄에서 첫 번째 test_size만 0.2로 바꿉니다. 두 번째는 그대로 0.5입니다. random_state=42를 유지합니다.</span></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>tr, rest <span class="op">=</span> train_test_split(auto, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -860,7 +852,7 @@ torch.Size([18, 9]) torch.Size([18, 1])</code></pre>
 <section id="과제-2-평균을-전체-표에서-구하면-무엇이-달라지나" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-평균을-전체-표에서-구하면-무엇이-달라지나">📝 과제 2 · 평균을 전체 표에서 구하면 무엇이 달라지나</h3>
 <p>평균을 훈련 세트가 아니라 전체 표 <code>auto</code>에서 구한 뒤 훈련 세트를 표준화하면, 훈련 세트의 평균이 0이 되지 않습니다. 확인합니다.</p>
-<div id="a9e0c258" class="cell" data-execution_count="24">
+<div id="8147bdfd" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 3절에서 mu를 만든 줄의 train_df를 auto로 바꿔 wrong_mu를 만듭니다. 그다음 (train_df[num_cols] - wrong_mu) / sd 의 열 평균을 .round(4)로 봅니다.</span></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>wrong_mu <span class="op">=</span> auto[num_cols].mean()</span>
@@ -884,7 +876,7 @@ dtype: float64</code></pre>
 <section id="과제-3-배치-크기를-바꾸면-이터레이션-수는" class="level3">
 <h3 class="anchored" data-anchor-id="과제-3-배치-크기를-바꾸면-이터레이션-수는">📝 과제 3 · 배치 크기를 바꾸면 이터레이션 수는</h3>
 <p>배치 크기 64와 274로 로더를 만들어 <code>len()</code>을 출력합니다. 먼저 예상해 봅니다.</p>
-<div id="81d08687" class="cell" data-execution_count="25">
+<div id="9a7fac83" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 7절에서 train_loader를 만든 줄을 두 번 더 쓰되 batch_size만 64, 274로 바꾸고, 각각 len()을 print 합니다.</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(DataLoader(train_ds, batch_size<span class="op">=</span><span class="dv">64</span>)))</span>

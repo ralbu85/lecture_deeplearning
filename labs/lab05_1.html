@@ -259,20 +259,12 @@ window.Quarto = {
 <td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
 </tr>
 <tr class="odd">
-<td>💬</td>
-<td>결과를 함께 읽습니다</td>
-</tr>
-<tr class="even">
-<td>✅</td>
-<td>이 숫자가 나오면 맞습니다</td>
-</tr>
-<tr class="odd">
 <td>📝</td>
 <td>과제. 힌트를 보고 스스로 풉니다</td>
 </tr>
 </tbody>
 </table>
-<div id="a9b93f8b" class="cell" data-execution_count="1">
+<div id="c3f029e2" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요. 두 데이터셋을 내려받습니다(처음 한 번은 1~2분).</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
@@ -296,13 +288,13 @@ window.Quarto = {
 준비 완료!</code></pre>
 </div>
 </div>
-<p>✅ <code>준비 완료!</code>가 나오면 됩니다.</p>
+<p><code>준비 완료!</code>가 나오면 준비가 끝난 것입니다.</p>
 <hr>
 </section>
 <section id="흑백-사진-한-장은-어떤-숫자인가" class="level2">
 <h2 class="anchored" data-anchor-id="흑백-사진-한-장은-어떤-숫자인가">1. 흑백 사진 한 장은 어떤 숫자인가</h2>
 <p><code>fmnist</code>는 사진과 정답의 쌍을 6만 개 담고 있습니다. 길이와 클래스 이름부터 봅니다.</p>
-<div id="1964f1fc" class="cell" data-execution_count="2">
+<div id="f25a84fb" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(fmnist))</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fmnist.classes)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -311,9 +303,9 @@ window.Quarto = {
 ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 60,000장이고 클래스는 티셔츠부터 앵클부츠까지 <strong>10가지</strong>입니다. 각 사진에 클래스 번호가 정답으로 붙어 있습니다.</p>
+<p>60,000장이고 클래스는 티셔츠부터 앵클부츠까지 <strong>10가지</strong>입니다. 각 사진에 클래스 번호가 정답으로 붙어 있습니다.</p>
 <p><code>fmnist[0]</code>은 사진 한 장과 정답 번호의 쌍입니다. 사진은 PIL 이미지이고, <code>np.array</code>로 숫자 배열이 됩니다.</p>
-<div id="d97da5d7" class="cell" data-execution_count="3">
+<div id="8708b9db" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>img, label <span class="op">=</span> fmnist[<span class="dv">0</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array(img)</span>
@@ -327,8 +319,7 @@ window.Quarto = {
 0 255</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>9 Ankle boot</code>, <code>(28, 28) uint8</code>, <code>0 255</code>면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 이론 5장에서 본 대로 흑백 사진 한 장은 <code>(높이, 너비)</code> 행렬이고 칸 하나가 픽셀 하나입니다. 값은 <strong>0부터 255까지의 정수</strong>이고 0이 검정, 255가 흰색입니다.</p>
+<p>출력은 <code>9 Ankle boot</code>, <code>(28, 28) uint8</code>, <code>0 255</code>입니다. 이론 5장에서 본 대로 흑백 사진 한 장은 <code>(높이, 너비)</code> 행렬이고 칸 하나가 픽셀 하나입니다. 값은 <strong>0부터 255까지의 정수</strong>이고 0이 검정, 255가 흰색입니다.</p>
 <div id="cell-lab05-pixels" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 사진과 가운데 4×6칸의 숫자</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">7</span>, <span class="fl">3.2</span>))</span>
@@ -354,13 +345,13 @@ window.Quarto = {
  [  0  62 145 204 228 207]]</code></pre>
 </div>
 </div>
-<p>💬 오른쪽 그림의 밝은 칸이 200대, 검은 칸이 0입니다. 숫자와 밝기가 일대일로 대응합니다.</p>
+<p>오른쪽 그림의 밝은 칸이 200대, 검은 칸이 0입니다. 숫자와 밝기가 일대일로 대응합니다.</p>
 <hr>
 </section>
 <section id="컬러-사진은-채널-축이-하나-더-있다" class="level2">
 <h2 class="anchored" data-anchor-id="컬러-사진은-채널-축이-하나-더-있다">2. 컬러 사진은 채널 축이 하나 더 있다</h2>
 <p>CIFAR-10은 32×32 컬러 사진입니다. 한 장을 배열로 만들면 축이 하나 더 있습니다.</p>
-<div id="f3301014" class="cell" data-execution_count="5">
+<div id="2992eb81" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>img_c, label_c <span class="op">=</span> cifar[<span class="dv">0</span>]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>arr <span class="op">=</span> np.array(img_c)</span>
@@ -374,8 +365,7 @@ window.Quarto = {
 (32, 32)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>frog</code>, <code>(32, 32, 3) uint8</code>, <code>(32, 32)</code>면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 마지막 축 3이 <strong>R, G, B 채널</strong>입니다. <code>arr[:, :, 0]</code>은 빨강 채널 한 장이고 흑백 사진과 같은 <code>(32, 32)</code>입니다. 컬러 사진 한 장은 같은 크기의 흑백 행렬 세 장을 겹친 것입니다.</p>
+<p>출력은 <code>frog</code>, <code>(32, 32, 3) uint8</code>, <code>(32, 32)</code>입니다. 마지막 축 3이 <strong>R, G, B 채널</strong>입니다. <code>arr[:, :, 0]</code>은 빨강 채널 한 장이고 흑백 사진과 같은 <code>(32, 32)</code>입니다. 컬러 사진 한 장은 같은 크기의 흑백 행렬 세 장을 겹친 것입니다.</p>
 <div id="cell-lab05-channels" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 원본과 채널 세 장</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">4</span>, figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">3</span>))</span>
@@ -400,7 +390,7 @@ window.Quarto = {
 <section id="신경망에-넣기-전-변환" class="level2">
 <h2 class="anchored" data-anchor-id="신경망에-넣기-전-변환">3. 신경망에 넣기 전 변환</h2>
 <p>PIL과 matplotlib은 <code>(높이, 너비, 채널)</code>로 다루지만, PyTorch는 <strong>채널을 앞에</strong> 두는 <code>(채널, 높이, 너비)</code>를 씁니다. <code>transforms.ToTensor()</code>는 PIL 이미지를 텐서로 바꾸면서 두 가지를 한꺼번에 합니다. 축을 <code>(C, H, W)</code>로 옮기고, 값을 255로 나누어 <strong>0~1 사이의 실수</strong>로 만듭니다. 픽셀의 최솟값 0과 최댓값 255는 어떤 사진이든 같으므로, 255로 나누는 것이 곧 <strong>min-max 스케일링</strong>입니다.</p>
-<div id="22c123b8" class="cell" data-execution_count="7">
+<div id="eae22a91" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>to_tensor <span class="op">=</span> transforms.ToTensor()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> to_tensor(img_c)</span>
@@ -414,10 +404,9 @@ window.Quarto = {
 [59 62 63] tensor([0.2314, 0.2431, 0.2471])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(3, 32, 32) torch.float32</code>, <code>0.0 1.0</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 마지막 줄이 왼쪽 위 픽셀 하나입니다. 배열에서는 <code>[59 62 63]</code>이던 R, G, B가 텐서에서는 <code>0.2314, 0.2431, 0.2471</code>입니다. 59/255 = 0.2314로, 같은 픽셀이 축 순서와 눈금만 바뀌어 들어 있습니다.</p>
+<p>출력은 <code>(3, 32, 32) torch.float32</code>, <code>0.0 1.0</code>입니다. 마지막 줄이 왼쪽 위 픽셀 하나입니다. 배열에서는 <code>[59 62 63]</code>이던 R, G, B가 텐서에서는 <code>0.2314, 0.2431, 0.2471</code>입니다. 59/255 = 0.2314로, 같은 픽셀이 축 순서와 눈금만 바뀌어 들어 있습니다.</p>
 <p><code>ToTensor()</code>를 데이터셋에 <code>transform</code>으로 넘기면 사진을 꺼낼 때마다 자동으로 적용됩니다. 실습 4의 <code>DataLoader</code>를 그대로 써서 64장을 꺼냅니다.</p>
-<div id="ac9c0647" class="cell" data-execution_count="8">
+<div id="025d85c0" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>cifar_t <span class="op">=</span> datasets.CIFAR10(root<span class="op">=</span><span class="st">'../data'</span>, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">False</span>, transform<span class="op">=</span>transforms.ToTensor())</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> DataLoader(cifar_t, batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
@@ -428,14 +417,13 @@ window.Quarto = {
 <pre><code>(64, 3, 32, 32) (64,)</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(64, 3, 32, 32) (64,)</code>이면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 앞으로 나오는 모든 이미지 텐서는 이 네 축 <strong><code>(N, C, H, W)</code></strong>를 갖습니다. N은 배치 크기, C는 채널, H와 W는 높이와 너비입니다. 실습 4의 <code>(32, 9)</code>에서 N은 그대로이고, 변수 축 하나가 <code>(C, H, W)</code> 세 축으로 바뀌었습니다.</p>
+<p>출력은 <code>(64, 3, 32, 32) (64,)</code>입니다. 앞으로 나오는 모든 이미지 텐서는 이 네 축 <strong><code>(N, C, H, W)</code></strong>를 갖습니다. N은 배치 크기, C는 채널, H와 W는 높이와 너비입니다. 실습 4의 <code>(32, 9)</code>에서 N은 그대로이고, 변수 축 하나가 <code>(C, H, W)</code> 세 축으로 바뀌었습니다.</p>
 <hr>
 </section>
 <section id="펼쳐서-넣으면-파라미터가-폭발한다" class="level2">
 <h2 class="anchored" data-anchor-id="펼쳐서-넣으면-파라미터가-폭발한다">4. 펼쳐서 넣으면 파라미터가 폭발한다</h2>
 <p>이론 5장의 방식대로 사진 한 장을 한 줄로 펼쳐 <code>nn.Linear</code>에 넣어 봅니다. <code>flatten(start_dim=1)</code>은 N축은 두고 나머지를 한 줄로 잇습니다. 은닉 노드는 5장과 같이 256개이고, 파라미터 수는 실습 2의 규칙 <span class="math inline">\(n_{\text{in}} \times n_{\text{out}} + n_{\text{out}}\)</span>입니다.</p>
-<div id="dcc3e83a" class="cell" data-execution_count="9">
+<div id="fc4fc018" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>flat <span class="op">=</span> xb.flatten(start_dim<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">32</span> <span class="op">*</span> <span class="dv">32</span>, <span class="dv">256</span>)</span>
@@ -449,14 +437,13 @@ torch.Size([256, 3072]) torch.Size([256])
 786688</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — 펼친 길이 <code>3072</code>, 가중치 <code>(256, 3072)</code>, 파라미터 <strong>786,688</strong>개면 맞습니다.</p>
-<p>💬 <strong>결과 해설</strong> — 32×32짜리 작은 사진을 층 하나에 넣는 데 79만 개입니다. 5장의 224×224 사진이면 몇 개가 되는지는 과제 2에서 셉니다. 이것이 <strong>파라미터 폭발</strong>이고, 5절의 콘볼루션이 푸는 문제입니다.</p>
+<p>펼친 길이는 <code>3072</code>, 가중치는 <code>(256, 3072)</code>, 파라미터는 <strong>786,688</strong>개입니다. 32×32짜리 작은 사진을 층 하나에 넣는 데 79만 개입니다. 5장의 224×224 사진이면 몇 개가 되는지는 과제 2에서 셉니다. 이것이 <strong>파라미터 폭발</strong>이고, 5절의 콘볼루션이 푸는 문제입니다.</p>
 <hr>
 </section>
 <section id="콘볼루션을-코드로-계산한다" class="level2">
 <h2 class="anchored" data-anchor-id="콘볼루션을-코드로-계산한다">5. 콘볼루션을 코드로 계산한다</h2>
 <p>이론 6장에서 손으로 계산한 2채널 예제를 그대로 가져옵니다. 채널 2개의 3×3 입력과 채널 2개의 2×2 커널이고, 6장과 같이 편향은 0입니다. 계산 원리는 6장에서 봤으므로 여기서는 PyTorch로 결과만 냅니다.</p>
-<div id="6e37d458" class="cell" data-execution_count="10">
+<div id="c765744d" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>x2 <span class="op">=</span> torch.tensor([[[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>], [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>], [<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">1</span>]],</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                   [[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>], [<span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>]]], dtype<span class="op">=</span>torch.float32)</span>
@@ -468,9 +455,9 @@ torch.Size([256, 3072]) torch.Size([256])
 <pre><code>torch.Size([2, 3, 3]) torch.Size([2, 2, 2])</code></pre>
 </div>
 </div>
-<p>💬 <strong>결과 해설</strong> — 입력은 <code>(2, 3, 3)</code>, 커널은 <code>(2, 2, 2)</code>입니다. 첫 축이 채널이고, 커널의 채널 수는 입력의 채널 수와 같습니다.</p>
+<p>입력은 <code>(2, 3, 3)</code>, 커널은 <code>(2, 2, 2)</code>입니다. 첫 축이 채널이고, 커널의 채널 수는 입력의 채널 수와 같습니다.</p>
 <p>PyTorch의 콘볼루션 <code>F.conv2d</code>는 배치 단위로 계산하므로 입력은 <code>(N, C, H, W)</code>, 커널은 <code>(커널 수, 입력 채널 수, KH, KW)</code>여야 합니다. <code>unsqueeze(0)</code>은 맨 앞에 길이 1인 축을 하나 더합니다. 사진 한 장을 배치 하나로, 커널 한 개를 커널 묶음으로 만드는 것입니다.</p>
-<div id="8cfd4861" class="cell" data-execution_count="11">
+<div id="31856812" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>xt <span class="op">=</span> x2.unsqueeze(<span class="dv">0</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>kt <span class="op">=</span> k2.unsqueeze(<span class="dv">0</span>)</span>
@@ -484,8 +471,7 @@ tensor([[5., 6.],
         [2., 5.]])</code></pre>
 </div>
 </div>
-<p>✅ <strong>체크포인트</strong> — <code>(1, 2, 3, 3) (1, 2, 2, 2) -&gt; (1, 1, 2, 2)</code>이고 값이 <code>[[5, 6], [2, 5]]</code>면 맞습니다. 6장 보드의 마지막 스텝과 같은 값입니다.</p>
-<p>💬 <strong>결과 해설</strong> — 채널별 결과는 따로 쌓이지 않고 더해져서 특성 맵 <strong>한 장</strong>이 됩니다. - 커널의 두 번째 축은 <strong>입력 채널 수와 같아야</strong> 합니다. 콘볼루션에서 나는 모양 오류의 대부분이 이 축입니다. - 커널의 첫 축이 커널의 개수이고 그대로 출력 채널 수가 됩니다. 커널이 8개면 특성 맵도 8장입니다. 5-2에서 그렇게 씁니다.</p>
+<p>모양은 <code>(1, 2, 3, 3) (1, 2, 2, 2) -&gt; (1, 1, 2, 2)</code>이고 값은 <code>[[5, 6], [2, 5]]</code>입니다. 6장 보드의 마지막 스텝과 같은 값입니다. 채널별 결과는 따로 쌓이지 않고 더해져서 특성 맵 <strong>한 장</strong>이 됩니다. - 커널의 두 번째 축은 <strong>입력 채널 수와 같아야</strong> 합니다. 콘볼루션에서 나는 모양 오류의 대부분이 이 축입니다. - 커널의 첫 축이 커널의 개수이고 그대로 출력 채널 수가 됩니다. 커널이 8개면 특성 맵도 8장입니다. 5-2에서 그렇게 씁니다.</p>
 <hr>
 </section>
 <section id="실습-과제-10분" class="level2">
@@ -493,7 +479,7 @@ tensor([[5., 6.],
 <section id="과제-1-텐서를-그림으로-보기" class="level3">
 <h3 class="anchored" data-anchor-id="과제-1-텐서를-그림으로-보기">📝 과제 1 · 텐서를 그림으로 보기</h3>
 <p>3절의 <code>x</code>는 <code>(3, 32, 32)</code>입니다. <code>plt.imshow</code>는 <code>(높이, 너비, 채널)</code>만 받으므로 축을 되돌려야 그릴 수 있습니다. <code>permute</code>로 축 순서를 바꿔 모양을 확인하고 그립니다.</p>
-<div id="f4c48378" class="cell" data-execution_count="12">
+<div id="f6d5fd04" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: x.permute(1, 2, 0)은 "원래 1번 축을 0번으로, 2번을 1번으로, 0번을 2번으로" 옮깁니다. 모양을 tuple(...shape)로 출력한 뒤 plt.imshow에 넣습니다.</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>back <span class="op">=</span> x.permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)</span>
@@ -521,7 +507,7 @@ tensor([[5., 6.],
 <section id="과제-2-224224-사진이면-파라미터는-몇-개인가" class="level3">
 <h3 class="anchored" data-anchor-id="과제-2-224224-사진이면-파라미터는-몇-개인가">📝 과제 2 · 224×224 사진이면 파라미터는 몇 개인가</h3>
 <p>이론 5장의 224×224 컬러 사진을 같은 은닉 노드 256개에 연결할 때의 파라미터 수를 먼저 손으로 계산한 뒤 코드로 확인합니다.</p>
-<div id="d287e3ea" class="cell" data-execution_count="13">
+<div id="0cd4a855" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 4절 셀에서 32를 224로 바꿉니다. nn.Linear(3 * 224 * 224, 256)의 weight.shape와 공식 3*224*224*256 + 256을 함께 출력합니다.</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>fc224 <span class="op">=</span> nn.Linear(<span class="dv">3</span> <span class="op">*</span> <span class="dv">224</span> <span class="op">*</span> <span class="dv">224</span>, <span class="dv">256</span>)</span>
@@ -561,7 +547,7 @@ tensor([[5., 6.],
 <section id="과제-3-세로-에지-커널" class="level3">
 <h3 class="anchored" data-anchor-id="과제-3-세로-에지-커널">📝 과제 3 · 세로 에지 커널</h3>
 <p>왼쪽 두 열이 10, 나머지가 0인 5×5 흑백 이미지에 이론 6장의 세로 에지 커널 <code>[[1, 0, -1], [1, 0, -1], [1, 0, -1]]</code>을 <code>F.conv2d</code>로 적용합니다. 출력 크기와 값이 큰 위치를 먼저 예상합니다.</p>
-<div id="8a7a748d" class="cell" data-execution_count="14">
+<div id="51137a29" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 이미지는 torch.zeros(1, 5, 5)를 만든 뒤 img_e[0, :, :2] = 10으로 왼쪽 두 열을 채웁니다. 커널은 5절의 k2처럼 (1, 3, 3) 모양의 torch.tensor입니다. 둘 다 unsqueeze(0)으로 축을 하나 더해 F.conv2d에 넣고, 결과의 [0, 0]을 출력합니다.</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>img_e <span class="op">=</span> torch.zeros(<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>)</span>
