@@ -306,23 +306,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>−5, −3, −1 세 칸만 0이 되고 나머지는 그대로입니다.</p>
-<p><code>nn.MaxPool2d(2)</code>는 Max 풀링 층입니다. 2×2 창을 두 칸씩 옮기며 창마다 가장 큰 값 하나만 남깁니다. 층은 <code>(N, C, H, W)</code> 모양을 받으므로, 입력을 처음부터 사진 1장, 채널 1장인 4×4 특성 맵 <code>(1, 1, 4, 4)</code>로 만듭니다. 대괄호를 네 겹 쓰면 축이 네 개입니다.</p>
+<p><code>nn.MaxPool2d(2)</code>는 Max 풀링 층입니다. 2×2 창을 두 칸씩 옮기며 창마다 가장 큰 값 하나만 남깁니다. 층은 <code>(N, C, H, W)</code> 모양을 받으므로 입력은 사진 1장, 채널 1장인 4×4 특성 맵 <code>(1, 1, 4, 4)</code>로 만듭니다. <code>torch.randint(0, 10, (1, 1, 4, 4))</code>는 0부터 9까지의 정수를 무작위로 뽑아 이 모양의 텐서를 만듭니다. 바로 앞의 <code>torch.manual_seed(42)</code>는 무작위 값을 고정해서 누가 실행해도 같은 값이 나오게 합니다.</p>
 <div id="2ace5c74" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>pool <span class="op">=</span> nn.MaxPool2d(<span class="dv">2</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.tensor([[[[<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">1.</span>, <span class="fl">0.</span>],</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    [<span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>, <span class="fl">3.</span>],</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                    [<span class="fl">3.</span>, <span class="fl">0.</span>, <span class="fl">1.</span>, <span class="fl">2.</span>],</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                    [<span class="fl">2.</span>, <span class="fl">4.</span>, <span class="fl">0.</span>, <span class="fl">1.</span>]]]])</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t.shape)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pool(t))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> torch.randint(<span class="dv">0</span>, <span class="dv">10</span>, (<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">4</span>))</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(t)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pool(t))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>torch.Size([1, 1, 4, 4])
-tensor([[[[2., 3.],
-          [4., 2.]]]])</code></pre>
+<pre><code>tensor([[[[2, 7, 6, 4],
+          [6, 5, 0, 4],
+          [0, 3, 8, 4],
+          [0, 4, 1, 2]]]])
+tensor([[[[7, 6],
+          [4, 8]]]])</code></pre>
 </div>
 </div>
-<p>입력은 <code>torch.Size([1, 1, 4, 4])</code>이고, 출력은 <code>[[2., 3.], [4., 2.]]</code>입니다. 창이 네 개이므로 2×2가 나오고, 값은 네 창의 최댓값입니다.</p>
+<p>출력은 <code>[[7, 6], [4, 8]]</code>입니다. 창이 네 개이므로 2×2가 나오고, 값은 네 창의 최댓값입니다.</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
@@ -334,23 +335,23 @@ tensor([[[[2., 3.],
 <tbody>
 <tr class="odd">
 <td>왼쪽 위</td>
-<td>1, 2, 0, 1</td>
-<td>2</td>
+<td>2, 7, 6, 5</td>
+<td>7</td>
 </tr>
 <tr class="even">
 <td>오른쪽 위</td>
-<td>1, 0, 2, 3</td>
-<td>3</td>
+<td>6, 4, 0, 4</td>
+<td>6</td>
 </tr>
 <tr class="odd">
 <td>왼쪽 아래</td>
-<td>3, 0, 2, 4</td>
+<td>0, 3, 0, 4</td>
 <td>4</td>
 </tr>
 <tr class="even">
 <td>오른쪽 아래</td>
-<td>1, 2, 0, 1</td>
-<td>2</td>
+<td>8, 4, 1, 2</td>
+<td>8</td>
 </tr>
 </tbody>
 </table>
