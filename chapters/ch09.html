@@ -204,6 +204,14 @@ window.Quarto = {
   <li><a href="#탐지-모델의-손실-클래스-손실과-박스-손실" id="toc-탐지-모델의-손실-클래스-손실과-박스-손실" class="nav-link" data-scroll-target="#탐지-모델의-손실-클래스-손실과-박스-손실">탐지 모델의 손실: 클래스 손실과 박스 손실</a></li>
   <li><a href="#nms-non-maximum-suppression" id="toc-nms-non-maximum-suppression" class="nav-link" data-scroll-target="#nms-non-maximum-suppression">NMS (Non-Maximum Suppression)</a></li>
   <li><a href="#예측의-정답-판정" id="toc-예측의-정답-판정" class="nav-link" data-scroll-target="#예측의-정답-판정">예측의 정답 판정</a></li>
+  <li><a href="#탐지-모델의-평가-정밀도-재현율-map" id="toc-탐지-모델의-평가-정밀도-재현율-map" class="nav-link" data-scroll-target="#탐지-모델의-평가-정밀도-재현율-map">탐지 모델의 평가: 정밀도, 재현율, mAP</a>
+  <ul class="collapse">
+  <li><a href="#정밀도와-재현율" id="toc-정밀도와-재현율" class="nav-link" data-scroll-target="#정밀도와-재현율">정밀도와 재현율</a></li>
+  <li><a href="#신뢰도-기준과-정밀도재현율" id="toc-신뢰도-기준과-정밀도재현율" class="nav-link" data-scroll-target="#신뢰도-기준과-정밀도재현율">신뢰도 기준과 정밀도·재현율</a></li>
+  <li><a href="#ap-average-precision" id="toc-ap-average-precision" class="nav-link" data-scroll-target="#ap-average-precision">AP (Average Precision)</a></li>
+  <li><a href="#map-mean-average-precision" id="toc-map-mean-average-precision" class="nav-link" data-scroll-target="#map-mean-average-precision">mAP (mean Average Precision)</a></li>
+  <li><a href="#연습-1" id="toc-연습-1" class="nav-link" data-scroll-target="#연습-1">연습</a></li>
+  </ul></li>
   <li><a href="#탐지-모델의-전이-학습" id="toc-탐지-모델의-전이-학습" class="nav-link" data-scroll-target="#탐지-모델의-전이-학습">탐지 모델의 전이 학습</a></li>
   <li><a href="#대표적인-객체탐지-모델" id="toc-대표적인-객체탐지-모델" class="nav-link" data-scroll-target="#대표적인-객체탐지-모델">대표적인 객체탐지 모델</a></li>
   <li><a href="#핵심-요약" id="toc-핵심-요약" class="nav-link" data-scroll-target="#핵심-요약">핵심 요약</a></li>
@@ -248,24 +256,11 @@ window.Quarto = {
 <li>두 박스의 IoU를 <strong>직접 계산</strong>한다</li>
 <li>NMS 절차를 따라 겹친 박스를 정리한다</li>
 <li>IoU로 예측이 맞았는지 판정한다</li>
+<li>정밀도, 재현율, AP, mAP로 탐지 모델의 성능을 평가한다</li>
 </ul>
 </div>
 </div>
-<p>객체탐지는 이미지 안에 있는 물체의 종류와 위치를 함께 찾는 컴퓨터 비전 분야이다.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-객체탐지 (Object Detection)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>이미지 안의 물체마다 위치(바운딩 박스)와 종류(클래스)를 함께 찾는 작업.</p>
-</div>
-</div>
-<p>탐지 모델은 8장까지 다룬 분류 모델과 출력의 형태가 다르다. 같은 이미지에 대해 분류 모델은 “자동차”라는 클래스 하나를 출력하므로, 이미지에 무엇이 있는지는 알 수 있지만 그 물체가 어디에 몇 개 있는지는 알 수 없다. 반면 탐지 모델은 자동차와 사람 각각의 위치에 박스를 그리고 그 박스마다 클래스를 붙여 출력한다.</p>
+<p>지금까지는 주어진 이미지를 특정한 카테고리로 분류하는 분류 모델 상황을 주로 다루었다. 이와 달리 객체탐지 모델은 이미지 내에서 사물의 ’위치’를 특정하고, 해당 위치 내에 있는 사진의 카테고리를 분류하는 두 가지 작업을 동시에 수행하는 모델을 일컫는다.</p>
 <div style="text-align:center;margin:1em 0;">
 <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 350" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
 <defs><marker id="ah9" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#444"></path></marker></defs><rect width="720" height="350" fill="white"></rect><text x="20.0" y="95.0" text-anchor="start" font-size="14" font-weight="700" fill="#222">분류</text><rect x="70" y="25" width="210" height="71.5" fill="#E3F2FD"></rect><rect x="70" y="96.5" width="210" height="58.5" fill="#CFD8DC"></rect><line x1="70" y1="129.0" x2="280" y2="129.0" stroke="white" stroke-width="2" stroke-dasharray="10,8"></line><rect x="70" y="25" width="210" height="130" fill="none" stroke="#90A4AE" stroke-width="1.2"></rect><rect x="130.9" y="87.0" width="49.4" height="22.5" rx="6.0" fill="#EF9A9A"></rect><rect x="138.5" y="90.5" width="16.2" height="13.5" fill="#E3F2FD"></rect><rect x="157.5" y="90.5" width="16.2" height="13.5" fill="#E3F2FD"></rect><rect x="110.0" y="104.5" width="95.0" height="22.5" rx="5.0" fill="#E53935"></rect><circle cx="130.9" cy="128.0" r="8.5" fill="#37474F"></circle><circle cx="184.1" cy="128.0" r="8.5" fill="#37474F"></circle><circle cx="241.0" cy="80.7" r="7.0" fill="#FFCC80"></circle><rect x="232.6" y="89.6" width="16.7" height="26.9" rx="4.4" fill="#1E88E5"></rect><line x1="237.7" y1="115.2" x2="236.6" y2="137.0" stroke="#263238" stroke-width="3.5" stroke-linecap="round"></line><line x1="244.3" y1="115.2" x2="245.4" y2="137.0" stroke="#263238" stroke-width="3.5" stroke-linecap="round"></line><line x1="290" y1="90" x2="330" y2="90" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><polygon points="340,50 410,66.0 410,114.0 340,130" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.4"></polygon><text x="375.0" y="94.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">CNN</text><line x1="420" y1="90" x2="460" y2="90" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><rect x="470" y="65" width="230" height="50" rx="8" fill="#F5F5F5" stroke="#9E9E9E"></rect><text x="585.0" y="95.0" text-anchor="middle" font-size="14" font-weight="700" fill="#222">자동차</text><text x="585.0" y="137.0" text-anchor="middle" font-size="11" font-weight="400" fill="#757575">이미지 전체에 클래스 하나</text><text x="20.0" y="265.0" text-anchor="start" font-size="14" font-weight="700" fill="#222">탐지</text><rect x="70" y="195" width="210" height="71.5" fill="#E3F2FD"></rect><rect x="70" y="266.5" width="210" height="58.5" fill="#CFD8DC"></rect><line x1="70" y1="299.0" x2="280" y2="299.0" stroke="white" stroke-width="2" stroke-dasharray="10,8"></line><rect x="70" y="195" width="210" height="130" fill="none" stroke="#90A4AE" stroke-width="1.2"></rect><rect x="130.9" y="257.0" width="49.4" height="22.5" rx="6.0" fill="#EF9A9A"></rect><rect x="138.5" y="260.5" width="16.2" height="13.5" fill="#E3F2FD"></rect><rect x="157.5" y="260.5" width="16.2" height="13.5" fill="#E3F2FD"></rect><rect x="110.0" y="274.5" width="95.0" height="22.5" rx="5.0" fill="#E53935"></rect><circle cx="130.9" cy="298.0" r="8.5" fill="#37474F"></circle><circle cx="184.1" cy="298.0" r="8.5" fill="#37474F"></circle><circle cx="241.0" cy="250.7" r="7.0" fill="#FFCC80"></circle><rect x="232.6" y="259.6" width="16.7" height="26.9" rx="4.4" fill="#1E88E5"></rect><line x1="237.7" y1="285.2" x2="236.6" y2="307.0" stroke="#263238" stroke-width="3.5" stroke-linecap="round"></line><line x1="244.3" y1="285.2" x2="245.4" y2="307.0" stroke="#263238" stroke-width="3.5" stroke-linecap="round"></line><rect x="106.0" y="251.0" width="103.0" height="60.0" fill="none" stroke="#E53935" stroke-width="2.2" stroke-opacity="1.0"></rect><rect x="106.0" y="234.0" width="31.6" height="17" fill="#E53935" fill-opacity="1.0"></rect><text x="111.0" y="246.5" text-anchor="start" font-size="11" font-weight="700" fill="white">자동차</text><rect x="227.0" y="239.0" width="30.0" height="72.0" fill="none" stroke="#1E88E5" stroke-width="2.2" stroke-opacity="1.0"></rect><rect x="227.0" y="222.0" width="24.4" height="17" fill="#1E88E5" fill-opacity="1.0"></rect><text x="232.0" y="234.5" text-anchor="start" font-size="11" font-weight="700" fill="white">사람</text><line x1="290" y1="260" x2="330" y2="260" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><polygon points="340,220 410,236.0 410,284.0 340,300" fill="#C8E6C9" stroke="#2E7D32" stroke-width="1.4"></polygon><text x="375.0" y="264.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">CNN</text><line x1="420" y1="260" x2="460" y2="260" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><rect x="470" y="220" width="230" height="80" rx="8" fill="#F5F5F5" stroke="#9E9E9E"></rect><text x="485.0" y="250.0" text-anchor="start" font-size="13" font-weight="700" fill="#E53935">자동차 (x1, y1, w1, h1)</text><text x="485.0" y="277.0" text-anchor="start" font-size="13" font-weight="700" fill="#1E88E5">사람 (x2, y2, w2, h2)</text><text x="585.0" y="322.0" text-anchor="middle" font-size="11" font-weight="400" fill="#757575">물체마다 클래스와 박스</text>
@@ -329,7 +324,7 @@ window.Quarto = {
 <hr>
 <section id="탐지-모델의-출력-분류와-회귀" class="level2">
 <h2 class="anchored" data-anchor-id="탐지-모델의-출력-분류와-회귀">탐지 모델의 출력: 분류와 회귀</h2>
-<p>객체탐지 모델을 이해하려면 모델이 무엇을 출력하는지, 그 출력을 정답과 어떻게 비교하여 학습시키는지, 학습된 모델의 출력을 어떻게 정리하고 평가하는지를 알아야 한다. 이 장에서는 이 순서에 따라 탐지 모델의 출력, IoU, 레이블링과 레이블 할당, 손실, NMS, 정답 판정을 차례로 다루고, 마지막으로 탐지 모델의 전이 학습과 대표적인 객체탐지 모델을 다룬다.</p>
+<p>객체탐지 모델을 이해하려면 모델이 무엇을 출력하는지, 그 출력을 정답과 어떻게 비교하여 학습시키는지, 학습된 모델의 출력을 어떻게 정리하고 평가하는지를 알아야 한다. 이 장에서는 이 순서에 따라 탐지 모델의 출력, IoU, 레이블링과 레이블 할당, 손실, NMS, 정답 판정과 성능 평가를 차례로 다루고, 마지막으로 탐지 모델의 전이 학습과 대표적인 객체탐지 모델을 다룬다.</p>
 <p>탐지 모델의 출력은 분류와 회귀의 두 부분으로 이루어진다. 물체의 종류를 찾는 것은 정해진 클래스 중 하나를 고르는 분류이고, 물체의 위치를 찾는 것은 박스의 좌표를 숫자로 예측하는 회귀이다.</p>
 <section id="바운딩-박스" class="level3">
 <h3 class="anchored" data-anchor-id="바운딩-박스">바운딩 박스</h3>
@@ -489,10 +484,10 @@ IoU (Intersection over Union)
 <h3 class="anchored" data-anchor-id="예측-박스에-따른-iou의-변화">예측 박스에 따른 IoU의 변화</h3>
 <p>다음은 정답 박스를 위의 예시와 같이 두고, 예측 박스의 위치와 크기에 따라 IoU가 어떻게 달라지는지 나타낸 것이다.</p>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="138" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 137;"><span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a>viewof px <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 x"</span>})</span>
-<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>viewof py <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">4</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 y"</span>})</span>
-<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>viewof pw <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 w"</span>})</span>
-<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a>viewof ph <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 h"</span>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb1" data-startfrom="131" data-source-offset="-0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 130;"><span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>viewof px <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 x"</span>})</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a>viewof py <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">4</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 y"</span>})</span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>viewof pw <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">4</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 w"</span>})</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>viewof ph <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">range</span>([<span class="dv">1</span><span class="op">,</span> <span class="dv">3</span>]<span class="op">,</span> {<span class="dt">step</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="dt">label</span><span class="op">:</span> <span class="st">"예측 박스 h"</span>})</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <div id="ojs-cell-1-1" data-nodetype="declaration">
@@ -523,30 +518,30 @@ IoU (Intersection over Union)
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="145" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 144;"><span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> A <span class="op">=</span> {<span class="dt">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">h</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span> B <span class="op">=</span> {<span class="dt">x</span><span class="op">:</span> px<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> py<span class="op">,</span> <span class="dt">w</span><span class="op">:</span> pw<span class="op">,</span> <span class="dt">h</span><span class="op">:</span> ph}<span class="op">;</span></span>
-<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ix <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(A<span class="op">.</span><span class="at">x</span> <span class="op">+</span> A<span class="op">.</span><span class="at">w</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span> <span class="op">+</span> B<span class="op">.</span><span class="at">w</span>) <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">x</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span>))<span class="op">;</span></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> iy <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(A<span class="op">.</span><span class="at">y</span> <span class="op">+</span> A<span class="op">.</span><span class="at">h</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span> <span class="op">+</span> B<span class="op">.</span><span class="at">h</span>) <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">y</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span>))<span class="op">;</span></span>
-<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> inter <span class="op">=</span> ix <span class="op">*</span> iy<span class="op">,</span> uni <span class="op">=</span> A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span> <span class="op">+</span> B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span> <span class="op">-</span> inter<span class="op">,</span> v <span class="op">=</span> inter <span class="op">/</span> uni<span class="op">;</span></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cs <span class="op">=</span> <span class="dv">34</span><span class="op">,</span> gx <span class="op">=</span> <span class="dv">20</span><span class="op">,</span> gy <span class="op">=</span> <span class="dv">16</span><span class="op">,</span> W <span class="op">=</span> <span class="dv">680</span><span class="op">,</span> H <span class="op">=</span> <span class="dv">270</span><span class="op">;</span></span>
-<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">create</span>(<span class="st">"svg"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)<span class="op">.</span><span class="fu">style</span>(<span class="st">"max-width"</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>W<span class="sc">}</span><span class="vs">px`</span>)<span class="op">.</span><span class="fu">style</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"Pretendard, sans-serif"</span>)<span class="op">;</span></span>
-<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++</span>) svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> gx <span class="op">+</span> i <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> gy)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> gx <span class="op">+</span> i <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> gy <span class="op">+</span> <span class="dv">7</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#E0E0E0"</span>)<span class="op">;</span></span>
-<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;=</span> <span class="dv">7</span><span class="op">;</span> j<span class="op">++</span>) svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> gx)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> gy <span class="op">+</span> j <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> gx <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> gy <span class="op">+</span> j <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#E0E0E0"</span>)<span class="op">;</span></span>
-<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rect <span class="op">=</span> (r<span class="op">,</span> fill<span class="op">,</span> op<span class="op">,</span> stroke<span class="op">,</span> dash) <span class="kw">=&gt;</span> svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"rect"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> gx <span class="op">+</span> r<span class="op">.</span><span class="at">x</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> gy <span class="op">+</span> r<span class="op">.</span><span class="at">y</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> r<span class="op">.</span><span class="at">w</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"height"</span><span class="op">,</span> r<span class="op">.</span><span class="at">h</span> <span class="op">*</span> cs)</span>
-<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> fill)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill-opacity"</span><span class="op">,</span> op)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> stroke)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> stroke <span class="op">===</span> <span class="st">"none"</span> <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> <span class="fl">2.2</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-dasharray"</span><span class="op">,</span> dash <span class="op">?</span> <span class="st">"6,4"</span> <span class="op">:</span> <span class="kw">null</span>)<span class="op">;</span></span>
-<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(A<span class="op">,</span> <span class="st">"#2E7D32"</span><span class="op">,</span> <span class="fl">0.18</span><span class="op">,</span> <span class="st">"#2E7D32"</span><span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
-<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(B<span class="op">,</span> <span class="st">"#1565C0"</span><span class="op">,</span> <span class="fl">0.18</span><span class="op">,</span> <span class="st">"#1565C0"</span><span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
-<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (inter <span class="op">&gt;</span> <span class="dv">0</span>) <span class="fu">rect</span>({<span class="dt">x</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">x</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">y</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span>)<span class="op">,</span> <span class="dt">w</span><span class="op">:</span> ix<span class="op">,</span> <span class="dt">h</span><span class="op">:</span> iy}<span class="op">,</span> <span class="st">"#6A1B9A"</span><span class="op">,</span> <span class="fl">0.45</span><span class="op">,</span> <span class="st">"none"</span><span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
-<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tx <span class="op">=</span> gx <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> cs <span class="op">+</span> <span class="dv">30</span><span class="op">;</span></span>
-<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> (y<span class="op">,</span> s<span class="op">,</span> c<span class="op">,</span> size <span class="op">=</span> <span class="dv">14</span>) <span class="kw">=&gt;</span> svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> tx)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> y)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> size)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-weight"</span><span class="op">,</span> <span class="dv">700</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> c)<span class="op">.</span><span class="fu">text</span>(s)<span class="op">;</span></span>
-<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">40</span><span class="op">,</span> <span class="vs">`정답 박스: </span><span class="sc">${</span>A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#2E7D32"</span>)<span class="op">;</span></span>
-<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">68</span><span class="op">,</span> <span class="vs">`예측 박스: </span><span class="sc">${</span>B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#1565C0"</span>)<span class="op">;</span></span>
-<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">96</span><span class="op">,</span> <span class="vs">`겹친 부분: </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#6A1B9A"</span>)<span class="op">;</span></span>
-<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">134</span><span class="op">,</span> <span class="vs">`합집합: </span><span class="sc">${</span>A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs"> - </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs"> = </span><span class="sc">${</span>uni<span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#222"</span>)<span class="op">;</span></span>
-<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">172</span><span class="op">,</span> <span class="vs">`IoU = </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs"> / </span><span class="sc">${</span>uni<span class="sc">}</span><span class="vs"> = </span><span class="sc">${</span>v<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="st">"#222"</span><span class="op">,</span> <span class="dv">17</span>)<span class="op">;</span></span>
-<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">206</span><span class="op">,</span> v <span class="op">&gt;=</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">"0.5 이상: 맞은 박스로 본다"</span> <span class="op">:</span> <span class="st">"0.5 미만: 빗나간 박스로 본다"</span><span class="op">,</span> v <span class="op">&gt;=</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">"#2E7D32"</span> <span class="op">:</span> <span class="st">"#C62828"</span>)<span class="op">;</span></span>
-<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> svg<span class="op">.</span><span class="fu">node</span>()<span class="op">;</span></span>
-<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code hidden" id="cb2" data-startfrom="138" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 137;"><span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> A <span class="op">=</span> {<span class="dt">x</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">h</span><span class="op">:</span> <span class="dv">3</span>}<span class="op">,</span> B <span class="op">=</span> {<span class="dt">x</span><span class="op">:</span> px<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> py<span class="op">,</span> <span class="dt">w</span><span class="op">:</span> pw<span class="op">,</span> <span class="dt">h</span><span class="op">:</span> ph}<span class="op">;</span></span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> ix <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(A<span class="op">.</span><span class="at">x</span> <span class="op">+</span> A<span class="op">.</span><span class="at">w</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span> <span class="op">+</span> B<span class="op">.</span><span class="at">w</span>) <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">x</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span>))<span class="op">;</span></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> iy <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(<span class="dv">0</span><span class="op">,</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">min</span>(A<span class="op">.</span><span class="at">y</span> <span class="op">+</span> A<span class="op">.</span><span class="at">h</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span> <span class="op">+</span> B<span class="op">.</span><span class="at">h</span>) <span class="op">-</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">y</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span>))<span class="op">;</span></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> inter <span class="op">=</span> ix <span class="op">*</span> iy<span class="op">,</span> uni <span class="op">=</span> A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span> <span class="op">+</span> B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span> <span class="op">-</span> inter<span class="op">,</span> v <span class="op">=</span> inter <span class="op">/</span> uni<span class="op">;</span></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cs <span class="op">=</span> <span class="dv">34</span><span class="op">,</span> gx <span class="op">=</span> <span class="dv">20</span><span class="op">,</span> gy <span class="op">=</span> <span class="dv">16</span><span class="op">,</span> W <span class="op">=</span> <span class="dv">680</span><span class="op">,</span> H <span class="op">=</span> <span class="dv">270</span><span class="op">;</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> svg <span class="op">=</span> d3<span class="op">.</span><span class="fu">create</span>(<span class="st">"svg"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"viewBox"</span><span class="op">,</span> <span class="vs">`0 0 </span><span class="sc">${</span>W<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>H<span class="sc">}</span><span class="vs">`</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> <span class="st">"100%"</span>)<span class="op">.</span><span class="fu">style</span>(<span class="st">"max-width"</span><span class="op">,</span> <span class="vs">`</span><span class="sc">${</span>W<span class="sc">}</span><span class="vs">px`</span>)<span class="op">.</span><span class="fu">style</span>(<span class="st">"font-family"</span><span class="op">,</span> <span class="st">"Pretendard, sans-serif"</span>)<span class="op">;</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;=</span> <span class="dv">10</span><span class="op">;</span> i<span class="op">++</span>) svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> gx <span class="op">+</span> i <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> gy)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> gx <span class="op">+</span> i <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> gy <span class="op">+</span> <span class="dv">7</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#E0E0E0"</span>)<span class="op">;</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (<span class="kw">let</span> j <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> j <span class="op">&lt;=</span> <span class="dv">7</span><span class="op">;</span> j<span class="op">++</span>) svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"line"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x1"</span><span class="op">,</span> gx)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y1"</span><span class="op">,</span> gy <span class="op">+</span> j <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x2"</span><span class="op">,</span> gx <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y2"</span><span class="op">,</span> gy <span class="op">+</span> j <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> <span class="st">"#E0E0E0"</span>)<span class="op">;</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> rect <span class="op">=</span> (r<span class="op">,</span> fill<span class="op">,</span> op<span class="op">,</span> stroke<span class="op">,</span> dash) <span class="kw">=&gt;</span> svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"rect"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> gx <span class="op">+</span> r<span class="op">.</span><span class="at">x</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> gy <span class="op">+</span> r<span class="op">.</span><span class="at">y</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"width"</span><span class="op">,</span> r<span class="op">.</span><span class="at">w</span> <span class="op">*</span> cs)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"height"</span><span class="op">,</span> r<span class="op">.</span><span class="at">h</span> <span class="op">*</span> cs)</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> fill)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill-opacity"</span><span class="op">,</span> op)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke"</span><span class="op">,</span> stroke)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-width"</span><span class="op">,</span> stroke <span class="op">===</span> <span class="st">"none"</span> <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> <span class="fl">2.2</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"stroke-dasharray"</span><span class="op">,</span> dash <span class="op">?</span> <span class="st">"6,4"</span> <span class="op">:</span> <span class="kw">null</span>)<span class="op">;</span></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(A<span class="op">,</span> <span class="st">"#2E7D32"</span><span class="op">,</span> <span class="fl">0.18</span><span class="op">,</span> <span class="st">"#2E7D32"</span><span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rect</span>(B<span class="op">,</span> <span class="st">"#1565C0"</span><span class="op">,</span> <span class="fl">0.18</span><span class="op">,</span> <span class="st">"#1565C0"</span><span class="op">,</span> <span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (inter <span class="op">&gt;</span> <span class="dv">0</span>) <span class="fu">rect</span>({<span class="dt">x</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">x</span><span class="op">,</span> B<span class="op">.</span><span class="at">x</span>)<span class="op">,</span> <span class="dt">y</span><span class="op">:</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">max</span>(A<span class="op">.</span><span class="at">y</span><span class="op">,</span> B<span class="op">.</span><span class="at">y</span>)<span class="op">,</span> <span class="dt">w</span><span class="op">:</span> ix<span class="op">,</span> <span class="dt">h</span><span class="op">:</span> iy}<span class="op">,</span> <span class="st">"#6A1B9A"</span><span class="op">,</span> <span class="fl">0.45</span><span class="op">,</span> <span class="st">"none"</span><span class="op">,</span> <span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> tx <span class="op">=</span> gx <span class="op">+</span> <span class="dv">10</span> <span class="op">*</span> cs <span class="op">+</span> <span class="dv">30</span><span class="op">;</span></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> t <span class="op">=</span> (y<span class="op">,</span> s<span class="op">,</span> c<span class="op">,</span> size <span class="op">=</span> <span class="dv">14</span>) <span class="kw">=&gt;</span> svg<span class="op">.</span><span class="fu">append</span>(<span class="st">"text"</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"x"</span><span class="op">,</span> tx)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"y"</span><span class="op">,</span> y)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-size"</span><span class="op">,</span> size)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"font-weight"</span><span class="op">,</span> <span class="dv">700</span>)<span class="op">.</span><span class="fu">attr</span>(<span class="st">"fill"</span><span class="op">,</span> c)<span class="op">.</span><span class="fu">text</span>(s)<span class="op">;</span></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">40</span><span class="op">,</span> <span class="vs">`정답 박스: </span><span class="sc">${</span>A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#2E7D32"</span>)<span class="op">;</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">68</span><span class="op">,</span> <span class="vs">`예측 박스: </span><span class="sc">${</span>B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#1565C0"</span>)<span class="op">;</span></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">96</span><span class="op">,</span> <span class="vs">`겹친 부분: </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#6A1B9A"</span>)<span class="op">;</span></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">134</span><span class="op">,</span> <span class="vs">`합집합: </span><span class="sc">${</span>A<span class="op">.</span><span class="at">w</span> <span class="op">*</span> A<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs"> + </span><span class="sc">${</span>B<span class="op">.</span><span class="at">w</span> <span class="op">*</span> B<span class="op">.</span><span class="at">h</span><span class="sc">}</span><span class="vs"> - </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs"> = </span><span class="sc">${</span>uni<span class="sc">}</span><span class="vs">칸`</span><span class="op">,</span> <span class="st">"#222"</span>)<span class="op">;</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">172</span><span class="op">,</span> <span class="vs">`IoU = </span><span class="sc">${</span>inter<span class="sc">}</span><span class="vs"> / </span><span class="sc">${</span>uni<span class="sc">}</span><span class="vs"> = </span><span class="sc">${</span>v<span class="op">.</span><span class="fu">toFixed</span>(<span class="dv">2</span>)<span class="sc">}</span><span class="vs">`</span><span class="op">,</span> <span class="st">"#222"</span><span class="op">,</span> <span class="dv">17</span>)<span class="op">;</span></span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>(<span class="dv">206</span><span class="op">,</span> v <span class="op">&gt;=</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">"0.5 이상: 맞은 박스로 본다"</span> <span class="op">:</span> <span class="st">"0.5 미만: 빗나간 박스로 본다"</span><span class="op">,</span> v <span class="op">&gt;=</span> <span class="fl">0.5</span> <span class="op">?</span> <span class="st">"#2E7D32"</span> <span class="op">:</span> <span class="st">"#C62828"</span>)<span class="op">;</span></span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> svg<span class="op">.</span><span class="fu">node</span>()<span class="op">;</span></span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="expression">
 
@@ -558,7 +553,7 @@ IoU (Intersection over Union)
 <h3 class="anchored" data-anchor-id="연습">연습</h3>
 <p>정답 박스 <span class="math inline">\((x=1,\ y=1,\ w=4,\ h=4)\)</span>와 예측 박스 <span class="math inline">\((x=3,\ y=3,\ w=4,\ h=4)\)</span>의 IoU를 구하라.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -567,7 +562,7 @@ IoU (Intersection over Union)
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>정답은 <span class="math inline">\(x\)</span> 1~5, <span class="math inline">\(y\)</span> 1~5이고 예측은 <span class="math inline">\(x\)</span> 3~7, <span class="math inline">\(y\)</span> 3~7이다. 교집합은 <span class="math inline">\(x\)</span> max(1, 3) ~ min(5, 7) = 3~5, <span class="math inline">\(y\)</span>도 3~5이므로 넓이 <span class="math inline">\(2 \times 2 = 4\)</span>다. 합집합은 <span class="math inline">\(16 + 16 - 4 = 28\)</span>이고 IoU는 <span class="math inline">\(4 / 28 = \mathbf{0.14}\)</span>다.</p>
 </div>
@@ -779,6 +774,218 @@ NMS (Non-Maximum Suppression, 비최대 억제)
 <p>두 번째 예측은 클래스는 맞았지만 IoU가 0.12로 0.5보다 작으므로 틀린 예측이다. 세 번째 예측은 IoU가 0.79로 박스는 거의 맞았지만 사람을 자동차로 예측했으므로 역시 틀린 예측이다.</p>
 <hr>
 </section>
+<section id="탐지-모델의-평가-정밀도-재현율-map" class="level2">
+<h2 class="anchored" data-anchor-id="탐지-모델의-평가-정밀도-재현율-map">탐지 모델의 평가: 정밀도, 재현율, mAP</h2>
+<p>정답 판정은 예측 박스 하나하나가 맞았는지를 알려 줄 뿐이므로, 탐지 모델의 성능을 나타내려면 판정 결과를 모아 하나의 수치로 요약해야 한다. 분류 모델은 이미지마다 클래스 하나를 출력하므로 전체 이미지 중 클래스를 맞힌 이미지의 비율인 정확도로 성능을 나타낼 수 있다. 반면 탐지 모델은 이미지 안에 있는 물체의 수와 다른 수의 박스를 출력할 수 있으므로, 물체가 없는 곳에 박스를 그리는 실수와 있는 물체를 찾지 못하는 실수가 따로 일어난다. 따라서 탐지 모델의 성능은 이 두 가지 실수를 각각 나타내는 정밀도와 재현율에서 출발하여 평가한다.</p>
+<section id="정밀도와-재현율" class="level3">
+<h3 class="anchored" data-anchor-id="정밀도와-재현율">정밀도와 재현율</h3>
+<p>예를 들어 아래 그림과 같이 자동차 네 대가 있는 이미지에서 탐지 모델이 자동차 박스 다섯 개를 출력했다고 하자. 앞에서 본 기준에 따라 예측 박스마다 가장 많이 겹치는 정답 박스와의 IoU를 구하여 판정하면 아래 표와 같다.</p>
+<div style="text-align:center;margin:1em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 232" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
+<defs><marker id="ah9" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#444"></path></marker></defs><rect width="720" height="232" fill="white"></rect><rect x="10" y="10" width="700" height="104.5" fill="#E3F2FD"></rect><rect x="10" y="114.5" width="700" height="85.5" fill="#CFD8DC"></rect><line x1="10" y1="162.0" x2="710" y2="162.0" stroke="white" stroke-width="2" stroke-dasharray="10,8"></line><rect x="10" y="10" width="700" height="190" fill="none" stroke="#90A4AE" stroke-width="1.2"></rect><rect x="69.2" y="107.0" width="57.2" height="24.3" rx="6.5" fill="#EF9A9A"></rect><rect x="78.0" y="110.8" width="18.7" height="14.6" fill="#E3F2FD"></rect><rect x="100.0" y="110.8" width="18.7" height="14.6" fill="#E3F2FD"></rect><rect x="45.0" y="125.9" width="110.0" height="24.3" rx="5.4" fill="#E53935"></rect><circle cx="69.2" cy="151.3" r="9.2" fill="#37474F"></circle><circle cx="130.8" cy="151.3" r="9.2" fill="#37474F"></circle><rect x="40.0" y="102.0" width="120.0" height="62.0" fill="none" stroke="#2E7D32" stroke-width="2.2" stroke-opacity="1.0"></rect><text x="100.0" y="179.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">A</text><rect x="227.4" y="115.0" width="53.0" height="22.5" rx="6.0" fill="#EF9A9A"></rect><rect x="235.6" y="118.5" width="17.3" height="13.5" fill="#E3F2FD"></rect><rect x="256.0" y="118.5" width="17.3" height="13.5" fill="#E3F2FD"></rect><rect x="205.0" y="132.5" width="102.0" height="22.5" rx="5.0" fill="#E53935"></rect><circle cx="227.4" cy="156.0" r="8.5" fill="#37474F"></circle><circle cx="284.6" cy="156.0" r="8.5" fill="#37474F"></circle><rect x="200.0" y="110.0" width="112.0" height="58.0" fill="none" stroke="#2E7D32" stroke-width="2.2" stroke-opacity="1.0"></rect><text x="256.0" y="183.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">B</text><rect x="385.5" y="109.0" width="60.3" height="25.2" rx="6.7" fill="#EF9A9A"></rect><rect x="394.8" y="112.9" width="19.7" height="15.1" fill="#E3F2FD"></rect><rect x="418.0" y="112.9" width="19.7" height="15.1" fill="#E3F2FD"></rect><rect x="360.0" y="128.6" width="116.0" height="25.2" rx="5.6" fill="#E53935"></rect><circle cx="385.5" cy="154.9" r="9.5" fill="#37474F"></circle><circle cx="450.5" cy="154.9" r="9.5" fill="#37474F"></circle><rect x="355.0" y="104.0" width="126.0" height="64.0" fill="none" stroke="#2E7D32" stroke-width="2.2" stroke-opacity="1.0"></rect><text x="418.0" y="183.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">C</text><rect x="573.9" y="125.0" width="44.7" height="18.9" rx="5.0" fill="#EF9A9A"></rect><rect x="580.8" y="127.9" width="14.6" height="11.3" fill="#E3F2FD"></rect><rect x="598.0" y="127.9" width="14.6" height="11.3" fill="#E3F2FD"></rect><rect x="555.0" y="139.7" width="86.0" height="18.9" rx="4.2" fill="#E53935"></rect><circle cx="573.9" cy="159.4" r="7.1" fill="#37474F"></circle><circle cx="622.1" cy="159.4" r="7.1" fill="#37474F"></circle><rect x="550.0" y="120.0" width="96.0" height="50.0" fill="none" stroke="#2E7D32" stroke-width="2.2" stroke-opacity="1.0"></rect><text x="598.0" y="185.0" text-anchor="middle" font-size="12" font-weight="700" fill="#2E7D32">D</text><rect x="44.0" y="105.0" width="120.0" height="62.0" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-opacity="1.0" stroke-dasharray="6,4"></rect><rect x="44.0" y="88.0" width="60.4" height="17" fill="#1565C0" fill-opacity="1.0"></rect><text x="49.0" y="100.5" text-anchor="start" font-size="11" font-weight="700" fill="white">P1 0.95</text><rect x="350.0" y="102.0" width="128.0" height="66.0" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-opacity="1.0" stroke-dasharray="6,4"></rect><rect x="350.0" y="85.0" width="60.4" height="17" fill="#1565C0" fill-opacity="1.0"></rect><text x="355.0" y="97.5" text-anchor="start" font-size="11" font-weight="700" fill="white">P2 0.90</text><rect x="240.0" y="32.0" width="70.0" height="44.0" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-opacity="1.0" stroke-dasharray="6,4"></rect><rect x="240.0" y="15.0" width="60.4" height="17" fill="#1565C0" fill-opacity="1.0"></rect><text x="245.0" y="27.5" text-anchor="start" font-size="11" font-weight="700" fill="white">P3 0.80</text><rect x="214.0" y="118.0" width="112.0" height="58.0" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-opacity="1.0" stroke-dasharray="6,4"></rect><rect x="214.0" y="101.0" width="60.4" height="17" fill="#1565C0" fill-opacity="1.0"></rect><text x="219.0" y="113.5" text-anchor="start" font-size="11" font-weight="700" fill="white">P4 0.70</text><rect x="592.0" y="102.0" width="92.0" height="54.0" fill="none" stroke="#1565C0" stroke-width="2.2" stroke-opacity="1.0" stroke-dasharray="6,4"></rect><rect x="592.0" y="85.0" width="60.4" height="17" fill="#1565C0" fill-opacity="1.0"></rect><text x="597.0" y="97.5" text-anchor="start" font-size="11" font-weight="700" fill="white">P5 0.60</text><rect x="200" y="216" width="14" height="4" fill="#2E7D32"></rect><text x="220.0" y="222.0" text-anchor="start" font-size="11" font-weight="400" fill="#333">정답 박스 A~D</text><rect x="360" y="216" width="14" height="4" fill="#1565C0"></rect><text x="380.0" y="222.0" text-anchor="start" font-size="11" font-weight="400" fill="#333">예측 박스(점선)와 신뢰도</text>
+</svg>
+</div>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>예측</th>
+<th style="text-align: center;">신뢰도</th>
+<th style="text-align: center;">가장 많이 겹치는 정답 박스</th>
+<th style="text-align: center;">IoU</th>
+<th>판정</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>P1</td>
+<td style="text-align: center;">0.95</td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">0.85</td>
+<td>맞음</td>
+</tr>
+<tr class="even">
+<td>P2</td>
+<td style="text-align: center;">0.90</td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">0.91</td>
+<td>맞음</td>
+</tr>
+<tr class="odd">
+<td>P3</td>
+<td style="text-align: center;">0.80</td>
+<td style="text-align: center;">없음</td>
+<td style="text-align: center;">0.00</td>
+<td>틀림</td>
+</tr>
+<tr class="even">
+<td>P4</td>
+<td style="text-align: center;">0.70</td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;">0.61</td>
+<td>맞음</td>
+</tr>
+<tr class="odd">
+<td>P5</td>
+<td style="text-align: center;">0.60</td>
+<td style="text-align: center;">D</td>
+<td style="text-align: center;">0.25</td>
+<td>틀림</td>
+</tr>
+</tbody>
+</table>
+<p>다섯 개의 예측 중 맞은 박스는 P1, P2, P4의 세 개이다. P3는 자동차가 없는 하늘에 그린 박스이고, P5는 자동차 D와 겹치기는 하지만 IoU가 0.5보다 작으므로 틀린 박스이다. 즉 이 모델은 틀린 박스를 두 개 출력하였고, 자동차 네 대 중 D를 찾지 못하였다. 앞의 실수는 정밀도로, 뒤의 실수는 재현율로 나타낸다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+정밀도 (Precision)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>모델이 출력한 박스 가운데 맞은 박스의 비율.</p>
+<p><span class="math display">\[\text{정밀도} = \frac{\text{맞은 박스 수}}{\text{출력한 박스 수}}\]</span></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+재현율 (Recall)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>정답 박스 가운데 모델이 찾아낸 박스의 비율.</p>
+<p><span class="math display">\[\text{재현율} = \frac{\text{맞은 박스 수}}{\text{정답 박스 수}}\]</span></p>
+</div>
+</div>
+<p>위의 예시에서 정밀도는 맞은 박스 3개를 출력한 박스 5개로 나눈 <span class="math inline">\(3/5 = 0.60\)</span>이고, 재현율은 맞은 박스 3개를 정답 박스 4개로 나눈 <span class="math inline">\(3/4 = 0.75\)</span>이다. 정밀도가 낮다는 것은 모델이 출력한 박스 중 틀린 박스가 많다는 것을 의미하고, 재현율이 낮다는 것은 모델이 찾지 못한 물체가 많다는 것을 의미한다.</p>
+</section>
+<section id="신뢰도-기준과-정밀도재현율" class="level3">
+<h3 class="anchored" data-anchor-id="신뢰도-기준과-정밀도재현율">신뢰도 기준과 정밀도·재현율</h3>
+<p>앞의 “출력 개수와 후보 박스”에서 본 것처럼 탐지 모델은 신뢰도가 기준값 이상인 박스만 남기므로, 정밀도와 재현율은 이 기준값에 따라 달라진다. 위의 예시에서 기준값을 바꿔 가며 남는 박스로 정밀도와 재현율을 구하면 다음과 같다.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">신뢰도 기준</th>
+<th>남는 예측</th>
+<th style="text-align: center;">맞은 박스 수</th>
+<th style="text-align: center;">정밀도</th>
+<th style="text-align: center;">재현율</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.95</td>
+<td>P1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1/1 = 1.00</td>
+<td style="text-align: center;">1/4 = 0.25</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.90</td>
+<td>P1, P2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2/2 = 1.00</td>
+<td style="text-align: center;">2/4 = 0.50</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.80</td>
+<td>P1, P2, P3</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2/3 = 0.67</td>
+<td style="text-align: center;">2/4 = 0.50</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.70</td>
+<td>P1 ~ P4</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3/4 = 0.75</td>
+<td style="text-align: center;">3/4 = 0.75</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.60</td>
+<td>P1 ~ P5</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3/5 = 0.60</td>
+<td style="text-align: center;">3/4 = 0.75</td>
+</tr>
+</tbody>
+</table>
+<p>기준값을 높이면 신뢰도가 높은 박스만 남으므로 정밀도는 대체로 높아지지만 찾지 못하는 물체가 늘어나 재현율은 낮아지고, 기준값을 낮추면 그 반대가 된다. 이처럼 정밀도와 재현율은 기준값에 따라 서로 반대 방향으로 움직이므로, 기준값 하나에서 구한 정밀도와 재현율만으로는 모델의 성능을 나타낼 수 없다.</p>
+</section>
+<section id="ap-average-precision" class="level3">
+<h3 class="anchored" data-anchor-id="ap-average-precision">AP (Average Precision)</h3>
+<p>이를 해결하는 방법은 모든 기준값에서의 정밀도와 재현율을 함께 반영한 하나의 수치를 사용하는 것이다. 위 표의 재현율을 가로축, 정밀도를 세로축으로 하여 점을 찍으면 아래 그림과 같다. 재현율은 맞은 박스가 나올 때만 늘어나므로, 맞은 박스가 나올 때마다의 정밀도를 높이로 하여 계단 모양으로 이은 선을 정밀도-재현율 곡선이라고 한다. 좋은 모델일수록 재현율이 높아져도 정밀도가 떨어지지 않으므로 곡선이 위쪽에 머물고, 곡선 아래의 넓이도 커진다. 이 넓이를 AP라고 한다.</p>
+<div style="text-align:center;margin:1em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 325" width="100%" style="max-width:720px;font-family:Pretendard, 'Noto Sans CJK KR', sans-serif;display:block;margin:1.2em auto;">
+<defs><marker id="ah9" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#444"></path></marker></defs><rect width="720" height="325" fill="white"></rect><rect x="70.0" y="55.0" width="95.0" height="220.0" fill="#6A1B9A" fill-opacity="0.16" stroke="#6A1B9A" stroke-width="0.8" stroke-opacity="0.5"></rect><text x="117.5" y="169.0" text-anchor="middle" font-size="12" font-weight="700" fill="#6A1B9A">1.00</text><rect x="165.0" y="55.0" width="95.0" height="220.0" fill="#6A1B9A" fill-opacity="0.16" stroke="#6A1B9A" stroke-width="0.8" stroke-opacity="0.5"></rect><text x="212.5" y="169.0" text-anchor="middle" font-size="12" font-weight="700" fill="#6A1B9A">1.00</text><rect x="260.0" y="110.0" width="95.0" height="165.0" fill="#6A1B9A" fill-opacity="0.16" stroke="#6A1B9A" stroke-width="0.8" stroke-opacity="0.5"></rect><text x="307.5" y="196.5" text-anchor="middle" font-size="12" font-weight="700" fill="#6A1B9A">0.75</text><polyline points="70.0,55.0 70.0,55.0 165.0,55.0 165.0,55.0 260.0,55.0 260.0,110.0 355.0,110.0 355.0,275.0" fill="none" stroke="#6A1B9A" stroke-width="2.4"></polyline><line x1="70.0" y1="275" x2="70.0" y2="280" stroke="#444"></line><text x="70.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">0.00</text><line x1="65" y1="275.0" x2="70" y2="275.0" stroke="#444"></line><text x="61.0" y="279.0" text-anchor="end" font-size="10.5" font-weight="400" fill="#555">0.00</text><line x1="165.0" y1="275" x2="165.0" y2="280" stroke="#444"></line><text x="165.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">0.25</text><line x1="65" y1="220.0" x2="70" y2="220.0" stroke="#444"></line><text x="61.0" y="224.0" text-anchor="end" font-size="10.5" font-weight="400" fill="#555">0.25</text><line x1="260.0" y1="275" x2="260.0" y2="280" stroke="#444"></line><text x="260.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">0.50</text><line x1="65" y1="165.0" x2="70" y2="165.0" stroke="#444"></line><text x="61.0" y="169.0" text-anchor="end" font-size="10.5" font-weight="400" fill="#555">0.50</text><line x1="355.0" y1="275" x2="355.0" y2="280" stroke="#444"></line><text x="355.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">0.75</text><line x1="65" y1="110.0" x2="70" y2="110.0" stroke="#444"></line><text x="61.0" y="114.0" text-anchor="end" font-size="10.5" font-weight="400" fill="#555">0.75</text><line x1="450.0" y1="275" x2="450.0" y2="280" stroke="#444"></line><text x="450.0" y="294.0" text-anchor="middle" font-size="10.5" font-weight="400" fill="#555">1.00</text><line x1="65" y1="55.0" x2="70" y2="55.0" stroke="#444"></line><text x="61.0" y="59.0" text-anchor="end" font-size="10.5" font-weight="400" fill="#555">1.00</text><line x1="70" y1="275" x2="470" y2="275" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><line x1="70" y1="275" x2="70" y2="35" stroke="#444" stroke-width="1.8" marker-end="url(#ah9)"></line><text x="260.0" y="315.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#222">재현율</text><text x="70.0" y="25.0" text-anchor="middle" font-size="12.5" font-weight="700" fill="#222">정밀도</text><circle cx="165.0" cy="55.0" r="5" fill="#2E7D32"></circle><text x="165.0" y="45.0" text-anchor="middle" font-size="11" font-weight="700" fill="#2E7D32">P1</text><circle cx="260.0" cy="55.0" r="5" fill="#2E7D32"></circle><text x="268.0" y="47.0" text-anchor="start" font-size="11" font-weight="700" fill="#2E7D32">P2</text><circle cx="260.0" cy="128.3" r="5" fill="#C62828"></circle><text x="251.0" y="132.3" text-anchor="end" font-size="11" font-weight="700" fill="#C62828">P3</text><circle cx="355.0" cy="110.0" r="5" fill="#2E7D32"></circle><text x="364.0" y="104.0" text-anchor="start" font-size="11" font-weight="700" fill="#2E7D32">P4</text><circle cx="355.0" cy="143.0" r="5" fill="#C62828"></circle><text x="364.0" y="155.0" text-anchor="start" font-size="11" font-weight="700" fill="#C62828">P5</text><text x="402.5" y="245.0" text-anchor="middle" font-size="11" font-weight="700" fill="#757575">찾지 못한 D</text><text x="402.5" y="261.0" text-anchor="middle" font-size="11" font-weight="400" fill="#757575">넓이 없음</text><circle cx="505" cy="76" r="5" fill="#2E7D32"></circle><text x="517.0" y="80.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#333">맞은 박스</text><circle cx="505" cy="100" r="5" fill="#C62828"></circle><text x="517.0" y="104.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#333">틀린 박스</text><line x1="498" y1="124" x2="512" y2="124" stroke="#6A1B9A" stroke-width="2.4"></line><text x="517.0" y="128.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#333">정밀도-재현율 곡선</text><rect x="499" y="142" width="12" height="12" fill="#6A1B9A" fill-opacity="0.16" stroke="#6A1B9A"></rect><text x="517.0" y="152.0" text-anchor="start" font-size="11.5" font-weight="400" fill="#333">곡선 아래의 넓이 = AP</text><text x="499.0" y="196.0" text-anchor="start" font-size="12.5" font-weight="700" fill="#222">AP = (1.00 + 1.00 + 0.75) ÷ 4</text><text x="499.0" y="222.0" text-anchor="start" font-size="13" font-weight="700" fill="#6A1B9A"> = 0.69</text>
+</svg>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+AP (Average Precision)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>정밀도-재현율 곡선 아래의 넓이. 예측 박스를 신뢰도가 높은 순서로 하나씩 더하면서 맞은 박스가 나올 때마다 그때의 정밀도를 적고, 그 합을 정답 박스 수로 나누어 구한다.</p>
+<p><span class="math display">\[\text{AP} = \frac{\text{맞은 박스가 나올 때마다의 정밀도의 합}}{\text{정답 박스 수}}\]</span></p>
+<p>0과 1 사이의 값이며, 1에 가까울수록 성능이 좋다.</p>
+</div>
+</div>
+<p>맞은 박스가 하나 나올 때마다 재현율은 1 ÷ 정답 박스 수만큼, 위의 예시에서는 0.25씩 늘어나므로, 곡선 아래의 넓이는 폭이 0.25이고 높이가 그때의 정밀도인 직사각형들의 넓이의 합과 같다. 위의 예시에서 맞은 박스 P1, P2, P4가 나올 때의 정밀도는 각각 1.00, 1.00, 0.75이므로 AP는 다음과 같다.</p>
+<p><span class="math display">\[\text{AP} = \frac{1.00 + 1.00 + 0.75}{4} = 0.69\]</span></p>
+<p>이 식의 분모는 맞은 박스 수가 아니라 정답 박스 수이므로, 찾지 못한 물체가 있으면 AP가 낮아진다. 그림에서 자동차 D를 찾지 못한 것은 재현율 0.75부터 1.00까지의 넓이가 없는 것으로 나타난다. 또한 틀린 박스 P3가 P4보다 높은 신뢰도를 받았으므로, P4가 나올 때의 정밀도는 1.00이 아니라 0.75로 낮아졌다. 따라서 AP는 찾지 못한 물체가 적을수록, 그리고 맞은 박스가 틀린 박스보다 높은 신뢰도를 받을수록 1에 가까워진다.</p>
+</section>
+<section id="map-mean-average-precision" class="level3">
+<h3 class="anchored" data-anchor-id="map-mean-average-precision">mAP (mean Average Precision)</h3>
+<p>AP는 클래스 하나에 대해 계산한 값이므로, 여러 클래스를 찾는 모델의 성능은 클래스마다 AP를 구한 뒤 이를 평균하여 나타낸다. 이를 mAP라고 한다.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+mAP (mean Average Precision)
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>클래스마다 구한 AP의 평균.</p>
+<p><span class="math display">\[\text{mAP} = \frac{\text{클래스별 AP의 합}}{\text{클래스 수}}\]</span></p>
+</div>
+</div>
+<p>예를 들어 위의 모델이 자동차와 사람을 찾는 모델이고, 사람에 대해서도 같은 방법으로 구한 AP가 0.81이라면 mAP는 <span class="math inline">\((0.69 + 0.81) / 2 = 0.75\)</span>이다.</p>
+<p>지금까지는 IoU가 0.5 이상일 때 맞은 박스로 판정하였는데, 이 기준으로 구한 mAP를 mAP50이라고 한다. 판정 기준을 높이면 박스가 정답 박스와 더 정확히 겹쳐야 맞은 박스가 되므로, 같은 모델이라도 mAP가 낮아진다. 예를 들어 위의 예시에서 판정 기준을 0.75로 높이면 IoU가 0.61인 P4도 틀린 박스가 되므로, 자동차의 AP는 <span class="math inline">\((1.00 + 1.00) / 4 = 0.50\)</span>으로 낮아진다. 이처럼 박스를 얼마나 정확히 그렸는지까지 반영하기 위해, IoU 기준을 0.50, 0.55, …, 0.95의 10개로 바꿔 가며 mAP를 구하여 평균한 값을 mAP50-95라고 한다. 객체탐지 모델의 성능은 주로 mAP50과 mAP50-95로 비교한다.</p>
+</section>
+<section id="연습-1" class="level3">
+<h3 class="anchored" data-anchor-id="연습-1">연습</h3>
+<p>자동차 정답 박스가 3개인 이미지에서 탐지 모델이 자동차 박스 4개를 출력하였고, 신뢰도가 높은 순서로 판정한 결과는 맞음, 틀림, 맞음, 틀림이었다. 네 박스를 모두 남겼을 때의 정밀도와 재현율, 그리고 AP를 구하라.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+✍️ 직접 해보기 — 풀이
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>네 박스 중 맞은 박스는 2개이므로 정밀도는 <span class="math inline">\(2/4 = 0.50\)</span>이고, 정답 박스 3개 중 2개를 찾았으므로 재현율은 <span class="math inline">\(2/3 = 0.67\)</span>이다. 맞은 박스가 나올 때의 정밀도는 첫 번째 박스에서 <span class="math inline">\(1/1 = 1.00\)</span>, 세 번째 박스에서 <span class="math inline">\(2/3 = 0.67\)</span>이므로 AP는 <span class="math inline">\((1.00 + 0.67) / 3 = \mathbf{0.56}\)</span>이다.</p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
 <section id="탐지-모델의-전이-학습" class="level2">
 <h2 class="anchored" data-anchor-id="탐지-모델의-전이-학습">탐지 모델의 전이 학습</h2>
 <p>탐지 모델도 8장의 분류 모델과 같이 전이 학습을 사용할 수 있다. 탐지 모델을 처음부터 학습시키려면 박스 레이블이 달린 이미지가 매우 많이 필요하므로, 대량의 데이터로 사전 학습된 탐지 모델을 가져와 사용한다. 탐지 모델의 사전 학습에 널리 쓰이는 데이터셋으로는 COCO가 있다. COCO는 약 12만 장의 이미지에 80개 클래스의 박스를 그려 둔 데이터셋으로, 이 데이터로 학습된 탐지 모델이 공개되어 있다. 따라서 내가 가진 이미지 수백 장에 박스를 그려 이 모델을 미세 조정하면, 내가 원하는 물체를 찾는 탐지 모델을 만들 수 있다.</p>
@@ -898,6 +1105,14 @@ NMS (Non-Maximum Suppression, 비최대 억제)
 <tr class="odd">
 <td><strong>판정</strong></td>
 <td>IoU 0.5 이상이고 클래스가 같으면 맞은 예측</td>
+</tr>
+<tr class="even">
+<td><strong>정밀도·재현율</strong></td>
+<td>출력한 박스 중 맞은 박스의 비율 / 정답 박스 중 찾아낸 박스의 비율. 신뢰도 기준에 따라 반대로 움직임</td>
+</tr>
+<tr class="odd">
+<td><strong>AP·mAP</strong></td>
+<td>AP는 정밀도-재현율 곡선 아래의 넓이(클래스별), mAP는 클래스별 AP의 평균. mAP50은 판정 기준 IoU 0.5, mAP50-95는 0.50~0.95 평균</td>
 </tr>
 <tr class="even">
 <td><strong>대표 모델</strong></td>
