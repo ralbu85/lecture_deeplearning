@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>실습 9-2 · 탐지 모델 미세 조정하기 – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">수업 안내</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../license.html"> 
+<span class="menu-text">저작권</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#이번-시간의-질문" id="toc-이번-시간의-질문" class="nav-link active" data-scroll-target="#이번-시간의-질문">🎯 이번 시간의 질문</a></li>
+  <li><a href="#사전학습-모델은-알약을-찾지-못한다" id="toc-사전학습-모델은-알약을-찾지-못한다" class="nav-link" data-scroll-target="#사전학습-모델은-알약을-찾지-못한다">1. 사전학습 모델은 알약을 찾지 못한다</a></li>
+  <li><a href="#학습-데이터를-확인한다" id="toc-학습-데이터를-확인한다" class="nav-link" data-scroll-target="#학습-데이터를-확인한다">2. 학습 데이터를 확인한다</a></li>
+  <li><a href="#데이터-설정-파일을-만든다" id="toc-데이터-설정-파일을-만든다" class="nav-link" data-scroll-target="#데이터-설정-파일을-만든다">3. 데이터 설정 파일을 만든다</a></li>
+  <li><a href="#미세-조정한다" id="toc-미세-조정한다" class="nav-link" data-scroll-target="#미세-조정한다">4. 미세 조정한다</a></li>
+  <li><a href="#미세-조정한-모델로-알약을-찾는다" id="toc-미세-조정한-모델로-알약을-찾는다" class="nav-link" data-scroll-target="#미세-조정한-모델로-알약을-찾는다">5. 미세 조정한 모델로 알약을 찾는다</a></li>
+  <li><a href="#실습-과제-10분" id="toc-실습-과제-10분" class="nav-link" data-scroll-target="#실습-과제-10분">6. 실습 과제 (10분)</a>
+  <ul class="collapse">
+  <li><a href="#과제-1-다른-검증-사진에서-알약-세기" id="toc-과제-1-다른-검증-사진에서-알약-세기" class="nav-link" data-scroll-target="#과제-1-다른-검증-사진에서-알약-세기">📝 과제 1 · 다른 검증 사진에서 알약 세기</a></li>
+  <li><a href="#과제-2-내-데이터의-설정-파일" id="toc-과제-2-내-데이터의-설정-파일" class="nav-link" data-scroll-target="#과제-2-내-데이터의-설정-파일">📝 과제 2 · 내 데이터의 설정 파일</a></li>
+  </ul></li>
+  <li><a href="#정리" id="toc-정리" class="nav-link" data-scroll-target="#정리">✅ 정리</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">실습 9-2 · 탐지 모델 미세 조정하기</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab09_2.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img" alt="Open In Colab"></a></p>
+<figcaption>Open In Colab</figcaption>
+</figure>
+</div>
+<p><strong>⏱ 60분</strong> · 9주차 실습</p>
+<section id="이번-시간의-질문" class="level2">
+<h2 class="anchored" data-anchor-id="이번-시간의-질문">🎯 이번 시간의 질문</h2>
+<p>실습 9에서 사용한 YOLO는 COCO의 80개 클래스만 찾도록 학습된 모델입니다.</p>
+<blockquote class="blockquote">
+<p><strong>80개 클래스에 없는 물체를 찾게 하려면 어떻게 해야 할까요?</strong></p>
+</blockquote>
+<p>알약 사진 115장으로 사전학습된 YOLO를 다시 학습시켜, 알약을 찾는 탐지 모델을 만듭니다.</p>
+<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch09.html">Ch09 객체탐지</a></p>
+<p><strong>Colab 설정:</strong> 메뉴 <strong>런타임 → 런타임 유형 변경 → T4 GPU</strong>를 고른 뒤 시작합니다. 학습에 GPU가 필요합니다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>표시</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>▶</td>
+<td>그대로 실행합니다</td>
+</tr>
+<tr class="even">
+<td>✍️</td>
+<td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
+</tr>
+<tr class="odd">
+<td>📝</td>
+<td>과제. 힌트를 보고 스스로 풉니다</td>
+</tr>
+</tbody>
+</table>
+<div id="62e6f0db" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.cuda.is_available())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>True</code></pre>
+</div>
+</div>
+<p>Colab에서 GPU 런타임이면 <code>True</code>가 나옵니다. 다른 라이브러리는 필요한 셀에서 그때그때 불러옵니다.</p>
+<hr>
+</section>
+<section id="사전학습-모델은-알약을-찾지-못한다" class="level2">
+<h2 class="anchored" data-anchor-id="사전학습-모델은-알약을-찾지-못한다">1. 사전학습 모델은 알약을 찾지 못한다</h2>
+<p>이번 실습에서는 알약 포장 사진을 씁니다. 사진마다 알약 하나하나에 박스를 그린 레이블이 함께 들어 있습니다.</p>
+<div id="54d68365" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 알약 사진과 레이블 내려받기</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request   <span class="co"># 인터넷에서 파일을 내려받는 표준 라이브러리</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> zipfile          <span class="co"># 압축 파일을 푸는 표준 라이브러리</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/medical-pills.zip'</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>urllib.request.urlretrieve(url, <span class="st">'medical-pills.zip'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>zipfile.ZipFile(<span class="st">'medical-pills.zip'</span>).extractall(<span class="st">'.'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>COCO로 사전학습된 YOLO에 알약 사진 한 장을 넣어 봅니다.</p>
+<div id="cell-lab09-2-before" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ultralytics <span class="im">import</span> YOLO        <span class="co"># YOLO 모델을 내려받고 쓰는 라이브러리</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt     <span class="co"># 그림을 그리는 라이브러리</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>img <span class="op">=</span> <span class="st">'medical-pills/images/val/Frame_64.jpg'</span>   <span class="co"># 검증용 알약 사진 한 장</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>coco_model <span class="op">=</span> YOLO(<span class="st">'yolo11n.pt'</span>)                 <span class="co"># COCO로 사전학습된 가장 작은 YOLO</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> coco_model(img, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plt.imshow(r.plot()[:, :, ::<span class="op">-</span><span class="dv">1</span>])                <span class="co"># r.plot()은 BGR 순서이므로 RGB로 뒤집어 그린다</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab09_2_files/figure-html/lab09-2-before-output-1.png" id="lab09-2-before" width="540" height="312" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>알약에는 박스가 그려지지 않고, 알약을 케이크(<code>cake</code>)로, 사진 전체를 식탁(<code>dining table</code>)으로 봅니다. 알약은 COCO의 80개 클래스에 없으므로 모델은 알약이라는 답을 낼 수 없고, 80개 가운데 가장 비슷한 클래스를 고릅니다. 그러므로 알약을 찾게 하려면 알약 사진과 레이블로 모델을 다시 학습시켜야 합니다.</p>
+<hr>
+</section>
+<section id="학습-데이터를-확인한다" class="level2">
+<h2 class="anchored" data-anchor-id="학습-데이터를-확인한다">2. 학습 데이터를 확인한다</h2>
+<p>내려받은 <code>medical-pills</code> 폴더는 실습 9에서 본 YOLO 학습 데이터의 형태를 따릅니다. 사진은 <code>images</code>에, 레이블은 <code>labels</code>에 들어 있고, 각각 학습용 <code>train</code>과 검증용 <code>val</code>로 나뉩니다.</p>
+<div id="0c7c4628" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os   <span class="co"># 폴더와 파일을 다루는 표준 라이브러리</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(os.listdir(<span class="st">'medical-pills/images/train'</span>)), <span class="bu">len</span>(os.listdir(<span class="st">'medical-pills/images/val'</span>))   <span class="co"># 학습용, 검증용 사진 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>(92, 23)</code></pre>
+</div>
+</div>
+<p>학습용 사진이 <strong>92</strong>장, 검증용 사진이 <strong>23</strong>장입니다. 1절의 사진에 알약이 몇 개 있는지 레이블 파일의 줄 수로 확인합니다. 레이블은 한 줄이 물체 하나입니다.</p>
+<div id="a4b47bc8" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(<span class="bu">open</span>(<span class="st">'medical-pills/labels/val/Frame_64.txt'</span>).readlines())   <span class="co"># 레이블 파일의 줄 수 = 알약 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>16</code></pre>
+</div>
+</div>
+<p>이 사진에는 알약이 <strong>16</strong>개 있습니다.</p>
+<hr>
+</section>
+<section id="데이터-설정-파일을-만든다" class="level2">
+<h2 class="anchored" data-anchor-id="데이터-설정-파일을-만든다">3. 데이터 설정 파일을 만든다</h2>
+<p>YOLO를 학습시키려면 데이터가 어느 폴더에 있고 클래스 번호마다 이름이 무엇인지 적은 설정 파일이 필요합니다. 이 파일은 YAML 형식으로 씁니다. <code>path</code>에는 데이터 폴더의 전체 경로를, <code>train</code>과 <code>val</code>에는 그 안의 학습용·검증용 사진 폴더를, <code>names</code>에는 클래스 번호와 이름을 적습니다. 알약 데이터는 클래스가 <code>pill</code> 하나이고 번호는 0입니다.</p>
+<p>아래 코드는 설정 파일 <code>pills.yaml</code>을 만드는 코드입니다.</p>
+<div id="fd103cff" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>root <span class="op">=</span> os.path.abspath(<span class="st">'medical-pills'</span>)   <span class="co"># 데이터 폴더의 전체 경로</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>yaml_text <span class="op">=</span> <span class="ss">f"""path: </span><span class="sc">{</span>root<span class="sc">}</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ss">train: images/train</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ss">val: images/val</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ss">names:</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  0: pill</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'pills.yaml'</span>, <span class="st">'w'</span>) <span class="im">as</span> f:   <span class="co"># 위 내용을 pills.yaml 파일로 저장한다</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    f.write(yaml_text)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+</section>
+<section id="미세-조정한다" class="level2">
+<h2 class="anchored" data-anchor-id="미세-조정한다">4. 미세 조정한다</h2>
+<p><strong>미세 조정</strong>은 사전학습된 모델의 가중치에서 출발하여 내 데이터로 모델을 다시 학습시키는 것입니다. 처음부터 학습시키면 사진이 수만 장 필요하지만, COCO로 사전학습된 모델은 이미 물체의 모양과 경계를 찾는 법을 배워 두었으므로 사진 92장으로도 알약을 찾도록 학습시킬 수 있습니다.</p>
+<p>아래 코드는 COCO로 사전학습된 YOLO를 불러와, 3절의 설정 파일에 적힌 알약 데이터로 30에폭 학습시키는 코드입니다. <code>imgsz=640</code>은 사진을 가로세로 640픽셀로 맞춰 학습한다는 뜻입니다. T4 GPU에서 몇 분 걸립니다.</p>
+<div id="6b6762ae" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> YOLO(<span class="st">'yolo11n.pt'</span>)                                          <span class="co"># COCO로 사전학습된 가중치에서 출발한다</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.train(data<span class="op">=</span><span class="st">'pills.yaml'</span>, epochs<span class="op">=</span><span class="dv">30</span>, imgsz<span class="op">=</span><span class="dv">640</span>)   <span class="co"># 알약 데이터로 30에폭 학습한다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>학습하는 동안 에폭마다 두 줄이 출력됩니다. 첫 줄의 <code>box_loss</code>는 예측 박스가 정답 박스와 어긋난 정도인 박스 손실이고, <code>cls_loss</code>는 클래스를 틀린 정도인 클래스 손실입니다. 둘째 줄의 <code>mAP50</code>은 검증 사진에서 예측 박스와 정답 박스의 IoU가 0.5 이상이고 클래스가 같으면 맞은 예측으로 보고 계산한 정확도로, 1에 가까울수록 잘 찾는다는 뜻입니다.</p>
+<p>에폭마다 기록된 값은 학습 결과 폴더의 <code>results.csv</code>에 저장됩니다. 아래 코드는 이 파일을 읽어 박스 손실과 <code>mAP50</code>의 변화를 그리는 코드입니다.</p>
+<div id="cell-lab09-2-curve" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 학습 곡선</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd   <span class="co"># 표 형태의 데이터를 다루는 라이브러리</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>log <span class="op">=</span> pd.read_csv(model.trainer.save_dir <span class="op">/</span> <span class="st">'results.csv'</span>)   <span class="co"># 에폭마다 기록된 손실과 정확도</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="fl">3.5</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].plot(log[<span class="st">'epoch'</span>], log[<span class="st">'train/box_loss'</span>])</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">'box_loss'</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_xlabel(<span class="st">'epoch'</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].plot(log[<span class="st">'epoch'</span>], log[<span class="st">'metrics/mAP50(B)'</span>])</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">'mAP50'</span>)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_xlabel(<span class="st">'epoch'</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab09_2_files/figure-html/lab09-2-curve-output-1.png" id="lab09-2-curve" width="802" height="339" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>박스 손실은 에폭이 지날수록 줄어들고, <code>mAP50</code>은 학습 후반에 <strong>0.99</strong>에 가까워집니다.</p>
+<hr>
+</section>
+<section id="미세-조정한-모델로-알약을-찾는다" class="level2">
+<h2 class="anchored" data-anchor-id="미세-조정한-모델로-알약을-찾는다">5. 미세 조정한 모델로 알약을 찾는다</h2>
+<p>학습이 끝나면 <code>model</code>에는 검증 정확도가 가장 높았던 에폭의 가중치가 들어 있습니다. 1절과 같은 사진을 넣어 봅니다.</p>
+<div id="cell-lab09-2-after" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> model(img, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.imshow(r.plot()[:, :, ::<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab09_2_files/figure-html/lab09-2-after-output-1.png" id="lab09-2-after" width="540" height="312" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>알약마다 <code>pill</code> 박스가 그려집니다. 찾은 박스 수를 레이블의 알약 수와 비교합니다.</p>
+<div id="d03c1400" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(r.boxes)   <span class="co"># 모델이 찾은 알약 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>16</code></pre>
+</div>
+</div>
+<p>레이블의 16개와 같거나 거의 같은 수가 나옵니다. 1절에서 알약을 하나도 찾지 못한 모델이 사진 92장으로 미세 조정한 뒤에는 알약을 하나하나 찾습니다.</p>
+<p>학습한 가중치는 학습 결과 폴더의 <code>weights/best.pt</code>에 저장됩니다. 이 파일을 <code>YOLO('...best.pt')</code>로 불러오면 다시 학습하지 않고 알약 탐지 모델을 쓸 수 있습니다.</p>
+<div id="8792c787" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model.trainer.best   <span class="co"># 학습한 가중치 파일의 경로</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>PosixPath('/workspace/BALAB_Prof/Lecture_DeepLearning/labs/runs/detect/train/weights/best.pt')</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="실습-과제-10분" class="level2">
+<h2 class="anchored" data-anchor-id="실습-과제-10분">6. 실습 과제 (10분)</h2>
+<section id="과제-1-다른-검증-사진에서-알약-세기" class="level3">
+<h3 class="anchored" data-anchor-id="과제-1-다른-검증-사진에서-알약-세기">📝 과제 1 · 다른 검증 사진에서 알약 세기</h3>
+<p>검증용 사진 <code>Frame_420.jpg</code>의 알약을 미세 조정한 모델로 찾고, 찾은 수를 레이블의 알약 수와 비교합니다.</p>
+<div id="e23aae3d" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 5절처럼 사진을 model에 넣고 len(r.boxes)로 찾은 수를 셉니다.</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 레이블의 알약 수는 2절처럼 레이블 파일의 줄 수로 셉니다.</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> model(<span class="st">'medical-pills/images/val/Frame_420.jpg'</span>, verbose<span class="op">=</span><span class="va">False</span>)[<span class="dv">0</span>]</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(r2.boxes), <span class="bu">len</span>(<span class="bu">open</span>(<span class="st">'medical-pills/labels/val/Frame_420.txt'</span>).readlines()))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>18 18</code></pre>
+</div>
+</div>
+<p>✏️ <strong>찾은 수 / 레이블의 알약 수:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> 레이블의 알약은 18개이고, 모델도 18개 안팎을 찾습니다.</p>
+</blockquote>
+</section>
+<section id="과제-2-내-데이터의-설정-파일" class="level3">
+<h3 class="anchored" data-anchor-id="과제-2-내-데이터의-설정-파일">📝 과제 2 · 내 데이터의 설정 파일</h3>
+<p>10원, 50원, 100원, 500원 동전을 찾는 모델을 만든다고 합시다. 사진과 레이블은 <code>coins</code> 폴더에 알약 데이터와 같은 형태로 들어 있습니다. 3절처럼 이 데이터의 설정 파일 내용을 씁니다.</p>
+<div id="40220595" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 3절의 yaml_text에서 path의 폴더 이름과 names만 바꿉니다. 클래스 번호는 0부터 차례로 붙입니다.</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>yaml_text <span class="op">=</span> <span class="ss">f"""path: </span><span class="sc">{</span>os<span class="sc">.</span>path<span class="sc">.</span>abspath(<span class="st">'coins'</span>)<span class="sc">}</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="ss">train: images/train</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="ss">val: images/val</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="ss">names:</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="ss">  0: 10won</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ss">  1: 50won</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="ss">  2: 100won</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="ss">  3: 500won</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(yaml_text)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>path: /workspace/BALAB_Prof/Lecture_DeepLearning/labs/coins
+train: images/train
+val: images/val
+names:
+  0: 10won
+  1: 50won
+  2: 100won
+  3: 500won
+</code></pre>
+</div>
+</div>
+<p>✏️ <strong>설정 파일 내용:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> <code>names</code>에 클래스 네 개를 0~3번으로 적습니다. 레이블 파일의 클래스 번호는 이 순서를 따라야 하므로, 어노테이션 도구에 클래스를 입력할 때도 같은 순서로 입력합니다.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="정리" class="level2">
+<h2 class="anchored" data-anchor-id="정리">✅ 정리</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>배운 것</th>
+<th>핵심</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>사전학습 모델의 한계</td>
+<td>COCO 80개 클래스에 없는 알약은 찾지 못하고 가장 비슷한 클래스(<code>cake</code>)로 봄</td>
+</tr>
+<tr class="even">
+<td>학습 데이터</td>
+<td><code>images</code>·<code>labels</code> 폴더, 각각 <code>train</code>·<code>val</code>. 레이블 한 줄이 물체 하나</td>
+</tr>
+<tr class="odd">
+<td>설정 파일</td>
+<td><code>path</code>(데이터 폴더), <code>train</code>·<code>val</code>(사진 폴더), <code>names</code>(클래스 번호와 이름)</td>
+</tr>
+<tr class="even">
+<td>미세 조정</td>
+<td><code>YOLO('yolo11n.pt')</code>에서 출발해 <code>model.train(data='pills.yaml', epochs=30, imgsz=640)</code></td>
+</tr>
+<tr class="odd">
+<td>학습 기록</td>
+<td><code>box_loss</code>(박스 손실), <code>cls_loss</code>(클래스 손실), <code>mAP50</code>(IoU 0.5 기준 정확도)</td>
+</tr>
+<tr class="even">
+<td>결과</td>
+<td>사진 92장으로 미세 조정한 모델이 알약을 하나하나 찾음. 가중치는 <code>weights/best.pt</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>다음:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/labs/lab10.html">실습 10</a>에서는 이미지에서 텍스트로 넘어갑니다.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 이지환 · 부경대학교 시스템경영공학부</p>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ko">
+<p>교재 CC BY-NC-SA 4.0</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="https://github.com/ralbu85/lecture_deeplearning_labs/blob/main/LICENSE">
+<p>코드 MIT</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../license.html">
+<p>저작권 안내</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

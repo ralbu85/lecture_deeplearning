@@ -3021,7 +3021,7 @@
     "href": "labs/lab09.html#정리",
     "title": "실습 9 · 사전학습 탐지 모델 YOLO 사용하기",
     "section": "✅ 정리",
-    "text": "✅ 정리\n\n\n\n\n\n\n\n배운 것\n핵심\n\n\n\n\n사전학습된 탐지 모델\nYOLO('yolo11n.pt'). COCO 80개 클래스\n\n\n탐지\nr = model(사진)[0], r.plot()으로 박스를 그린 그림\n\n\n탐지 결과\nr.boxes의 cls(클래스 번호), conf(신뢰도), xyxy(박스의 왼쪽 위와 오른쪽 아래, 픽셀)\n\n\n실시간 탐지\n카메라 화면 한 장을 탐지하고 그림을 보여 주는 일을 반복\n\n\n영상 위의 박스\n클래스 이름, 신뢰도, 박스 좌표만 브라우저로 보내고, 브라우저가 영상 위에 박스를 그림\n\n\n학습 데이터\nimages와 labels 폴더, 사진마다 같은 이름의 .txt 레이블\n\n\n레이블 한 줄\n클래스 번호, 박스 중심 \\(x\\), 중심 \\(y\\), 너비, 높이. 좌표와 크기는 사진 크기로 나눈 0~1 값\n\n\n\n다음: 실습 10에서는 이미지에서 텍스트로 넘어갑니다."
+    "text": "✅ 정리\n\n\n\n\n\n\n\n배운 것\n핵심\n\n\n\n\n사전학습된 탐지 모델\nYOLO('yolo11n.pt'). COCO 80개 클래스\n\n\n탐지\nr = model(사진)[0], r.plot()으로 박스를 그린 그림\n\n\n탐지 결과\nr.boxes의 cls(클래스 번호), conf(신뢰도), xyxy(박스의 왼쪽 위와 오른쪽 아래, 픽셀)\n\n\n실시간 탐지\n카메라 화면 한 장을 탐지하고 그림을 보여 주는 일을 반복\n\n\n영상 위의 박스\n클래스 이름, 신뢰도, 박스 좌표만 브라우저로 보내고, 브라우저가 영상 위에 박스를 그림\n\n\n학습 데이터\nimages와 labels 폴더, 사진마다 같은 이름의 .txt 레이블\n\n\n레이블 한 줄\n클래스 번호, 박스 중심 \\(x\\), 중심 \\(y\\), 너비, 높이. 좌표와 크기는 사진 크기로 나눈 0~1 값\n\n\n\n다음: 실습 9-2에서는 알약 사진으로 YOLO를 미세 조정하여, 80개 클래스에 없는 물체를 찾는 모델을 만듭니다."
   },
   {
     "objectID": "chapters/ch10.html#텍스트-데이터의-특징",
@@ -3750,5 +3750,68 @@
     "title": "실습 9 · 사전학습 탐지 모델 YOLO 사용하기",
     "section": "5. 카메라 영상 위에 박스를 그린다",
     "text": "5. 카메라 영상 위에 박스를 그린다\n4절은 박스를 그린 사진 전체를 브라우저로 다시 보내므로, 화면이 사진을 한 장씩 넘기듯 끊겨 보입니다. 브라우저가 카메라 영상을 그대로 보여 주고, Colab은 3절에서 본 출력값인 클래스 이름, 신뢰도, 박스 좌표만 돌려주면 주고받는 양이 크게 줄어듭니다. 그러면 영상은 끊기지 않고 박스만 조금 늦게 따라옵니다.\n아래 코드는 카메라 영상을 보여 주면서 화면을 가로 640픽셀로 줄여 Python으로 가져오고, Python이 돌려준 박스를 영상 위에 그리는 함수 두 개를 만드는 코드입니다.\n\n# ▶ 그대로 실행하세요 — (Colab) 카메라 영상 위에 박스를 그리는 함수\n# 4절의 첫 셀에서 불러온 라이브러리(display, eval_js, np, cv2 등)를 그대로 쓴다\nimport json   # 파이썬 목록을 브라우저가 읽는 문자열로 바꾸는 표준 라이브러리\n\n# 브라우저에서 실행되는 코드: 카메라 영상을 보여 주고, 그 위의 투명한 판에 박스를 그린다\nOVERLAY_JS = \"\"\"\nvar video2, board, stream2, stopped2 = false;\nasync function overlayStart() {\n  const div = document.createElement('div');\n  div.style.position = 'relative';\n  div.style.width = '100%';\n  div.style.maxWidth = '640px';\n  const btn = document.createElement('button');\n  btn.textContent = '멈추기';\n  btn.onclick = () =&gt; { stopped2 = true; };\n  video2 = document.createElement('video');\n  video2.setAttribute('playsinline', '');\n  video2.muted = true;\n  video2.style.width = '100%';\n  video2.style.display = 'block';\n  board = document.createElement('canvas');\n  board.style.position = 'absolute';\n  board.style.left = '0';\n  board.style.top = '0';\n  board.style.width = '100%';\n  div.append(video2, board);\n  document.body.append(div, btn);\n  stream2 = await navigator.mediaDevices.getUserMedia({video: {facingMode: 'environment'}});\n  video2.srcObject = stream2;\n  await video2.play();\n  board.width = 640;\n  board.height = Math.round(640 * video2.videoHeight / video2.videoWidth);\n  google.colab.output.setIframeHeight(document.documentElement.scrollHeight, true);\n}\nfunction overlayFrame(boxes) {\n  const ctx = board.getContext('2d');\n  ctx.clearRect(0, 0, board.width, board.height);\n  ctx.lineWidth = 3;\n  ctx.font = '18px sans-serif';\n  ctx.strokeStyle = 'lime';\n  ctx.fillStyle = 'lime';\n  for (const b of boxes) {\n    ctx.strokeRect(b[2], b[3], b[4] - b[2], b[5] - b[3]);\n    ctx.fillText(b[0] + ' ' + b[1], b[2] + 4, b[3] + 20);\n  }\n  if (stopped2) {\n    stream2.getTracks().forEach(t =&gt; t.stop());\n    return '';\n  }\n  const small = document.createElement('canvas');\n  small.width = board.width;\n  small.height = board.height;\n  small.getContext('2d').drawImage(video2, 0, 0, small.width, small.height);\n  return small.toDataURL('image/jpeg', 0.7);\n}\n\"\"\"\n\n# 카메라 영상과 멈추기 버튼을 셀 아래에 만든다\ndef overlay_start():\n    display(Javascript(OVERLAY_JS))\n    eval_js('overlayStart()')\n\n# boxes에 박스 목록을 주면 영상 위에 그리고, 카메라 화면 한 장(가로 640픽셀, BGR 배열)을 돌려준다\n# 박스 하나는 [클래스 이름, 신뢰도, x1, y1, x2, y2]이고, 멈추기 버튼을 누른 뒤에는 None을 돌려준다\ndef overlay_frame(boxes=None):\n    if boxes is None:\n        boxes = []\n    reply = eval_js(f'overlayFrame({json.dumps(boxes)})')\n    if reply == '':\n        return None\n    jpg = np.frombuffer(b64decode(reply.split(',')[1]), np.uint8)\n    return cv2.imdecode(jpg, cv2.IMREAD_COLOR)\n\n반복은 4절과 같습니다. 다른 점은 박스를 그린 그림 대신 3절의 cls, conf, xyxy로 박스 목록을 만들어 보낸다는 것입니다.\n\n# ✍️ 직접 입력\noverlay_start()\nframe = overlay_frame()                      # 첫 화면을 가져온다\nwhile frame is not None:                     # 멈추기를 누를 때까지 반복한다\n    r_cam = model(frame, verbose=False)[0]   # 화면 한 장을 탐지한다\n    boxes = []\n    for c, p, b in zip(r_cam.boxes.cls.tolist(), r_cam.boxes.conf.tolist(), r_cam.boxes.xyxy.tolist()):\n        boxes.append([r_cam.names[int(c)], round(p, 2)] + b)   # [클래스 이름, 신뢰도, x1, y1, x2, y2]\n    frame = overlay_frame(boxes)             # 박스를 영상 위에 그리고 다음 화면을 가져온다\n\n카메라 영상은 끊기지 않고 재생되고, 그 위에 박스와 클래스 이름, 신뢰도가 따라다닙니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html",
+    "href": "labs/lab09_2.html",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "",
+    "text": "Open In Colab\n⏱ 60분 · 9주차 실습"
+  },
+  {
+    "objectID": "labs/lab09_2.html#이번-시간의-질문",
+    "href": "labs/lab09_2.html#이번-시간의-질문",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "🎯 이번 시간의 질문",
+    "text": "🎯 이번 시간의 질문\n실습 9에서 사용한 YOLO는 COCO의 80개 클래스만 찾도록 학습된 모델입니다.\n\n80개 클래스에 없는 물체를 찾게 하려면 어떻게 해야 할까요?\n\n알약 사진 115장으로 사전학습된 YOLO를 다시 학습시켜, 알약을 찾는 탐지 모델을 만듭니다.\n대응 이론: Ch09 객체탐지\nColab 설정: 메뉴 런타임 → 런타임 유형 변경 → T4 GPU를 고른 뒤 시작합니다. 학습에 GPU가 필요합니다.\n\n\n\n\n\n\n\n표시\n뜻\n\n\n\n\n▶\n그대로 실행합니다\n\n\n✍️\n보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 ___은 채웁니다\n\n\n📝\n과제. 힌트를 보고 스스로 풉니다\n\n\n\n\n# ▶ 준비 셀 — 그대로 실행하세요.\nimport torch\n\nprint(torch.cuda.is_available())\n\nTrue\n\n\nColab에서 GPU 런타임이면 True가 나옵니다. 다른 라이브러리는 필요한 셀에서 그때그때 불러옵니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html#사전학습-모델은-알약을-찾지-못한다",
+    "href": "labs/lab09_2.html#사전학습-모델은-알약을-찾지-못한다",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "1. 사전학습 모델은 알약을 찾지 못한다",
+    "text": "1. 사전학습 모델은 알약을 찾지 못한다\n이번 실습에서는 알약 포장 사진을 씁니다. 사진마다 알약 하나하나에 박스를 그린 레이블이 함께 들어 있습니다.\n\n# ▶ 그대로 실행하세요 — 알약 사진과 레이블 내려받기\nimport urllib.request   # 인터넷에서 파일을 내려받는 표준 라이브러리\nimport zipfile          # 압축 파일을 푸는 표준 라이브러리\n\nurl = 'https://github.com/ralbu85/lecture_deeplearning_labs/releases/download/data-v1/medical-pills.zip'\nurllib.request.urlretrieve(url, 'medical-pills.zip')\nzipfile.ZipFile('medical-pills.zip').extractall('.')\n\nCOCO로 사전학습된 YOLO에 알약 사진 한 장을 넣어 봅니다.\n\n# ✍️ 직접 입력\nfrom ultralytics import YOLO        # YOLO 모델을 내려받고 쓰는 라이브러리\nimport matplotlib.pyplot as plt     # 그림을 그리는 라이브러리\n\nimg = 'medical-pills/images/val/Frame_64.jpg'   # 검증용 알약 사진 한 장\ncoco_model = YOLO('yolo11n.pt')                 # COCO로 사전학습된 가장 작은 YOLO\nr = coco_model(img, verbose=False)[0]\nplt.imshow(r.plot()[:, :, ::-1])                # r.plot()은 BGR 순서이므로 RGB로 뒤집어 그린다\nplt.axis('off')\nplt.show()\n\n\n\n\n\n\n\n\n알약에는 박스가 그려지지 않고, 알약을 케이크(cake)로, 사진 전체를 식탁(dining table)으로 봅니다. 알약은 COCO의 80개 클래스에 없으므로 모델은 알약이라는 답을 낼 수 없고, 80개 가운데 가장 비슷한 클래스를 고릅니다. 그러므로 알약을 찾게 하려면 알약 사진과 레이블로 모델을 다시 학습시켜야 합니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html#학습-데이터를-확인한다",
+    "href": "labs/lab09_2.html#학습-데이터를-확인한다",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "2. 학습 데이터를 확인한다",
+    "text": "2. 학습 데이터를 확인한다\n내려받은 medical-pills 폴더는 실습 9에서 본 YOLO 학습 데이터의 형태를 따릅니다. 사진은 images에, 레이블은 labels에 들어 있고, 각각 학습용 train과 검증용 val로 나뉩니다.\n\n# ✍️ 직접 입력\nimport os   # 폴더와 파일을 다루는 표준 라이브러리\n\nlen(os.listdir('medical-pills/images/train')), len(os.listdir('medical-pills/images/val'))   # 학습용, 검증용 사진 수\n\n(92, 23)\n\n\n학습용 사진이 92장, 검증용 사진이 23장입니다. 1절의 사진에 알약이 몇 개 있는지 레이블 파일의 줄 수로 확인합니다. 레이블은 한 줄이 물체 하나입니다.\n\n# ✍️ 직접 입력\nlen(open('medical-pills/labels/val/Frame_64.txt').readlines())   # 레이블 파일의 줄 수 = 알약 수\n\n16\n\n\n이 사진에는 알약이 16개 있습니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html#데이터-설정-파일을-만든다",
+    "href": "labs/lab09_2.html#데이터-설정-파일을-만든다",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "3. 데이터 설정 파일을 만든다",
+    "text": "3. 데이터 설정 파일을 만든다\nYOLO를 학습시키려면 데이터가 어느 폴더에 있고 클래스 번호마다 이름이 무엇인지 적은 설정 파일이 필요합니다. 이 파일은 YAML 형식으로 씁니다. path에는 데이터 폴더의 전체 경로를, train과 val에는 그 안의 학습용·검증용 사진 폴더를, names에는 클래스 번호와 이름을 적습니다. 알약 데이터는 클래스가 pill 하나이고 번호는 0입니다.\n아래 코드는 설정 파일 pills.yaml을 만드는 코드입니다.\n\n# ✍️ 직접 입력\nroot = os.path.abspath('medical-pills')   # 데이터 폴더의 전체 경로\n\nyaml_text = f\"\"\"path: {root}\ntrain: images/train\nval: images/val\nnames:\n  0: pill\n\"\"\"\n\nwith open('pills.yaml', 'w') as f:   # 위 내용을 pills.yaml 파일로 저장한다\n    f.write(yaml_text)"
+  },
+  {
+    "objectID": "labs/lab09_2.html#미세-조정한다",
+    "href": "labs/lab09_2.html#미세-조정한다",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "4. 미세 조정한다",
+    "text": "4. 미세 조정한다\n미세 조정은 사전학습된 모델의 가중치에서 출발하여 내 데이터로 모델을 다시 학습시키는 것입니다. 처음부터 학습시키면 사진이 수만 장 필요하지만, COCO로 사전학습된 모델은 이미 물체의 모양과 경계를 찾는 법을 배워 두었으므로 사진 92장으로도 알약을 찾도록 학습시킬 수 있습니다.\n아래 코드는 COCO로 사전학습된 YOLO를 불러와, 3절의 설정 파일에 적힌 알약 데이터로 30에폭 학습시키는 코드입니다. imgsz=640은 사진을 가로세로 640픽셀로 맞춰 학습한다는 뜻입니다. T4 GPU에서 몇 분 걸립니다.\n\n# ✍️ 직접 입력\nmodel = YOLO('yolo11n.pt')                                          # COCO로 사전학습된 가중치에서 출발한다\nresults = model.train(data='pills.yaml', epochs=30, imgsz=640)   # 알약 데이터로 30에폭 학습한다\n\n학습하는 동안 에폭마다 두 줄이 출력됩니다. 첫 줄의 box_loss는 예측 박스가 정답 박스와 어긋난 정도인 박스 손실이고, cls_loss는 클래스를 틀린 정도인 클래스 손실입니다. 둘째 줄의 mAP50은 검증 사진에서 예측 박스와 정답 박스의 IoU가 0.5 이상이고 클래스가 같으면 맞은 예측으로 보고 계산한 정확도로, 1에 가까울수록 잘 찾는다는 뜻입니다.\n에폭마다 기록된 값은 학습 결과 폴더의 results.csv에 저장됩니다. 아래 코드는 이 파일을 읽어 박스 손실과 mAP50의 변화를 그리는 코드입니다.\n\n# ▶ 그대로 실행하세요 — 학습 곡선\nimport pandas as pd   # 표 형태의 데이터를 다루는 라이브러리\n\nlog = pd.read_csv(model.trainer.save_dir / 'results.csv')   # 에폭마다 기록된 손실과 정확도\nfig, ax = plt.subplots(1, 2, figsize=(10, 3.5))\nax[0].plot(log['epoch'], log['train/box_loss'])\nax[0].set_title('box_loss')\nax[0].set_xlabel('epoch')\nax[1].plot(log['epoch'], log['metrics/mAP50(B)'])\nax[1].set_title('mAP50')\nax[1].set_xlabel('epoch')\nplt.show()\n\n\n\n\n\n\n\n\n박스 손실은 에폭이 지날수록 줄어들고, mAP50은 학습 후반에 0.99에 가까워집니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html#미세-조정한-모델로-알약을-찾는다",
+    "href": "labs/lab09_2.html#미세-조정한-모델로-알약을-찾는다",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "5. 미세 조정한 모델로 알약을 찾는다",
+    "text": "5. 미세 조정한 모델로 알약을 찾는다\n학습이 끝나면 model에는 검증 정확도가 가장 높았던 에폭의 가중치가 들어 있습니다. 1절과 같은 사진을 넣어 봅니다.\n\n# ✍️ 직접 입력\nr = model(img, verbose=False)[0]\nplt.imshow(r.plot()[:, :, ::-1])\nplt.axis('off')\nplt.show()\n\n\n\n\n\n\n\n\n알약마다 pill 박스가 그려집니다. 찾은 박스 수를 레이블의 알약 수와 비교합니다.\n\n# ✍️ 직접 입력\nlen(r.boxes)   # 모델이 찾은 알약 수\n\n16\n\n\n레이블의 16개와 같거나 거의 같은 수가 나옵니다. 1절에서 알약을 하나도 찾지 못한 모델이 사진 92장으로 미세 조정한 뒤에는 알약을 하나하나 찾습니다.\n학습한 가중치는 학습 결과 폴더의 weights/best.pt에 저장됩니다. 이 파일을 YOLO('...best.pt')로 불러오면 다시 학습하지 않고 알약 탐지 모델을 쓸 수 있습니다.\n\n# ✍️ 직접 입력\nmodel.trainer.best   # 학습한 가중치 파일의 경로\n\nPosixPath('/workspace/BALAB_Prof/Lecture_DeepLearning/labs/runs/detect/train/weights/best.pt')"
+  },
+  {
+    "objectID": "labs/lab09_2.html#실습-과제-10분",
+    "href": "labs/lab09_2.html#실습-과제-10분",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "6. 실습 과제 (10분)",
+    "text": "6. 실습 과제 (10분)\n\n📝 과제 1 · 다른 검증 사진에서 알약 세기\n검증용 사진 Frame_420.jpg의 알약을 미세 조정한 모델로 찾고, 찾은 수를 레이블의 알약 수와 비교합니다.\n\n# 📝\n#&gt; 힌트: 5절처럼 사진을 model에 넣고 len(r.boxes)로 찾은 수를 셉니다.\n#&gt; 힌트: 레이블의 알약 수는 2절처럼 레이블 파일의 줄 수로 셉니다.\nr2 = model('medical-pills/images/val/Frame_420.jpg', verbose=False)[0]\nprint(len(r2.boxes), len(open('medical-pills/labels/val/Frame_420.txt').readlines()))\n\n18 18\n\n\n✏️ 찾은 수 / 레이블의 알약 수:\n\n\n예시 답: 레이블의 알약은 18개이고, 모델도 18개 안팎을 찾습니다.\n\n\n\n📝 과제 2 · 내 데이터의 설정 파일\n10원, 50원, 100원, 500원 동전을 찾는 모델을 만든다고 합시다. 사진과 레이블은 coins 폴더에 알약 데이터와 같은 형태로 들어 있습니다. 3절처럼 이 데이터의 설정 파일 내용을 씁니다.\n\n# 📝\n#&gt; 힌트: 3절의 yaml_text에서 path의 폴더 이름과 names만 바꿉니다. 클래스 번호는 0부터 차례로 붙입니다.\nyaml_text = f\"\"\"path: {os.path.abspath('coins')}\ntrain: images/train\nval: images/val\nnames:\n  0: 10won\n  1: 50won\n  2: 100won\n  3: 500won\n\"\"\"\nprint(yaml_text)\n\npath: /workspace/BALAB_Prof/Lecture_DeepLearning/labs/coins\ntrain: images/train\nval: images/val\nnames:\n  0: 10won\n  1: 50won\n  2: 100won\n  3: 500won\n\n\n\n✏️ 설정 파일 내용:\n\n\n예시 답: names에 클래스 네 개를 0~3번으로 적습니다. 레이블 파일의 클래스 번호는 이 순서를 따라야 하므로, 어노테이션 도구에 클래스를 입력할 때도 같은 순서로 입력합니다."
+  },
+  {
+    "objectID": "labs/lab09_2.html#정리",
+    "href": "labs/lab09_2.html#정리",
+    "title": "실습 9-2 · 탐지 모델 미세 조정하기",
+    "section": "✅ 정리",
+    "text": "✅ 정리\n\n\n\n\n\n\n\n배운 것\n핵심\n\n\n\n\n사전학습 모델의 한계\nCOCO 80개 클래스에 없는 알약은 찾지 못하고 가장 비슷한 클래스(cake)로 봄\n\n\n학습 데이터\nimages·labels 폴더, 각각 train·val. 레이블 한 줄이 물체 하나\n\n\n설정 파일\npath(데이터 폴더), train·val(사진 폴더), names(클래스 번호와 이름)\n\n\n미세 조정\nYOLO('yolo11n.pt')에서 출발해 model.train(data='pills.yaml', epochs=30, imgsz=640)\n\n\n학습 기록\nbox_loss(박스 손실), cls_loss(클래스 손실), mAP50(IoU 0.5 기준 정확도)\n\n\n결과\n사진 92장으로 미세 조정한 모델이 알약을 하나하나 찾음. 가중치는 weights/best.pt\n\n\n\n다음: 실습 10에서는 이미지에서 텍스트로 넘어갑니다."
   }
 ]
