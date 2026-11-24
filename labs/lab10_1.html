@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>실습 10-1 · 문장을 임베딩 벡터로 바꿔 영화평 분류하기 – 딥러닝</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-147ae4ee18c5c59146968edbade18837.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색",
+    "search-label": "검색"
+  }
+}</script>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">딥러닝</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="검색"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="탐색 전환" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">수업 안내</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../syllabus.html"> 
+<span class="menu-text">강의계획서</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../license.html"> 
+<span class="menu-text">저작권</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#이번-시간의-질문" id="toc-이번-시간의-질문" class="nav-link active" data-scroll-target="#이번-시간의-질문">🎯 이번 시간의 질문</a></li>
+  <li><a href="#문장을-단어-번호로-바꾼다" id="toc-문장을-단어-번호로-바꾼다" class="nav-link" data-scroll-target="#문장을-단어-번호로-바꾼다">1. 문장을 단어 번호로 바꾼다</a></li>
+  <li><a href="#단어-번호를-원-핫-벡터로-바꾼다" id="toc-단어-번호를-원-핫-벡터로-바꾼다" class="nav-link" data-scroll-target="#단어-번호를-원-핫-벡터로-바꾼다">2. 단어 번호를 원-핫 벡터로 바꾼다</a></li>
+  <li><a href="#임베딩-층" id="toc-임베딩-층" class="nav-link" data-scroll-target="#임베딩-층">3. 임베딩 층</a></li>
+  <li><a href="#실제-모델은-문장을-토큰으로-자른다" id="toc-실제-모델은-문장을-토큰으로-자른다" class="nav-link" data-scroll-target="#실제-모델은-문장을-토큰으로-자른다">4. 실제 모델은 문장을 토큰으로 자른다</a></li>
+  <li><a href="#영화평-데이터를-준비한다" id="toc-영화평-데이터를-준비한다" class="nav-link" data-scroll-target="#영화평-데이터를-준비한다">5. 영화평 데이터를 준비한다</a></li>
+  <li><a href="#임베딩-평균-분류" id="toc-임베딩-평균-분류" class="nav-link" data-scroll-target="#임베딩-평균-분류">6. 임베딩 → 평균 → 분류</a></li>
+  <li><a href="#학습시킨다" id="toc-학습시킨다" class="nav-link" data-scroll-target="#학습시킨다">7. 학습시킨다</a></li>
+  <li><a href="#학습된-임베딩-벡터를-본다" id="toc-학습된-임베딩-벡터를-본다" class="nav-link" data-scroll-target="#학습된-임베딩-벡터를-본다">8. 학습된 임베딩 벡터를 본다</a></li>
+  <li><a href="#문장을-넣어-판별한다" id="toc-문장을-넣어-판별한다" class="nav-link" data-scroll-target="#문장을-넣어-판별한다">9. 문장을 넣어 판별한다</a></li>
+  <li><a href="#사전-학습된-트랜스포머로-같은-영화평을-분류한다" id="toc-사전-학습된-트랜스포머로-같은-영화평을-분류한다" class="nav-link" data-scroll-target="#사전-학습된-트랜스포머로-같은-영화평을-분류한다">10. 사전 학습된 트랜스포머로 같은 영화평을 분류한다</a></li>
+  <li><a href="#실습-과제-20분" id="toc-실습-과제-20분" class="nav-link" data-scroll-target="#실습-과제-20분">11. 실습 과제 (20분)</a>
+  <ul class="collapse">
+  <li><a href="#과제-1-지루와-가까운-토큰" id="toc-과제-1-지루와-가까운-토큰" class="nav-link" data-scroll-target="#과제-1-지루와-가까운-토큰">📝 과제 1 · 지루와 가까운 토큰</a></li>
+  <li><a href="#과제-2-임베딩-벡터의-길이를-16으로" id="toc-과제-2-임베딩-벡터의-길이를-16으로" class="nav-link" data-scroll-target="#과제-2-임베딩-벡터의-길이를-16으로">📝 과제 2 · 임베딩 벡터의 길이를 16으로</a></li>
+  <li><a href="#과제-3-순서만-다른-두-문장" id="toc-과제-3-순서만-다른-두-문장" class="nav-link" data-scroll-target="#과제-3-순서만-다른-두-문장">📝 과제 3 · 순서만 다른 두 문장</a></li>
+  <li><a href="#과제-4-분류-층만-학습하기" id="toc-과제-4-분류-층만-학습하기" class="nav-link" data-scroll-target="#과제-4-분류-층만-학습하기">📝 과제 4 · 분류 층만 학습하기</a></li>
+  </ul></li>
+  <li><a href="#정리" id="toc-정리" class="nav-link" data-scroll-target="#정리">✅ 정리</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">실습 10-1 · 문장을 임베딩 벡터로 바꿔 영화평 분류하기</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://colab.research.google.com/github/ralbu85/lecture_deeplearning_labs/blob/main/lab10_1.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid figure-img" alt="Open In Colab"></a></p>
+<figcaption>Open In Colab</figcaption>
+</figure>
+</div>
+<p><strong>⏱ 95분</strong> · 10장 실습 1/2</p>
+<section id="이번-시간의-질문" class="level2">
+<h2 class="anchored" data-anchor-id="이번-시간의-질문">🎯 이번 시간의 질문</h2>
+<p>지금까지 신경망에 넣은 표와 사진은 처음부터 숫자였습니다. 문장은 글자로 되어 있습니다.</p>
+<blockquote class="blockquote">
+<p><strong>문장을 숫자로 바꾸면, 신경망이 영화평이 긍정인지 부정인지 맞힐까요?</strong></p>
+</blockquote>
+<p>문장 하나를 단어 번호, 원-핫 벡터, 임베딩 벡터로 차례로 바꿔 봅니다. 그다음 네이버 영화평 2만 개로 임베딩 층을 학습시키고, 학습된 임베딩 벡터를 평면에 그려 봅니다. 마지막에는 미리 학습된 트랜스포머로 같은 영화평을 분류합니다.</p>
+<p><strong>대응 이론:</strong> <a href="https://ralbu85.github.io/lecture_deeplearning/chapters/ch10.html">Ch10 순환신경망을 이용한 자연어 처리</a></p>
+<p><strong>Colab 설정:</strong> 메뉴 <strong>런타임 → 런타임 유형 변경 → T4 GPU</strong>를 고른 뒤 시작합니다. GPU는 10절에서 씁니다.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>표시</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>▶</td>
+<td>그대로 실행합니다</td>
+</tr>
+<tr class="even">
+<td>✍️</td>
+<td>보여 준 코드를 손으로 타이핑해서 실행합니다. 빈칸 <code>___</code>은 채웁니다</td>
+</tr>
+<tr class="odd">
+<td>📝</td>
+<td>과제. 힌트를 보고 스스로 풉니다</td>
+</tr>
+</tbody>
+</table>
+<div id="0c11a0e7" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 준비 셀 — 그대로 실행하세요.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.__version__)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.4.1+cu124</code></pre>
+</div>
+</div>
+<p>PyTorch의 버전이 나옵니다. 다른 라이브러리는 필요한 셀에서 그때그때 불러옵니다.</p>
+<hr>
+</section>
+<section id="문장을-단어-번호로-바꾼다" class="level2">
+<h2 class="anchored" data-anchor-id="문장을-단어-번호로-바꾼다">1. 문장을 단어 번호로 바꾼다</h2>
+<p>신경망에는 숫자만 넣을 수 있으므로, 문장을 먼저 숫자로 바꿔야 합니다. 문장을 단어로 자르고 단어마다 번호를 붙입니다. 아래 코드는 문장 하나를 단어로 자르는 코드입니다.</p>
+<div id="1240014e" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sentence <span class="op">=</span> <span class="st">'The kimchi was not bad.'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> sentence.lower().replace(<span class="st">'.'</span>, <span class="st">''</span>).split()   <span class="co"># 소문자로 바꾸고, 마침표를 지우고, 빈칸에서 자른다</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(words)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['the', 'kimchi', 'was', 'not', 'bad']</code></pre>
+</div>
+</div>
+<p><code>['the', 'kimchi', 'was', 'not', 'bad']</code>가 나옵니다.</p>
+<p>텍스트에 나오는 서로 다른 단어를 모은 목록을 <strong>어휘</strong>라고 합니다. 아래 코드는 이 문장의 어휘를 만드는 코드입니다.</p>
+<div id="bb3b490f" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>vocab <span class="op">=</span> <span class="bu">sorted</span>(<span class="bu">set</span>(words))   <span class="co"># 겹치는 단어를 없애고 알파벳 순으로 늘어놓는다</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(vocab, <span class="bu">len</span>(vocab))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['bad', 'kimchi', 'not', 'the', 'was'] 5</code></pre>
+</div>
+</div>
+<p><code>['bad', 'kimchi', 'not', 'the', 'was']</code>와 <code>5</code>가 나옵니다. 어휘는 다섯 단어입니다.</p>
+<p>단어의 번호는 그 단어가 어휘의 몇 번째에 있는지로 정합니다. 파이썬은 0부터 세므로 <code>bad</code>가 0번, <code>was</code>가 4번입니다.</p>
+<div id="41200d5d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ids <span class="op">=</span> [vocab.index(w) <span class="cf">for</span> w <span class="kw">in</span> words]   <span class="co"># 단어마다 어휘에서의 번호를 찾는다</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ids)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[3, 1, 4, 2, 0]</code></pre>
+</div>
+</div>
+<p><code>[3, 1, 4, 2, 0]</code>이 나옵니다. 문장의 첫 단어 <code>the</code>는 3번이고, 넷째 단어 <code>not</code>은 2번입니다.</p>
+<hr>
+</section>
+<section id="단어-번호를-원-핫-벡터로-바꾼다" class="level2">
+<h2 class="anchored" data-anchor-id="단어-번호를-원-핫-벡터로-바꾼다">2. 단어 번호를 원-핫 벡터로 바꾼다</h2>
+<p>단어의 번호는 크기가 아니라 어떤 단어인지를 나타냅니다. 번호를 그대로 신경망에 넣으면 번호의 크기가 계산에 쓰이므로, 번호를 원-핫 벡터로 바꿉니다. <strong>원-핫 벡터</strong>는 길이가 어휘의 크기와 같고, 그 단어의 번호 자리만 1이고 나머지는 0인 벡터입니다.</p>
+<div id="1beca55a" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F   <span class="co"># 층을 만들지 않고 바로 쓰는 계산 함수들이 들어 있다</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>onehot <span class="op">=</span> F.one_hot(torch.tensor(ids), num_classes<span class="op">=</span><span class="dv">5</span>)   <span class="co"># 번호마다 길이 5인 원-핫 벡터로 바꾼다</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(onehot)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[0, 0, 0, 1, 0],
+        [0, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1],
+        [0, 0, 1, 0, 0],
+        [1, 0, 0, 0, 0]])</code></pre>
+</div>
+</div>
+<p>줄 하나가 단어 하나입니다. 넷째 줄 <code>[0, 0, 1, 0, 0]</code>이 <code>not</code>의 원-핫 벡터이고, 2번 자리만 1입니다.</p>
+<p>이 문장은 어휘가 다섯 단어라 원-핫 벡터의 길이가 5입니다. 어휘가 10,000 단어이면 단어 하나가 길이 10,000인 벡터가 되고, 그 가운데 9,999개가 0입니다.</p>
+<hr>
+</section>
+<section id="임베딩-층" class="level2">
+<h2 class="anchored" data-anchor-id="임베딩-층">3. 임베딩 층</h2>
+<p>길고 0이 대부분인 원-핫 벡터를 짧고 실수로 채워진 벡터로 바꾸는 것을 <strong>임베딩</strong>이라고 하고, 바뀐 벡터를 <strong>임베딩 벡터</strong>라고 합니다. 임베딩은 원-핫 벡터에 가중치 행렬을 곱해서 합니다. 어휘가 5 단어이고 임베딩 벡터의 길이를 2로 정하면 가중치 행렬은 5×2입니다. 아래 코드는 가중치 행렬 <code>W</code>를 하나 정하고, <code>not</code>의 원-핫 벡터에 곱하는 코드입니다.</p>
+<div id="06d12bd0" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>W <span class="op">=</span> torch.tensor([[<span class="fl">6.</span>, <span class="fl">5.</span>],    <span class="co"># 0번 bad</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">4.</span>, <span class="fl">1.</span>],    <span class="co"># 1번 kimchi</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">2.</span>, <span class="fl">8.</span>],    <span class="co"># 2번 not</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">7.</span>, <span class="fl">9.</span>],    <span class="co"># 3번 the</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                  [<span class="fl">3.</span>, <span class="fl">6.</span>]])   <span class="co"># 4번 was</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(onehot[<span class="dv">3</span>].<span class="bu">float</span>() <span class="op">@</span> W)   <span class="co"># 문장의 넷째 단어 not의 원-핫 벡터에 W를 곱한다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([2., 8.])</code></pre>
+</div>
+</div>
+<p><code>tensor([2., 8.])</code>이 나옵니다. <code>W</code>의 2번 줄입니다. <code>not</code>의 원-핫 벡터는 2번 자리만 1이므로, 곱하면 <code>W</code>의 2번 줄만 남습니다.</p>
+<p>그러므로 곱셈을 하지 않고 <code>W</code>에서 그 번호의 줄을 꺼내도 결과가 같습니다. 아래 코드는 문장의 다섯 단어를 두 방법으로 임베딩 벡터로 바꾸는 코드입니다.</p>
+<div id="4937cd8b" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(onehot.<span class="bu">float</span>() <span class="op">@</span> W)   <span class="co"># 원-핫 벡터 다섯 개에 W를 곱한다</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(W[ids])               <span class="co"># W에서 3, 1, 4, 2, 0번 줄을 꺼낸다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[7., 9.],
+        [4., 1.],
+        [3., 6.],
+        [2., 8.],
+        [6., 5.]])
+tensor([[7., 9.],
+        [4., 1.],
+        [3., 6.],
+        [2., 8.],
+        [6., 5.]])</code></pre>
+</div>
+</div>
+<p>두 결과가 같습니다. <code>W</code>의 줄 하나가 단어 하나의 임베딩 벡터입니다.</p>
+<p>PyTorch의 <code>nn.Embedding</code>은 이렇게 번호로 가중치의 줄을 꺼내는 층입니다. 이 층을 <strong>임베딩 층</strong>이라고 합니다. 아래 코드는 단어 5개를 길이 2인 벡터로 바꾸는 임베딩 층을 만들고, 그 가중치를 확인하는 코드입니다.</p>
+<div id="744200e4" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn   <span class="co"># 신경망의 층들이 들어 있다</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> nn.Embedding(<span class="dv">5</span>, <span class="dv">2</span>)   <span class="co"># 단어 5개를 길이 2인 벡터로 바꾸는 임베딩 층</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emb.weight)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parameter containing:
+tensor([[ 0.3367,  0.1288],
+        [ 0.2345,  0.2303],
+        [-1.1229, -0.1863],
+        [ 2.2082, -0.6380],
+        [ 0.4617,  0.2674]], requires_grad=True)</code></pre>
+</div>
+</div>
+<p>5×2 가중치가 나옵니다. 처음에는 임의의 값이 들어 있고, 다른 층의 가중치처럼 학습하면서 바뀝니다. 임베딩 층에는 편향이 없으므로 파라미터는 5 × 2 = 10개입니다.</p>
+<p>임베딩 층의 가중치를 위의 <code>W</code>로 바꾸고, 문장의 단어 번호를 넣어 봅니다.</p>
+<div id="5906b047" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> torch.no_grad():        <span class="co"># 학습이 아니라 값을 직접 넣는 것이므로 기울기는 계산하지 않는다</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    emb.weight.copy_(W)      <span class="co"># 가중치를 W로 바꾼다</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(emb(torch.tensor(ids)))   <span class="co"># 단어 번호 다섯 개를 넣는다</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[7., 9.],
+        [4., 1.],
+        [3., 6.],
+        [2., 8.],
+        [6., 5.]], grad_fn=&lt;EmbeddingBackward0&gt;)</code></pre>
+</div>
+</div>
+<p>위의 두 결과와 같은 값이 나옵니다. 임베딩 층에는 원-핫 벡터를 만들지 않고 단어 번호를 그대로 넣습니다.</p>
+<hr>
+</section>
+<section id="실제-모델은-문장을-토큰으로-자른다" class="level2">
+<h2 class="anchored" data-anchor-id="실제-모델은-문장을-토큰으로-자른다">4. 실제 모델은 문장을 토큰으로 자른다</h2>
+<p>지금까지는 문장을 단어로 잘랐습니다. 실제 언어 모델은 문장을 <strong>토큰</strong>이라는 단위로 자릅니다. 자주 쓰이는 단어는 단어 하나가 토큰 하나가 되고, 드물게 쓰이는 단어는 여러 조각으로 나뉘어 조각 하나가 토큰 하나가 됩니다. 문장을 토큰으로 자르는 도구를 <strong>토크나이저</strong>라고 합니다. 아래 코드는 언어 모델 GPT-2의 토크나이저를 내려받아 같은 문장을 자르는 코드입니다.</p>
+<div id="38fbb651" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoTokenizer   <span class="co"># 공개된 언어 모델의 토크나이저를 내려받는 도구</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>gpt2_tok <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">'gpt2'</span>)   <span class="co"># GPT-2의 토크나이저</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gpt2_tok.tokenize(sentence))                 <span class="co"># 문장을 토큰으로 자른다</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gpt2_tok.vocab_size)                         <span class="co"># 어휘에 든 토큰의 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['The', 'Ġk', 'im', 'chi', 'Ġwas', 'Ġnot', 'Ġbad', '.']
+50257</code></pre>
+</div>
+</div>
+<p><code>['The', 'Ġk', 'im', 'chi', 'Ġwas', 'Ġnot', 'Ġbad', '.']</code>와 <code>50257</code>이 나옵니다. <code>Ġ</code>는 그 토큰 앞에 빈칸이 있었다는 표시입니다. <code>was</code>, <code>not</code>, <code>bad</code>는 단어 하나가 토큰 하나입니다. 영어 텍스트에 드물게 나오는 <code>kimchi</code>는 <code>k</code>, <code>im</code>, <code>chi</code> 세 토큰으로 나뉘고, 마침표도 토큰 하나가 됩니다. GPT-2의 어휘에는 토큰이 50,257개 있으므로, 토큰 하나를 원-핫 벡터로 만들면 길이가 50,257입니다.</p>
+<p>토크나이저에 문장을 그대로 넣으면 토큰의 번호가 나옵니다.</p>
+<div id="50522bd5" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(gpt2_tok(sentence)[<span class="st">'input_ids'</span>])   <span class="co"># 토큰 여덟 개의 번호</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[464, 479, 320, 11072, 373, 407, 2089, 13]</code></pre>
+</div>
+</div>
+<p><code>[464, 479, 320, 11072, 373, 407, 2089, 13]</code>이 나옵니다. 토큰 여덟 개가 어휘에서의 번호 여덟 개로 바뀌었습니다. 1절에서 단어를 번호로 바꾼 것과 같은 일입니다.</p>
+<hr>
+</section>
+<section id="영화평-데이터를-준비한다" class="level2">
+<h2 class="anchored" data-anchor-id="영화평-데이터를-준비한다">5. 영화평 데이터를 준비한다</h2>
+<p>이제 실제 데이터로 임베딩 층을 학습시킵니다. 네이버 영화평 데이터는 영화평 20만 개에 긍정이면 1, 부정이면 0을 붙여 둔 공개 데이터셋입니다. 훈련용 15만 개와 테스트용 5만 개로 나뉘어 있습니다.</p>
+<div id="b7bbcabe" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 영화평 데이터 내려받기(약 19MB)</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os, urllib.request</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>os.makedirs(<span class="st">'../data'</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name <span class="kw">in</span> [<span class="st">'train'</span>, <span class="st">'test'</span>]:</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    path <span class="op">=</span> <span class="ss">f'../data/nsmc_</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.txt'</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.exists(path):   <span class="co"># 이미 받아 두었으면 건너뛴다</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        urllib.request.urlretrieve(<span class="ss">f'https://raw.githubusercontent.com/e9t/nsmc/master/ratings_</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">.txt'</span>, path)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 탭으로 나뉜 표를 읽고, 영화평이 비어 있는 줄은 뺀다</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>train_df <span class="op">=</span> pd.read_csv(<span class="st">'../data/nsmc_train.txt'</span>, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>).dropna()</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>test_df <span class="op">=</span> pd.read_csv(<span class="st">'../data/nsmc_test.txt'</span>, sep<span class="op">=</span><span class="st">'</span><span class="ch">\t</span><span class="st">'</span>).dropna()</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(train_df), <span class="bu">len</span>(test_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>149995 49997</code></pre>
+</div>
+</div>
+<p>수업 시간 안에 학습이 끝나도록, 훈련용 2만 개와 테스트용 5천 개만 무작위로 골라 씁니다.</p>
+<div id="7b00310f" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>train_df <span class="op">=</span> train_df.sample(<span class="dv">20000</span>, random_state<span class="op">=</span><span class="dv">42</span>)   <span class="co"># 무작위로 20,000개를 고른다</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>test_df <span class="op">=</span> test_df.sample(<span class="dv">5000</span>, random_state<span class="op">=</span><span class="dv">42</span>)      <span class="co"># 무작위로 5,000개를 고른다</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_df.head())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             id                    document  label
+128076  7865795                      원본이 최고      1
+65517   5417631            스릴감과 훈훈함이 있는 영화.      1
+85048   8357466      굉장히 저평가되는 영화중 하나라고 생각함      1
+118192  8252946  정말영화같은이야기 영화여서 영화같은이야기가 좋다      1
+92368   7800452                 계기도없는데 이상하다      0</code></pre>
+</div>
+</div>
+<p><code>document</code> 열이 영화평이고, <code>label</code> 열이 정답입니다. 첫 영화평 <code>원본이 최고</code>의 정답은 1, 곧 긍정입니다.</p>
+<p>한국어 영화평은 한국어 텍스트로 만든 토크나이저로 자릅니다. 아래 코드는 한국어 언어 모델 <code>klue/bert-base</code>의 토크나이저를 내려받아 문장 하나를 자르는 코드입니다.</p>
+<div id="959872fa" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>tok <span class="op">=</span> AutoTokenizer.from_pretrained(<span class="st">'klue/bert-base'</span>)   <span class="co"># 한국어 토크나이저</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.vocab_size)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.tokenize(<span class="st">'지루하지 않고 재미있다'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>32000
+['지루', '##하', '##지', '않', '##고', '재미있', '##다']</code></pre>
+</div>
+</div>
+<p><code>32000</code>과 <code>['지루', '##하', '##지', '않', '##고', '재미있', '##다']</code>가 나옵니다. 어휘에는 토큰이 32,000개 있고, 이 문장은 토큰 일곱 개로 잘립니다. <code>##</code>은 앞 토큰에 붙여 쓰는 조각이라는 표시입니다.</p>
+<p>영화평마다 토큰의 수가 다릅니다. 여러 영화평을 텐서 하나에 담으려면 길이가 같아야 하므로, 정한 길이보다 긴 영화평은 뒤를 자르고 짧은 영화평은 뒤를 0번 토큰으로 채웁니다. 이렇게 길이를 맞추려고 채우는 것을 <strong>패딩</strong>이라고 합니다. 아래 코드는 문장 두 개를 길이 8로 맞춰 토큰 번호로 바꾸는 코드입니다.</p>
+<div id="2aa2eda3" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> tok([<span class="st">'재미있다'</span>, <span class="st">'지루하지 않고 재미있다'</span>],</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>          padding<span class="op">=</span><span class="st">'max_length'</span>,       <span class="co"># 짧은 문장은 뒤를 0번 토큰으로 채운다</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>          truncation<span class="op">=</span><span class="va">True</span>,            <span class="co"># 긴 문장은 뒤를 자른다</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>          max_length<span class="op">=</span><span class="dv">8</span>,               <span class="co"># 맞출 길이</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>          add_special_tokens<span class="op">=</span><span class="va">False</span>,   <span class="co"># 문장의 시작과 끝을 알리는 토큰은 붙이지 않는다</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>          return_tensors<span class="op">=</span><span class="st">'pt'</span>)        <span class="co"># 결과를 PyTorch 텐서로 받는다</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(out[<span class="st">'input_ids'</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[6001, 2062,    0,    0,    0,    0,    0,    0],
+        [9734, 2205, 2118, 1380, 2088, 6001, 2062,    0]])</code></pre>
+</div>
+</div>
+<p>두 줄 모두 길이가 8입니다. 첫 문장은 토큰이 두 개라 나머지 여섯 자리가 0이고, 둘째 문장은 토큰이 일곱 개라 마지막 한 자리가 0입니다.</p>
+<p>같은 방법으로 영화평 전체를 길이 40으로 맞춥니다.</p>
+<div id="6b199efe" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 영화평 전체를 토큰 번호로 바꾸기</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 영화평 여러 개를 받아, 영화평마다 토큰 번호 40개로 바꾼 텐서를 돌려주는 함수</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode(texts):</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> tok(<span class="bu">list</span>(texts), padding<span class="op">=</span><span class="st">'max_length'</span>, truncation<span class="op">=</span><span class="va">True</span>, max_length<span class="op">=</span><span class="dv">40</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>              add_special_tokens<span class="op">=</span><span class="va">False</span>, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out[<span class="st">'input_ids'</span>]</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>X_train <span class="op">=</span> encode(train_df[<span class="st">'document'</span>])</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> encode(test_df[<span class="st">'document'</span>])</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> torch.tensor(train_df[<span class="st">'label'</span>].to_numpy())   <span class="co"># 정답 (0 부정, 1 긍정)</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> torch.tensor(test_df[<span class="st">'label'</span>].to_numpy())</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_train.shape, y_train.shape)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_train[<span class="dv">0</span>], y_train[<span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([20000, 40]) torch.Size([20000])
+tensor([15548,  2052,  3841,     0,     0,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0]) tensor(1)</code></pre>
+</div>
+</div>
+<p><code>X_train</code>의 모양은 <code>torch.Size([20000, 40])</code>입니다. 영화평 20,000개가 각각 토큰 번호 40개입니다. 첫 영화평 <code>원본이 최고</code>는 토큰이 세 개이고 나머지 37자리는 0입니다.</p>
+<hr>
+</section>
+<section id="임베딩-평균-분류" class="level2">
+<h2 class="anchored" data-anchor-id="임베딩-평균-분류">6. 임베딩 → 평균 → 분류</h2>
+<p>영화평 하나는 토큰 번호 40개입니다. 이를 임베딩 층에 넣으면 임베딩 벡터 40개가 됩니다. 긍정과 부정을 가르려면 영화평 하나가 벡터 하나여야 하므로, 토큰들의 임베딩 벡터를 평균합니다. 그 평균 벡터를 분류 층에 넣어 부정과 긍정의 점수를 냅니다. 먼저 영화평 4개로 한 단계씩 확인합니다.</p>
+<div id="f0d875de" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> X_train[:<span class="dv">4</span>]                               <span class="co"># 영화평 4개</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>emb <span class="op">=</span> nn.Embedding(<span class="dv">32000</span>, <span class="dv">2</span>, padding_idx<span class="op">=</span><span class="dv">0</span>)   <span class="co"># 토큰 32,000개를 길이 2인 벡터로 바꾼다</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> emb(x)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(e.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([4, 40, 2])</code></pre>
+</div>
+</div>
+<p><code>torch.Size([4, 40, 2])</code>가 나옵니다. 차례로 영화평의 수, 토큰의 수, 임베딩 벡터의 길이입니다. <code>padding_idx=0</code>은 패딩에 쓴 0번 토큰의 임베딩 벡터를 <code>[0, 0]</code>으로 고정합니다. 그러므로 패딩은 임베딩 벡터의 합을 바꾸지 않습니다.</p>
+<p>평균은 임베딩 벡터의 합을 실제 토큰의 수로 나눠서 구합니다.</p>
+<div id="1cf54048" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> (x <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)   <span class="co"># 영화평마다 번호가 0이 아닌 토큰, 곧 실제 토큰의 수</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(n)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>v <span class="op">=</span> e.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> n                    <span class="co"># 토큰 40개의 벡터를 더해 실제 토큰의 수로 나눈다</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(v.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor([[ 3],
+        [10],
+        [11],
+        [17]])
+torch.Size([4, 2])</code></pre>
+</div>
+</div>
+<p>첫 영화평의 실제 토큰 수는 3입니다. <code>v</code>의 모양은 <code>torch.Size([4, 2])</code>로, 영화평 하나가 길이 2인 벡터 하나가 되었습니다.</p>
+<div id="0f87b75e" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>fc <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">2</span>)   <span class="co"># 평균 벡터를 받아 부정(0)과 긍정(1)의 점수를 낸다</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fc(v).shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([4, 2])</code></pre>
+</div>
+</div>
+<p><code>torch.Size([4, 2])</code>가 나옵니다. 영화평마다 점수가 2개입니다.</p>
+<p>세 단계를 모델 하나로 묶습니다. 아래 코드는 임베딩 층, 평균, 분류 층을 차례로 거치는 모델입니다.</p>
+<div id="4b95dec6" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ReviewModel(nn.Module):</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.emb <span class="op">=</span> nn.Embedding(<span class="dv">32000</span>, <span class="dv">2</span>, padding_idx<span class="op">=</span><span class="dv">0</span>)   <span class="co"># 임베딩 층</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc <span class="op">=</span> nn.Linear(<span class="dv">2</span>, <span class="dv">2</span>)                          <span class="co"># 분류 층</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> <span class="va">self</span>.emb(x)                          <span class="co"># 토큰마다 임베딩 벡터로 바꾼다</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>        n <span class="op">=</span> (x <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)    <span class="co"># 영화평마다 실제 토큰의 수</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> e.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> n                     <span class="co"># 토큰 벡터의 평균</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fc(v)                        <span class="co"># 부정과 긍정의 점수</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ReviewModel()</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model(x).shape)</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model.parameters()))   <span class="co"># 파라미터의 수</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([4, 2])
+64006</code></pre>
+</div>
+</div>
+<p><code>torch.Size([4, 2])</code>와 <code>64006</code>이 나옵니다. 임베딩 층의 가중치가 32,000 × 2 = 64,000개이고, 분류 층의 가중치 4개와 편향 2개를 더해 64,006개입니다. 파라미터의 대부분이 임베딩 층에 있습니다.</p>
+<hr>
+</section>
+<section id="학습시킨다" class="level2">
+<h2 class="anchored" data-anchor-id="학습시킨다">7. 학습시킨다</h2>
+<p>학습 함수와 평가 함수는 사진을 분류할 때 쓴 것과 같습니다.</p>
+<div id="14077398" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 학습·평가 함수</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 한 에폭 동안 학습하고, 평균 손실을 돌려준다</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_one_epoch(model, loader, criterion, optimizer):</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>        optimizer.zero_grad()</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> criterion(model(xb), yb)</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>        loss.backward()</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>        optimizer.step()</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>        total <span class="op">+=</span> loss.item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>        n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 학습 없이 평균 손실과 정확도를 잰다</span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> evaluate(model, loader, criterion):</span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>    total <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb41-20"><a href="#cb41-20" aria-hidden="true" tabindex="-1"></a>    correct <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb41-21"><a href="#cb41-21" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb41-22"><a href="#cb41-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb41-23"><a href="#cb41-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> xb, yb <span class="kw">in</span> loader:</span>
+<span id="cb41-24"><a href="#cb41-24" aria-hidden="true" tabindex="-1"></a>            out <span class="op">=</span> model(xb)</span>
+<span id="cb41-25"><a href="#cb41-25" aria-hidden="true" tabindex="-1"></a>            total <span class="op">+=</span> criterion(out, yb).item() <span class="op">*</span> <span class="bu">len</span>(yb)</span>
+<span id="cb41-26"><a href="#cb41-26" aria-hidden="true" tabindex="-1"></a>            correct <span class="op">+=</span> (out.argmax(<span class="dv">1</span>) <span class="op">==</span> yb).<span class="bu">sum</span>().item()</span>
+<span id="cb41-27"><a href="#cb41-27" aria-hidden="true" tabindex="-1"></a>            n <span class="op">+=</span> <span class="bu">len</span>(yb)</span>
+<span id="cb41-28"><a href="#cb41-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> total <span class="op">/</span> n, correct <span class="op">/</span> n</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>아래 코드는 로더, 손실 함수, 옵티마이저를 만들고, 학습하기 전의 테스트 손실과 정확도를 보는 코드입니다.</p>
+<div id="3afc5cf8" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> TensorDataset, DataLoader   <span class="co"># 텐서를 데이터셋으로 묶고, 묶음으로 꺼내 준다</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> DataLoader(TensorDataset(X_train, y_train), batch_size<span class="op">=</span><span class="dv">64</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>test_loader <span class="op">=</span> DataLoader(TensorDataset(X_test, y_test), batch_size<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>criterion <span class="op">=</span> nn.CrossEntropyLoss()</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)   <span class="co"># 임베딩 층과 분류 층을 함께 학습한다</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model, test_loader, criterion))              <span class="co"># (테스트 손실, 테스트 정확도)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(0.7417840719223022, 0.485)</code></pre>
+</div>
+</div>
+<p>정확도는 <strong>0.5</strong> 안팎입니다. 가중치가 아직 임의의 값이라 둘 중 하나를 찍는 수준입니다.</p>
+<p>학습으로 임베딩 벡터가 바뀌는지 보려고, 학습하기 전에 토큰 <code>최고</code>의 임베딩 벡터를 찍어 둡니다.</p>
+<div id="b0d80a58" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>i <span class="op">=</span> tok.convert_tokens_to_ids(<span class="st">'최고'</span>)   <span class="co"># 토큰 '최고'의 번호</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(i, model.emb.weight[i])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3841 tensor([ 0.9149, -2.1186], grad_fn=&lt;SelectBackward0&gt;)</code></pre>
+</div>
+</div>
+<p><code>최고</code>는 3841번 토큰이고, 임베딩 벡터에는 임의의 값이 들어 있습니다.</p>
+<p>3 에폭 학습하며 테스트 정확도를 봅니다.</p>
+<div id="1e0a6102" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model, train_loader, criterion, optimizer)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    test_loss, test_acc <span class="op">=</span> evaluate(model, test_loader, criterion)</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(epoch, <span class="bu">round</span>(test_loss, <span class="dv">4</span>), <span class="bu">round</span>(test_acc, <span class="dv">4</span>))   <span class="co"># 에폭, 테스트 손실, 테스트 정확도</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0 0.5401 0.7404
+1 0.482 0.79
+2 0.4796 0.8002</code></pre>
+</div>
+</div>
+<p>마지막 정확도는 <strong>0.80</strong> 안팎입니다. 처음 보는 영화평 다섯 개 가운데 네 개를 맞힙니다.</p>
+<hr>
+</section>
+<section id="학습된-임베딩-벡터를-본다" class="level2">
+<h2 class="anchored" data-anchor-id="학습된-임베딩-벡터를-본다">8. 학습된 임베딩 벡터를 본다</h2>
+<p>학습이 끝난 임베딩 층에서 토큰 몇 개의 임베딩 벡터를 꺼내 봅니다. 아래 코드는 긍정적인 영화평에 자주 나오는 토큰 다섯 개와 부정적인 영화평에 자주 나오는 토큰 다섯 개의 임베딩 벡터를 찍는 코드입니다.</p>
+<div id="84b4d22f" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>E <span class="op">=</span> model.emb.weight.detach()   <span class="co"># 학습이 끝난 임베딩 층의 가중치. detach()는 기울기 계산에서 떼어 낸 값을 돌려준다</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>good <span class="op">=</span> [<span class="st">'최고'</span>, <span class="st">'감동'</span>, <span class="st">'재밌'</span>, <span class="st">'좋'</span>, <span class="st">'명작'</span>]</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>bad <span class="op">=</span> [<span class="st">'최악'</span>, <span class="st">'쓰레기'</span>, <span class="st">'지루'</span>, <span class="st">'아깝'</span>, <span class="st">'재미없'</span>]</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> good <span class="op">+</span> bad:</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> tok.convert_tokens_to_ids(w)   <span class="co"># 토큰의 번호</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(w, E[i])                     <span class="co"># 그 토큰의 임베딩 벡터</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>최고 tensor([-2.3228,  1.5039])
+감동 tensor([-3.0315,  2.3972])
+재밌 tensor([-1.3573,  4.2915])
+좋 tensor([-2.1555,  2.3929])
+명작 tensor([-1.1506,  2.3931])
+최악 tensor([ 4.1072, -3.5408])
+쓰레기 tensor([ 2.9025, -3.4631])
+지루 tensor([ 2.3220, -3.8753])
+아깝 tensor([ 2.9739, -2.4380])
+재미없 tensor([ 4.6940, -1.7983])</code></pre>
+</div>
+</div>
+<p><code>최고</code>의 임베딩 벡터가 학습하기 전과 달라졌습니다. 임베딩 층의 가중치도 학습으로 바뀐 것입니다. 벡터의 길이가 2이므로 평면에 점으로 그릴 수 있습니다.</p>
+<div id="cell-lab10-plane" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — 임베딩 벡터를 평면에 그리기</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> koreanize_matplotlib            <span class="co"># 그림에 한글을 쓸 수 있게 한다</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt        <span class="co"># 그림을 그리는 라이브러리</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> group, color <span class="kw">in</span> [(good, <span class="st">'tab:blue'</span>), (bad, <span class="st">'tab:red'</span>)]:   <span class="co"># 긍정 토큰은 파랑, 부정 토큰은 빨강</span></span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> w <span class="kw">in</span> group:</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>        e1, e2 <span class="op">=</span> E[tok.convert_tokens_to_ids(w)].tolist()</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>        plt.scatter(e1, e2, color<span class="op">=</span>color)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>        plt.annotate(w, (e1, e2), textcoords<span class="op">=</span><span class="st">'offset points'</span>, xytext<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>plt.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">'gray'</span>, linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'임베딩 벡터의 첫째 값'</span>)</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'임베딩 벡터의 둘째 값'</span>)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="lab10_1_files/figure-html/lab10-plane-output-1.png" id="lab10-plane" width="531" height="503" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>파란 점 다섯 개와 빨간 점 다섯 개가 원점을 사이에 두고 반대쪽에 모여 있습니다. 임베딩 벡터의 값은 우리가 정하지 않았습니다. 긍정과 부정을 맞히도록 학습하는 동안, 뜻이 비슷한 토큰의 벡터가 가까운 곳에 놓였습니다.</p>
+<p>두 벡터가 가까운 정도는 내적으로 잽니다. <strong>내적</strong>은 두 벡터의 같은 자리 값끼리 곱해 모두 더한 값으로, 두 벡터의 방향이 비슷하면 양수이고 반대이면 음수입니다.</p>
+<div id="dd28bac6" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> E[tok.convert_tokens_to_ids(<span class="st">'최고'</span>)]</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> E[tok.convert_tokens_to_ids(<span class="st">'감동'</span>)]</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> E[tok.convert_tokens_to_ids(<span class="st">'최악'</span>)]</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.dot(a, b))   <span class="co"># 최고와 감동의 내적</span></span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(torch.dot(a, c))   <span class="co"># 최고와 최악의 내적</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tensor(10.6468)
+tensor(-14.8652)</code></pre>
+</div>
+</div>
+<p><code>최고</code>와 <code>감동</code>의 내적은 양수이고, <code>최고</code>와 <code>최악</code>의 내적은 음수입니다.</p>
+<hr>
+</section>
+<section id="문장을-넣어-판별한다" class="level2">
+<h2 class="anchored" data-anchor-id="문장을-넣어-판별한다">9. 문장을 넣어 판별한다</h2>
+<p>학습한 모델에 문장을 넣어 봅니다. 아래 코드는 문장 하나를 받아 부정과 긍정의 확률을 돌려주는 함수 <code>predict</code>입니다.</p>
+<div id="218410a2" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 문장 하나를 넣으면, 그 문장이 부정일 확률과 긍정일 확률을 알려 주는 함수</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(text):</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 문장 하나를 토큰 번호로 바꾼다. 문장이 하나뿐이므로 길이를 맞추지 않는다</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> tok(text, add_special_tokens<span class="op">=</span><span class="va">False</span>, return_tensors<span class="op">=</span><span class="st">'pt'</span>)[<span class="st">'input_ids'</span>]</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 학습할 때와 다르게 동작하는 층을 평가용으로 바꾼다</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">eval</span>()</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 학습이 아니므로 기울기는 계산하지 않는다</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 점수 2개를 확률로 바꾸고, 묶음에 하나뿐인 문장의 확률을 꺼낸다</span></span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> torch.softmax(model(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 확률을 소수 셋째 자리까지 돌려준다</span></span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">'부정'</span>: <span class="bu">round</span>(prob[<span class="dv">0</span>].item(), <span class="dv">3</span>), <span class="st">'긍정'</span>: <span class="bu">round</span>(prob[<span class="dv">1</span>].item(), <span class="dv">3</span>)}</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(<span class="st">'연기도 좋고 스토리도 탄탄하다'</span>))</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(<span class="st">'시간이 아깝다 최악'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'부정': 0.013, '긍정': 0.987}
+{'부정': 1.0, '긍정': 0.0}</code></pre>
+</div>
+</div>
+<p>첫 문장은 긍정의 확률이, 둘째 문장은 부정의 확률이 1에 가깝게 나옵니다.</p>
+<p>내가 쓴 영화평을 넣어 봅니다. 따옴표 안의 문장을 바꿔서 실행합니다.</p>
+<div id="05697ea6" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(<span class="st">'다시 보고 싶은 영화'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'부정': 0.014, '긍정': 0.986}</code></pre>
+</div>
+</div>
+<p>이번에는 뜻이 반대인 두 문장을 넣습니다.</p>
+<div id="c17105ca" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(<span class="st">'지루하지 않고 재미있다'</span>))</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(<span class="st">'재미있지 않고 지루하다'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'부정': 0.561, '긍정': 0.439}
+{'부정': 0.561, '긍정': 0.439}</code></pre>
+</div>
+</div>
+<p>두 문장은 뜻이 반대인데 확률이 똑같이 나옵니다. 두 문장을 토큰으로 잘라 비교합니다.</p>
+<div id="41dfb854" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.tokenize(<span class="st">'지루하지 않고 재미있다'</span>))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.tokenize(<span class="st">'재미있지 않고 지루하다'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['지루', '##하', '##지', '않', '##고', '재미있', '##다']
+['재미있', '##지', '않', '##고', '지루', '##하', '##다']</code></pre>
+</div>
+</div>
+<p>두 문장은 토큰이 같고 순서만 다릅니다. 이 모델은 토큰들의 임베딩 벡터를 평균하므로, 토큰이 같으면 순서가 달라도 평균이 같고 확률도 같습니다. 단어의 순서를 반영하려면 순서를 볼 수 있는 신경망이 필요합니다.</p>
+<hr>
+</section>
+<section id="사전-학습된-트랜스포머로-같은-영화평을-분류한다" class="level2">
+<h2 class="anchored" data-anchor-id="사전-학습된-트랜스포머로-같은-영화평을-분류한다">10. 사전 학습된 트랜스포머로 같은 영화평을 분류한다</h2>
+<p>트랜스포머는 문장 속 토큰들이 서로를 보고, 토큰마다의 벡터를 문맥에 맞게 고쳐 쓰는 층을 여러 번 쌓은 신경망입니다. 토큰의 위치도 함께 입력받으므로 순서가 다른 두 문장을 다르게 봅니다.</p>
+<p>지금까지는 <code>klue/bert-base</code>에서 토크나이저만 가져다 썼습니다. 이번에는 모델까지 내려받습니다. 이 모델은 대량의 한국어 텍스트로 미리 학습해 둔 트랜스포머입니다. 여기에 같은 영화평을 넣어 이어서 학습시킵니다.</p>
+<p>트랜스포머는 계산량이 많아 GPU에서 학습합니다. 아래 코드는 GPU를 쓸 수 있는지 확인하는 코드입니다.</p>
+<div id="3ca015c6" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">'cuda'</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">'cpu'</span>   <span class="co"># GPU를 쓸 수 있으면 'cuda', 아니면 'cpu'</span></span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(device)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cuda</code></pre>
+</div>
+</div>
+<p><code>cuda</code>가 나와야 합니다. <code>cpu</code>가 나오면 메뉴 <strong>런타임 → 런타임 유형 변경</strong>에서 <strong>T4 GPU</strong>를 고르고, 첫 셀부터 다시 실행합니다.</p>
+<p>아래 코드는 미리 학습된 모델을 내려받아(약 445MB) 파라미터의 수와 마지막 층을 찍는 코드입니다. <code>num_labels=2</code>는 마지막 층의 출력을 부정과 긍정 2개로 만듭니다.</p>
+<div id="41364249" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> AutoModelForSequenceClassification   <span class="co"># 미리 학습된 모델에 분류 층을 붙여 불러온다</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>bert <span class="op">=</span> AutoModelForSequenceClassification.from_pretrained(<span class="st">'klue/bert-base'</span>, num_labels<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> bert.parameters()))   <span class="co"># 파라미터의 수</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(bert.classifier)                             <span class="co"># 마지막 층</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>110618882
+Linear(in_features=768, out_features=2, bias=True)</code></pre>
+</div>
+</div>
+<p><code>110618882</code>와 <code>Linear(in_features=768, out_features=2, bias=True)</code>가 나옵니다. 파라미터가 약 1억 1천만 개로, 6절에서 만든 모델의 64,006개보다 1,700배쯤 많습니다. 마지막 층은 값 768개를 받아 점수 2개를 내는 분류 층입니다. 이 층만 새로 만든 것이라 가중치가 임의의 값이고, 그래서 내려받을 때 <code>newly initialized</code>라는 안내가 함께 나옵니다.</p>
+<p>이 모델은 문장의 맨 앞에 <code>[CLS]</code>, 맨 끝에 <code>[SEP]</code>라는 토큰을 붙인 입력으로 학습되었습니다. 5절에서는 <code>add_special_tokens=False</code>로 두 토큰을 뺐는데, 이번에는 붙입니다.</p>
+<div id="31b11f46" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> tok(<span class="st">'지루하지 않고 재미있다'</span>)   <span class="co"># add_special_tokens=False를 쓰지 않으면 두 토큰이 붙는다</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tok.convert_ids_to_tokens(out[<span class="st">'input_ids'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>['[CLS]', '지루', '##하', '##지', '않', '##고', '재미있', '##다', '[SEP]']</code></pre>
+</div>
+</div>
+<p><code>['[CLS]', '지루', '##하', '##지', '않', '##고', '재미있', '##다', '[SEP]']</code>가 나옵니다. <code>[CLS]</code>는 문장 전체를 대표하는 자리입니다. 모델은 <code>[CLS]</code> 자리에서 나온 벡터를 분류 층에 넣어 긍정과 부정을 가릅니다. <code>[SEP]</code>는 문장의 끝을 알립니다.</p>
+<p>미리 학습된 모델이 적은 데이터로도 학습되는지 보려고, 훈련용 영화평은 20,000개 가운데 앞의 2,000개만 씁니다. 아래 코드는 두 토큰을 붙여 길이 40으로 맞춘 뒤 텐서를 GPU로 옮기는 코드입니다.</p>
+<div id="4afa4e82" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ▶ 그대로 실행하세요 — [CLS]와 [SEP]를 붙여 토큰 번호로 바꾸기</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode2(texts):</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> tok(<span class="bu">list</span>(texts), padding<span class="op">=</span><span class="st">'max_length'</span>, truncation<span class="op">=</span><span class="va">True</span>, max_length<span class="op">=</span><span class="dv">40</span>, return_tensors<span class="op">=</span><span class="st">'pt'</span>)</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out[<span class="st">'input_ids'</span>]</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>X2_train <span class="op">=</span> encode2(train_df[<span class="st">'document'</span>][:<span class="dv">2000</span>]).to(device)   <span class="co"># 훈련용은 앞의 2,000개만</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>y2_train <span class="op">=</span> y_train[:<span class="dv">2000</span>].to(device)</span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>X2_test <span class="op">=</span> encode2(test_df[<span class="st">'document'</span>]).to(device)            <span class="co"># 테스트용은 앞에서 쓴 5,000개 그대로</span></span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>y2_test <span class="op">=</span> y_test.to(device)</span>
+<span id="cb67-10"><a href="#cb67-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X2_train.shape, X2_test.shape)</span>
+<span id="cb67-11"><a href="#cb67-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X2_train[<span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([2000, 40]) torch.Size([5000, 40])
+tensor([    2, 15548,  2052,  3841,     3,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+            0,     0,     0,     0,     0,     0,     0,     0,     0,     0],
+       device='cuda:0')</code></pre>
+</div>
+</div>
+<p>첫 영화평 <code>원본이 최고</code>의 맨 앞 <code>2</code>가 <code>[CLS]</code>의 번호이고, 토큰 세 개 뒤의 <code>3</code>이 <code>[SEP]</code>의 번호입니다. 나머지 자리는 패딩인 0입니다.</p>
+<p>모델에는 토큰 번호와 함께, 어느 자리가 패딩인지도 알려 줍니다. 패딩은 문장의 일부가 아니므로 다른 토큰이 패딩을 보지 않게 하려는 것입니다. 아래 코드는 토큰 번호를 받아 패딩이 아닌 자리를 1로 표시해 함께 넣고, 점수 2개를 돌려주는 모델입니다.</p>
+<div id="6e4ef46a" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ReviewBERT(nn.Module):</span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, bert):</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.bert <span class="op">=</span> bert</span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>        mask <span class="op">=</span> (x <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">long</span>()                                      <span class="co"># 실제 토큰의 자리는 1, 패딩의 자리는 0</span></span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.bert(input_ids<span class="op">=</span>x, attention_mask<span class="op">=</span>mask).logits   <span class="co"># 부정과 긍정의 점수</span></span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> ReviewBERT(bert).to(device)   <span class="co"># 모델도 GPU로 옮긴다</span></span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model2(X2_train[:<span class="dv">4</span>]).shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>torch.Size([4, 2])</code></pre>
+</div>
+</div>
+<p><code>torch.Size([4, 2])</code>가 나옵니다. 토큰 번호를 받아 영화평마다 점수 2개를 내는 것이 6절의 모델과 같으므로, 7절의 학습 함수와 평가 함수를 그대로 씁니다.</p>
+<p>아래 코드는 로더와 옵티마이저를 만들고, 학습하기 전의 테스트 손실과 정확도를 보는 코드입니다. 미리 학습된 가중치가 크게 바뀌지 않도록 학습률을 0.00002로 작게 둡니다.</p>
+<div id="f924babe" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>train_loader2 <span class="op">=</span> DataLoader(TensorDataset(X2_train, y2_train), batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>test_loader2 <span class="op">=</span> DataLoader(TensorDataset(X2_test, y2_test), batch_size<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>optimizer2 <span class="op">=</span> torch.optim.Adam(model2.parameters(), lr<span class="op">=</span><span class="fl">0.00002</span>)</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model2, test_loader2, criterion))   <span class="co"># (테스트 손실, 테스트 정확도)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(0.726319420337677, 0.4862)</code></pre>
+</div>
+</div>
+<p>정확도는 <strong>0.5</strong> 안팎입니다. 분류 층의 가중치가 아직 임의의 값이기 때문입니다.</p>
+<p>3 에폭 학습합니다. T4 GPU에서 1~2분 걸립니다.</p>
+<div id="c1f83605" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model2, train_loader2, criterion, optimizer2)</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>    test_loss, test_acc <span class="op">=</span> evaluate(model2, test_loader2, criterion)</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(epoch, <span class="bu">round</span>(test_loss, <span class="dv">4</span>), <span class="bu">round</span>(test_acc, <span class="dv">4</span>))   <span class="co"># 에폭, 테스트 손실, 테스트 정확도</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0 0.3998 0.8298
+1 0.3895 0.8402
+2 0.4568 0.8378</code></pre>
+</div>
+</div>
+<p>마지막 정확도는 <strong>0.84</strong> 안팎입니다. 7절의 모델은 영화평 20,000개로 학습해 0.80이었는데, 이 모델은 그 10분의 1인 2,000개로 더 높은 정확도를 냅니다. 대량의 텍스트로 미리 학습하면서 한국어 단어의 뜻과 문맥을 이미 배워 두었기 때문입니다.</p>
+<p>9절에서 확률이 똑같이 나온 두 문장을 이 모델에 넣습니다. 아래 코드는 문장 하나를 받아 부정과 긍정의 확률을 돌려주는 함수입니다.</p>
+<div id="01ae9a64" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ✍️ 직접 입력</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict2(text):</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> tok(text, return_tensors<span class="op">=</span><span class="st">'pt'</span>)[<span class="st">'input_ids'</span>].to(device)   <span class="co"># [CLS]와 [SEP]를 붙여 토큰 번호로 바꾼다</span></span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>    model2.<span class="bu">eval</span>()</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> torch.no_grad():</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> torch.softmax(model2(x), dim<span class="op">=</span><span class="dv">1</span>)[<span class="dv">0</span>]</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">'부정'</span>: <span class="bu">round</span>(prob[<span class="dv">0</span>].item(), <span class="dv">3</span>), <span class="st">'긍정'</span>: <span class="bu">round</span>(prob[<span class="dv">1</span>].item(), <span class="dv">3</span>)}</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict2(<span class="st">'지루하지 않고 재미있다'</span>))</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict2(<span class="st">'재미있지 않고 지루하다'</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'부정': 0.007, '긍정': 0.993}
+{'부정': 0.993, '긍정': 0.007}</code></pre>
+</div>
+</div>
+<p>첫 문장은 긍정의 확률이, 둘째 문장은 부정의 확률이 1에 가깝게 나옵니다. 토큰이 같고 순서만 다른 두 문장을 이 모델은 반대로 판별합니다.</p>
+<hr>
+</section>
+<section id="실습-과제-20분" class="level2">
+<h2 class="anchored" data-anchor-id="실습-과제-20분">11. 실습 과제 (20분)</h2>
+<section id="과제-1-지루와-가까운-토큰" class="level3">
+<h3 class="anchored" data-anchor-id="과제-1-지루와-가까운-토큰">📝 과제 1 · 지루와 가까운 토큰</h3>
+<p>8절의 토큰 열 개 각각과 <code>지루</code>의 내적을 구해, 내적이 양수인 토큰과 음수인 토큰으로 나눕니다.</p>
+<div id="7c19dc29" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 지루의 임베딩 벡터는 8절의 a, b, c처럼 E에서 토큰 번호로 꺼냅니다.</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: for 문으로 good + bad의 토큰을 하나씩 꺼내, 그 토큰의 임베딩 벡터와 지루의 임베딩 벡터의 내적을 torch.dot으로 구해 찍습니다.</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>d <span class="op">=</span> E[tok.convert_tokens_to_ids(<span class="st">'지루'</span>)]   <span class="co"># 지루의 임베딩 벡터</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> w <span class="kw">in</span> good <span class="op">+</span> bad:</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(w, torch.dot(d, E[tok.convert_tokens_to_ids(w)]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>최고 tensor(-11.2216)
+감동 tensor(-16.3287)
+재밌 tensor(-19.7825)
+좋 tensor(-14.2781)
+명작 tensor(-11.9455)
+최악 tensor(23.2582)
+쓰레기 tensor(20.1602)
+지루 tensor(20.4093)
+아깝 tensor(16.3532)
+재미없 tensor(17.8682)</code></pre>
+</div>
+</div>
+<p>✏️ <strong>내적이 양수인 토큰과 음수인 토큰:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> <code>최악</code>, <code>쓰레기</code>, <code>지루</code>, <code>아깝</code>, <code>재미없</code>과의 내적은 양수이고, <code>최고</code>, <code>감동</code>, <code>재밌</code>, <code>좋</code>, <code>명작</code>과의 내적은 음수입니다. 부정적인 영화평에 나오는 토큰끼리는 임베딩 벡터의 방향이 비슷합니다.</p>
+</blockquote>
+</section>
+<section id="과제-2-임베딩-벡터의-길이를-16으로" class="level3">
+<h3 class="anchored" data-anchor-id="과제-2-임베딩-벡터의-길이를-16으로">📝 과제 2 · 임베딩 벡터의 길이를 16으로</h3>
+<p>임베딩 벡터의 길이를 2에서 16으로 바꾼 모델을 만들어 3 에폭 학습하고, 테스트 정확도를 길이 2일 때와 비교합니다.</p>
+<div id="921323e8" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: ReviewModel을 복사해 이름을 바꾸고, 임베딩 층의 2를 16으로 바꿉니다. 분류 층에 들어가는 벡터의 길이도 16이 됩니다.</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 옵티마이저는 새 모델의 파라미터로 새로 만들고, 학습은 7절의 반복문을 그대로 씁니다.</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ReviewModel16(nn.Module):</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.emb <span class="op">=</span> nn.Embedding(<span class="dv">32000</span>, <span class="dv">16</span>, padding_idx<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb79-8"><a href="#cb79-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fc <span class="op">=</span> nn.Linear(<span class="dv">16</span>, <span class="dv">2</span>)</span>
+<span id="cb79-9"><a href="#cb79-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-10"><a href="#cb79-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
+<span id="cb79-11"><a href="#cb79-11" aria-hidden="true" tabindex="-1"></a>        e <span class="op">=</span> <span class="va">self</span>.emb(x)</span>
+<span id="cb79-12"><a href="#cb79-12" aria-hidden="true" tabindex="-1"></a>        n <span class="op">=</span> (x <span class="op">!=</span> <span class="dv">0</span>).<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>, keepdim<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb79-13"><a href="#cb79-13" aria-hidden="true" tabindex="-1"></a>        v <span class="op">=</span> e.<span class="bu">sum</span>(dim<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> n</span>
+<span id="cb79-14"><a href="#cb79-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.fc(v)</span>
+<span id="cb79-15"><a href="#cb79-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-16"><a href="#cb79-16" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb79-17"><a href="#cb79-17" aria-hidden="true" tabindex="-1"></a>model16 <span class="op">=</span> ReviewModel16()</span>
+<span id="cb79-18"><a href="#cb79-18" aria-hidden="true" tabindex="-1"></a>optimizer16 <span class="op">=</span> torch.optim.Adam(model16.parameters(), lr<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb79-19"><a href="#cb79-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb79-20"><a href="#cb79-20" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model16, train_loader, criterion, optimizer16)</span>
+<span id="cb79-21"><a href="#cb79-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model16, test_loader, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(0.49732529520988467, 0.8036)</code></pre>
+</div>
+</div>
+<p>✏️ <strong>길이 16일 때의 테스트 정확도와 길이 2일 때와의 차이:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> 약 0.80으로 길이 2일 때와 거의 같습니다. 긍정과 부정 두 가지를 가르는 데는 길이 2인 임베딩 벡터로도 충분합니다.</p>
+</blockquote>
+</section>
+<section id="과제-3-순서만-다른-두-문장" class="level3">
+<h3 class="anchored" data-anchor-id="과제-3-순서만-다른-두-문장">📝 과제 3 · 순서만 다른 두 문장</h3>
+<p>토큰은 같고 순서만 달라 뜻이 반대가 되는 두 문장을 직접 만들어, 9절의 모델과 10절의 모델이 본 확률을 비교합니다.</p>
+<div id="61bfcb5a" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 두 문장의 토큰이 같은지는 tok.tokenize로 자른 결과를 sorted로 정렬해 비교합니다.</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 9절의 predict와 10절의 predict2에 두 문장을 차례로 넣습니다.</span></span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> <span class="st">'나쁘지 않고 좋다'</span></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> <span class="st">'좋지 않고 나쁘다'</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sorted</span>(tok.tokenize(a)) <span class="op">==</span> <span class="bu">sorted</span>(tok.tokenize(b)))   <span class="co"># 두 문장의 토큰이 같은지 확인한다</span></span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict(a), predict(b))</span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predict2(a), predict2(b))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>True
+{'부정': 0.009, '긍정': 0.991} {'부정': 0.009, '긍정': 0.991}
+{'부정': 0.008, '긍정': 0.992} {'부정': 0.983, '긍정': 0.017}</code></pre>
+</div>
+</div>
+<p>✏️ <strong>내가 만든 두 문장과 두 모델의 확률:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> <code>나쁘지 않고 좋다</code>와 <code>좋지 않고 나쁘다</code>는 토큰이 같습니다. 평균하는 모델은 두 문장에 같은 확률을 내고, 트랜스포머는 첫 문장을 긍정으로, 둘째 문장을 부정으로 판별합니다.</p>
+</blockquote>
+</section>
+<section id="과제-4-분류-층만-학습하기" class="level3">
+<h3 class="anchored" data-anchor-id="과제-4-분류-층만-학습하기">📝 과제 4 · 분류 층만 학습하기</h3>
+<p>10절에서는 파라미터 1억 1천만 개를 모두 학습했습니다. 이번에는 미리 학습된 부분의 파라미터는 학습하지 않고 고정한 채, 새로 만든 분류 층만 학습합니다. 학습하는 파라미터의 수와 테스트 정확도를 10절과 비교합니다.</p>
+<div id="9e6146c6" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 📝</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 모델은 10절처럼 from_pretrained로 새로 불러옵니다. 한 번 내려받은 모델은 다시 내려받지 않습니다.</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 모든 파라미터의 requires_grad를 False로 바꾼 뒤, bert3.classifier의 파라미터만 True로 되돌립니다.</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 힌트: 옵티마이저에는 bert3.classifier.parameters()만 넣고 학습률은 0.001로 둡니다. 학습은 10절의 반복문을 그대로 씁니다.</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>torch.manual_seed(<span class="dv">42</span>)</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>bert3 <span class="op">=</span> AutoModelForSequenceClassification.from_pretrained(<span class="st">'klue/bert-base'</span>, num_labels<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> bert3.parameters():</span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>    p.requires_grad <span class="op">=</span> <span class="va">False</span>   <span class="co"># 모든 파라미터를 고정한다</span></span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> bert3.classifier.parameters():</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>    p.requires_grad <span class="op">=</span> <span class="va">True</span>    <span class="co"># 분류 층만 학습한다</span></span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>model3 <span class="op">=</span> ReviewBERT(bert3).to(device)</span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sum</span>(p.numel() <span class="cf">for</span> p <span class="kw">in</span> model3.parameters() <span class="cf">if</span> p.requires_grad))   <span class="co"># 학습하는 파라미터의 수</span></span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a>optimizer3 <span class="op">=</span> torch.optim.Adam(bert3.classifier.parameters(), lr<span class="op">=</span><span class="fl">0.001</span>)</span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>    train_one_epoch(model3, train_loader2, criterion, optimizer3)</span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(evaluate(model3, test_loader2, criterion))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1538
+(0.44914574921131134, 0.7984)</code></pre>
+</div>
+</div>
+<p>✏️ <strong>학습하는 파라미터의 수와 테스트 정확도, 10절과의 차이:</strong></p>
+<!-- 교수용 -->
+<blockquote class="blockquote">
+<p><strong>예시 답:</strong> 학습하는 파라미터는 768 × 2 + 2 = 1,538개이고 테스트 정확도는 0.79~0.80입니다. 모든 파라미터를 학습한 10절의 0.84보다 낮지만, 1,538개만 학습하고도 영화평 20,000개로 학습한 7절의 모델과 비슷한 정확도가 나옵니다. 미리 학습된 부분이 이미 문장의 뜻을 담은 벡터를 내놓기 때문입니다.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="정리" class="level2">
+<h2 class="anchored" data-anchor-id="정리">✅ 정리</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>배운 것</th>
+<th>핵심</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>어휘와 단어 번호</td>
+<td>텍스트에 나오는 서로 다른 단어의 목록이 어휘이고, 어휘에서의 순서가 단어의 번호입니다.</td>
+</tr>
+<tr class="even">
+<td>원-핫 벡터</td>
+<td>길이가 어휘의 크기와 같고 그 단어의 자리만 1입니다. <code>F.one_hot</code>으로 만듭니다.</td>
+</tr>
+<tr class="odd">
+<td>임베딩</td>
+<td>원-핫 벡터에 가중치 행렬을 곱하면 그 단어의 줄 하나가 나옵니다. 그 줄이 임베딩 벡터입니다.</td>
+</tr>
+<tr class="even">
+<td>임베딩 층</td>
+<td><code>nn.Embedding(어휘의 크기, 임베딩 벡터의 길이)</code>. 단어 번호를 넣으면 가중치에서 그 줄을 꺼냅니다. 편향이 없습니다.</td>
+</tr>
+<tr class="odd">
+<td>토큰</td>
+<td>실제 모델은 문장을 토큰으로 자릅니다. <code>AutoTokenizer.from_pretrained</code>로 토크나이저를 내려받습니다.</td>
+</tr>
+<tr class="even">
+<td>패딩</td>
+<td>문장의 길이를 맞추려고 짧은 문장의 뒤를 0번 토큰으로 채웁니다.</td>
+</tr>
+<tr class="odd">
+<td>영화평 분류</td>
+<td>임베딩 층 → 토큰 벡터의 평균 → 분류 층. 영화평 2만 개로 테스트 정확도 약 0.80입니다.</td>
+</tr>
+<tr class="even">
+<td>학습된 임베딩</td>
+<td>임베딩 벡터는 학습으로 정해지고, 뜻이 비슷한 토큰의 벡터가 가까이 놓입니다. 가까운 정도는 내적으로 잽니다.</td>
+</tr>
+<tr class="odd">
+<td>이 모델의 한계</td>
+<td>평균은 순서를 반영하지 않으므로, 토큰이 같고 순서만 다른 두 문장의 확률이 같습니다.</td>
+</tr>
+<tr class="even">
+<td>사전 학습된 트랜스포머</td>
+<td><code>AutoModelForSequenceClassification.from_pretrained</code>로 미리 학습된 모델을 내려받아 이어서 학습합니다. 영화평 2,000개로 테스트 정확도 약 0.84이고, 순서만 다른 두 문장을 가릅니다.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>다음:</strong> 실습 10-2에서는 문장을 순서대로 읽는 순환신경망으로 같은 영화평을 분류합니다.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© 2026 이지환 · 부경대학교 시스템경영공학부</p>
+</div>   
+    <div class="nav-footer-center">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+    <a class="nav-link" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ko">
+<p>교재 CC BY-NC-SA 4.0</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="https://github.com/ralbu85/lecture_deeplearning_labs/blob/main/LICENSE">
+<p>코드 MIT</p>
+</a>
+  </li>  
+    <li class="nav-item">
+    <a class="nav-link" href="../license.html">
+<p>저작권 안내</p>
+</a>
+  </li>  
+</ul>
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
